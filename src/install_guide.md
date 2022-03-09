@@ -33,7 +33,7 @@ Primer copiar els documents del github (ara mateix només printa un Hola per pan
 Un cop tenim el directori del projecte "happyLungs" obrim una terminal dins el directori i executem:
 
 ```bash
-sudo npm run web
+npm run web
 ```
 
 Hauria d'aparèixer un missatge com aquest:
@@ -51,7 +51,7 @@ També apareix un QR que amb l'app que ja teniu instal·lada " Expo Client " sim
 En cas de voler crear un template des de 0 per anar provant per la vostra banda, haureu de fer les següents comandes:
 
 ```bash
-sudo expo init NOM_DEL_PROJECTE_NOU
+expo init NOM_DEL_PROJECTE_NOU
 ```
 
 Poden aparèixer erros de dependència amb node, però si teniu la versió 16 no ha de sortir res.
