@@ -1,4 +1,4 @@
-import Chart from "./app/domainLayer/classes/Chart.js"
+import Chart from "./Chart.js"
 
 export default class ChartAirQuality extends Chart {
     constructor (title) {
