@@ -9,11 +9,23 @@ export default class DataPointMap {
         this.pollutantType = pollutantType;
     }
     
+    calcPollutionLevel(d1,d2){ 
+          let plevel;
+        /*
+        ***
+        Some math
+        ***
+        */
+               
+        return plevel;
+
+    }
+
     //Getters
    
     get NearerPoints() {
-        h1 = new DataPointMap("...");
-        h2 = new DataPointMap("...");
+        d1 = new DataPointMap("...");
+        d12 = new DataPointMap("...");
 
         return [h1,h2];
     }
