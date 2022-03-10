@@ -7,7 +7,7 @@ export default class Pin {
       this.rating = rating;
     }
   
-    create_pin(name, location, description, media, rating) {}
+    create_pin(nameeeeeee, location, description, media, rating) {}
     
     //Getters
     get recomended_IDs() {
