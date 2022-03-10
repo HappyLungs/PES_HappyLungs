@@ -8,5 +8,4 @@ export default class Map {
     get MapTitle () {
         return this.title;
     }
-
 }
