@@ -1,7 +1,7 @@
 # PES_HappyLungs
 PES FIB 2022
 
-Projecte Enginyeria del Software
+Projecte d'Enginyeria del Software
 
 Members:
 
