@@ -1,7 +1,7 @@
 export default class Map {
     title
-    constructor (name) {
-        this.title = name;
+    constructor (nameeeeee) {
+        this.titleeeddddde = name;
     }
     
     //Getters
