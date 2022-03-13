@@ -1,12 +1,3 @@
-/* var express = require('express')
-var app = express()
-
-app.get('/', function (req, res) {
-  res.send('hello world')
-})
-
-app.listen(3000) */
-
 // Packages
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -34,9 +25,6 @@ function connect() {
     });
 }
 
-// Set Content Type For Form
-// To support URL-encoded bodies
-// Increase req json size
 app.use(bodyParser.json({ type: "application/json", limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
