@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button} from 'react-native';
+
 
 import ChartAirQuality from './app/domainLayer/classes/ChartAirQuality.js';
 
@@ -12,15 +13,19 @@ export default function App() {
     <View style={styles.container}>
       <Text>Hola</Text>
       <StatusBar style="auto" />
+      <Button title="Hola" style={styles.button}></Button>
     </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: '#ffff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: '#93a243'
   },
 });
