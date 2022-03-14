@@ -8,7 +8,7 @@ import colors from '../config/colors';
 //npm install --save react-native-ratings
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DatePicker from 'react-native-datepicker';
-import { Rating, AirbnbRating } from 'react-native-ratings';
+import { Rating } from 'react-native-ratings';
 
 
 const handlePress = () => console.log("clicked");

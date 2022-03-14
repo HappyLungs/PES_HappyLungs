@@ -10,23 +10,17 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "axios": "^0.26.1",
-    "dotenv": "^16.0.0",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
-    "express": "^4.17.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-<<<<<<< HEAD
-    "react-native-web": "0.17.1",
-    "xmlhttprequest": "^1.8.0"
-=======
     "react-native-bouncy-checkbox": "^2.1.10",
     "react-native-datepicker": "^1.7.2",
     "react-native-ratings": "^8.1.0",
-    "react-native-web": "0.17.1"
->>>>>>> refs/remotes/origin/main
+    "react-native-svg": "^12.3.0",
+    "react-native-web": "0.17.1",
+    "victory-native": "^36.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
