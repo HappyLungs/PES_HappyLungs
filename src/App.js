@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button} from 'react-native';
 
 
-import {} from './app/screens/CreatePinScreen';
-import StatisticsScreen from './app/screens/StatisticsScreen';
+import CreatePinScreen from './app/presentationLayer/StatisticsScreen';
+import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
 
 export default function App() {
 
