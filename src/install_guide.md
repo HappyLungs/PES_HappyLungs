@@ -58,8 +58,15 @@ Poden aparèixer erros de dependència amb node, però si teniu la versió 16 no
 
 Un cop executat apareixerà un conjunt d'opcions diferents per a descarregar un template, jo he utilitzat "blank" per al projecte de github, però si més endavant ens veiem amb ganes d'utilitzar TypeScript, també ho podem provar.
 
-Libraries:
+## _Libraries:_
 
+```bash
 npm i react-native-bouncy-checkbox
 npm install react-native-datepicker --save
 npm install --save react-native-ratings
+npm install victory-native --save
+npm install react-native-svg --save
+#react-native link react-native-svg
+npm install @react-navigation/native @react-navigation/native-stack
+expo install react-native-screens react-native-safe-area-context
+```
