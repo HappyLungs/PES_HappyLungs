@@ -15,11 +15,16 @@ export default class Pin {
         return this.show_recomended_IDs;
     }
 
-    get charts(){
+    get charts() {
         return this.show_charts;
     }
 
-    show_recomended_IDs(){}
+      //returns true if private
+    get private() {
+        return this.private;
+    }
+
+    show_recomended_IDs() {}
   
-    show_charts(){}
+    show_charts() {}
   }
