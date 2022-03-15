@@ -1,13 +1,14 @@
 export default class Pin {
-    constructor(name, location, description, media, rating) {
+    constructor(name, location, description, media, rating, private) {
       this.name = name;
       this.location = location;
       this.description = description;
       this.media = media;
       this.rating = rating;
+      this.private = private;
     }
   
-    create_pin(name, location, description, media, rating) {}
+    create_pin(nameeeeeee, location, description, media, rating, private) {}
     
     //Getters
     get recomended_IDs() {

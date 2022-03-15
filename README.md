@@ -1,7 +1,7 @@
 # PES_HappyLungs
 PES FIB 2022
 
-Projecte Enginyeria del Software
+Projecte d'Enginyeria del Software
 
 Members:
 
@@ -15,3 +15,4 @@ Members:
 | Herrera Caba    | Júlia     | julia.herrera.caba@estudiantat.upc.edu   | /juliahc           |
 | Jimeno Ramírez  | Iván      | ivan.jimeno@estudiantat.upc.edu          | /IvanJimenoRamirez |
 | Valencia Luque  | Pol       | pol.valencia@estudiantat.upc.edu         | /polkp22           |
+ 
