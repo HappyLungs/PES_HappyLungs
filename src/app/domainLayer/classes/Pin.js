@@ -24,7 +24,7 @@ export default class Pin {
         return this.private;
     }
 
-    show_recomended_IDs(){}
+    show_recomended_IDs() {}
   
-    show_charts(){}
+    show_charts() {}
   }
