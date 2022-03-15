@@ -67,4 +67,6 @@ npm install --save react-native-ratings
 npm install victory-native --save
 npm install react-native-svg --save
 #react-native link react-native-svg
+npm install @react-navigation/native @react-navigation/native-stack
+expo install react-native-screens react-native-safe-area-context
 ```

@@ -15,9 +15,6 @@ const TimeOptionsBtn = (props) => {
     )
 }
 
-function setSelectCategory(name) {
-    let category = name;
-}
 
 function renderOptions() {
     return (
@@ -134,7 +131,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         width: "80%",
-        height: "1%",
+        height: "0.5%",
     },
     title: { 
         textAlign: 'center',
