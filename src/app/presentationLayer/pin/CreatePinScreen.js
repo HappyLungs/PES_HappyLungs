@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Platform, TextInput, Image, TouchableOpacity, Switch} from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Platform, TextInput, Image, TouchableOpacity } from 'react-native';
 
-import colors from '../../config/stylesheet/colors.js';
+import colors from '../config/stylesheet/colors';
 
 //npm i react-native-bouncy-checkbox
 //npm install react-native-datepicker --save

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TestingScreen from './app/presentationLayer/TestingScreen';
 import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
+import PinScreen from './app/presentationLayer/PinScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -26,8 +27,8 @@ export default function App() {
             component={StatisticsScreen}
           />
           <Stack.Screen
-            name="Map"
-            component={TestingScreen}
+            name="Pin"
+            component={PinScreen}
           />
           <Stack.Screen
             name="Testing"

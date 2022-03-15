@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Platform, TouchableOpacity} from 'react-native';
 
-import colors from '../config/colors';
-
-import {VictoryPie} from 'victory-native'
+import colors from '../config/stylesheet/colors';
 
 const onPress = (option) => {console.log(option)};
 
@@ -26,7 +24,7 @@ function renderOptions() {
         </View>
     )
 }
-
+/*
 function renderChart() {
     
     let chartData = [ 526, 520, 470, 440, 250, 240, 170, 150, 120, 110, 80, 40 ]
@@ -58,7 +56,7 @@ function renderChart() {
         </View>
     )
 }
-
+*/
 function StatisticsScreen(props) {
 
     return (
@@ -69,8 +67,6 @@ function StatisticsScreen(props) {
             <View style={styles.stroke}/>
             <Text style={styles.subtitle}> Location-based data recorded over time</Text>
             {renderOptions()}
-            <View style={{justifyContent: "center", alignItems: "center",}} >
-            {renderChart()}</View> 
             <Text style={styles.subtitle}> Pollutants to which you have been most exposed</Text>
             <View style={styles.containerBtn}>
                 <View style={styles.CircleShape} />
