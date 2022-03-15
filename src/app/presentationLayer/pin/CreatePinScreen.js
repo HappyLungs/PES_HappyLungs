@@ -61,7 +61,7 @@ function CreatePinScreen(props) {
                 />
                 <Text style={styles.subtitle}> Images</Text>
                 <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/addButton.png")}/>
+                    <Image style={styles.image} fadeDuration={250} source={require("../../../assets/addButton.png")}/>
                 </TouchableOpacity>
                 <Text style={styles.subtitle}> Rate</Text>
                 <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
