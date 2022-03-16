@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Platform} from 'react-native';
 
-import colors from '../config/colors';
+import colors from '../config/stylesheet/colors';
 
 function TestingScreen({ navigation }, props) {
     return (
@@ -23,9 +23,9 @@ function TestingScreen({ navigation }, props) {
                     <Text style={styles.btnText}>Statistics</Text>
                 </TouchableOpacity>             
                 <TouchableOpacity style={styles.btn}
-                    onPress={() => navigation.navigate("Map")}
+                    onPress={() => navigation.navigate("Pin")}
                 >
-                    <Text style={styles.btnText}> Map</Text>
+                    <Text style={styles.btnText}> Pin</Text>
                 </TouchableOpacity>             
             </View>
         </SafeAreaView>        

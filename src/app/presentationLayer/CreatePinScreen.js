@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Platform, TextInput, Image, TouchableOpacity, Switch} from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Platform, TextInput, Image, TouchableOpacity } from 'react-native';
 
-import colors from '../../config/stylesheet/colors.js';
+import colors from '../config/stylesheet/colors';
 
 //npm i react-native-bouncy-checkbox
 //npm install react-native-datepicker --save
 //npm install --save react-native-ratings
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DatePicker from 'react-native-datepicker';
+//nnimport DatePicker from 'react-native-datepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from 'react-native-ratings';
-
 
 const handlePress = () => console.log("clicked");
 
 function CreatePinScreen(props) {
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [checkboxState, setCheckboxState] = useState(false);
     const [date, setDate] = useState(new Date);
     const ubication = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+    
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+      };
+    
+      const handleConfirm = (date) => {
+        console.warn("A date has been picked: ", date);
+        hideDatePicker();
+      };
+    
 
     return (
         <SafeAreaView
@@ -37,7 +52,42 @@ function CreatePinScreen(props) {
                 </Text>
                 <TextInput multiline numberOfLines={3} maxLength={90} style={styles.inputDescription}/>
                 <Text style={styles.subtitle}> Date</Text>
-                <DatePicker
+                <TouchableOpacity style={styles.containerImage} onPress={showDatePicker}>
+                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
+                    <DateTimePickerModal
+                        //style={styles.datePickerStyle}
+                        mode="date"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                        isVisible={isDatePickerVisible}
+                    />
+                    <Text style={styles.text}> dd/mm/yyyy</Text>
+                </TouchableOpacity>
+                <Text style={styles.subtitle}> Images</Text>
+                <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
+                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/addButton.png")}/>
+                </TouchableOpacity>
+                <Text style={styles.subtitle}> Rate</Text>
+                <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
+                <Text style={styles.subtitle}> Allow others to view this pin?</Text>
+                <View style={{ marginLeft: 40, marginTop: 15 }}>
+                    <BouncyCheckbox
+                        fillColor="dodgerblue"
+                        size= {25}
+                        unfillColor="#FFFFFF"
+                        iconStyle={{ borderColor: "#767577" }}
+                        textStyle={{textDecorationLine: "none"}}
+                        onPress={() => setCheckboxState(!checkboxState)}
+                        text= {checkboxState? "This pin will be visible to other people." : "This pin will only be visible to you."}
+                    />
+                </View>
+            </View>
+        </SafeAreaView>        
+    );
+}
+
+/*
+ <DatePicker
                     style={styles.datePickerStyle}
                     date={date} //initial date from state
                     mode="date" //The enum of date, datetime and time
@@ -58,29 +108,7 @@ function CreatePinScreen(props) {
                     onDateChange={(date) => {
                         setDate(date);
                     }}
-                />
-                <Text style={styles.subtitle}> Images</Text>
-                <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../../assets/addButton.png")}/>
-                </TouchableOpacity>
-                <Text style={styles.subtitle}> Rate</Text>
-                <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
-                <Text style={styles.subtitle}> Allow others to view this pin?</Text>
-                <View style={{ marginLeft: 40, marginTop: 15 }}>
-                    <BouncyCheckbox
-                        fillColor="dodgerblue"
-                        size= {25}
-                        unfillColor="#FFFFFF"
-                        iconStyle={{ borderColor: "#767577" }}
-                        textStyle={{textDecorationLine: "none"}}
-                        onPress={() => setCheckboxState(!checkboxState)}
-                        text= {checkboxState? "This pin will be visible to other people." : "This pin will only be visible to you."}
-                    />
-                </View>
-            </View>
-        </SafeAreaView>        
-    );
-}
+*/
 
 const styles = StyleSheet.create({
     background: {
@@ -113,6 +141,12 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start", //main
         alignItems: "flex-start", //secondary
     },
+    containerImage: {
+        flex: 1,
+        flexDirection: 'row',
+        marginLeft: 40,
+        padding: 10,
+    },
     title: { 
         textAlign: 'center',
         alignSelf: 'center',
@@ -128,6 +162,12 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingStart: 25,
         fontWeight: 'bold',
+        color: '#12161b',
+    },
+    text: {
+        textAlignVertical: 'center',
+        fontSize: 15,
+        marginStart: 20,
         color: '#12161b',
     },
     ubication: { 
@@ -159,16 +199,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         textAlignVertical: 'top',
     },
-    containerImage: {
-        marginLeft: 40,
-        padding: 10,
-    },
     image: {
         alignSelf: "flex-start",
         justifyContent: "flex-start",
         padding: 10,
         width: 30,
         height: 30,
+        resizeMode: 'contain',
     },
     datePickerStyle: {
         width: "75%",
