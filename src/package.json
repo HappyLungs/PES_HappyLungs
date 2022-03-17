@@ -31,5 +31,4 @@
     "@expo/webpack-config": "^0.16.19"
   },
   "private": true,
-  "type" : "module"
 }
