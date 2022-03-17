@@ -1,4 +1,4 @@
-export default class LevelCalculator {
+class LevelCalculator {
 
     constructor (){
         //Pollutants ranges
@@ -46,13 +46,14 @@ export default class LevelCalculator {
 
     calculateLevelHour (pollutants) {
         if (pollutants.size == 0) return null;
-
         let maxLevel = 0
-        for(const [pollutant, quantity] of pollutants){
+        for(const [pollutant, quantity] of pollutants) {
             let actLevel = this.calculatePollutantLevel(pollutant, quantity);
             if (actLevel > maxLevel) maxLevel = actLevel
         }
-        return this.level[maxLevel]
+        return maxLevel
     }
 
 }
+
+export { LevelCalculator }
