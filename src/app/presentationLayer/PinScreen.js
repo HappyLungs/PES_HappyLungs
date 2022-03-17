@@ -38,6 +38,10 @@ function StatisticsScreen(props) {
                         <Text style={styles.ubication}> See Comments</Text>
                     </TouchableOpacity>
                     <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 25, alignSelf:'flex-start'}}/>
+                    <TouchableOpacity style={styles.containerEditBtn} onPress={handlePress}>
+                        <Image style={styles.image} fadeDuration={250} source={require("../../assets/edit.png")}/>
+                        <Text style={{marginStart: 20, fontWeight:'bold', fontSize: 15, color: colors.white}} color={colors.white}> Edit</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
     </SafeAreaView>        
@@ -98,6 +102,19 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
     },
+    containerEditBtn: {
+        width: 135,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'flex-start',
+        marginLeft: 25,
+        marginTop: 35,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: colors.green1,
+    },
     pinImage: {
         width: 250,
         height: 250,
@@ -138,9 +155,9 @@ const styles = StyleSheet.create({
         color: '#12161b',
     },
     text: {
-        textAlign: 'left',
         textAlignVertical: 'center',
         alignSelf: 'flex-start',
+        justifyContent: "center",
         fontSize: 15,
         marginStart: 10,
         color: '#12161b',
