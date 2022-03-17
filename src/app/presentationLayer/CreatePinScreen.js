@@ -11,13 +11,34 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from 'react-native-ratings';
 
-const handlePress = () => console.log("clicked");
+import * as ImagePicker from 'expo-image-picker';
+
+
+
 
 function CreatePinScreen(props) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [checkboxState, setCheckboxState] = useState(false);
     const [date, setDate] = useState(new Date);
     const ubication = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+
+    const handlePress = () => console.log("clicked");
+
+const [image, setImage] = useState(null);
+const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+    });
+    console.log(result);
+
+    if (!result.cancelled) {
+        setImage(result.uri);
+    }
+};
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -32,7 +53,6 @@ function CreatePinScreen(props) {
         hideDatePicker();
       };
     
-
     return (
         <SafeAreaView
             style={styles.background}
@@ -64,7 +84,7 @@ function CreatePinScreen(props) {
                     <Text style={styles.text}> dd/mm/yyyy</Text>
                 </TouchableOpacity>
                 <Text style={styles.subtitle}> Images</Text>
-                <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
+                <TouchableOpacity style={styles.containerImage} onPress={pickImage}>
                     <Image style={styles.image} fadeDuration={250} source={require("../../assets/addButton.png")}/>
                 </TouchableOpacity>
                 <Text style={styles.subtitle}> Rate</Text>
