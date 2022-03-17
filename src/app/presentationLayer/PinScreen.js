@@ -19,7 +19,7 @@ function StatisticsScreen(props) {
                 <Image style={styles.pinImage} fadeDuration={0} source={require("../../assets/noimage.png")}/>
                 <View style={styles.stroke}/>
                 <Text style={styles.title}> Pin Name</Text>
-                <Text style={styles.text}> Pin Description</Text>
+                <Text style={[styles.text, {marginStart: 30}]}> Pin Description</Text>
                 <View
                     style={styles.containerBtn}
                 >
@@ -37,7 +37,7 @@ function StatisticsScreen(props) {
                         <Text style={styles.text}> 5</Text>
                         <Text style={styles.ubication}> See Comments</Text>
                     </TouchableOpacity>
-                    <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40, alignSelf:'flex-start'}}/>
+                    <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 25, alignSelf:'flex-start'}}/>
                 </View>
             </View>
     </SafeAreaView>        
@@ -94,13 +94,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignContent: 'center',
         justifyContent: 'flex-start',
-        marginLeft: 40,
+        marginLeft: 25,
         padding: 10,
         marginBottom: 10,
     },
     pinImage: {
-        width: 300,
-        height: 300,
+        width: 250,
+        height: 250,
+        resizeMode: 'contain',
     },
     image: {
         alignSelf: "flex-start",
@@ -141,14 +142,16 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         alignSelf: 'flex-start',
         fontSize: 15,
-        marginStart: 20,
-        fontWeight: 'bold',
+        marginStart: 10,
         color: '#12161b',
     },
     ubication: { 
+        textAlign: 'left',
+        textAlignVertical: 'center',
+        alignSelf: 'flex-start',
         fontSize: 15,
-        marginLeft: 40,
-        //fontWeight: 'bold',
+        marginLeft: 10,
+        fontWeight: 'bold',
         color: colors.green1,
     },
 })

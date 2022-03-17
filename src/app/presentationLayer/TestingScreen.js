@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Platform} from 'react-native';
 
 import colors from '../config/stylesheet/colors';
 
