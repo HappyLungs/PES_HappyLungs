@@ -6,26 +6,29 @@ export default class DataPointMapRegister {
     }
 
     getLevelByHour(date, hour) {
-        nearerpoints = nearerPoints(date, hour);
-        
-        levelSum = 0;
+        level = 0;
 
+        /*
+        let aux = nearerPoints(date, hour);
+        let points = aux[0];
+        let totalDistance = aux[1];
+        
         //esto solo coge dos medidas, de los dos primeros puntos que devuelvan antes
         //Mirar las 4 más cercanas y hacer media por distancia
-        nearerpoints.forEach(station => {
+        points.forEach(station => {
             pollutants = station.getMeasuresByHour(date, hour);
-            levelSum += calc.calcLevel(pollutants);
+            level += calc.calcLevel(pollutants);
         });
+        */
 
-
-        return 
+        return level
     }
 
     getLevelByDay (date) {
-        nearerpoints = nearerPoints(date, hour);
+        //nearerpoints = nearerPoints(date, hour);
         
         levelSum = 0;
-
+/*
         //esto solo coge dos medidas, de los dos primeros puntos que devuelvan antes
         nearerpoints.forEach(station => {
             pollutantsDay = station.getMeasuresByDate(date, hour);
@@ -35,40 +38,11 @@ export default class DataPointMapRegister {
             levelSum += calc.calcLevel(pollutants);
         });
 
-
+*/
         return levelSum/2;
     }
     
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    calcPollutionLevel(p1,p2, latitud, longitud){ 
-        let plevel;
-            
-        /*
-        ***
-        Some math
-        ***
-        */
-                
-        return plevel;
-    }
-    
-    calcLevelDay(date, latitud, longitud) {
-
-    }
 
     //Getters
     /*A partir de un punto (this) seleccionado por el usuario la función devolverá todos los puntos ordenados ascendentemente por 
@@ -81,19 +55,21 @@ export default class DataPointMapRegister {
         let point2 = new DataPointMap("08015001", "Españaaa", "1991-02-01T00:00:00.000", 6, "CO", "mg/m3", "traffic", "urban", "08015", "Badalona", 13,  "Barcelonès", [0.4, 0.3], 6, 42.392001, 2.8888);
         let point3 = new DataPointMap("08015001", "Alemaniaaaa", "1991-02-01T00:00:00.000", 6, "CO", "mg/m3", "traffic", "urban", "08015", "Badalona", 13,  "Barcelonès", [0.4, 0.3], 6, 56.392001, 7.8888);
         let point4 = new DataPointMap("08015001", "Italia", "1991-02-01T00:00:00.000", 6, "CO", "mg/m3", "traffic", "urban", "08015", "Badalona", 13,  "Barcelonès", [0.4, 0.3], 6, 38.392001, 5.8888);
+        let distanciaTotal = 0;
 
         let all_points = [point1, point2,point3, point4];
-            all_points.forEach(c_point => {
-            console.log(c_point)
+        all_points.forEach(c_point => {
+            //console.log(c_point)
             let d = c_point.distance(latitud,longitud);
-                           
+            distanciaTotal += d;
+            
             points.push([d,c_point]);
         });
         
         var ordenados = points.sort(function(a, b) {
             return a[0] - b[0];
         });
-        return ordenados;
+        return [ordenados, distanciaTotal];
     }
         
     distance(lat2,lon2) {
@@ -122,5 +98,4 @@ export default class DataPointMapRegister {
     }
         
 }
-d = new DataPointMap(..)
-d.getInfo("17/")
+
