@@ -52,7 +52,7 @@ export default class LevelCalculator {
             let actLevel = this.calculatePollutantLevel(pollutant, quantity);
             if (actLevel > maxLevel) maxLevel = actLevel
         }
-        return this.level[maxLevel]
+        return this.maxLevel
     }
 
 }
