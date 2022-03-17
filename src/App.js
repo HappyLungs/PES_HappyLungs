@@ -12,13 +12,12 @@ import SearchScreen from './app/presentationLayer/SearchScreen';
 import MapScreen from './app/presentationLayer/MapScreen';
 import PinsScreen from './app/presentationLayer/PinsScreen';
 import ProfileScreen from './app/presentationLayer/ProfileScreen';
-
-
+import { getRequest, postRequest } from './requestAPI';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function Home() {
+async function Home() {
   return (
     <Tab.Navigator 
     screenOptions={{headerShown: false, tabBarShowLabel: false}}>
