@@ -17,7 +17,7 @@ import { getRequest, postRequest } from './requestAPI';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-async function Home() {
+function Home() {
   return (
     <Tab.Navigator 
     screenOptions={{headerShown: false, tabBarShowLabel: false}}>
