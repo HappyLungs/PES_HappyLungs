@@ -2,10 +2,6 @@
 const DataPointMapSchema = new global.Schema({
     eoiCode: Number,
     stationName: String,
-    date: {
-        type: Date
-    },
-    units: String,
     stationType: String,
     altitude: {
         type: Number,
