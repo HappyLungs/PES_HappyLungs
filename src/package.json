@@ -15,9 +15,12 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "axios": "^0.26.1",
+    "dotenv": "^16.0.0",
     "expo": "~44.0.0",
     "expo-image-picker": "~12.0.1",
     "expo-status-bar": "~1.2.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
@@ -33,6 +36,5 @@
     "@babel/core": "^7.12.9",
     "@expo/webpack-config": "^0.16.19"
   },
-  "private": true,
-  "type": "module"
+  "private": true
 }
