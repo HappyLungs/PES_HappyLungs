@@ -48,8 +48,10 @@ class LevelCalculator {
         if (pollutants.size == 0) return null;
         let maxLevel = 0
         for(const [pollutant, quantity] of pollutants) {
+            
             let actLevel = this.calculatePollutantLevel(pollutant, quantity);
             if (actLevel > maxLevel) maxLevel = actLevel
+            console.log(pollutant+"("+quantity+") -> "+actLevel);
         }
         return maxLevel
     }

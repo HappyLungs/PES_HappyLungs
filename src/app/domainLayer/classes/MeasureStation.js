@@ -13,44 +13,52 @@ class MeasureStation {
         this.levelCalculator = new LevelCalculator();
     }
 
+
+    getPollutantQuantityByHour(pollutantData, hour) {
+        if(typeof pollutantData[hour] === 'undefined'){
+            hour = hour.toString().slice(-2);
+            for(let i = parseInt(hour); i >= 1; --i){
+                if(hour >= 10)  hour = 'h'+ i;
+                else hour= 'h0'+i;
+                if(typeof pollutantData[hour] !== 'undefined') {
+                    return pollutantData[hour];
+
+                }
+            }
+            hour = hour;
+        } else {
+            return pollutantData[hour];
+        }
+    }
+
+
     /*
         Returns the contamination level on this MeasureStation at the hour "hour" on the day date
     */
     async getHourLevel(date, hour) {
         //Some stuff - Revisar Alex
         let data = new Map();
-        let hora = null;
-        if(hour >= 10) hora = 'h'+hour;
-        else hora = 'h0'+hour;
+        let jsonHour = null;
+        if(hour >= 10) jsonHour = 'h'+hour;
+        else jsonHour = 'h0'+hour;
         
         //Database query to get the measures taken in this MeasureStation on the day date
         let measures = await getMeasuresDay(this.eoiCode, date);
 
         //Pollutants used to calculate the contamination level with the LevelCalculator
         let availablePollutants = ['CO', 'NO2', 'O3', 'PM10', 'PM2.5', 'SO2'];
-        
+
+
         //Gets the pollutant of each measure and its quantity in the hour "hour" and saves it into "data"
         measures.forEach(pollutantData => {
             
             let pollutant = pollutantData.contaminant;
 
             if (availablePollutants.includes(pollutant) ){
-
-                if(typeof pollutantData[hora] === 'undefined'){
-                    hora = hora.toString().slice(-2);
-                    for(let i = parseInt(hora); i >= 1; --i){
-                        if(hora >= 10)  hora = 'h'+ i;
-                        else      hora= 'h0'+i;
-                        if(typeof pollutantData[hora] !== 'undefined') {
-                            data.set(pollutantData.contaminant, pollutantData[hora])
-                            break;
-                        }
-                    }
-                    hora = hour;
-                } else {
-                    data.set(pollutantData.contaminant, pollutantData[hora])
-                }
-
+                let pollutant = pollutantData.contaminant;
+                let quantity = this.getPollutantQuantityByHour(pollutantData, jsonHour)
+                
+                data.set(pollutant, quantity)
             }
         })
 
@@ -64,15 +72,67 @@ class MeasureStation {
     /*
         Returns the contamination level on this MeasureStation at the hour "hour" of the day date
     */
-    getMeasuresByDay(date, hour) {
-        /*
-            SELECT pollutant, quantity
-            FROM dadesObertes o
-            WHERE o.eoiCode = this.eoiCode, o.date = date
+    async getMeasuresByDay(date) {
+        
+        //Database query to get the measures taken in this MeasureStation on the day date
+        let measures = await getMeasuresDay(this.eoiCode, date);
 
-            De lo de antes solo en la hora hour
+        let availablePollutants = ['CO', 'NO2', 'O3', 'PM10', 'PM2.5', 'SO2'];
+        
+        let hourlyLevel = new Map();
+
+        for (let h = 1; h <= 24; ++h) {
+
+            let jsonHour
+            if(h >= 10) jsonHour = 'h'+h;
+            else jsonHour = 'h0'+h;
+
+            let pollutantQuantity = new Map();
+
+            measures.forEach(pollutantData => {
+            
+                let pollutant = pollutantData.contaminant;
+    
+                if (availablePollutants.includes(pollutant) ){
+                    let quantity = this.getPollutantQuantityByHour(pollutantData, jsonHour);
+                    pollutantQuantity.set(pollutant, quantity);
+                }
+            })
+
+            //Calculates the contamination level for h hour
+            console.log("HORA "+h);
+            let level = this.levelCalculator.calculateLevelHour(pollutantQuantity);
+            console.log("");
+
+            hourlyLevel.set(h, level)
+        }
+
+        return hourlyLevel;
+
+        /*
+            measures.forEach(pollutantData => {
+                
+                let pollutant = pollutantData.contaminant;
+
+                if (availablePollutants.includes(pollutant) ){
+                    let totalHours = 0;
+                    let quantitySum = 0;
+                    for (let h = 1; h <= 24; ++h) {
+                        if(hour >= 10) jsonHour = 'h'+hour;
+                        else jsonHour = 'h0'+hour;
+
+                        let quantity = pollutantData[h]
+
+                        if (! quantity === 'undefined') {
+                            quantitySum += quantity;
+                            totalHours += 1; 
+                        }
+                    }
+                }
+
+            }
         */
-       //devuelva map[(1,((no2,23), (pn10, 6))), (2, ... )]
+
     }
 }
 

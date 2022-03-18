@@ -22,34 +22,32 @@ function Home() {
     <Tab.Navigator 
     screenOptions={{headerShown: false, tabBarShowLabel: false}}>
       <Tab.Screen options={{
-            tabBarIcon: ({size}) => {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={require("./assets/statistics.png")}
-                  resizeMode={'cover'}
-                />
-              );
-            },
-          }}
-          name="Statistiscs"
-          component={StatisticsScreen} />
-      <Tab.Screen options={{
         tabBarIcon: ({size}) => {
           return (
             <Image
-              style={{ width: 20, height: size }}
-              source={require("./assets/search.png")}
+              style={{ width: 25, height: 25 }}
+              source={require("./assets/comment.png")}
               resizeMode={'cover'}
             />
           );
         },
-      }} tabBarShowLabel="false" name="Search" component={SearchScreen} />
+      }} tabBarShowLabel="false" name="Comments" component={SearchScreen} />
+        <Tab.Screen options={{
+          tabBarIcon: ({size}) => {
+            return (
+              <Image
+                style={{ width: 30, height: 30 }}
+                source={require("./assets/pins.png")}
+                resizeMode={'cover'}
+              />
+            );
+          },
+        }} name="Pins" component={PinsScreen} />
       <Tab.Screen options={{
         tabBarIcon: ({size}) => {
           return (
             <Image
-              style={{ width: 30, height: size }}
+              style={{ width: 30, height: 30 }}
               source={require("./assets/map.png")}
               resizeMode={'cover'}
             />
@@ -60,18 +58,7 @@ function Home() {
         tabBarIcon: ({size}) => {
           return (
             <Image
-              style={{ width: 20, height: 20 }}
-              source={require("./assets/ubication.png")}
-              resizeMode={'cover'}
-            />
-          );
-        },
-      }} name="Pins" component={PinsScreen} />
-      <Tab.Screen options={{
-        tabBarIcon: ({size}) => {
-          return (
-            <Image
-              style={{ width: 20, height: 20 }}
+              style={{ width: 30, height: 30 }}
               source={require("./assets/profile.png")}
               resizeMode={'cover'}
             />

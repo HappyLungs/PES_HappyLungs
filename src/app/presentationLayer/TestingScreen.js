@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#12161b',
     },
-    text: {
+    body: {
         textAlign: 'left',
         alignSelf: 'flex-start',
         fontSize: 10,
