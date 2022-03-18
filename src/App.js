@@ -7,7 +7,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TestingScreen from './app/presentationLayer/TestingScreen';
 import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
-import PinScreen from './app/presentationLayer/PinScreen';
+import PinOwnerScreen from './app/presentationLayer/PinOwnerScreen';
+import PinDefaultScreen from './app/presentationLayer/PinDefaultScreen';
 import SearchScreen from './app/presentationLayer/SearchScreen';
 import MapScreen from './app/presentationLayer/MapScreen';
 import PinsScreen from './app/presentationLayer/PinsScreen';
@@ -37,7 +38,7 @@ function Home() {
             return (
               <Image
                 style={{ width: 30, height: 30 }}
-                source={require("./assets/pins.png")}
+                source={require("./assets/pin.png")}
                 resizeMode={'cover'}
               />
             );
@@ -89,8 +90,12 @@ export default function App() {
             component={StatisticsScreen}
           />
           <Stack.Screen
-            name="Pin"
-            component={PinScreen}
+            name="Pin Owner View"
+            component={PinOwnerScreen}
+          />
+          <Stack.Screen
+            name="Pin Default View"
+            component={PinDefaultScreen}
           />
           <Stack.Screen
             name="Testing"

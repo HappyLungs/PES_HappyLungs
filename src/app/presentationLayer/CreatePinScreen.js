@@ -24,6 +24,8 @@ function CreatePinScreen(props) {
     const [image2, setImage2] = useState(null);
     const [image3, setImage3] = useState(null);
 
+    const handlePress = () => console.log("clicked");
+
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,12 +34,10 @@ function CreatePinScreen(props) {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
-
         if (!result.cancelled) {
             if(!image1) setImage1(result.uri);
             else if (!image2) setImage2(result.uri);
-            else setImage3(result.uri);
+            else if (!image3) setImage3(result.uri);
         }
     };
 
@@ -133,6 +133,9 @@ function CreatePinScreen(props) {
                 <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
                 <Text style={styles.subtitle}> Allow others to view this pin?</Text>
                 {renderPinModeSelector()}
+                <TouchableOpacity style={styles.containerEditBtn} onPress={handlePress}>
+                    <Text style={{textAlign:'center', fontWeight:'bold', fontSize: 15, color: colors.white}}> Save Pin</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>        
     );
@@ -164,6 +167,19 @@ const styles = StyleSheet.create({
     containerAddImage: {
         //flex: 1,
         flexDirection: 'row',
+    },
+    containerEditBtn: {
+        width: 110,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginLeft: 200,
+        marginTop: 15,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: colors.green1,
     },
     title: { 
         textAlign: 'center',
