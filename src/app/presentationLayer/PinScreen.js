@@ -19,22 +19,22 @@ function StatisticsScreen(props) {
                 <Image style={styles.pinImage} fadeDuration={0} source={require("../../assets/noimage.png")}/>
                 <View style={styles.stroke}/>
                 <Text style={styles.title}> Pin Name</Text>
-                <Text style={[styles.text, {marginStart: 30}]}> Pin Description</Text>
+                <Text style={[styles.body, {marginStart: 30}]}> Pin Description</Text>
                 <View
                     style={styles.containerBtn}
                 >
                     <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
                         <Image style={styles.image} fadeDuration={250} source={require("../../assets/ubication.png")}/>
-                        <Text style={styles.text}> Pin Ubication</Text>
+                        <Text style={styles.body}> Pin Ubication</Text>
                         <Text style={styles.ubication}> See On Map</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
                         <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
-                        <Text style={styles.text}> dd/mm/yyyy</Text>
+                        <Text style={styles.body}> dd/mm/yyyy</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.containerImage} onPress={handlePress}>
-                        <Image style={styles.image} fadeDuration={250} source={require("../../assets/comments.png")}/>
-                        <Text style={styles.text}> 5</Text>
+                        <Image style={styles.image} fadeDuration={250} source={require("../../assets/comment.png")}/>
+                        <Text style={styles.body}> 5</Text>
                         <Text style={styles.ubication}> See Comments</Text>
                     </TouchableOpacity>
                     <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 25, alignSelf:'flex-start'}}/>
@@ -65,23 +65,6 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start", //main
         alignItems: "flex-start", //secondary
         alignItems: "center",
-    },
-    btnText: {
-        color: "white",
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-    btn: {
-        marginStart: 5,
-        marginEnd: 5,
-        justifyContent: 'center',
-        borderRadius: 5,
-        borderBottomWidth: 5,
-        borderRadius: 5,
-        width: 80,
-        height: 35,
-        borderBottomColor: colors.green2,
-        backgroundColor: colors.green1,
     },
     containerBtn: {
         //backgroundColor: colors.green1,
@@ -154,7 +137,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#12161b',
     },
-    text: {
+    body: {
         textAlignVertical: 'center',
         alignSelf: 'flex-start',
         justifyContent: "center",

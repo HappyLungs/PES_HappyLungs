@@ -13,32 +13,33 @@ import { Rating } from 'react-native-ratings';
 
 import * as ImagePicker from 'expo-image-picker';
 
-
-
-
 function CreatePinScreen(props) {
+    const ubication = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [checkboxState, setCheckboxState] = useState(false);
     const [date, setDate] = useState(new Date);
-    const ubication = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
-    const handlePress = () => console.log("clicked");
+    const [image1, setImage1] = useState(null);
+    const [image2, setImage2] = useState(null);
+    const [image3, setImage3] = useState(null);
 
-const [image, setImage] = useState(null);
-const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-    });
-    console.log(result);
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        console.log(result);
 
-    if (!result.cancelled) {
-        setImage(result.uri);
-    }
-};
+        if (!result.cancelled) {
+            if(!image1) setImage1(result.uri);
+            else if (!image2) setImage2(result.uri);
+            else setImage3(result.uri);
+        }
+    };
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -46,20 +47,72 @@ const pickImage = async () => {
     
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
-      };
+    };
     
-      const handleConfirm = (date) => {
-        console.warn("A date has been picked: ", date);
+    const handleConfirm = (date) => {
+        setDate(date);
         hideDatePicker();
-      };
+    };
+
+    const getDate = () => {
+        let tempDate = date.toString().split(' ');
+        return date !== ''
+          ? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
+          : '';
+    };
     
+    function renderImageSelector() {
+        return (
+            <View style={styles.containerImage}>
+                <TouchableOpacity onPress={pickImage} style={styles.containerAddImage}>
+                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/addButton.png")}/>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.containerAddImage}>
+                    {image1 && <Image source={{ uri: image1 }} style={styles.selectedImages} />}
+                    {image2 && <Image source={{ uri: image2 }} style={styles.selectedImages} />}
+                    {image3 && <Image source={{ uri: image3 }} style={styles.selectedImages} />}
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    function renderDateSelector() {
+        return (
+            <View style={styles.containerImage}>
+                <TouchableOpacity onPress={showDatePicker}>
+                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
+                    <DateTimePickerModal
+                        //style={styles.datePickerStyle}
+                        mode="date"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                        isVisible={isDatePickerVisible}
+                    />
+                </TouchableOpacity>
+                <Text style={styles.body}> {getDate()}</Text>
+            </View>
+        )
+    }
+
+    function renderPinModeSelector() {
+        return (
+            <View style={{ marginLeft: 40, marginTop: 15 }}>
+                <BouncyCheckbox
+                    fillColor="dodgerblue"
+                    size= {25}
+                    unfillColor="#FFFFFF"
+                    iconStyle={{ borderColor: "#767577" }}
+                    textStyle={{textDecorationLine: "none"}}
+                    onPress={() => setCheckboxState(!checkboxState)}
+                    text= {checkboxState? "This pin will be visible to other people." : "This pin will only be visible to you."}
+                />
+            </View>
+        )
+    }
+
     return (
-        <SafeAreaView
-            style={styles.background}
-        >
-            <View
-                style={styles.container}
-            >
+        <SafeAreaView style={styles.background}>
+            <View style={styles.container}>
                 <Text style={styles.title}> Create Pin</Text>
                 <Text style={styles.subtitle}> Location</Text>
                 <Text style={styles.ubication}>{ubication} </Text>
@@ -72,63 +125,18 @@ const pickImage = async () => {
                 </Text>
                 <TextInput multiline numberOfLines={3} maxLength={90} style={styles.inputDescription}/>
                 <Text style={styles.subtitle}> Date</Text>
-                <TouchableOpacity style={styles.containerImage} onPress={showDatePicker}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
-                    <DateTimePickerModal
-                        //style={styles.datePickerStyle}
-                        mode="date"
-                        onConfirm={handleConfirm}
-                        onCancel={hideDatePicker}
-                        isVisible={isDatePickerVisible}
-                    />
-                    <Text style={styles.text}> dd/mm/yyyy</Text>
-                </TouchableOpacity>
+                {renderDateSelector()}
                 <Text style={styles.subtitle}> Images</Text>
-                <TouchableOpacity style={styles.containerImage} onPress={pickImage}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/addButton.png")}/>
-                </TouchableOpacity>
+                {renderImageSelector()}
+               
                 <Text style={styles.subtitle}> Rate</Text>
                 <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
                 <Text style={styles.subtitle}> Allow others to view this pin?</Text>
-                <View style={{ marginLeft: 40, marginTop: 15 }}>
-                    <BouncyCheckbox
-                        fillColor="dodgerblue"
-                        size= {25}
-                        unfillColor="#FFFFFF"
-                        iconStyle={{ borderColor: "#767577" }}
-                        textStyle={{textDecorationLine: "none"}}
-                        onPress={() => setCheckboxState(!checkboxState)}
-                        text= {checkboxState? "This pin will be visible to other people." : "This pin will only be visible to you."}
-                    />
-                </View>
+                {renderPinModeSelector()}
             </View>
         </SafeAreaView>        
     );
 }
-
-/*
- <DatePicker
-                    style={styles.datePickerStyle}
-                    date={date} //initial date from state
-                    mode="date" //The enum of date, datetime and time
-                    placeholder="select date"
-                    format="DD-MM-YYYY"
-                    customStyles={{
-                        dateIcon: {
-                        //display: 'none',
-                            position: 'absolute',
-                            left: 0,
-                            marginLeft: 0,
-                        },
-                        dateInput: {
-                            borderWidth:0,
-                            marginLeft: -120,
-                        },
-                    }}
-                    onDateChange={(date) => {
-                        setDate(date);
-                    }}
-*/
 
 const styles = StyleSheet.create({
     background: {
@@ -137,20 +145,6 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         paddingTop: Platform.OS === 'android' ? 30 : 0,
         alignItems: "center"
-    },
-    button: {
-        width: '100%',
-        height: 70,
-        backgroundColor: "#2b7e58",
-    },
-    button2: {
-        width: '100%',
-        height: 70,
-        backgroundColor: colors.secondary,
-    },
-    logo: {
-        width: 100,
-        height: 100,
     },
     container: {
         width: "100%",
@@ -166,6 +160,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 40,
         padding: 10,
+    },
+    containerAddImage: {
+        //flex: 1,
+        flexDirection: 'row',
     },
     title: { 
         textAlign: 'center',
@@ -184,7 +182,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#12161b',
     },
-    text: {
+    body: {
         textAlignVertical: 'center',
         fontSize: 15,
         marginStart: 20,
@@ -220,18 +218,20 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
     },
     image: {
-        alignSelf: "flex-start",
+        alignSelf: "center",
         justifyContent: "flex-start",
-        padding: 10,
+        //padding: 10,
         width: 30,
         height: 30,
         resizeMode: 'contain',
     },
-    datePickerStyle: {
-        width: "75%",
-        marginLeft: 40,
-        padding: 10,
-        borderBottomWidth: 1,
+    selectedImages: {
+        alignSelf: "flex-start",
+        justifyContent: "flex-start",
+        width: 60,
+        height: 60,
+        resizeMode: 'contain',
+        marginStart: 30,
     },
 })
 
