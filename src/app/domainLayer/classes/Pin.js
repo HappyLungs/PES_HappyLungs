@@ -8,7 +8,7 @@ export default class Pin {
       this.public = public;
     }
   
-    create_pin(nameeeeeee, location, description, media, rating, public) {}
+    create_pin(name, location, description, media, rating, public) {}
     
     //Getters
     get recomended_IDs() {
