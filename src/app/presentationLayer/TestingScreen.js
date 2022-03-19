@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: 80,
         height: 35,
-        borderBottomColor: colors.lightgrey,
+        borderBottomColor: colors.darkgrey,
         backgroundColor: colors.secondary,
     },
     containerBtn: {

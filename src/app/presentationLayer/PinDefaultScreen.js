@@ -16,7 +16,7 @@ function PinDefaultScreen(props) {
         <SafeAreaView style={styles.background}>
             <View style={styles.container}>
                 <Image style={styles.pinImage} fadeDuration={0} source={require("../../assets/noimage.png")}/>
-                <View style={styles.stroke}/>
+                <View style={[styles.stroke, styles.shadow]}/>
                 <View style={styles.containerTop}>
                     <Text style={styles.title}> Pin Name</Text>
                     <TouchableOpacity style={{marginStart:175}} onPress={handleBookmark}>
@@ -157,6 +157,16 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold',
         color: colors.green1,
+    },
+    shadow: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
 })
 

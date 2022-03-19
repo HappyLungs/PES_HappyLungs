@@ -7,4 +7,3 @@ git commit -m "task #34: Configurar l'idioma"
 git pull
 git push
 ```
-
