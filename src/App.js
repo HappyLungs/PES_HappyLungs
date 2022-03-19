@@ -1,16 +1,79 @@
 import * as React from 'react';
+import { View, Text, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import TestingScreen from './app/presentationLayer/TestingScreen';
 import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
-import PinScreen from './app/presentationLayer/PinScreen';
-
+import PinOwnerScreen from './app/presentationLayer/PinOwnerScreen';
+import PinDefaultScreen from './app/presentationLayer/PinDefaultScreen';
+import GeneralChatScreen from './app/presentationLayer/GeneralChatScreen';
+import MapScreen from './app/presentationLayer/MapScreen';
+import PinsScreen from './app/presentationLayer/PinsScreen';
+import ProfileScreen from './app/presentationLayer/ProfileScreen';
+import { getRequest, postRequest } from './requestAPI';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function Home() {
+  return (
+    <Tab.Navigator 
+    screenOptions={{headerShown: false, tabBarShowLabel: false}}>
+      <Tab.Screen options={{
+        tabBarIcon: ({size}) => {
+          return (
+            <Image
+              style={{ width: 25, height: 25 }}
+              source={require("./assets/comment.png")}
+              resizeMode={'cover'}
+            />
+          );
+        },
+      }} tabBarShowLabel="false" name="General Chat" component={GeneralChatScreen} />
+        <Tab.Screen options={{
+          tabBarIcon: ({size}) => {
+            return (
+              <Image
+                style={{ width: 30, height: 30 }}
+                source={require("./assets/pin.png")}
+                resizeMode={'cover'}
+              />
+            );
+          },
+        }} name="Pins" component={PinsScreen} />
+      <Tab.Screen options={{
+        tabBarIcon: ({size}) => {
+          return (
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={require("./assets/map.png")}
+              resizeMode={'cover'}
+            />
+          );
+        },
+      }} name="Map" component={MapScreen} />
+      <Tab.Screen options={{
+        tabBarIcon: ({size}) => {
+          return (
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={require("./assets/profile.png")}
+              resizeMode={'cover'}
+            />
+          );
+        },
+      }} name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+}
+
 
 export default function App() {
+
+  
 
   return (
     <NavigationContainer>
@@ -27,12 +90,16 @@ export default function App() {
             component={StatisticsScreen}
           />
           <Stack.Screen
-            name="Pin"
-            component={PinScreen}
+            name="Pin Owner View"
+            component={PinOwnerScreen}
+          />
+          <Stack.Screen
+            name="Pin Default View"
+            component={PinDefaultScreen}
           />
           <Stack.Screen
             name="Testing"
-            component={TestingScreen}
+            component={Home}
           />
         </Stack.Navigator>
     </NavigationContainer>

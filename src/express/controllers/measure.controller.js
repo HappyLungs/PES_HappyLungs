@@ -3,10 +3,9 @@ const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 
-const userDatalayer = require("./../datalayers/user.datalayer");
+const measure = require("./../datalayers/measure.datalayer");
 
 exports.find = async (request, response) => {
-    console.log(request);
     let id;
     if (request.query._id) {
         id = request.query._id;
@@ -20,12 +19,12 @@ exports.find = async (request, response) => {
     if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
         const where = {};
         where._id = mongodb.ObjectId(id);
-        userDatalayer.findUser(where)
-        .then((userData) => {
-            if (userData !== null && typeof userData !== undefined) {
+        measure.findMeasure(where)
+        .then((measureData) => {
+            if (measureData !== null && typeof measureData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
                 responseObj.message = "Success";
-                responseObj.data    = userData;
+                responseObj.data    = measureData;
             } else {
                 responseObj.status  = errorCodes.DATA_NOT_FOUND;
                 responseObj.message = "No record found";
@@ -59,13 +58,13 @@ exports.create = async (request, response, next) => {
         response.send(responseObj);
         return;
     }
-    userDatalayer.createUser(params)
-    .then((userData) => {
-        console.log(userData);
-        if (userData !== null && typeof userData !== undefined) {
+    measure.createMeasure(params)
+    .then((measureData) => {
+        console.log(measureData);
+        if (measureData !== null && typeof measureData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
-            responseObj.data    = userData;
+            responseObj.data    = measureData;
         } else {
             responseObj.status  = errorCodes.DATA_NOT_FOUND;
             responseObj.message = "No record found";
