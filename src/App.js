@@ -9,7 +9,7 @@ import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
 import PinOwnerScreen from './app/presentationLayer/PinOwnerScreen';
 import PinDefaultScreen from './app/presentationLayer/PinDefaultScreen';
-import SearchScreen from './app/presentationLayer/SearchScreen';
+import GeneralChatScreen from './app/presentationLayer/GeneralChatScreen';
 import MapScreen from './app/presentationLayer/MapScreen';
 import PinsScreen from './app/presentationLayer/PinsScreen';
 import ProfileScreen from './app/presentationLayer/ProfileScreen';
@@ -32,7 +32,7 @@ function Home() {
             />
           );
         },
-      }} tabBarShowLabel="false" name="Comments" component={SearchScreen} />
+      }} tabBarShowLabel="false" name="General Chat" component={GeneralChatScreen} />
         <Tab.Screen options={{
           tabBarIcon: ({size}) => {
             return (
