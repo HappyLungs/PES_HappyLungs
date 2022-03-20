@@ -25,6 +25,7 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-bouncy-checkbox": "^2.1.10",
+    "react-native-image-slider-banner": "^1.0.2",
     "react-native-modal-datetime-picker": "^13.1.0",
     "react-native-ratings": "^8.1.0",
     "react-native-safe-area-context": "3.3.2",

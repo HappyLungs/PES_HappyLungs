@@ -3,8 +3,9 @@ import { View, Text, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons'
 
-import TestingScreen from './app/presentationLayer/TestingScreen';
+
 import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
 import PinOwnerScreen from './app/presentationLayer/PinOwnerScreen';
@@ -15,6 +16,8 @@ import PinsScreen from './app/presentationLayer/PinsScreen';
 import ProfileScreen from './app/presentationLayer/ProfileScreen';
 import { getRequest, postRequest } from './requestAPI';
 
+import colors from './app/config/stylesheet/colors';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -23,18 +26,19 @@ function Home() {
     <Tab.Navigator 
     screenOptions={{headerShown: false, tabBarShowLabel: false}}>
       <Tab.Screen options={{
-        tabBarIcon: ({size}) => {
+        tabBarIcon: () => {
           return (
-            <Image
-              style={{ width: 25, height: 25 }}
-              source={require("./assets/comment.png")}
-              resizeMode={'cover'}
+            <Icon 
+              name="chatbubble-outline" 
+              style={{alignSelf:'center'}} 
+              color={colors.secondary} 
+              size={30}
             />
           );
         },
       }} tabBarShowLabel="false" name="General Chat" component={GeneralChatScreen} />
         <Tab.Screen options={{
-          tabBarIcon: ({size}) => {
+          tabBarIcon: () => {
             return (
               <Image
                 style={{ width: 30, height: 30 }}
@@ -45,23 +49,25 @@ function Home() {
           },
         }} name="Pins" component={PinsScreen} />
       <Tab.Screen options={{
-        tabBarIcon: ({size}) => {
+        tabBarIcon: () => {
           return (
-            <Image
-              style={{ width: 30, height: 30 }}
-              source={require("./assets/map.png")}
-              resizeMode={'cover'}
+            <Icon 
+              name="earth" 
+              style={{alignSelf:'center'}} 
+              color={colors.secondary} 
+              size={30}
             />
           );
         },
       }} name="Map" component={MapScreen} />
       <Tab.Screen options={{
-        tabBarIcon: ({size}) => {
+        tabBarIcon: () => {
           return (
-            <Image
-              style={{ width: 30, height: 30 }}
-              source={require("./assets/profile.png")}
-              resizeMode={'cover'}
+            <Icon 
+              name="person-outline" 
+              style={{alignSelf:'center'}} 
+              color={colors.secondary} 
+              size={30}
             />
           );
         },
@@ -70,10 +76,7 @@ function Home() {
   );
 }
 
-
 export default function App() {
-
-  
 
   return (
     <NavigationContainer>
