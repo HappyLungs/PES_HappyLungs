@@ -4,6 +4,8 @@ import { StyleSheet, View, Text, SafeAreaView, Platform, TouchableOpacity, Image
 import colors from '../config/stylesheet/colors';
 
 import { Rating } from 'react-native-ratings';
+import { ImageSlider } from "react-native-image-slider-banner";
+import Icon from 'react-native-vector-icons/Ionicons'
 
 function PinOwnerScreen(props) {
     
@@ -47,15 +49,39 @@ function PinOwnerScreen(props) {
         )
     }
 
+    function renderImageCarousel() {
+        return (
+            <ImageSlider 
+                data={[
+                    {img: 'https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg'},
+                    {img: 'https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg'},
+                ]}
+                backgroundColor={colors.green1}
+                showHeader
+                showIndicator
+                headerRightComponent={<Icon name="trash-outline" color={colors.white} size={30} onPress={() => handleDelete()}/>}
+                headerStyle={{padding: 5}}
+                onItemChanged={(item) => console.log("item", item)}
+                caroselImageStyle={{height: 250}}
+                inActiveIndicatorStyle={{backgroundColor:colors.lightgrey}}
+                activeIndicatorStyle={{backgroundColor:colors.white}}
+                indicatorContainerStyle={{top: 15}}
+                >
+            </ImageSlider>
+        )
+    }
+
     return (
         <SafeAreaView style={styles.background}>
             <View style={styles.container}>
-                <Image style={styles.pinImage} fadeDuration={0} source={require("../../assets/noimage.png")}/>
+                <View style={{height: 250, marginTop: 10}}>
+                    {renderImageCarousel()}
+                </View>             
                 <View style={[styles.stroke, styles.shadow]}/>
                 <View style={styles.containerTop}>
                     <Text style={styles.title}> Pin Name</Text>
                     <TouchableOpacity style={{marginStart:15}} onPress={() => setModalVisible(true)}>
-                        <Image style={[styles.image, { width:25, height:25 }]} fadeDuration={250} source={require("../../assets/bin.png")}/>
+                        <Icon name="trash-outline" style={{alignSelf:'center'}} color={colors.red1} size={25}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.containerEditBtn, styles.shadow]} onPress={handleEdit}>
                         <Image style={[styles.image, { width:25, height:25 }]} fadeDuration={250} source={require("../../assets/edit.png")}/>
@@ -65,7 +91,7 @@ function PinOwnerScreen(props) {
                 {renderModal()}
                 <Text style={[styles.body, { alignSelf:'flex-start', marginStart: 30 }]}> Pin Description</Text>
                 <View style={styles.containerTop}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/ubication.png")}/>
+                    <Icon name="ios-location-sharp" style={{alignSelf:'center'}} color={colors.secondary} size={30}/>
                     <Text style={styles.body}> Pin Ubication</Text>
                     <TouchableOpacity style={styles.containerImage} onPress={handleSeeOnMap}>
                         <Text style={styles.greenhighlight}> See On Map</Text>
@@ -73,7 +99,7 @@ function PinOwnerScreen(props) {
                 </View>
 
                 <View style={styles.containerTop}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
+                    <Icon name="md-calendar" style={{alignSelf:'center'}} color={colors.secondary} size={25}/>
                     <Text style={styles.body}> dd/mm/yyyy</Text>
                 </View>
                 <View style={styles.containerTop}>
@@ -81,14 +107,15 @@ function PinOwnerScreen(props) {
                 </View>
                 <View style={styles.containerTop}>
                     <TouchableOpacity style={{marginStart:15}} onPress={handleShare}>
-                        <Image style={styles.image} fadeDuration={250} source={require("../../assets/share.png")}/>
+                        <Icon name="share-social-outline" style={{alignSelf:'center'}} color={colors.secondary} size={35}/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{marginStart:200, flexDirection: 'column'}} onPress={handleSeeStatistics}>
-                        <Image style={[styles.image, {width:35, height:35}]} fadeDuration={250} source={require("../../assets/statistics_selected.png")}/>
+                    <TouchableOpacity style={{marginStart:180, flexDirection: 'column'}} onPress={handleSeeStatistics}>
+                        <Icon name="bar-chart" style={{alignSelf:'center'}} color={colors.green1} size={35}/>
                         <Text style={styles.greenhighlight}> See Statistics</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+
     </SafeAreaView>        
     );
 }
@@ -163,11 +190,10 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     stroke: {
-        backgroundColor: "black",
+        backgroundColor: colors.secondary,
         alignSelf: "center",
-        marginTop: 10,
         marginBottom: 10,
-        width: "80%",
+        width: "100%",
         height: "0.5%",
     },
     title: { 
