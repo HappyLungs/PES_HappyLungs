@@ -5,7 +5,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons'
 
-
 import CreatePinScreen from './app/presentationLayer/CreatePinScreen';
 import StatisticsScreen from './app/presentationLayer/StatisticsScreen';
 import PinOwnerScreen from './app/presentationLayer/PinOwnerScreen';

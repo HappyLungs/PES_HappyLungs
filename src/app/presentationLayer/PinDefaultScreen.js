@@ -14,6 +14,8 @@ const handleBookmark = () => console.log("Bookmark clicked");
 
 function PinDefaultScreen(props) {
 
+    const [modalVisible, setModalVisible] = useState(false);
+
     function renderImageCarousel() {
         return (
             <ImageSlider 
