@@ -39,5 +39,4 @@ let datos = await dadesObertesDia(eoiCode, date, hour)
 console.log("datos:");
 console.log(datos);
 */
-
 export {getMeasuresDay, getMeasuresDate}

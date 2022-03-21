@@ -152,7 +152,6 @@ class MeasureStation {
         var d = R * c;
         return d;
     }
-    
     //Conversor
     toRad(Value) {
         return Value * Math.PI / 180;

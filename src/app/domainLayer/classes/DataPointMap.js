@@ -78,5 +78,4 @@ export default class DataPointMapRegister {
         return ordenados;
     }
         
-  
 }
