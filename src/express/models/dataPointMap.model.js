@@ -15,7 +15,7 @@ const DataPointMapSchema = new global.Schema({
         type: Number,
         default: 0
     },
-    georeference: String
+    georeference: [Number]
 });
   const DataPointMap = global.mongoose.model("DataPointMap", DataPointMapSchema);
   module.exports = DataPointMap;

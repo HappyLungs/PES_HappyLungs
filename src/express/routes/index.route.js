@@ -41,6 +41,11 @@ router.post(
     //authorizationMiddleware.validate,
     DataPointMap.create
 );
+router.post(
+    "/insertMultipleDataPointMap",
+    licenseMiddleware.validate,
+    DataPointMap.insertMultiple
+);
 /* /DataPointMap */
 
 /* PollutantDayMeasure */
@@ -56,6 +61,11 @@ router.post(
     //authorizationMiddleware.validate,
     PollutantDayMeasure.create
 );
+router.post(
+    "/insertMultiplePollutantDayMeasure",
+    licenseMiddleware.validate,
+    PollutantDayMeasure.insertMultiple
+);
 /* /PollutantDayMeasure */
 
 /*   Measure  */
@@ -70,5 +80,10 @@ router.post(
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
     Measure.create
-)
+);
+router.post(
+    "/insertMultipleMeasures",
+    licenseMiddleware.validate,
+    Measure.insertMultiple
+);
 /*  /Measure  */

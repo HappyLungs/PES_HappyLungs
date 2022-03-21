@@ -1,6 +1,23 @@
-const axios = require("axios");
+import { getRequest, postRequest } from './persistence.controller.mjs';
 
-axios({
+
+let params = {
+    name: "exemple2",
+    password: "12345",
+    email: "exemple2@gmail.com",
+    phone: "123456789",
+    birthdate: "03-03-2001",
+    location: "World",
+    points: 0,
+    language: "Catalan",
+    healthStatus: "None"
+}
+
+let response = await postRequest("/newUser", params);
+console.log(response);
+
+
+/* axios({
     method: 'get', //you can set what request you want to be
     url: 'http://localhost:2000/v1/user',
     params: {_id: "622e3db2e949df09ae796cf2"},
@@ -14,7 +31,7 @@ axios({
   })
   .catch(err => {
       console.log(err);
-  })
+  }) */
   
 
 /* axios.post('http://localhost:2000/v1/newUser', {
