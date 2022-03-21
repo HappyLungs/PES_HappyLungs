@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: 100,
         height: 50,
-        borderBottomColor: colors.lightgrey,
+        borderBottomColor: colors.darkgrey,
         backgroundColor: colors.secondary,
     },
     btnText: {

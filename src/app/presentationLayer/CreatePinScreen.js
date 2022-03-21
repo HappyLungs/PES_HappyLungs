@@ -3,15 +3,11 @@ import { StyleSheet, View, Text, SafeAreaView, Platform, TextInput, Image, Touch
 
 import colors from '../config/stylesheet/colors';
 
-//npm i react-native-bouncy-checkbox
-//npm install react-native-datepicker --save
-//npm install --save react-native-ratings
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-//nnimport DatePicker from 'react-native-datepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from 'react-native-ratings';
-
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 function CreatePinScreen(props) {
     const ubication = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
@@ -24,6 +20,8 @@ function CreatePinScreen(props) {
     const [image2, setImage2] = useState(null);
     const [image3, setImage3] = useState(null);
 
+    const handlePress = () => console.log("clicked");
+
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,12 +30,10 @@ function CreatePinScreen(props) {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
-
         if (!result.cancelled) {
             if(!image1) setImage1(result.uri);
             else if (!image2) setImage2(result.uri);
-            else setImage3(result.uri);
+            else if (!image3) setImage3(result.uri);
         }
     };
 
@@ -80,7 +76,7 @@ function CreatePinScreen(props) {
         return (
             <View style={styles.containerImage}>
                 <TouchableOpacity onPress={showDatePicker}>
-                    <Image style={styles.image} fadeDuration={250} source={require("../../assets/calendar.png")}/>
+                    <Icon name="md-calendar" style={{alignSelf:'center'}} color={colors.secondary} size={25}/>
                     <DateTimePickerModal
                         //style={styles.datePickerStyle}
                         mode="date"
@@ -133,6 +129,9 @@ function CreatePinScreen(props) {
                 <Rating imageSize={20} fractions={0} style={{padding: 10, marginLeft: 40,}}/>
                 <Text style={styles.subtitle}> Allow others to view this pin?</Text>
                 {renderPinModeSelector()}
+                <TouchableOpacity style={styles.containerEditBtn} onPress={handlePress}>
+                    <Text style={{textAlign:'center', fontWeight:'bold', fontSize: 15, color: colors.white}}> Save Pin</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>        
     );
@@ -164,6 +163,19 @@ const styles = StyleSheet.create({
     containerAddImage: {
         //flex: 1,
         flexDirection: 'row',
+    },
+    containerEditBtn: {
+        width: 110,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginLeft: 200,
+        marginTop: 15,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: colors.green1,
     },
     title: { 
         textAlign: 'center',

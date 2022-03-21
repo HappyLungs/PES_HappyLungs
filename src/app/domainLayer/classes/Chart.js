@@ -4,7 +4,7 @@ export default class Chart {
         this.title = name;
     }
     
-    //Getters
+    //Getters eres tonto
     get ChartTitle () {
         return this.title;
     }

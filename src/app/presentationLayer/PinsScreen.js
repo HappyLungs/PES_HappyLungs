@@ -9,9 +9,14 @@ function PinsScreen({navigation}, props) {
         <View style={styles.background}>
             <Text style={{marginTop:300}}> Pins Screen</Text>
             <TouchableOpacity style={styles.btn}
-                onPress={() => navigation.navigate("Pin")}
+                onPress={() => navigation.navigate("Pin Owner View")}
             >
-                <Text style={styles.btnText}>Pin Example</Text>
+                <Text style={styles.btnText}>Pin Owner View</Text>
+            </TouchableOpacity>   
+            <TouchableOpacity style={styles.btn}
+                onPress={() => navigation.navigate("Pin Default View")}
+            >
+                <Text style={styles.btnText}>Pin Default View</Text>
             </TouchableOpacity>   
             <TouchableOpacity style={styles.btn}
                 onPress={() => navigation.navigate("Create Pin")}
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: 100,
         height: 50,
-        borderBottomColor: colors.lightgrey,
+        borderBottomColor: colors.darkgrey,
         backgroundColor: colors.secondary,
     },
     btnText: {

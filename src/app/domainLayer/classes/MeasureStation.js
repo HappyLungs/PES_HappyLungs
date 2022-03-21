@@ -3,12 +3,12 @@ import { LevelCalculator } from "../services/LevelCalculator.js"
 
 class MeasureStation {
 
-    constructor (eoiCode, stationName, stationType, altitude, latitude, length) {
+    constructor (eoiCode, stationName, stationType, latitud, longitud, length) {
         this.eoiCode = eoiCode;
         this.stationName = stationName;
         this.stationType = stationType;
-        this.altitude = altitude;
-        this.latitude = latitude;
+        this.latitud = latitud;
+        this.longitud = longitud;
         this.length = length;
         this.levelCalculator = new LevelCalculator();
     }
@@ -134,6 +134,35 @@ class MeasureStation {
         */
 
     }
+
+    distance(lat2,lon2) {
+
+        var lat1 = this.latitud;
+        var lon1 = this.longitud;
+        //console.log(lat1, lon1)
+
+        var R = 6371; // km
+        var dLat = this.toRad(lat2-lat1);
+        var dLon = this.toRad(lon2-lon1);
+        var lat1 = this.toRad(lat1);
+        var lat2 = this.toRad(lat2);
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c;
+        return d;
+    }
+    //Conversor
+    toRad(Value) {
+        return Value * Math.PI / 180;
+    }
+
+    deg2rad(deg) {
+        return deg * (Math.PI/180)
+    }
+
+
+
 }
 
 export {MeasureStation};
