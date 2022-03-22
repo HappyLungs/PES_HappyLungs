@@ -1,3 +1,4 @@
+const { data } = require('../../../../../tasf-thgu');
 const PollutantDayMeasureModel = require('../models/pollutantDayMeasure.model')
 
 exports.createPollutantDayMeasure = async (params) => {
@@ -21,5 +22,19 @@ exports.findPollutantDayMeasure = async (where = {}) => {
         .catch((error) => {
             reject(error)
         })
+    })
+}
+
+exports.insertMany = async (params) => {
+    return new Promise((resolve, reject) => {
+        PollutantDayMeasureModel
+        .insertMany(params)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+
     })
 }
