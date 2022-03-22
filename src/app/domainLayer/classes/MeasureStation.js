@@ -76,7 +76,6 @@ class MeasureStation {
         
         //Database query to get the measures taken in this MeasureStation on the day date
         let measures = await getMeasuresDay(this.eoiCode, date);
-
         let availablePollutants = ['CO', 'NO2', 'O3', 'PM10', 'PM2.5', 'SO2'];
         
         let hourlyLevel = new Map();
@@ -100,9 +99,7 @@ class MeasureStation {
             })
 
             //Calculates the contamination level for h hour
-            console.log("HORA "+h);
             let level = this.levelCalculator.calculateLevelHour(pollutantQuantity);
-            console.log("");
 
             hourlyLevel.set(h, level)
         }
@@ -134,7 +131,6 @@ class MeasureStation {
         */
 
     }
-
     distance(lat2,lon2) {
 
         var lat1 = this.latitud;
