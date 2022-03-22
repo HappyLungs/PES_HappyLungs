@@ -126,6 +126,10 @@ function MapScreen({ navigation }) {
                 <LinearGradient
                   flex={1}
                   colors={[
+                    "green", "yellow", "orange", "red", "purple", "brown"
+                  ]}
+                  /*
+                  colors={[
                     "#8ff08c",
                     "#b1f46b",
                     "#d2f94e",
@@ -142,6 +146,8 @@ function MapScreen({ navigation }) {
                     "#870211",
                     "#7e0211",
                   ]}
+                  */
+
                   start={{ x: 0, y: 0.5 }}
                   end={{ x: 1, y: 1 }}
                   style={{ borderRadius: 5 }}
@@ -242,6 +248,19 @@ function MapScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.background}>
+      <View style={styles.container}>
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+                latitude: 41.366531,  
+                longitude: 2.019336,
+                latitudeDelta: 0.3,
+                longitudeDelta: 1.5,
+            }}
+        >
+        </MapView>
+    </View>
       <View style={styles.rowContainer}>
         
         <View style={[styles.containerSearch, styles.shadow]}>
@@ -270,25 +289,13 @@ function MapScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity
+      
+    <TouchableOpacity
         style={styles.btn}
         onPress={() => setModalPinVisible(true)}
       >
         <Text style={styles.btnText}>Pin Example</Text>
       </TouchableOpacity>
-      <View style={styles.container}>
-          <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            style={styles.map}
-            region={{
-                latitude: 41.366531,  
-                longitude: 2.019336,
-                latitudeDelta: 0.3,
-                longitudeDelta: 1.5,
-            }}
-        >
-        </MapView>
-    </View>
       {renderModalPin()}
       {renderModalFilter()}
 
@@ -403,11 +410,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
-    //...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFillObject,
     height: "100%",
     width: "100%",
     justifyContent: 'flex-end',
-    position:'absolute',
+    //position:'absolute',
     alignItems: 'center',
   },
   map: {
