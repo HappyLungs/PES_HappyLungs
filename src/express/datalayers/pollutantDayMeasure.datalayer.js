@@ -1,4 +1,3 @@
-const { data } = require('../../../../../tasf-thgu');
 const PollutantDayMeasureModel = require('../models/pollutantDayMeasure.model')
 
 exports.createPollutantDayMeasure = async (params) => {
