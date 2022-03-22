@@ -3,10 +3,7 @@ const PollutantDayMeasureSchema = new global.Schema({
     date: {
         type: Date
     },
-    pollutant: {
-        type: String,
-        enum: ["CO", "NO2", "O3", "PM10", "PM2.5", "SO2"]
-    },
+    pollutant: String,
     units: String,
     dataPointMap: {
         type: Schema.Types.ObjectId,

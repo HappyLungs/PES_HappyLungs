@@ -13,7 +13,6 @@ import GeneralChatScreen from './app/presentationLayer/GeneralChatScreen';
 import MapScreen from './app/presentationLayer/MapScreen';
 import PinsScreen from './app/presentationLayer/PinsScreen';
 import ProfileScreen from './app/presentationLayer/ProfileScreen';
-import { getRequest, postRequest } from './requestAPI';
 
 import colors from './app/config/stylesheet/colors';
 

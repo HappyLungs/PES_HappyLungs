@@ -1,4 +1,3 @@
-const {data} = require('./dadesObertes.js');
 const mongodb = require("mongodb");
 const axios = require("axios");
 
@@ -14,9 +13,27 @@ function getNZero(number) {
     return s;
 }
 
-data.map(element => {
-    if (!dataPointMap.has(element.codi_eoi)) {
-        if (element.contaminant == "CO" || element.contaminant == "NO2" || element.contaminant == "O3" || element.contaminant == "PM10" || element.contaminant == "PM2.5" || element.contaminant == "SO2"){
+
+async function getData() {
+    //Data since 5 years ago
+    let data = {};
+    await axios({
+        method: 'get',
+        url: `https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json?$where=data >= '2017-01-01T00:00:00.000' &$limit=10000000`,
+        data: {
+            "$$app_token" : "66TexGsqu_6szbRMKhNkE64Rx1uzX-dlfb0D",
+        }
+    }).then(function (res) { 
+        data =  res.data;
+    });
+    return data;
+}
+
+
+async function insertData () {
+    let data = await getData();
+    data.map(element => {
+        if (!dataPointMap.has(element.codi_eoi)) {
             let dpm = {
                 _id: mongodb.ObjectId.createFromHexString(getNZero(24 - id.toString(16).length) + id.toString(16)),
                 eoiCode: element.codi_eoi,
@@ -52,9 +69,8 @@ data.map(element => {
             dataPointMap.set(element.codi_eoi, dpm);
             pollutantDayMeasure.set(dpm.eoiCode, new Map([[pdm.date, pdm]]));
             measure.set(dpm.eoiCode, new Map([[pdm.date, measures]]));
-        }
-    } else {
-        if (element.contaminant == "CO" || element.contaminant == "NO2" || element.contaminant == "O3" || element.contaminant == "PM10" || element.contaminant == "PM2.5" || element.contaminant == "SO2"){
+            
+        } else {
             let pdm = {
                 _id: mongodb.ObjectId.createFromHexString(getNZero(24 - id.toString(16).length) + id.toString(16)),
                 date: element.data,
@@ -79,8 +95,10 @@ data.map(element => {
             pollutantDayMeasure.set(element.codi_eoi, new Map([[pdm.date, pdm]]));
             measure.set(element.codi_eoi, new Map([[pdm.date, measures]]));
         }
-    }
-});
+    });
+    insert();
+}
+
 
 async function insert () {
     let insertions = [];
@@ -148,4 +166,4 @@ async function insert () {
     });
 }
 
-insert();
+insertData();
