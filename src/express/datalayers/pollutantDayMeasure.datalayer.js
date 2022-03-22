@@ -23,3 +23,17 @@ exports.findPollutantDayMeasure = async (where = {}) => {
         })
     })
 }
+
+exports.insertMany = async (params) => {
+    return new Promise((resolve, reject) => {
+        PollutantDayMeasureModel
+        .insertMany(params)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+
+    })
+}

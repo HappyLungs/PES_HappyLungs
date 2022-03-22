@@ -24,3 +24,17 @@ exports.findDataPointMap = async (where = {}) => {
         })
     })
 }
+
+exports.insertMany = async (params) => {
+    return new Promise((resolve, reject) => {
+        DataPointMapModel
+        .insertMany(params)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+
+    })
+}

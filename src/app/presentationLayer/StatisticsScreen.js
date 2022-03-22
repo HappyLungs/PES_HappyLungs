@@ -1,160 +1,286 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Platform, TouchableOpacity} from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from "react-native-chart-kit";
 
-import colors from '../config/stylesheet/colors';
+import colors from "../config/stylesheet/colors";
 
-const onPress = (option) => {console.log(option)};
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const onPress = (option) => {
+  console.log(option);
+};
 
 const TimeOptionsBtn = (props) => {
-    return (
-        <TouchableOpacity onPress={onPress.bind(this, props.option)} style={styles.btn}>
-            <Text style={styles.btnText}>{props.value}</Text>
-        </TouchableOpacity>
-    )
-}
-
+  return (
+    <TouchableOpacity
+      onPress={onPress.bind(this, props.option)}
+      style={styles.btn}
+    >
+      <Text style={styles.btnText}>{props.value}</Text>
+    </TouchableOpacity>
+  );
+};
 
 function renderOptions() {
-    return (
-        <View style={styles.containerBtn}>
-            <TimeOptionsBtn option={'1'} value='Last 24h'/>                
-            <TimeOptionsBtn option={'2'} value='Last Week'/>                
-            <TimeOptionsBtn option={'3'} value='Last Month'/>                
-            <TimeOptionsBtn option={'4'} value='Last Year'/> 
-        </View>
-    )
+  return (
+    <View style={styles.containerBtn}>
+      <TimeOptionsBtn option={"1"} value="Last 24h" />
+      <TimeOptionsBtn option={"2"} value="Last Week" />
+      <TimeOptionsBtn option={"3"} value="Last Month" />
+      <TimeOptionsBtn option={"4"} value="Last Year" />
+    </View>
+  );
 }
-/*
-function renderChart() {
-    
-    let chartData = [ 526, 520, 470, 440, 250, 240, 170, 150, 120, 110, 80, 40 ]
-    let labels = ["NO2", "NO", "O3", "SO2", "CO", "NOX", "PM10", "H2S", "HCT", "PS", "HNCM", "C6H6"]
-    const reducer = (accumulator, curr) => accumulator+curr;
-    let totalPollution = chartData.reduce(reducer);
 
-    return (
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <VictoryPie
-                data={chartData}
-                innerRadius={70}
-                //labels={chartData}
-                labels={labels}
-                style={{
-                    labels: { fontWeight: 'bold'},
-                    parent: {
-                        ...styles.shadow
-                    }
-                }}
-                width={350}
-                height={350}
-        />
-        <View style={{position: 'absolute', top: '42%', left: '41%'}}>
-            <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 15}}>
-                {totalPollution}</Text>
-            <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 15}}>Total</Text>
-        </View>
-        </View>
-    )
+function renderLinearChart() {
+  const chartConfig = {
+      backgroundGradientFrom: "#1E2923",
+      backgroundGradientFromOpacity: 0,
+      backgroundGradientTo: "#08130D",
+      backgroundGradientToOpacity: 0,
+      color: (opacity = 1) => "#8bc34a",
+      strokeWidth: 2, // optional, default 3
+      barPercentage: 0.5,
+      useShadowColorFromDataset: false // optional
+  };
+  const screenWidth = Dimensions.get("window").width;
+  const data = {
+      labels: ["00", "02", "04", "06", "08", "10", "12", "14", "16", "18", "20", "22"],
+      datasets: [
+        {
+          data: [2,2,2,2,3,3,3,4,4,3,2,2],
+          color: (opacity = 1) => "#4d4d4d", // optional
+          strokeWidth: 2 // optional
+        }
+      ],
+      //legend: ["Rainy Days"] // optional
+  };
+  return(
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <LineChart
+              data={data}
+              width={screenWidth}
+              height={180}
+              chartConfig={chartConfig}
+              bezier
+          />
+      </View>
+  )
 }
-*/
+
+function renderPieChart() {
+  const data = [
+      {
+          name: "PM10 (µg/m3)",
+          quantity: 24,
+          color: "#F94144",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "NOX (µg/m3)",
+          quantity: 13,
+          color: "#F3722C",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "O3 (µg/m3)",
+          quantity: 57,
+          color: "#F8961E",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "SO2 (µg/m3)",
+          quantity: 1,
+          color: "#F9844A",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "H2S (µg/m3)",
+          quantity: 1.2,
+          color: "#F9C74F",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "CO  (mg/m3)",
+          quantity: 0.2,
+          color: "#90BE6D",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "NO (µg/m3)",
+          quantity: 2,
+          color: "#43AA8B",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "NO2 (µg/m3)",
+          quantity: 11,
+          color: "#4D908E",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      },
+      {
+          name: "PM2.5 (µg/m3)",
+          quantity: 19,
+          color: "#577590",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 13
+      }         
+  ];
+
+  data.sort((a,b) => (a.quantity < b.quantity));
+  let colorsPieChart = ["#F94144", "#F3722C", "#F8961E", "#F9844A", "#F9C74F", "#90BE6D", "#43AA8B", "#4D908E", "#4D908E", "#277DA1"];
+  for (let i = 0; i < data.length; i++) {
+      data[i].color = colorsPieChart[i];
+  }
+
+  const chartConfig = {
+      backgroundGradientFrom: "#1E2923",
+      backgroundGradientFromOpacity: 0,
+      backgroundGradientTo: "#08130D",
+      backgroundGradientToOpacity: 0,
+      color: (opacity = 1) => "#8bc34a",
+      strokeWidth: 2, // optional, default 3
+      barPercentage: 0.5,
+      useShadowColorFromDataset: false // optional
+  };
+  
+  const screenWidth = Dimensions.get("window").width;
+
+  return(
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <PieChart
+              data={data}
+              width={screenWidth}
+              height={200}
+              chartConfig={chartConfig}
+              accessor={"quantity"}
+              backgroundColor={"transparent"}
+              paddingLeft={"0"}
+              center={[0, 0]}
+              absolute
+          />
+      </View>
+  )
+}
+
 function StatisticsScreen(props) {
-
-    return (
-        <SafeAreaView
-            style={styles.container}
-        >
-            <Text style={styles.title}> Statistics</Text>
-            <View style={styles.stroke}/>
-            <Text style={styles.subtitle}> Location-based data recorded over time</Text>
-            {renderOptions()}
-            <Text style={styles.subtitle}> Pollutants to which you have been most exposed</Text>
-            <View style={styles.containerBtn}>
-                <View style={styles.CircleShape} />
-                <View style={styles.CircleShape} />
-                <View style={styles.CircleShape} />
+  return (
+    <SafeAreaView style={styles.background}>
+      <View
+        style={{ flexDirection: "row", alignSelf: "flex-start", marginTop: 10 }}
+      >
+        <Text style={styles.subtitle}>
+          {" "}
+          Location-based data recorded over time
+        </Text>
+        <View style={[styles.containerSphere, styles.shadow]}>
+          <TouchableOpacity onPress={console.log("Filter clicked")}>
+            <MaterialCommunityIcons
+              name="filter-menu"
+              style={{ alignSelf: "center" }}
+              color={colors.white}
+              size={30}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      {renderOptions()}
+      <Text style={styles.subtitle}>
+        {" "}
+        Pollutants to which you have been most exposed
+      </Text>
+      <View style={{justifyContent: "center", alignItems: "center", marginTop: 20, marginBottom: 10}} >
+                <Text style={styles.subtitle}> POLLUTION EVOLUTION</Text>
             </View>
-    </SafeAreaView>        
-    );      
+            <View style={{justifyContent: "center", alignItems: "center",}} >
+                {renderLinearChart()}
+            </View>
+            <View style={{justifyContent: "center", alignItems: "center", marginTop: 20, marginBottom: 10}} >
+                <Text style={styles.subtitle}> POLLUTANT QUANTITY</Text>
+            </View>
+            <View style={{justifyContent: "center", alignItems: "center",}} >
+                {renderPieChart()}
+            </View> 
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        paddingTop: Platform.OS === 'android' ? 30 : 0,
-        position: 'absolute',
-        flex: 1,     
-        flexDirection: "column",
-        justifyContent: "flex-start", //main
-        alignItems: "flex-start", //secondary
-        alignItems: "center"
-    },
-    btnText: {
-        color: "white",
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-    CircleShape: {
-        width: 50,
-        height: 50,
-        margin: 15,
-        borderRadius: 150 / 2,
-        backgroundColor: colors.secondary,
-    },
-    btn: {
-        marginStart: 5,
-        marginEnd: 5,
-        justifyContent: 'center',
-        borderRadius: 5,
-        borderBottomWidth: 5,
-        borderRadius: 5,
-        width: 80,
-        height: 35,
-        borderBottomColor: colors.green2,
-        backgroundColor: colors.green1,
-    },
-    containerBtn: {
-        //backgroundColor: colors.green1,
-        alignSelf: "center",
-        marginTop: 25,
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
-        //padding: 10,
-    },
-    stroke: {
-        backgroundColor: "black",
-        alignSelf: "center",
-        marginTop: 10,
-        marginBottom: 10,
-        width: "80%",
-        height: "0.5%",
-    },
-    title: { 
-        textAlign: 'center',
-        alignSelf: 'center',
-        fontSize: 30,
-        paddingTop: 35,
-        fontWeight: 'bold',
-        color: '#12161b',
-    },
-    subtitle: { 
-        textAlign: 'left',
-        alignSelf: 'flex-start',
-        fontSize: 15,
-        paddingTop: 10,
-        paddingStart: 25,
-        fontWeight: 'bold',
-        color: '#12161b',
-    },
-    body: {
-        textAlign: 'left',
-        alignSelf: 'flex-start',
-        fontSize: 10,
-        //paddingTop: 10,
-        //paddingStart: 25,
-        fontWeight: 'bold',
-        color: '#12161b',
-    }
-})
+  background: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  btnText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  btn: {
+    marginStart: 5,
+    marginEnd: 5,
+    justifyContent: "center",
+    borderRadius: 5,
+    borderBottomWidth: 5,
+    borderRadius: 5,
+    width: 80,
+    height: 35,
+    borderBottomColor: colors.green2,
+    backgroundColor: colors.green1,
+  },
+  containerBtn: {
+    alignSelf: "center",
+    marginTop: 25,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  subtitle: {
+    textAlign: "left",
+    alignSelf: "flex-start",
+    fontSize: 15,
+    paddingTop: 10,
+    paddingStart: 25,
+    fontWeight: "bold",
+    color: "#12161b",
+  },
+  body: {
+    textAlign: "left",
+    alignSelf: "flex-start",
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#12161b",
+  },
+  containerSphere: {
+    backgroundColor: colors.green1,
+    width: 45,
+    height: 45,
+    marginStart: 15,
+    borderRadius: 12,
+    justifyContent: "center",
+  },
+});
 
 export default StatisticsScreen;
