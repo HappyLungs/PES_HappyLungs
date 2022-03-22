@@ -33,7 +33,6 @@ class LevelCalculator {
                 return this.so2
         }
     }
-
     calculatePollutantLevel(element, num) {
         let ranges = this.getPollutantRange(element);
         for (var i=0; i<ranges.length-1; i++) {
@@ -51,11 +50,10 @@ class LevelCalculator {
             
             let actLevel = this.calculatePollutantLevel(pollutant, quantity);
             if (actLevel > maxLevel) maxLevel = actLevel
-            console.log(pollutant+"("+quantity+") -> "+actLevel);
+        //    console.log(pollutant+"("+quantity+") -> "+actLevel);
         }
         return maxLevel
     }
-
 }
 
 export { LevelCalculator }

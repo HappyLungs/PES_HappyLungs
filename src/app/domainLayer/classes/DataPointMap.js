@@ -1,7 +1,7 @@
 import { getMeasuresDate, getMeasuresDay } from "./ConsultesMesures.js";
 import { MeasureStation } from "./MeasureStation.js";
 
-export default class DataPointMapRegister {
+export default class DataPointMap {
 
     constructor (latitude, longitud, date) {
        this.latitude = latitude;
@@ -11,41 +11,22 @@ export default class DataPointMapRegister {
 
     //Me pasan un punto un cualquier, buscar entre los mas cercanos y que devuelva 1. Ver la contaminación de ese punto
 
-    getLevelByHour(date, hour) {
-        level = 0;
+  async  getLevelByHour(date, hour) {
+        let puntos_cercanos = await this.nearerPoints();
 
-        /*
-        let aux = nearerPoints(date, hour);
-        let points = aux[0];
-        let totalDistance = aux[1];
-        
-        //esto solo coge dos medidas, de los dos primeros puntos que devuelvan antes
-        //Mirar las 4 más cercanas y hacer media por distancia
-        points.forEach(station => {
-            pollutants = station.getMeasuresByHour(date, hour);
-            level += calc.calcLevel(pollutants);
-        });
-        */
-
-        return level
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getMeasuresByDay(date);
+        return x.get(hour);     
     }
 
-    getLevelByDay (date) {
-        //nearerpoints = nearerPoints(date, hour);
+   async getLevelByDay (date) {
         
-        levelSum = 0;
-/*
-        //esto solo coge dos medidas, de los dos primeros puntos que devuelvan antes
-        nearerpoints.forEach(station => {
-            pollutantsDay = station.getMeasuresByDate(date, hour);
-            foreach {
-                //encontrar una media de la cacntidad de cada contaminante del dia
-            }
-            levelSum += calc.calcLevel(pollutants);
-        });
 
-*/
-        return levelSum/2;
+     let puntos_cercanos = await this.nearerPoints();
+
+     let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+     let x = await punto_cercano.getMeasuresByDay(date);
+     return x;     
     }
     
 
@@ -59,16 +40,12 @@ export default class DataPointMapRegister {
         let point1 = new MeasureStation("08015001", "Franciaa", "urbana" , 41.443584, 2.23889, null );
         console.log("Datos: " + point1.altitude)
         let distancia = point1.distance(this.latitude,this.longitud);
-      //  console.log(distancia);
          let distanciaTotal = 0;
         let all_points = await getMeasuresDate(this.date);
-       // console.log(all_points)
         all_points.forEach(c_point => {
             let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
-            //console.log(c_point)
             let d = m_s.distance(this.latitude,this.longitud);
             distanciaTotal += d;
-            
             points.push([d,c_point]);
         });
         
@@ -77,5 +54,5 @@ export default class DataPointMapRegister {
         });
         return ordenados;
     }
-        
+
 }
