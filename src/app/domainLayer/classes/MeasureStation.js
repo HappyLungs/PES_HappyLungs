@@ -131,7 +131,6 @@ class MeasureStation {
         */
 
     }
-
     distance(lat2,lon2) {
 
         var lat1 = this.latitud;

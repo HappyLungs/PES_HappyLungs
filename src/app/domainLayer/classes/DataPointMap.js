@@ -54,5 +54,5 @@ export default class DataPointMap {
         });
         return ordenados;
     }
-        
+
 }
