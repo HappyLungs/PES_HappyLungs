@@ -51,7 +51,7 @@ class LevelCalculator {
             
             let actLevel = this.calculatePollutantLevel(pollutant, quantity);
             if (actLevel > maxLevel) maxLevel = actLevel
-            console.log(pollutant+"("+quantity+") -> "+actLevel);
+        //    console.log(pollutant+"("+quantity+") -> "+actLevel);
         }
         return maxLevel
     }
