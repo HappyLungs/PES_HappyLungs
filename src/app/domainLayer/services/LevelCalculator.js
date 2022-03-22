@@ -55,7 +55,6 @@ class LevelCalculator {
         }
         return maxLevel
     }
-
 }
 
 export { LevelCalculator }
