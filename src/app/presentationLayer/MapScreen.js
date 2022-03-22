@@ -17,20 +17,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+
 
 function MapScreen({ navigation }) {
   const [modalPinVisible, setModalPinVisible] = useState(false);
   const [modalFilterVisible, setModalFilterVisible] = useState(false);
-  const location =
-    "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+  const location = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
-  const data = [
-    { id: 1, name: "All" },
-    { id: 2, name: "Traffic" },
-    { id: 3, name: "Industry" },
-    { id: 4, name: "Urban" },
-  ];
+  const [trafficSelected, setTraffic] = useState(false);
+  const [industrySelected, setIndustry] = useState(false);
+  const [urbanSelected, setUrban] = useState(false);
+  const [pinsShown, setPins] = useState(true);
+  const [byCertificate, setByCertificate] = useState(false);
 
   function renderModalPin() {
     return (
@@ -126,7 +127,12 @@ function MapScreen({ navigation }) {
                 <LinearGradient
                   flex={1}
                   colors={[
-                    "green", "yellow", "orange", "red", "purple", "brown"
+                    "green",
+                    "yellow",
+                    "orange",
+                    "red",
+                    "purple",
+                    "brown",
                   ]}
                   /*
                   colors={[
@@ -159,6 +165,43 @@ function MapScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+    );
+  }
+
+  function renderCheckList() {
+    return (
+      <View style={styles.checkList}>
+        <BouncyCheckbox
+          style={styles.checkBox}
+          fillColor={colors.secondary}
+          size={20}
+          unfillColor={colors.white}
+          iconStyle={{ borderColor: !trafficSelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5}}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !trafficSelected ? colors.lightGrey : colors.secondary}}
+          onPress={() => setTraffic(!trafficSelected)}
+          text="Traffic"
+        />
+        <BouncyCheckbox
+          style={styles.checkBox}
+          fillColor={colors.secondary}
+          size={20}
+          unfillColor={colors.white}
+          iconStyle={{ borderColor: !industrySelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5}}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !industrySelected ? colors.lightGrey : colors.secondary}}
+          onPress={() => setIndustry(!industrySelected)}
+          text="Industry"
+        />
+        <BouncyCheckbox
+          style={styles.checkBox}
+          fillColor={colors.secondary}
+          size={20}
+          unfillColor={colors.white}
+          iconStyle={{ borderColor: !urbanSelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5}}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !urbanSelected ? colors.lightGrey : colors.secondary}}
+          onPress={() => setUrban(!urbanSelected)}
+          text="Urban"
+        />
+      </View>
     );
   }
 
@@ -202,10 +245,11 @@ function MapScreen({ navigation }) {
             >
               Type of contamination
             </Text>
+            {renderCheckList()}
             <Text
               style={[
                 styles.modalText,
-                { fontWeight: "bold", color: colors.green1 },
+                { fontWeight: "bold", color: colors.green1, marginTop: 10},
               ]}
             >
               Show pins
@@ -213,33 +257,86 @@ function MapScreen({ navigation }) {
             <TouchableOpacity
               style={{
                 flexDirection: "row",
+                backgroundColor: colors.secondary,
+                borderRadius: 90,
+                padding: 7,
                 margin: 5,
                 marginStart: 15,
                 alignItems: "center",
               }}
-              onPress={() => setModalFilterVisible(!modalFilterVisible)}
+              onPress={() => setPins(!pinsShown)}
             >
-              <AntDesign name="pushpin" size={25} color={colors.secondary} />
+              <AntDesign name={pinsShown ? "pushpino" : "pushpin"} size={25} color={colors.white} />
             </TouchableOpacity>
             <Text
               style={[
                 styles.modalText,
-                { fontWeight: "bold", color: colors.green1 },
+                { fontWeight: "bold", color: colors.green1, marginTop: 10 },
               ]}
             >
               Filter buildings by energy certificate
             </Text>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                margin: 5,
-                marginStart: 15,
-                alignItems: "center",
-              }}
-              onPress={() => setModalFilterVisible(!modalFilterVisible)}
-            >
-              <Ionicons name="home" color={colors.secondary} size={25} />
-            </TouchableOpacity>
+            <View style={{flexDirection: 'row', alignItems:'center'}}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  backgroundColor: colors.secondary,
+                  borderRadius: 90,
+                  padding: 7,
+                  margin: 5,
+                  marginStart: 15,
+                  alignItems: "center",
+                }}
+                onPress={() => setByCertificate(!byCertificate)}
+                >
+                <Ionicons name={byCertificate ? "home" : "home-outline"}  size={25} color={colors.white} />
+              </TouchableOpacity>
+                <MultiSlider
+                  sliderLength={100}
+                  //onValuesChange={multiSliderValuesChange}
+                  min={0}
+                  max={7}
+                  step={1}
+                  snapped
+                  showSteps
+                  values={[0,1]}
+                  //enableLabel
+                  //customLabel={CustomLabel}
+                  stepLabelStyle={{
+                    color:'blue'
+                  }}
+                  markerStyle={{
+                    backgroundColor: colors.green1,
+                    height: 10,
+                    width: 10,
+                    bottom:-3,
+                  }}
+                  stepLabel={{
+                    backgroundColor:'red',
+                    height:20,
+                    width:20,
+                    fontSize:10,
+                  }}
+                  pressedMarkerStyle={{
+                    height: 10,
+                    width: 10,
+                  }}
+                  selectedStyle={{
+                    backgroundColor: colors.green1,
+                  }}
+                  unselectedStyle={{
+                    backgroundColor: colors.secondary,
+                  }}
+                  containerStyle={{
+                    height: 40,
+                    marginStart: 10,
+                  }}
+                  trackStyle={{
+                    height: 5,
+                    borderRadius: 2
+                  }}
+                />
+            </View>
           </View>
         </View>
       </Modal>
@@ -249,20 +346,18 @@ function MapScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.background}>
       <View style={styles.container}>
-          <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            style={styles.map}
-            region={{
-                latitude: 41.366531,  
-                longitude: 2.019336,
-                latitudeDelta: 0.3,
-                longitudeDelta: 1.5,
-            }}
-        >
-        </MapView>
-    </View>
+        <MapView
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          style={styles.map}
+          region={{
+            latitude: 41.366531,
+            longitude: 2.019336,
+            latitudeDelta: 0.3,
+            longitudeDelta: 1.5,
+          }}
+        ></MapView>
+      </View>
       <View style={styles.rowContainer}>
-        
         <View style={[styles.containerSearch, styles.shadow]}>
           <MaterialIcons
             name="search"
@@ -277,7 +372,7 @@ function MapScreen({ navigation }) {
             defaultValue={"Search a location"}
           />
         </View>
-        
+
         <View style={[styles.containerSphere, styles.shadow]}>
           <TouchableOpacity onPress={() => setModalFilterVisible(true)}>
             <MaterialCommunityIcons
@@ -289,8 +384,8 @@ function MapScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      
-    <TouchableOpacity
+
+      <TouchableOpacity
         style={styles.btn}
         onPress={() => setModalPinVisible(true)}
       >
@@ -298,7 +393,6 @@ function MapScreen({ navigation }) {
       </TouchableOpacity>
       {renderModalPin()}
       {renderModalFilter()}
-
     </SafeAreaView>
   );
 }
@@ -413,13 +507,20 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     height: "100%",
     width: "100%",
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     //position:'absolute',
-    alignItems: 'center',
+    alignItems: "center",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-},
+  },
+  checkList: {
+    flexDirection: 'column',
+    marginStart: 20,
+  },
+  checkBox: {
+    marginTop: 10,
+  }
 });
 
 export default MapScreen;
