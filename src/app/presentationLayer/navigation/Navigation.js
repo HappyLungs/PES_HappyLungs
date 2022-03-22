@@ -1,0 +1,176 @@
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+
+//screens
+import MapScreen from "../MapScreen";
+import GeneralChatScreen from "../GeneralChatScreen";
+import PinsScreen from "../PinsScreen";
+import ProfileScreen from "../ProfileScreen";
+import StatisticsScreen from "../StatisticsScreen";
+import CreatePinScreen from "../CreatePinScreen";
+import PinOwnerScreen from "../PinOwnerScreen";
+import PinDefaultScreen from "../PinDefaultScreen";
+import colors from "../../config/stylesheet/colors";
+
+const Tab = createBottomTabNavigator();
+
+const Stack = createNativeStackNavigator();
+
+function getHeaderTitle(route) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "MapScreen";
+
+  switch (routeName) {
+    case "MapScreen":
+      return "Map Lungs";
+    case "GeneralChat":
+      return "Chat Lungs";
+    case "Pins":
+      return "Pins Lungs";
+    case "Profile":
+      return "Happy Lungs";
+  }
+}
+
+function MapStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="MapScreen"
+      screenOptions={{
+        tabBarActiveTintColor: colors.green1,
+        tabBarInactiveTintColor: colors.secondary,
+        tabBarShowLabel: false,
+        headerTintColor: colors.secondary,
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 27,
+        },
+        headerShown: true,
+      }}
+    >
+      <Stack.Screen
+        name="MapScreen"
+        component={MapScreen}
+        options={{ title: "Happy Lungs" }}
+      />
+      <Stack.Screen name="Statistics" component={StatisticsScreen} />
+      <Stack.Screen name="CreatePin" component={CreatePinScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function PinStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="PinsScreen"
+      screenOptions={{
+        tabBarActiveTintColor: colors.green1,
+        tabBarInactiveTintColor: colors.secondary,
+        tabBarShowLabel: false,
+        headerTintColor: colors.secondary,
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 27,
+        },
+        headerShown: true,
+      }}
+    >
+      <Stack.Screen
+        name="PinsScreen"
+        component={PinsScreen}
+        options={{ title: "My Pins" }}
+      />
+      <Stack.Screen name="Statistics" component={StatisticsScreen} />
+      <Stack.Screen
+        name="DefaultPin"
+        component={PinDefaultScreen}
+        options={{ title: "" }}
+      />
+      <Stack.Screen
+        name="OwnerPin"
+        component={PinOwnerScreen}
+        options={{ title: "" }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function AppTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Map"
+      screenOptions={{
+        tabBarActiveTintColor: colors.green1,
+        tabBarInactiveTintColor: colors.secondary,
+        tabBarShowLabel: false,
+        headerTintColor: colors.secondary,
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 27,
+        },
+        headerShown: true,
+      }}
+    >
+      <Tab.Screen
+        name="GeneralChat"
+        component={GeneralChatScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubble-outline" size={size} color={color} />
+          ),
+          tabBarBadge: 2,
+          title: "General Chat",
+        }}
+      />
+      <Tab.Screen
+        name="Pins"
+        component={PinStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="pushpino" size={size} color={color} />
+          ),
+          title: "My Pins",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="map" size={size} color={color} />
+          ),
+          title: "Map",
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
+          ),
+          title: "Profile",
+        }}
+        //header username
+      />
+    </Tab.Navigator>
+  );
+}
+
+export default function Navigation() {
+  return (
+    <NavigationContainer>
+      <AppTabs />
+    </NavigationContainer>
+  );
+}
