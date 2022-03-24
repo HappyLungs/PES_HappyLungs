@@ -20,6 +20,8 @@ import colors from "../config/stylesheet/colors";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import { PresentationCtrl } from "./PresentationCtrl.js";
+
 const onPress = (option) => {
   console.log(option);
 };
@@ -46,7 +48,8 @@ function renderOptions() {
   );
 }
 
-function renderLinearChart() {
+function renderLinearChart(levelData) {
+
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -209,7 +212,29 @@ function renderPieChart() {
   );
 }
 
+
+
+
+
 function StatisticsScreen(props) {
+  let data;
+  //Connexió amb domini que no funciona -->
+  /*
+  let presentationCtrl = new PresentationCtrl();
+  let status = "pending"
+  try {
+    data = presentationCtrl.getPollutionLastDay();
+    status = "ok"
+  }catch(e){
+    console.log(e.message);
+    status = "error";
+    data = "error"
+  }
+  while (data._W === null);
+  console.log("Status despres del while: "+status);
+  console.log("Data: "+ JSON.stringify(data));
+  */
+
   return (
     <SafeAreaView style={styles.background}>
       <View

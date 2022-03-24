@@ -2,7 +2,9 @@ import { getRequest, postRequest } from './persistence.controller.mjs';
 
 
 let params = {
-    name: "exemple2",
+    eoiCode: 0,
+    date: "2016-12-31T23:00:00.000+00:00"
+    /* name: "exemple2",
     password: "12345",
     email: "exemple2@gmail.com",
     phone: "123456789",
@@ -10,17 +12,20 @@ let params = {
     location: "World",
     points: 0,
     language: "Catalan",
-    healthStatus: "None"
+    healthStatus: "None" */
 }
 
-let response = await postRequest("/newUser", params);
+let response = await getRequest("/dataPointMap", {eoiCode: 0, date: "2016-12-31T23:00:00.000+00:00"});
 console.log(response);
 
 
 /* axios({
     method: 'get', //you can set what request you want to be
-    url: 'http://localhost:2000/v1/user',
-    params: {_id: "622e3db2e949df09ae796cf2"},
+    url: 'http://localhost:2000/v1/dataPointMap',
+    params: {
+        eoiCode: 0,
+        date: "2016-12-31T23:00:00.000+00:00"
+    },
     headers: {
         lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
         authorization: "PES2022"
