@@ -135,7 +135,6 @@ class MeasureStation {
 
         var lat1 = this.latitud;
         var lon1 = this.longitud;
-        //console.log(lat1, lon1)
 
         var R = 6371; // km
         var dLat = this.toRad(lat2-lat1);
