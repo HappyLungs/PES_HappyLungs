@@ -50,31 +50,18 @@ function MapScreen({ navigation }) {
   });
   const mapRef = useRef(null);
 
-
-  const [selected, setSelected] = React.useState(null);
-    
-  /*const onMapPress = React.useCallback((event) => {
+  const onMapPress = React.useCallback((event) => {
       setMarkers((current) => [
         ...current,
         {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-    
-  const onMapPress = React.useCallback(({ lat, lng }) => {
-      setMarkers((current) => [
-        ...current,
-        {
-        latitude: lat,
-        longitude: lng,
+        latitude: event.coordinate.latitude(),
+        longitude: event.coordinate.longitude(),
       },
     ]);
   }, []);  
 
   const panTo = React.useCallback(({ lat, lng }) => {
+    console.log(lat, lng);
     const location = {
       latitude: lat,
       longitude: lng,
@@ -410,16 +397,13 @@ function MapScreen({ navigation }) {
             longitudeDelta: 1.5,
           }}
           onRegionChangeComplete={(region) => setRegion(region)}
-          onPress={onMapPress}
+          
         >
 
-          {markers.map((marker) => (
+           {markers.map((marker) => (
             <Marker
               key={`${marker.latitude}-${marker.longitude}`}
               coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              onPress={() => {
-                setSelected(marker);
-              }}   
             />
           ))}
         </MapView>

@@ -42,6 +42,7 @@ function MapScreen({ navigation }) {
   const [byCertificate, setByCertificate] = useState(false);
 
   const [markers, setMarkers] = useState([]);
+  const [id, setId] = useState(0);
   const [region, setRegion] = useState({
     latitude: 41.366531,
     longitude: 2.019336, 
@@ -49,39 +50,43 @@ function MapScreen({ navigation }) {
     longitudeDelta: 1.5,
   });
   const mapRef = useRef(null);
+  const tokyo = {
+    latitude: 35.6762,
+    longitude: 139.6503,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  };
+  const goTo = () => {
+    mapRef.current.animateToRegion(tokyo, 3 * 1000);
+  };
 
 
-  const [selected, setSelected] = React.useState(null);
-    
-  /*const onMapPress = React.useCallback((event) => {
+  const onMapPress = React.useCallback((event) => {
       setMarkers((current) => [
         ...current,
         {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-    
-  const onMapPress = React.useCallback(({ lat, lng }) => {
-      setMarkers((current) => [
-        ...current,
-        {
-        latitude: lat,
-        longitude: lng,
+        latitude: event.coordinate.latitude(),
+        longitude: event.coordinate.longitude(),
       },
     ]);
-  }, []);  
+  }, []);    
+  
+  function success(pos) {
+    var crd = pos.coords;
+  
+    console.log('Your current position is:');
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
+  }
+  
+  function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
 
   const panTo = React.useCallback(({ lat, lng }) => {
-    const location = {
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }
-    mapRef.current.animateToRegion( location, 2.5 * 1000 );
+    mapRef.current.panTo({ lat, lng });
+    mapRef.current.setZoom(14);
   }, []);
   
    
@@ -410,19 +415,21 @@ function MapScreen({ navigation }) {
             longitudeDelta: 1.5,
           }}
           onRegionChangeComplete={(region) => setRegion(region)}
-          onPress={onMapPress}
+          
         >
 
-          {markers.map((marker) => (
+           {markers.map((marker) => (
             <Marker
               key={`${marker.latitude}-${marker.longitude}`}
               coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              onPress={() => {
-                setSelected(marker);
-              }}   
             />
           ))}
         </MapView>
+        <Text style={styles.text}>Current latitude: {region.latitude}</Text>
+        <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+        <View style={styles.buttonContainer}>
+         
+        </View>
       </View>
       <View style={styles.rowContainer}>
         <View style={[styles.containerSearch, styles.shadow]}>
@@ -455,30 +462,10 @@ function MapScreen({ navigation }) {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => setModalPinVisible(true)}
+        
+
       >
         <Text style={styles.btnText}>Pin Example</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.Compass}
-        onPress={() => {
-          Location.installWebGeolocationPolyfill()
-          navigator.geolocation.getCurrentPosition(
-          (position) => {
-              panTo({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-        ); }}
-      
-      >
-        <MaterialCommunityIcons
-              name="compass"
-              style={{ alignSelf: "center" }}
-              color={colors.secondary}
-              size={35}
-            />
       </TouchableOpacity>
       {renderModalPin()}
       {renderModalFilter()}
@@ -611,19 +598,38 @@ const styles = StyleSheet.create({
   checkBox: {
     marginTop: 10,
   },
-  Compass: {
-    marginTop: 460,
-    marginRight: 10,
-    marginStart: 320,
+  bubble: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  latlng: {
+    width: 200,
+    alignItems: 'stretch',
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  }, 
+  compass: {
+    marginTop: 25,
     justifyContent: "center",
     borderRadius: 5,
     borderBottomWidth: 5,
-    width: 50,
+    width: 100,
     height: 50,
     borderBottomColor: colors.darkGrey,
     backgroundColor: colors.secondary,
   },
-  CompassText: {
+  compassText: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold",

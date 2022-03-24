@@ -42,6 +42,7 @@ function MapScreen({ navigation }) {
   const [byCertificate, setByCertificate] = useState(false);
 
   const [markers, setMarkers] = useState([]);
+  const [id, setId] = useState(0);
   const [region, setRegion] = useState({
     latitude: 41.366531,
     longitude: 2.019336, 
@@ -50,38 +51,25 @@ function MapScreen({ navigation }) {
   });
   const mapRef = useRef(null);
 
-
-  const [selected, setSelected] = React.useState(null);
-    
-  /*const onMapPress = React.useCallback((event) => {
+  const onMapPress = React.useCallback((event) => {
       setMarkers((current) => [
         ...current,
         {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-    
-  const onMapPress = React.useCallback(({ lat, lng }) => {
-      setMarkers((current) => [
-        ...current,
-        {
-        latitude: lat,
-        longitude: lng,
+        latitude: event.coordinate.latitude(),
+        longitude: event.coordinate.longitude(),
       },
     ]);
   }, []);  
 
   const panTo = React.useCallback(({ lat, lng }) => {
+    console.log(lat, lng);
     const location = {
       latitude: lat,
       longitude: lng,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     }
-    mapRef.current.animateToRegion( location, 2.5 * 1000 );
+    mapRef.current.animateToRegion( location, 3 * 1000 );
   }, []);
   
    
@@ -410,16 +398,13 @@ function MapScreen({ navigation }) {
             longitudeDelta: 1.5,
           }}
           onRegionChangeComplete={(region) => setRegion(region)}
-          onPress={onMapPress}
+          
         >
 
-          {markers.map((marker) => (
+           {markers.map((marker) => (
             <Marker
               key={`${marker.latitude}-${marker.longitude}`}
               coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              onPress={() => {
-                setSelected(marker);
-              }}   
             />
           ))}
         </MapView>
@@ -473,12 +458,7 @@ function MapScreen({ navigation }) {
         ); }}
       
       >
-        <MaterialCommunityIcons
-              name="compass"
-              style={{ alignSelf: "center" }}
-              color={colors.secondary}
-              size={35}
-            />
+        <Text style={styles.CompassText}>Compass</Text>
       </TouchableOpacity>
       {renderModalPin()}
       {renderModalFilter()}
@@ -611,14 +591,35 @@ const styles = StyleSheet.create({
   checkBox: {
     marginTop: 10,
   },
+  bubble: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  latlng: {
+    width: 200,
+    alignItems: 'stretch',
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  }, 
   Compass: {
-    marginTop: 460,
+    marginTop: 470,
     marginRight: 10,
-    marginStart: 320,
+    marginEnd: -10,
     justifyContent: "center",
     borderRadius: 5,
     borderBottomWidth: 5,
-    width: 50,
+    width: 75,
     height: 50,
     borderBottomColor: colors.darkGrey,
     backgroundColor: colors.secondary,

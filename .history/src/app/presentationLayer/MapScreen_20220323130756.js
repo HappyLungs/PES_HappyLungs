@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 import {
   Text,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
-  EventEmitter,
 } from "react-native";
 
 import colors from "../config/stylesheet/colors";
@@ -19,16 +18,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { Marker, PROVIDER_GOOGLE, ProviderPropType } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, ProviderPropType } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
-
-import * as Location from 'expo-location'
 
 function MapScreen({ navigation }) {
   const [modalPinVisible, setModalPinVisible] = useState(false);
@@ -41,50 +34,42 @@ function MapScreen({ navigation }) {
   const [pinsShown, setPins] = useState(true);
   const [byCertificate, setByCertificate] = useState(false);
 
-  const [markers, setMarkers] = useState([]);
-  const [region, setRegion] = useState({
-    latitude: 41.366531,
-    longitude: 2.019336, 
-    latitudeDelta: 0.3,
-    longitudeDelta: 1.5,
-  });
-  const mapRef = useRef(null);
+  const { width, height } = Dimensions.get('window');
+  const ASPECT_RATIO = width / height;
+  const LATITUDE = 41.366531;
+  const LONGITUDE = 2.019336;
+  const LATITUDE_DELTA = 0.3;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO; //1,5
+  let id = 0;
 
+  class constructor {
+    constructor(props) {
+      super(props);
 
-  const [selected, setSelected] = React.useState(null);
-    
-  /*const onMapPress = React.useCallback((event) => {
-      setMarkers((current) => [
-        ...current,
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
+      this.state = {
+        region: {
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
         },
-      ]);
-    }, []); */
-    
-  const onMapPress = React.useCallback(({ lat, lng }) => {
-      setMarkers((current) => [
-        ...current,
-        {
-        latitude: lat,
-        longitude: lng,
-      },
-    ]);
-  }, []);  
-
-  const panTo = React.useCallback(({ lat, lng }) => {
-    const location = {
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+        markers: [],
+      };
     }
-    mapRef.current.animateToRegion( location, 2.5 * 1000 );
-  }, []);
-  
-   
+  }
+
+  function onMapPress(e) {
+    this.setState({
+      markers: [
+        ...this.state.markers,
+        {
+          coordinate: e.nativeEvent.coordinate,
+          key: id++,
+        },
+      ],
+    });
+  }
+
   function renderModalPin() {
     return (
       <Modal
@@ -125,7 +110,6 @@ function MapScreen({ navigation }) {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-
                 style={{
                   flexDirection: "row",
                   margin: 5,
@@ -133,8 +117,8 @@ function MapScreen({ navigation }) {
                 }}
                 onPress={() => {
                   setModalPinVisible(!modalPinVisible),
-                  navigation.navigate("Statistics");
-                  }}
+                    navigation.navigate("Statistics");
+                }}
               >
                 <MaterialIcons
                   name="scatter-plot"
@@ -395,34 +379,41 @@ function MapScreen({ navigation }) {
       </Modal>
     );
   }
-
-  return (
-    <SafeAreaView style={styles.background}>
-      <View style={styles.container}>
+/*<View style={styles.container}>
         <MapView
-          ref= {mapRef}
-          provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
-          initialRegion={{
+          region={{
             latitude: 41.366531,
             longitude: 2.019336,
             latitudeDelta: 0.3,
             longitudeDelta: 1.5,
           }}
-          onRegionChangeComplete={(region) => setRegion(region)}
-          onPress={onMapPress}
+        ></MapView>
+      </View>*/
+  return (
+    <SafeAreaView style={styles.background}>
+      <View style={styles.container}>
+        <MapView
+          provider={this.props.provider}
+          style={styles.map}
+          initialRegion={this.state.region}
+          onPress={e => this.onMapPress(e)}
         >
-
-          {markers.map((marker) => (
+          {this.state.markers.map(marker => (
             <Marker
-              key={`${marker.latitude}-${marker.longitude}`}
-              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              onPress={() => {
-                setSelected(marker);
-              }}   
+              key={marker.key}
+              coordinate={marker.coordinate}
             />
           ))}
         </MapView>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => this.setState({ markers: [] })}
+            style={styles.bubble}
+          >
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.rowContainer}>
         <View style={[styles.containerSearch, styles.shadow]}>
@@ -458,34 +449,11 @@ function MapScreen({ navigation }) {
       >
         <Text style={styles.btnText}>Pin Example</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.Compass}
-        onPress={() => {
-          Location.installWebGeolocationPolyfill()
-          navigator.geolocation.getCurrentPosition(
-          (position) => {
-              panTo({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-        ); }}
-      
-      >
-        <MaterialCommunityIcons
-              name="compass"
-              style={{ alignSelf: "center" }}
-              color={colors.secondary}
-              size={35}
-            />
-      </TouchableOpacity>
       {renderModalPin()}
       {renderModalFilter()}
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   stroke: {
@@ -611,28 +579,35 @@ const styles = StyleSheet.create({
   checkBox: {
     marginTop: 10,
   },
-  Compass: {
-    marginTop: 460,
-    marginRight: 10,
-    marginStart: 320,
-    justifyContent: "center",
-    borderRadius: 5,
-    borderBottomWidth: 5,
-    width: 50,
-    height: 50,
-    borderBottomColor: colors.darkGrey,
-    backgroundColor: colors.secondary,
+  bubble: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
   },
-  CompassText: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "bold",
+  latlng: {
+    width: 200,
+    alignItems: 'stretch',
   },
-  
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
 });
 
 export default MapScreen;
 
 
 
+
+/*DefaultMarkers.propTypes = {
+  provider: ProviderPropType,
+};*/
 
