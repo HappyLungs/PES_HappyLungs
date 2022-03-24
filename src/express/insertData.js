@@ -19,7 +19,7 @@ async function getData() {
     let data = {};
     await axios({
         method: 'get',
-        url: `https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json?$where=data >= '2017-01-01T00:00:00.000' &$limit=10000000`,
+        url: `https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json?$where=data >= '2017-01-01T00:00:00.000' &$limit=10000`,
         data: {
             "$$app_token" : "66TexGsqu_6szbRMKhNkE64Rx1uzX-dlfb0D",
         }
