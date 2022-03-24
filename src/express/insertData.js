@@ -1,9 +1,10 @@
 const mongodb = require("mongodb");
 const axios = require("axios");
-
+const fs = require('fs');
+const path = require('path');
 let dataPointMap = new Map();
-let pollutantDayMeasure = new Map();
-let measure = new Map();
+let pollutantDayMeasure = [];
+let measure = [];
 
 let id = 0; //first id for the database
 
@@ -29,7 +30,6 @@ async function getData() {
     return data;
 }
 
-
 async function insertData () {
     let data = await getData();
     data.map(element => {
@@ -53,7 +53,6 @@ async function insertData () {
                 units: element.unitats
             }
             ++id;
-            let measures = [];
             for(let i = 0; i < 25; ++i) {
                 let searchHour = (i < 10) ? ("0" + i.toString()) : i.toString();
                 let quant = (element["h"+searchHour] !== "" && element["h"+searchHour] !== undefined) ? element["h"+searchHour] : null;
@@ -63,13 +62,11 @@ async function insertData () {
                     quantity: quant,
                     pollutantDayMeasure: pdm._id
                 }
-                measures.push(m);
+                measure.push(m);
                 ++id;
             }
             dataPointMap.set(element.codi_eoi, dpm);
-            pollutantDayMeasure.set(dpm.eoiCode, new Map([[pdm.date, pdm]]));
-            measure.set(dpm.eoiCode, new Map([[pdm.date, measures]]));
-            
+            pollutantDayMeasure.push(pdm);
         } else {
             let pdm = {
                 _id: mongodb.ObjectId.createFromHexString(getNZero(24 - id.toString(16).length) + id.toString(16)),
@@ -79,7 +76,6 @@ async function insertData () {
                 units: element.unitats
             }
             ++id;
-            let measures = [];
             for(let i = 0; i < 25; ++i) {
                 let searchHour = (i < 10) ? ("0" + i.toString()) : i.toString();
                 let quant = (element["h"+searchHour] !== "" && element["h"+searchHour] !== undefined) ? element["h"+searchHour] : null;
@@ -89,11 +85,10 @@ async function insertData () {
                     quantity: quant,
                     pollutantDayMeasure: pdm._id
                 }
-                measures.push(m);
+                measure.push(m);
                 ++id;
             }
-            pollutantDayMeasure.set(element.codi_eoi, new Map([[pdm.date, pdm]]));
-            measure.set(element.codi_eoi, new Map([[pdm.date, measures]]));
+            pollutantDayMeasure.push(pdm);
         }
     });
     insert();
@@ -105,14 +100,32 @@ async function insert () {
     for (let [key, value] of dataPointMap) {
         insertions.push(value);
     }
+    await axios({
+        method: 'post',
+        url: "http://localhost:2000/v1/insertMultipleDataPointMap",
+        data: insertions,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            authorization: "PES2022"
+        }
+      })
+      .then(response => {
+        console.log("It Worked!");
+      })
+      .catch(err => {
+          console.log("Error: ", err);
+      });
 
-    await axios.post('http://localhost:2000/v1/insertMultipleDataPointMap', {
-    params: { insertions }
+    /* await axios.post('http://localhost:2000/v1/insertMultipleDataPointMap', {
+    data: { insertions }
     }, {
         headers: {
             lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             authorization: "pes2022"
-        }
+        },
+        
     })
     .then(response => {
         console.log(response.data);
@@ -120,50 +133,170 @@ async function insert () {
     .catch(error => {
         console.log(error);
     });
-
+ */
+    //insertions = pollutantDayMeasure;
+    /* for (let value of pollutantDayMeasure) {
+        insertions.push(value);
+        if (insertions.length > 50000) {
+            await axios.post('http://localhost:2000/v1/insertMultiplePollutantDayMeasure', {
+            params: { insertions }
+            }, {
+                headers: {
+                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    authorization: "pes2022"
+                }
+            })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            insertions = [];
+        }
+    } */
     insertions = [];
-    for (let [key, value] of pollutantDayMeasure) {
-        for (let [key2, value2] of value) {
-            insertions.push(value2);
+    for (let value of pollutantDayMeasure) {
+        insertions.push(value);
+        if (insertions.length > 10000) {
+            await axios({
+                method: 'post',
+                url: "http://localhost:2000/v1/insertMultiplePollutantDayMeasure",
+                data: /* pollutantDayMeasure */insertions,
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
+                headers: {
+                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    authorization: "PES2022"
+                }
+              })
+              .then(response => {
+                  "It Worked!";
+              })
+              .catch(err => {
+                  console.log("Error: ", err);
+              });  
+              insertions = [];      
         }
     }
+    await axios({
+        method: 'post',
+        url: "http://localhost:2000/v1/insertMultiplePollutantDayMeasure",
+        data: /* pollutantDayMeasure */insertions,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            authorization: "PES2022"
+        }
+      })
+      .then(response => {
+        console.log("It Worked!");
+      })
+      .catch(err => {
+          console.log("Error: ", err);
+      });
 
-    await axios.post('http://localhost:2000/v1/insertMultiplePollutantDayMeasure', {
-    params: { insertions }
+    
+    /* await axios.post('http://localhost:2000/v1/insertMultiplePollutantDayMeasure', {
+    data: { pollutantDayMeasure }
     }, {
         headers: {
             lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             authorization: "pes2022"
-        }
+        },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
     })
     .then(response => {
         console.log(response.data);
     })
     .catch(error => {
         console.log(error);
-    });
+    }); */
+
+    /* insertions = measure;
+    for (let value of measure) {
+        insertions = insertions.concat(value);
+        if (insertions.length > 50000) {
+            await axios.post('http://localhost:2000/v1/insertMultipleMeasures', {
+                params: { insertions }
+            }, {
+                headers: {
+                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    authorization: "pes2022"
+                }
+            })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            insertions = [];
+        }
+    } */
 
     insertions = [];
-    for (let [key, value] of measure) {
-        for (let [key2, value2] of value) {
-            insertions = insertions.concat(value2);
+    for (let value of measure) {
+        insertions.push(value);
+        if (insertions.length > 10000) {
+            await axios({
+                method: 'post',
+                url: "http://localhost:2000/v1/insertMultipleMeasures",
+                data: insertions,
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
+                headers: {
+                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    authorization: "PES2022"
+                }
+              })
+              .then(response => {
+                  "It Worked!";
+              })
+              .catch(err => {
+                  console.log("Error: ", err);
+              });
+              insertions = [];
         }
     }
+    await axios({
+        method: 'post',
+        url: "http://localhost:2000/v1/insertMultipleMeasures",
+        data: insertions,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {
+            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            authorization: "PES2022"
+        }
+      })
+      .then(response => {
+          console.log("It Worked!");
+      })
+      .catch(err => {
+          console.log("Error: ", err);
+      });
 
-    await axios.post('http://localhost:2000/v1/insertMultipleMeasures', {
-    params: { insertions }
+    
+
+    /* await axios.post('http://localhost:2000/v1/insertMultipleMeasures', {
+    data: { measure }
     }, {
         headers: {
             lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             authorization: "pes2022"
-        }
+        },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
     })
     .then(response => {
         console.log(response.data);
     })
     .catch(error => {
         console.log(error);
-    });
+    }); */
 }
 
 insertData();

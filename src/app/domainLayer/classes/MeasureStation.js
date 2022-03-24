@@ -13,7 +13,10 @@ class MeasureStation {
         this.levelCalculator = new LevelCalculator();
     }
 
-
+    /*
+        Returns the quantity of the pollutant (pollutantData) at an hour. If there's
+        no data of it takes the last detected data on that point.
+    */
     getPollutantQuantityByHour(pollutantData, hour) {
         if(typeof pollutantData[hour] === 'undefined'){
             hour = hour.toString().slice(-2);
@@ -67,6 +70,53 @@ class MeasureStation {
         let level = this.levelCalculator.calculateLevelHour(data)
         
         return level;
+    }
+
+    /*
+        Returns the total quantity of a specific pollutant on a date
+    */
+    getQuantityOfAPollutantAtDay(pollutantData, date) {
+        let total = 0;
+        let jsonHour = null;
+        for (let i = 1; i < 25; ++i) {
+            if (i >= 10) {
+                jsonHour = 'h'+i;
+                
+            } else {
+                jsonHour = 'h0'+i;
+            }
+            total += parseInt(this.getPollutantQuantityByHour(pollutantData, jsonHour));
+        }
+        return total;
+    }
+
+    /*
+        Returns the quantities of each pollutant on a date
+    */
+    async getQuantityOfEachPollutantAtDay(date) {
+        //Database query to get the measures taken in this MeasureStation on the day date
+        let measuresOfTheDay = await getMeasuresDay(this.eoiCode, date);
+
+        //Pollutants used to calculate the contamination level with the LevelCalculator
+        let detectedPollutants = [];
+
+        measuresOfTheDay.forEach(pollutantData => {
+
+            let pollutant = pollutantData.contaminant;
+            let quant = this.getQuantityOfDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
+
+            if ( detectedPollutants.includes(pollutant) ) {
+
+                detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
+
+            } else {
+
+                detectedPollutants.push({name: pollutant, quantity: quant});
+                
+            }
+        })
+
+        return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
     }
 
     /*
