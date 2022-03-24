@@ -22,21 +22,6 @@ const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
 
-function getHeaderTitle(route) {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? "MapScreen";
-
-  switch (routeName) {
-    case "MapScreen":
-      return "Map Lungs";
-    case "GeneralChat":
-      return "Chat Lungs";
-    case "Pins":
-      return "Pins Lungs";
-    case "Profile":
-      return "Happy Lungs";
-  }
-}
-
 function MapStack() {
   return (
     <Stack.Navigator
@@ -60,7 +45,11 @@ function MapStack() {
         options={{ title: "Happy Lungs" }}
       />
       <Stack.Screen name="Statistics" component={StatisticsScreen} />
-      <Stack.Screen name="CreatePin" component={CreatePinScreen} />
+      <Stack.Screen
+        name="CreatePin"
+        component={CreatePinScreen}
+        options={{ title: "Create pin" }}
+      />
     </Stack.Navigator>
   );
 }

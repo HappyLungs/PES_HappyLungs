@@ -6,9 +6,9 @@ const errorCodes = require("../helpers/errorCodes.js");
 const dataPointMap = require("./../datalayers/dataPointMap.datalayer");
 
 exports.find = async (request, response) => {
-    let id;
-    if (request.query._id) {
-        id = request.query._id;
+    let params = {};
+    if (!request.query.hasOwnProperty("eoiCode") || !request.query.hasOwnProperty("date")) {
+        params = request.query;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
         responseObj.message = "Required parameters missing";
@@ -16,6 +16,9 @@ exports.find = async (request, response) => {
         response.send(responseObj);
         return;
     }
+
+    let aggregateArr = createAggregateArray(match, orderBy);
+
     if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
         const where = {};
         where._id = mongodb.ObjectId(id);
@@ -113,4 +116,28 @@ exports.insertMultiple = async (request, response) => {
         response.send(responseObj);
     });
     return;
+}
+
+function createAggregateArray (match, orderBy) {
+    return [
+        {
+          '$match': match
+        }, {
+          '$lookup': {
+            'from': 'urls', 
+            'localField': '_id', 
+            'foreignField': 'submission', 
+            'as': 'url'
+          }
+        }, {
+          '$lookup': {
+            'from': 'asks', 
+            'localField': '_id', 
+            'foreignField': 'submission', 
+            'as': 'ask'
+          }
+        }, {
+          '$sort': orderBy
+        }
+      ];
 }

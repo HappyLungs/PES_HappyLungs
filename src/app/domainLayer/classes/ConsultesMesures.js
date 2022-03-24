@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 async function getMeasuresDay (eoiCode, date, hour) {
     let data;
     await axios({

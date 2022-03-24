@@ -271,7 +271,7 @@ function StatisticsScreen(props) {
         <Text style={styles.subtitle}> POLLUTION EVOLUTION</Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        {renderLinearChart(data)}
+        {renderLinearChart()}
       </View>
       <View
         style={{
