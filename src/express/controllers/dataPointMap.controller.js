@@ -7,7 +7,7 @@ const dataPointMap = require("./../datalayers/dataPointMap.datalayer");
 
 exports.find = async (request, response) => {
     let params = {};
-    if (!request.query.hasOwnProperty("eoiCode") || !request.query.hasOwnProperty("date")) {
+    if (request.query.hasOwnProperty("eoiCode") && request.query.hasOwnProperty("date")) {
         params = request.query;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
@@ -17,9 +17,25 @@ exports.find = async (request, response) => {
         return;
     }
 
-    let aggregateArr = createAggregateArray(match, orderBy);
+    let date = new Date(params.date);
 
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+    let match = {
+        eoiCode: Number(params.eoiCode)
+    }
+
+    let aggregateArr = createAggregateArray(match, date);
+    console.log(JSON.stringify(aggregateArr));
+    dataPointMap
+    .aggregateDataPointMap(aggregateArr)
+    .then((dataPointMapData) => {
+        response.send(dataPointMapData);
+    })
+    .catch((err) => {
+        response.send(err);
+    });
+    return;
+    
+    /*if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
         const where = {};
         where._id = mongodb.ObjectId(id);
         dataPointMap.findDataPointMap(where)
@@ -47,7 +63,7 @@ exports.find = async (request, response) => {
         responseObj.data    = {};
         response.send(responseObj);
     }
-    return;
+    return; */
 };
 
 exports.create = async (request, response, next) => {
@@ -118,26 +134,53 @@ exports.insertMultiple = async (request, response) => {
     return;
 }
 
-function createAggregateArray (match, orderBy) {
+function createAggregateArray (match, date) {
     return [
         {
           '$match': match
         }, {
           '$lookup': {
-            'from': 'urls', 
-            'localField': '_id', 
-            'foreignField': 'submission', 
-            'as': 'url'
+            'from': 'pollutantdaymeasures', 
+            'let': {
+              'data': date, 
+              'id': '$_id'
+            }, 
+            'pipeline': [
+              {
+                '$match': {
+                  '$expr': {
+                    '$and': [
+                      {
+                        '$eq': [
+                          '$dataPointMap', '$$id'
+                        ]
+                      }, {
+                        '$eq': [
+                          '$$data', '$date'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }, {
+                '$lookup': {
+                  'from': 'measures', 
+                  'localField': '_id', 
+                  'foreignField': 'pollutantDayMeasure', 
+                  'as': 'measures'
+                }
+              }, {
+                '$project': {
+                  '_id': 0, 
+                  'pollutant': 1, 
+                  'units': 1, 
+                  'date': 1, 
+                  'measures': 1
+                }
+              }
+            ], 
+            'as': 'pollutantDayMeasure'
           }
-        }, {
-          '$lookup': {
-            'from': 'asks', 
-            'localField': '_id', 
-            'foreignField': 'submission', 
-            'as': 'ask'
-          }
-        }, {
-          '$sort': orderBy
         }
       ];
 }

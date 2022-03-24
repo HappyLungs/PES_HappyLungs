@@ -58,7 +58,7 @@ exports.create = async (request, response, next) => {
         response.send(responseObj);
         return;
     }
-    pollutantDayMeasure.createMeasure(params)
+    pollutantDayMeasure.createPollutantDayMeasure(params)
     .then((pollutantDayMeasureData) => {
         console.log(pollutantDayMeasureData);
         if (pollutantDayMeasureData !== null && typeof pollutantDayMeasureData !== undefined) {
