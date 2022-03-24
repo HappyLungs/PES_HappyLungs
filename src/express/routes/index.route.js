@@ -44,6 +44,7 @@ router.post(
 router.post(
     "/insertMultipleDataPointMap",
     licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
     DataPointMap.insertMultiple
 );
 /* /DataPointMap */
