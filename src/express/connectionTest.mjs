@@ -1,77 +1,38 @@
-import { getRequest, postRequest } from './persistence.controller.mjs';
+import { getRequest, postRequest, putRequest} from './persistence.controller.mjs';
 
+//  PINS METHODS EXAMPLE
 
-let params = {
-    eoiCode: 0,
-    date: "2016-12-31T23:00:00.000+00:00"
-    /* name: "exemple2",
-    password: "12345",
-    email: "exemple2@gmail.com",
-    phone: "123456789",
-    birthdate: "03-03-2001",
-    location: "World",
-    points: 0,
-    language: "Catalan",
-    healthStatus: "None" */
+//  CREAR PIN
+/* 
+let createPin = {
+    "title": "Un altre pin",
+    "description": "Descripció",
+    "latitude": 2,
+    "length": 3,
+    "date": "03/07/2022",
+    "rate": 3,
+    "public": true,
+    "creatorEmail": "ivan.jimeno@estudiantat.upc.edu"
 }
-
-let response = await getRequest("/dataPointMap", {eoiCode: 0, date: "2016-12-31T23:00:00.000+00:00"});
+let response = await postRequest("/newPin", createPin);
 console.log(response);
+ */
 
+//  EDITAR PIN
+/* 
+let put = {
+    "title": "Títol editat v4",
+    "description": "Descripció",
+    "latitude": 2,
+    "length": 3,
+    "date": "2022-03-06T23:00:00.000Z",
+    "rate": 3,
+    "public": true,
+    "creatorEmail": "ivan.jimeno@estudiantat.upc.edu",
+    "images": []
+  }
 
-/* axios({
-    method: 'get', //you can set what request you want to be
-    url: 'http://localhost:2000/v1/dataPointMap',
-    params: {
-        eoiCode: 0,
-        date: "2016-12-31T23:00:00.000+00:00"
-    },
-    headers: {
-        lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-        authorization: "PES2022"
-    }
-  })
-  .then(response => {
-      console.log(response);
-  })
-  .catch(err => {
-      console.log(err);
-  }) */
-  
-
-/* axios.post('http://localhost:2000/v1/newUser', {
-    params: {
-        name: "exemple",
-        password: "12345",
-        email: "exemple@gmail.com",
-        phone: "123456789",
-        birthdate: "03-03-2001",
-        location: "World",
-        points: 0,
-        language: "Catalan",
-        healthStatus: "None"
-    }
-    }, {
-        headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "pes2022"
-        }
-    })
-    .then(response => {
-        console.log(response.data);
-    })
-    .catch(error => {
-        console.log(error);
-    }); */
-
-/* axios.get('http://localhost:2000/v1/user', {
-    params: {
-        _id: "622e3db2e949df09ae796cf2"
-    }
-})
-.then(returnStatement => {
-    console.log(returnStatement.data)
-})
-.catch(error => {
-    console.log(error);
-}) */
+let _id = "623cf0b5f98986305e8af47f";
+let response = await putRequest("/pin?_id=" + _id, put);
+console.log(response);
+ */

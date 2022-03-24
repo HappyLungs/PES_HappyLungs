@@ -2,7 +2,6 @@ const MeasureModel = require('./../models/measure.model')
 
 exports.createMeasure = async (params) => {
     return new Promise((resolve, reject) => {
-        console.log(params);
         MeasureModel
         .create(params)
         .then((data) => { 
