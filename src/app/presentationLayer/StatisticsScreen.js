@@ -47,7 +47,6 @@ function renderOptions() {
 }
 
 function renderLinearChart(dades) {
-  console.log("Data: " + JSON.stringify(dades));
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -83,7 +82,6 @@ function renderLinearChart(dades) {
     ],
     //legend: ["Rainy Days"] // optional
   };
-  console.log(data);
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <LineChart
@@ -213,7 +211,6 @@ function renderPieChart() {
 
 function StatisticsScreen({ navigation, route }) {
   const { data } = route.params;
-  console.log("Data: " + JSON.stringify(data));
 
   return (
     <SafeAreaView style={styles.background}>

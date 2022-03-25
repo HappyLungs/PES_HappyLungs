@@ -33,7 +33,7 @@ import * as Location from 'expo-location'
 import { PresentationCtrl } from "./PresentationCtrl.js";
 
 
-function MapScreen({ navigation }) {
+function MapScreen({ navigation, route }) {
   const [modalPinVisible, setModalPinVisible] = useState(false);
   const [modalFilterVisible, setModalFilterVisible] = useState(false);
   const location = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
@@ -49,6 +49,8 @@ function MapScreen({ navigation }) {
     latitudeDelta: 0.3,
     longitudeDelta: 1.5,
   });
+
+
 
   let presentationCtrl = new PresentationCtrl();
 
@@ -70,6 +72,22 @@ function MapScreen({ navigation }) {
     },
   ]);
   const mapRef = useRef(null);
+
+  /*
+    Params passats des de PinOwnerScreen al clicar a SeeOnMap
+  */
+  /*
+  const { tmpLat, tmpLng } = route.params;
+  if (tmpLat && tmpLng) {
+    const tmpLocation = {
+      latitude: tmpLat,
+      longitude: tmpLng,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }
+    mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+  }
+  */
 
 
   const [selected, setSelected] = React.useState(null);
@@ -137,7 +155,7 @@ function MapScreen({ navigation }) {
                 }}
                 onPress={() => {
                   setModalPinVisible(!modalPinVisible),
-                    navigation.navigate("CreatePin");
+                    navigation.navigate("CreatePin", { coords: { latitude: 41.366531, longitude: 2.019336 } });
                 }}
               >
                 <AntDesign name="pushpino" size={35} color={colors.secondary} />
@@ -153,7 +171,6 @@ function MapScreen({ navigation }) {
                   alignItems: "center",
                 }}
                 onPress={async () => {
-                  console.log("stats");
                   let data = await presentationCtrl.getPollutionLastDay();
                   setModalPinVisible(!modalPinVisible);
                   navigation.navigate("Statistics", { data: data });
@@ -487,8 +504,10 @@ function MapScreen({ navigation }) {
         style={styles.Compass}
         onPress={() => {
           Location.installWebGeolocationPolyfill()
+          //navigator.geolocation.
           navigator.geolocation.getCurrentPosition(
             (position) => {
+              console.log(position.coords.latitude + " " + position.coords.longitude);
               panTo({
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
@@ -501,7 +520,7 @@ function MapScreen({ navigation }) {
         <MaterialCommunityIcons
           name="compass"
           style={{ alignSelf: "center" }}
-          color={colors.secondary}
+          color={colors.white}
           size={35}
         />
       </TouchableOpacity>

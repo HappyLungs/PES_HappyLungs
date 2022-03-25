@@ -18,19 +18,32 @@ import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-function CreatePinScreen(props) {
-  const location =
-    "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+import { PresentationCtrl } from "./PresentationCtrl.js";
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [checkboxState, setCheckboxState] = useState(false);
+function CreatePinScreen({ route }) {
+  let presentationCtrl = new PresentationCtrl();
+
+  const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+
+  const [title, setTitle] = useState('');
+  const { coords } = route.params;
+  console.log(coords);
+  const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
+  const [rating, setRating] = useState('');
+  const [status, setStatus] = useState(false);
 
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
 
-  const handlePress = () => console.log("clicked");
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const handleCreatePin = () => {
+    //Todo: media 
+    if (title != '' && description != '') presentationCtrl.createPin(title, coords, description, image1, rating, status);
+    else console.log("fail");
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -55,7 +68,7 @@ function CreatePinScreen(props) {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
+  const handleConfirmDate = (date) => {
     setDate(date);
     hideDatePicker();
   };
@@ -105,7 +118,7 @@ function CreatePinScreen(props) {
           <DateTimePickerModal
             //style={styles.datePickerStyle}
             mode="date"
-            onConfirm={handleConfirm}
+            onConfirm={handleConfirmDate}
             onCancel={hideDatePicker}
             isVisible={isDatePickerVisible}
           />
@@ -124,9 +137,9 @@ function CreatePinScreen(props) {
           unfillColor="#FFFFFF"
           iconStyle={{ borderColor: "#767577" }}
           textStyle={{ textDecorationLine: "none" }}
-          onPress={() => setCheckboxState(!checkboxState)}
+          onPress={() => setStatus(!status)}
           text={
-            checkboxState
+            status
               ? "This pin will be visible to other people."
               : "This pin will only be visible to you."
           }
@@ -139,23 +152,27 @@ function CreatePinScreen(props) {
     <SafeAreaView style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.subtitle}> Location</Text>
-        <Text style={styles.location}>{location} </Text>
+        <Text style={styles.location}>{locationName} </Text>
         <Text style={styles.subtitle}>
-          {" "}
           Title
           <Text style={styles.highlight}> *</Text>
         </Text>
-        <TextInput multiline={false} maxLength={30} style={styles.input} />
+        <TextInput
+          style={styles.input}
+          multiline={false}
+          maxLength={30}
+          onChangeText={newTitle => setTitle(newTitle)}
+        />
         <Text style={styles.subtitle}>
-          {" "}
           Description
           <Text style={styles.highlight}> *</Text>
         </Text>
         <TextInput
+          style={styles.inputDescription}
           multiline
           numberOfLines={3}
           maxLength={90}
-          style={styles.inputDescription}
+          onChangeText={newDescription => setDescription(newDescription)}
         />
         <Text style={styles.subtitle}> Date</Text>
         {renderDateSelector()}
@@ -167,10 +184,11 @@ function CreatePinScreen(props) {
           imageSize={20}
           fractions={0}
           style={{ padding: 10, marginLeft: 40 }}
+          onFinishRating={newRating => setRating(newRating)}
         />
         <Text style={styles.subtitle}> Allow others to view this pin?</Text>
         {renderPinModeSelector()}
-        <TouchableOpacity style={styles.containerEditBtn} onPress={handlePress}>
+        <TouchableOpacity style={styles.containerEditBtn} onPress={handleCreatePin}>
           <Text
             style={{
               textAlign: "center",
@@ -179,7 +197,6 @@ function CreatePinScreen(props) {
               color: colors.white,
             }}
           >
-            {" "}
             Save Pin
           </Text>
         </TouchableOpacity>
