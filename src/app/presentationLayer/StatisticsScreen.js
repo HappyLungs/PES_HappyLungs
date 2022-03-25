@@ -1,4 +1,5 @@
-import React from "react";
+import { useState, useEffect, React } from 'react';
+//import React from "react";
 import {
   StyleSheet,
   View,
@@ -78,7 +79,7 @@ function renderLinearChart(levelData) {
     ],
     datasets: [
       {
-        data: [2, 2, 2, 2, 3, 3, 3, 4, 4, 3, 2, 2],
+        data: levelData, //[2, 2, 2, 2, 3, 3, 3, 4, 4, 3, 2, 2],
         color: (opacity = 1) => "#4d4d4d", // optional
         strokeWidth: 2, // optional
       },
@@ -216,24 +217,11 @@ function renderPieChart() {
 
 
 
-function StatisticsScreen(props) {
-  let data;
-  //Connexió amb domini que no funciona -->
-  /*
-  let presentationCtrl = new PresentationCtrl();
-  let status = "pending"
-  try {
-    data = presentationCtrl.getPollutionLastDay();
-    status = "ok"
-  }catch(e){
-    console.log(e.message);
-    status = "error";
-    data = "error"
-  }
-  while (data._W === null);
-  console.log("Status despres del while: "+status);
-  console.log("Data: "+ JSON.stringify(data));
-  */
+function StatisticsScreen({ route, navigation }) {
+  var { data } = route.params;
+  data = Array.from(data);
+
+  //console.log("Result: "+result)
 
   return (
     <SafeAreaView style={styles.background}>
@@ -271,7 +259,7 @@ function StatisticsScreen(props) {
         <Text style={styles.subtitle}> POLLUTION EVOLUTION</Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        {renderLinearChart()}
+        {renderLinearChart(data)}
       </View>
       <View
         style={{
