@@ -11,6 +11,7 @@ const UserController = require("../controllers/user.controller");
 const DataPointMap = require("../controllers/dataPointMap.controller");
 const PollutantDayMeasure = require("../controllers/pollutantDayMeasure.controller");
 const Measure = require("../controllers/measure.controller");
+const PinController = require("../controllers/pin.controller");
 
 /*  User */
 router.get(
@@ -88,3 +89,22 @@ router.post(
     Measure.insertMultiple
 );
 /*  /Measure  */
+
+/*  Pin */
+router.post(
+    "/newPin",
+    licenseMiddleware.validate,
+    PinController.create
+);
+router.get(
+    "/pin",
+    licenseMiddleware.validate,
+    PinController.find
+);
+router.put(
+    "/pin",
+    licenseMiddleware.validate,
+    PinController.validate("updatePin"),
+    PinController.update
+);
+/*  /Pin */

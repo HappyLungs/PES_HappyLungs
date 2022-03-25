@@ -19,7 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { Marker, PROVIDER_GOOGLE, ProviderPropType } from "react-native-maps";
+import MapView, { Marker, Heatmap, PROVIDER_GOOGLE, ProviderPropType } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
@@ -34,13 +34,11 @@ function MapScreen({ navigation }) {
   const [modalPinVisible, setModalPinVisible] = useState(false);
   const [modalFilterVisible, setModalFilterVisible] = useState(false);
   const location = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
   const [trafficSelected, setTraffic] = useState(false);
   const [industrySelected, setIndustry] = useState(false);
   const [urbanSelected, setUrban] = useState(false);
   const [pinsShown, setPins] = useState(true);
   const [byCertificate, setByCertificate] = useState(false);
-
   const [markers, setMarkers] = useState([]);
   const [region, setRegion] = useState({
     latitude: 41.366531,
@@ -48,6 +46,23 @@ function MapScreen({ navigation }) {
     latitudeDelta: 0.3,
     longitudeDelta: 1.5,
   });
+    const [heatpoints, setHeatpoints] = useState([
+        {
+            latitude: 43.366531,
+            longitude: 2.019336,
+            weight: 1
+        },
+        {
+            latitude: 42.366531,
+            longitude: 2.019336,
+            weight: 2
+        },
+        {
+            latitude: 41.366531,
+            longitude: 2.019336,
+            weight: 3
+        },
+    ]);
   const mapRef = useRef(null);
 
 
@@ -422,6 +437,7 @@ function MapScreen({ navigation }) {
               }}   
             />
           ))}
+            <Heatmap points={heatpoints}/>
         </MapView>
       </View>
       <View style={styles.rowContainer}>

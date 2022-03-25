@@ -7,7 +7,7 @@ async function getRequest(url, data) {
     await axios({
         method: 'get',
         url: "http://localhost:2000/v1" + url,
-        params: { data },
+        params: data,
         headers: {
             lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             authorization: "PES2022"
@@ -27,7 +27,7 @@ async function postRequest(url, data) {
     await axios({
         method: 'post',
         url: "http://localhost:2000/v1" + url,
-        params: { data },
+        data: data,
         headers: {
             lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             authorization: "PES2022"
@@ -42,4 +42,24 @@ async function postRequest(url, data) {
     return res;
 }
 
-export {getRequest, postRequest}
+async function putRequest(url, data) {
+    let res = {};
+    await axios({
+        method: 'put',
+        url: "http://localhost:2000/v1" + url,
+        data: data,
+        headers: {
+            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            authorization: "PES2022"
+        }
+      })
+      .then(response => {
+          res = response.data;
+      })
+      .catch(err => {
+          res = err;
+      })
+    return res;
+}
+
+export {getRequest, postRequest, putRequest}
