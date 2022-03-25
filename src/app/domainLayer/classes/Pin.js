@@ -28,7 +28,7 @@ export default class Pin {
   
     show_charts() {}
 
-    addCalendarEvent() {
+    addCalendarEvent(pinName, location, description) {
       var gapi = window.gapi
       var CLIENT_ID = "940094993561-ul26es9rio610t1gj6161n2n1oqo6nc0.apps.googleusercontent.com"
       var API_KEY = "AIzaSyDnGgm8vf2p1rWoEQPb2OxXREvhIh2-CJk"
@@ -39,30 +39,14 @@ export default class Pin {
 
       gapi.auth2.getAuthInstance().signIn().then(() => {
         var event = {
-          'summary': 'Awesome Event!',
-          'location': '800 Howard St., San Francisco, CA 94103',
-          'description': 'Really great refreshments',
+          'summary': pinName,
+          'location': location,
+          'description': description,
           'start': {
             'dateTime': '2020-06-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
           },
           'end': {
             'dateTime': '2020-06-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
-          },
-          'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=2'
-          ],
-          'attendees': [
-            {'email': 'lpage@example.com'},
-            {'email': 'sbrin@example.com'}
-          ],
-          'reminders': {
-            'useDefault': false,
-            'overrides': [
-              {'method': 'email', 'minutes': 24 * 60},
-              {'method': 'popup', 'minutes': 10}
-            ]
           }
         }
 
@@ -92,5 +76,9 @@ export default class Pin {
         })
         */
       })
+    }
+
+    getActualDate() {
+
     }
 }
