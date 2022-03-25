@@ -17,14 +17,21 @@ import { ImageSlider } from "react-native-image-slider-banner";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-function PinOwnerScreen({ navigation }, props) {
-  const [modalVisible, setModalVisible] = useState(false);
+import { PresentationCtrl } from "./PresentationCtrl.js";
 
+
+function PinOwnerScreen({ navigation }) {
+  let presentationCtrl = new PresentationCtrl();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const lat = 37.421749;
+  const lng = -122.0841477
   const handleDelete = () => console.log("Delete clicked");
   const handleEdit = () => console.log("Edit clicked");
-  const handleSeeOnMap = () => console.log("See On Map clicked");
+  const handleSeeOnMap = () => {
+    navigation.navigate('MapScreen', { tmpLat: lat, tmpLng: lng });
+  }
   const handleShare = () => console.log("Share clicked");
-  const handleSeeStatistics = () => navigation.navigate("Statistics");
 
   function renderModal() {
     return (
@@ -33,7 +40,6 @@ function PinOwnerScreen({ navigation }, props) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
@@ -146,7 +152,7 @@ function PinOwnerScreen({ navigation }, props) {
             style={styles.containerImage}
             onPress={handleSeeOnMap}
           >
-            <Text style={styles.greenHighligh}> See On Map</Text>
+            <Text style={styles.greenHighlight}> See On Map</Text>
           </TouchableOpacity>
         </View>
 
@@ -173,7 +179,10 @@ function PinOwnerScreen({ navigation }, props) {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginStart: 180, flexDirection: "column" }}
-            onPress={handleSeeStatistics}
+            onPress={async () => {
+              let data = await presentationCtrl.getPollutionLastDay();
+              navigation.navigate("Statistics", { data: data });
+            }}
           >
             <Ionicons
               name="bar-chart"

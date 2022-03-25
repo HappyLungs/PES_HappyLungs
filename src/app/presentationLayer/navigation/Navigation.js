@@ -43,8 +43,12 @@ function MapStack() {
         name="MapScreen"
         component={MapScreen}
         options={{ title: "Happy Lungs" }}
+        initialParams={{ tmpLat: false, tmpLng: false }}
       />
-      <Stack.Screen name="Statistics" component={StatisticsScreen} />
+      <Stack.Screen
+        name="Statistics"
+        component={StatisticsScreen}
+      />
       <Stack.Screen
         name="CreatePin"
         component={CreatePinScreen}
@@ -76,7 +80,10 @@ function PinStack() {
         component={PinsScreen}
         options={{ title: "My Pins" }}
       />
-      <Stack.Screen name="Statistics" component={StatisticsScreen} />
+      <Stack.Screen
+        name="Statistics"
+        component={StatisticsScreen}
+      />
       <Stack.Screen
         name="DefaultPin"
         component={PinDefaultScreen}
@@ -150,7 +157,7 @@ function AppTabs() {
           ),
           title: "Profile",
         }}
-        //header username
+      //header username
       />
     </Tab.Navigator>
   );

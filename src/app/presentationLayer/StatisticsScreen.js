@@ -21,8 +21,6 @@ import colors from "../config/stylesheet/colors";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { PresentationCtrl } from "./PresentationCtrl.js";
-
 const onPress = (option) => {
   console.log(option);
 };
@@ -49,8 +47,7 @@ function renderOptions() {
   );
 }
 
-function renderLinearChart(levelData) {
-
+function renderLinearChart(dades) {
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -79,7 +76,7 @@ function renderLinearChart(levelData) {
     ],
     datasets: [
       {
-        data: levelData, //[2, 2, 2, 2, 3, 3, 3, 4, 4, 3, 2, 2],
+        data: Array.from(dades),
         color: (opacity = 1) => "#4d4d4d", // optional
         strokeWidth: 2, // optional
       },
@@ -213,15 +210,8 @@ function renderPieChart() {
   );
 }
 
-
-
-
-
-function StatisticsScreen({ route, navigation }) {
-  var { data } = route.params;
-  data = Array.from(data);
-
-  //console.log("Result: "+result)
+function StatisticsScreen({ navigation, route }) {
+  const { data } = route.params;
 
   return (
     <SafeAreaView style={styles.background}>
