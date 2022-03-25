@@ -14,12 +14,18 @@ import { Rating } from "react-native-ratings";
 import { ImageSlider } from "react-native-image-slider-banner";
 import { Ionicons } from "@expo/vector-icons";
 
-function PinDefaultScreen({ navigation }, props) {
-  const [bookmark, setBookmark] = useState("bookmark-outline");
+import { PresentationCtrl } from "./PresentationCtrl.js";
 
-  const handleSeeOnMap = () => console.log("See On Map clicked");
+
+function PinDefaultScreen({ navigation }) {
+  let presentationCtrl = new PresentationCtrl();
+
+  const [bookmark, setBookmark] = useState("bookmark-outline");
+  const handleSeeOnMap = () => {
+    console.log("See On Map clicked");
+    navigation.navigate('MapScreen');
+  }
   const handleShare = () => console.log("Share clicked");
-  const handleSeeStatistics = () => navigation.navigate("Statistics");
 
   function renderImageCarousel() {
     return (
@@ -109,7 +115,10 @@ function PinDefaultScreen({ navigation }, props) {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginStart: 180, flexDirection: "column" }}
-            onPress={handleSeeStatistics}
+            onPress={async () => {
+              let data = await presentationCtrl.getPollutionLastDay();
+              navigation.navigate("Statistics", { data: data });
+            }}
           >
             <Ionicons
               name="bar-chart"

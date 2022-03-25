@@ -20,8 +20,6 @@ import colors from "../config/stylesheet/colors";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { PresentationCtrl } from "./PresentationCtrl.js";
-
 const onPress = (option) => {
   console.log(option);
 };
@@ -48,8 +46,8 @@ function renderOptions() {
   );
 }
 
-function renderLinearChart(levelData) {
-
+function renderLinearChart(dades) {
+  console.log("Data: " + JSON.stringify(dades));
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -78,13 +76,14 @@ function renderLinearChart(levelData) {
     ],
     datasets: [
       {
-        data: [2, 2, 2, 2, 3, 3, 3, 4, 4, 3, 2, 2],
+        data: Array.from(dades),
         color: (opacity = 1) => "#4d4d4d", // optional
         strokeWidth: 2, // optional
       },
     ],
     //legend: ["Rainy Days"] // optional
   };
+  console.log(data);
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <LineChart
@@ -212,28 +211,9 @@ function renderPieChart() {
   );
 }
 
-
-
-
-
-function StatisticsScreen(props) {
-  let data;
-  //Connexió amb domini que no funciona -->
-  /*
-  let presentationCtrl = new PresentationCtrl();
-  let status = "pending"
-  try {
-    data = presentationCtrl.getPollutionLastDay();
-    status = "ok"
-  }catch(e){
-    console.log(e.message);
-    status = "error";
-    data = "error"
-  }
-  while (data._W === null);
-  console.log("Status despres del while: "+status);
-  console.log("Data: "+ JSON.stringify(data));
-  */
+function StatisticsScreen({ navigation, route }) {
+  const { data } = route.params;
+  console.log("Data: " + JSON.stringify(data));
 
   return (
     <SafeAreaView style={styles.background}>
@@ -271,7 +251,7 @@ function StatisticsScreen(props) {
         <Text style={styles.subtitle}> POLLUTION EVOLUTION</Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        {renderLinearChart()}
+        {renderLinearChart(data)}
       </View>
       <View
         style={{
