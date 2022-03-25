@@ -6,9 +6,17 @@ export default class Pin {
       this.media = media;
       this.rating = rating;
       this.public = public;
+
+      //add to data base function
+      
+      addCalendarEvent(name, location, description);
     }
   
     create_pin(name, location, description, media, rating, public) {}
+
+    edit_pin(name, location, description, media, rating, public) {
+      //consultar pin a la base de dades i enviar i guardar info nova amb la funció d'editar
+    }
     
     //Getters
     get recomended_IDs() {
