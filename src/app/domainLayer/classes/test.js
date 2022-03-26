@@ -1,13 +1,29 @@
-import {DataPointMap} from "./DataPointMap.js";
-import {MeasureStation} from "./MeasureStation.js"
+const MeasureStation = require("./MeasureStation");
+
+
+// Start function
+const start = async function() {
+    const d = "2022-03-15T00:00:00.000";
+    const h = 12;
+
+    let m = new MeasureStation("08019004");
+
+    console.log("Crido la funció a test.js")
+    const result = await m.getWeekLevel(d);;
+
+    console.log(result);
+}
+
+// Call start
+start();
+
+
+
+
 /*
-let s = new MeasureStation("08019043");
-let level = await s.getMeasuresByDay("2022-03-15T00:00:00.000");
-console.log(level);
+let m = new MeasureStation("08019004");
 
+let date="2022-03-03T00:00:00.000";
+let d = m.getWeekLevel(date)
+console.log(d)
 */
-
-let s = new DataPointMap(41.363094, 2.112971);
-//let level = await s.getLevelByHour("2022-03-15T00:00:00.000", 16);
-let level = await s.getLevelByDay("2022-03-15T00:00:00.000");
-console.log(level);

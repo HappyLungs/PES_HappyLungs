@@ -1,5 +1,7 @@
-import { getMeasuresDate, getMeasuresDay } from "./ConsultesMesures.js";
-import { MeasureStation } from "./MeasureStation.js";
+const DadesObertes = require("../services/DadesObertes");
+const MeasureStation = require("./MeasureStation.js");
+
+const dadesObertes = new DadesObertes();
 
 class DataPointMap {
 
@@ -19,8 +21,6 @@ class DataPointMap {
     }
 
    async getLevelByDay (date) {
-        
-
      let puntos_cercanos = await this.nearerPoints(date);
 
      let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
@@ -38,8 +38,8 @@ class DataPointMap {
         let points = [];
         let point1 = new MeasureStation("08015001", "Franciaa", "urbana" , 41.443584, 2.23889, null );
         let distancia = point1.distance(this.latitude,this.longitud);
-         let distanciaTotal = 0;
-        let all_points = await getMeasuresDate(date);
+        let distanciaTotal = 0;
+        let all_points = await dadesObertes.getMeasuresDate(date);
         all_points.forEach(c_point => {
             let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
             let d = m_s.distance(this.latitude,this.longitud);

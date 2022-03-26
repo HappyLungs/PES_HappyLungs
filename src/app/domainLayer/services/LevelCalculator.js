@@ -1,6 +1,9 @@
 class LevelCalculator {
 
     constructor (){
+        //Pollutants used to calculate contaminatin level
+        this.availablePollutants = ['CO', 'NO2', 'O3', 'PM10', 'PM2.5', 'SO2'];
+        
         //Pollutants ranges
         this.co = [0, 2, 4, 8, 30, 100, 1000];
         this.no2 = [0, 25, 50, 100, 200, 400, 1000];
@@ -15,6 +18,10 @@ class LevelCalculator {
         //Level of each pollutant range
         this.level = ["excellent", "fine", "moderate", "poor", "veryPoor", "severe"];
         this.colors = ["green", "yellow", "orange", "red", "purple", "brown"]
+    }
+
+    getAvailablePollutants () {
+        return this.availablePollutants;
     }
 
     getPollutantRange(element) {
@@ -56,4 +63,4 @@ class LevelCalculator {
     }
 }
 
-export { LevelCalculator }
+module.exports = LevelCalculator;
