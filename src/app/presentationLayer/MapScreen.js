@@ -504,10 +504,8 @@ function MapScreen({ navigation, route }) {
         style={styles.Compass}
         onPress={() => {
           Location.installWebGeolocationPolyfill()
-          //navigator.geolocation.
           navigator.geolocation.getCurrentPosition(
             (position) => {
-              console.log(position.coords.latitude + " " + position.coords.longitude);
               panTo({
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,

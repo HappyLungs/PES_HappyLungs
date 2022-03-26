@@ -44,6 +44,7 @@ DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length, da
 
 DomainCtrl.prototype.createPin = function (name, location, description, media, rating, status) {
     let newPin = new Pin(name, location, description, media, rating, status);
+    //store db
 }
 
 

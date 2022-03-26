@@ -8,10 +8,11 @@ class Pin {
     this.media = media;
     this.rating = rating;
     this.status = status; //t'he canviat 'public' per 'status', public es una reserved word de js
+    console.log("name: " + name + " location: " + location + " description: " + description + " media: " + media + " rating: " + rating + " status: " + status);
 
     //add to data base function
 
-    addCalendarEvent(name, location, description);
+    //addCalendarEvent(name, location, description);
   }
 
   create_pin(name, location, description, media, rating, status) { }

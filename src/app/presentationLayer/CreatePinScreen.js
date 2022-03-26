@@ -4,10 +4,10 @@ import {
   View,
   Text,
   SafeAreaView,
-  Platform,
-  TextInput,
+  Keyboard,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import colors from "../config/stylesheet/colors";
@@ -19,34 +19,60 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
 import { PresentationCtrl } from "./PresentationCtrl.js";
+import Input from "./components/Input";
 
 function CreatePinScreen({ route }) {
   let presentationCtrl = new PresentationCtrl();
 
   const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
-  const [title, setTitle] = useState('');
   const { coords } = route.params;
-  console.log(coords);
-  const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
-  const [rating, setRating] = useState('');
   const [status, setStatus] = useState(false);
 
+  const [rating, setRating] = useState(3);
+
+
+  const [media, setMedia] = useState([]);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
 
+  const [inputs, setInputs] = useState({
+    title: '',
+    description: '',
+  });
+  const [errors, setErrors] = useState({});
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const handleCreatePin = () => {
-    //Todo: media 
-    if (title != '' && description != '') presentationCtrl.createPin(title, coords, description, image1, rating, status);
-    else console.log("fail");
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+    const tmpMedia = [...media];
+
+    if (!inputs.title) {
+      handleError('Please input title', 'title');
+      isValid = false;
+    }
+    if (!inputs.description) {
+      handleError('Please input description', 'description');
+      isValid = false;
+    }
+    if (isValid) {
+      presentationCtrl.createPin(inputs.title, coords, inputs.description, tmpMedia, rating, status);
+    }
   }
 
+  const handleError = (error, input) => {
+    setErrors(prevState => ({ ...prevState, [input]: error }));
+  };
+
+  const handleOnChange = (text, input) => {
+    setInputs(prevState => ({ ...prevState, [input]: text }));
+  };
+
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -54,9 +80,18 @@ function CreatePinScreen({ route }) {
       quality: 1,
     });
     if (!result.cancelled) {
-      if (!image1) setImage1(result.uri);
-      else if (!image2) setImage2(result.uri);
-      else if (!image3) setImage3(result.uri);
+      console.log(result.uri);
+      const tmpMedia = [...media];
+      if (tmpMedia.length >= 3) {
+        Alert.alert('Max 3 images!');
+      } else {
+        tmpMedia.push(result.uri);
+        setMedia([...media, result.uri]);
+        console.log("media size: " + tmpMedia.length + " content: " + tmpMedia[tmpMedia.length - 1]);
+        if (!image1) setImage1(result.uri);
+        else if (!image2) setImage2(result.uri);
+        else if (!image3) setImage3(result.uri);
+      }
     }
   };
 
@@ -83,20 +118,24 @@ function CreatePinScreen({ route }) {
   function renderImageSelector() {
     return (
       <View style={styles.containerImage}>
-        <TouchableOpacity onPress={pickImage} style={styles.containerAddImage}>
+        <TouchableOpacity onPress={pickImage} style={{ flexDirection: 'row' }}>
           <Image
             style={styles.image}
             fadeDuration={250}
             source={require("../../assets/addButton.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.containerAddImage}>
+        <TouchableOpacity style={{ flexDirection: 'row' }}>
           {image1 && (
             <Image source={{ uri: image1 }} style={styles.selectedImages} />
           )}
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: 'row' }}>
           {image2 && (
             <Image source={{ uri: image2 }} style={styles.selectedImages} />
           )}
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: 'row' }}>
           {image3 && (
             <Image source={{ uri: image3 }} style={styles.selectedImages} />
           )}
@@ -123,20 +162,20 @@ function CreatePinScreen({ route }) {
             isVisible={isDatePickerVisible}
           />
         </TouchableOpacity>
-        <Text style={styles.body}> {getDate()}</Text>
+        <Text style={{ textAlignVertical: "center", fontSize: 15, marginStart: 20, color: colors.secondary }}> {getDate()}</Text>
       </View>
     );
   }
 
   function renderPinModeSelector() {
     return (
-      <View style={{ marginLeft: 40, marginTop: 15 }}>
+      <View style={{ padding: 10 }}>
         <BouncyCheckbox
-          fillColor="dodgerblue"
+          fillColor={colors.green1}
           size={25}
-          unfillColor="#FFFFFF"
-          iconStyle={{ borderColor: "#767577" }}
-          textStyle={{ textDecorationLine: "none" }}
+          unfillColor={colors.white}
+          iconStyle={{ borderColor: colors.secondary }}
+          textStyle={{ textDecorationLine: "none", color: colors.secondary }}
           onPress={() => setStatus(!status)}
           text={
             status
@@ -149,46 +188,45 @@ function CreatePinScreen({ route }) {
   }
 
   return (
-    <SafeAreaView style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.subtitle}> Location</Text>
-        <Text style={styles.location}>{locationName} </Text>
-        <Text style={styles.subtitle}>
-          Title
-          <Text style={styles.highlight}> *</Text>
-        </Text>
-        <TextInput
-          style={styles.input}
-          multiline={false}
-          maxLength={30}
-          onChangeText={newTitle => setTitle(newTitle)}
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white, flexDirection: 'column', paddingHorizontal: 20 }}>
+      <View style={{ marginVertical: 20 }}>
+        <Text style={styles.subtitle}>Location</Text>
+        <Text style={{ fontSize: 15, color: colors.green1 }}>{locationName} </Text>
+        <Input
+          onChangeText={newTitle => handleOnChange(newTitle, 'title')}
+          onFocus={() => handleError(null, 'title')}
+          iconName="title"
+          label="Title"
+          placeholder="Enter the pin title"
+          error={errors.title}
         />
-        <Text style={styles.subtitle}>
-          Description
-          <Text style={styles.highlight}> *</Text>
-        </Text>
-        <TextInput
-          style={styles.inputDescription}
-          multiline
-          numberOfLines={3}
-          maxLength={90}
-          onChangeText={newDescription => setDescription(newDescription)}
+        <Input
+          onChangeText={newTitle => handleOnChange(newTitle, 'description')}
+          onFocus={() => handleError(null, 'description')}
+          iconName="description"
+          label="Description"
+          placeholder="Enter the pin event description"
+          error={errors.description}
         />
         <Text style={styles.subtitle}> Date</Text>
         {renderDateSelector()}
         <Text style={styles.subtitle}> Images</Text>
         {renderImageSelector()}
-
         <Text style={styles.subtitle}> Rate</Text>
         <Rating
+          type={'custom'}
           imageSize={20}
           fractions={0}
-          style={{ padding: 10, marginLeft: 40 }}
+          startingValue={3}
+          ratingBackgroundColor={colors.secondary}
+          ratingColor={colors.green1}
+          tintColor={colors.white}
+          style={{ padding: 10, alignSelf: 'flex-start' }}
           onFinishRating={newRating => setRating(newRating)}
         />
         <Text style={styles.subtitle}> Allow others to view this pin?</Text>
         {renderPinModeSelector()}
-        <TouchableOpacity style={styles.containerEditBtn} onPress={handleCreatePin}>
+        <TouchableOpacity style={styles.containerEditBtn} onPress={validate}>
           <Text
             style={{
               textAlign: "center",
@@ -206,41 +244,19 @@ function CreatePinScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: colors.white,
-    justifyContent: "flex-start",
-    paddingTop: Platform.OS === "android" ? 30 : 0,
-    alignItems: "center",
-  },
-  container: {
-    width: "100%",
-    position: "absolute",
-    backgroundColor: colors.white,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start", //main
-    alignItems: "flex-start", //secondary
-  },
   containerImage: {
-    flex: 1,
     flexDirection: "row",
-    marginLeft: 40,
-    padding: 10,
-  },
-  containerAddImage: {
-    //flex: 1,
-    flexDirection: "row",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   containerEditBtn: {
     width: 110,
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
     marginLeft: 200,
-    marginTop: 15,
+    marginTop: 10,
     padding: 10,
     borderRadius: 10,
     backgroundColor: colors.green1,
@@ -249,50 +265,13 @@ const styles = StyleSheet.create({
     textAlign: "left",
     alignSelf: "flex-start",
     fontSize: 15,
-    paddingTop: 10,
-    paddingStart: 25,
     fontWeight: "bold",
-    color: "#12161b",
-  },
-  body: {
-    textAlignVertical: "center",
-    fontSize: 15,
-    marginStart: 20,
-    color: "#12161b",
-  },
-  location: {
-    fontSize: 15,
-    paddingTop: 25,
-    marginLeft: 40,
-    //fontWeight: 'bold',
-    color: colors.green1,
-  },
-  highlight: {
-    color: "red",
-  },
-  input: {
-    textAlign: "left",
-    justifyContent: "center",
-    width: "75%",
-    height: 35,
-    marginLeft: 40,
-    padding: 10,
-    borderBottomWidth: 1,
-  },
-  inputDescription: {
-    textAlign: "left",
-    justifyContent: "center",
-    width: "75%",
-    height: 75,
-    marginLeft: 40,
-    padding: 10,
-    borderBottomWidth: 1,
-    textAlignVertical: "top",
+    marginTop: 10,
+    color: colors.secondary,
   },
   image: {
     alignSelf: "center",
     justifyContent: "flex-start",
-    //padding: 10,
     width: 30,
     height: 30,
     resizeMode: "contain",
@@ -300,10 +279,10 @@ const styles = StyleSheet.create({
   selectedImages: {
     alignSelf: "flex-start",
     justifyContent: "flex-start",
-    width: 60,
-    height: 60,
-    resizeMode: "contain",
-    marginStart: 30,
+    width: 45,
+    height: 45,
+    resizeMode: "cover",
+    marginStart: 25,
   },
 });
 
