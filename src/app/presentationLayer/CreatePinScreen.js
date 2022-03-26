@@ -10,14 +10,13 @@ import {
   Alert,
 } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-
 import { PresentationCtrl } from "./PresentationCtrl.js";
 import Input from "./components/Input";
 
@@ -75,7 +74,6 @@ function CreatePinScreen({ route }) {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
@@ -151,7 +149,7 @@ function CreatePinScreen({ route }) {
           <Ionicons
             name="md-calendar"
             style={{ alignSelf: "center" }}
-            color={colors.secondary}
+            color={COLORS.secondary}
             size={25}
           />
           <DateTimePickerModal
@@ -162,7 +160,7 @@ function CreatePinScreen({ route }) {
             isVisible={isDatePickerVisible}
           />
         </TouchableOpacity>
-        <Text style={{ textAlignVertical: "center", fontSize: 15, marginStart: 20, color: colors.secondary }}> {getDate()}</Text>
+        <Text style={{ textAlignVertical: "center", fontSize: 15, marginStart: 20, color: COLORS.secondary }}> {getDate()}</Text>
       </View>
     );
   }
@@ -171,11 +169,11 @@ function CreatePinScreen({ route }) {
     return (
       <View style={{ padding: 10 }}>
         <BouncyCheckbox
-          fillColor={colors.green1}
+          fillColor={COLORS.green1}
           size={25}
-          unfillColor={colors.white}
-          iconStyle={{ borderColor: colors.secondary }}
-          textStyle={{ textDecorationLine: "none", color: colors.secondary }}
+          unfillColor={COLORS.white}
+          iconStyle={{ borderColor: COLORS.secondary }}
+          textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
           onPress={() => setStatus(!status)}
           text={
             status
@@ -188,10 +186,10 @@ function CreatePinScreen({ route }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white, flexDirection: 'column', paddingHorizontal: 20 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white, flexDirection: 'column', paddingHorizontal: 20 }}>
       <View style={{ marginVertical: 20 }}>
         <Text style={styles.subtitle}>Location</Text>
-        <Text style={{ fontSize: 15, color: colors.green1 }}>{locationName} </Text>
+        <Text style={{ fontSize: 15, color: COLORS.green1 }}>{locationName} </Text>
         <Input
           onChangeText={newTitle => handleOnChange(newTitle, 'title')}
           onFocus={() => handleError(null, 'title')}
@@ -218,9 +216,9 @@ function CreatePinScreen({ route }) {
           imageSize={20}
           fractions={0}
           startingValue={3}
-          ratingBackgroundColor={colors.secondary}
-          ratingColor={colors.green1}
-          tintColor={colors.white}
+          ratingBackgroundColor={COLORS.secondary}
+          ratingColor={COLORS.green1}
+          tintColor={COLORS.white}
           style={{ padding: 10, alignSelf: 'flex-start' }}
           onFinishRating={newRating => setRating(newRating)}
         />
@@ -232,7 +230,7 @@ function CreatePinScreen({ route }) {
               textAlign: "center",
               fontWeight: "bold",
               fontSize: 15,
-              color: colors.white,
+              color: COLORS.white,
             }}
           >
             Save Pin
@@ -259,7 +257,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
   },
   subtitle: {
     textAlign: "left",
@@ -267,7 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     marginTop: 10,
-    color: colors.secondary,
+    color: COLORS.secondary,
   },
   image: {
     alignSelf: "center",

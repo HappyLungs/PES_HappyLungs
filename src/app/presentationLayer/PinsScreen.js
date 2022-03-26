@@ -2,9 +2,9 @@ import React from "react";
 
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 
-function PinsScreen({ navigation }, props) {
+function PinsScreen({ navigation }) {
   return (
     <View style={styles.background}>
       <Text style={{ marginTop: 300 }}> Pins Screen</Text>
@@ -27,7 +27,7 @@ function PinsScreen({ navigation }, props) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     justifyContent: "flex-start",
     paddingTop: Platform.OS === "android" ? 30 : 0,
     alignItems: "center",
@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 100,
     height: 50,
-    borderBottomColor: colors.darkGrey,
-    backgroundColor: colors.secondary,
+    borderBottomColor: COLORS.darkGrey,
+    backgroundColor: COLORS.secondary,
   },
   btnText: {
-    color: "white",
+    color: COLORS.white,
     textAlign: "center",
     fontWeight: "bold",
   },

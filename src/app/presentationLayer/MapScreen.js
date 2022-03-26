@@ -7,12 +7,10 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Dimensions,
   Modal,
-  EventEmitter,
 } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -140,7 +138,7 @@ function MapScreen({ navigation, route }) {
               style={{ alignSelf: "flex-end" }}
               onPress={() => setModalPinVisible(!modalPinVisible)}
             >
-              <Ionicons name="close" color={colors.secondary} size={25} />
+              <Ionicons name="close" color={COLORS.secondary} size={25} />
             </TouchableOpacity>
             <Text style={[styles.modalText, { fontWeight: "bold" }]}>
               Selected location
@@ -158,7 +156,7 @@ function MapScreen({ navigation, route }) {
                     navigation.navigate("CreatePin", { coords: { latitude: 41.366531, longitude: 2.019336 } });
                 }}
               >
-                <AntDesign name="pushpino" size={35} color={colors.secondary} />
+                <AntDesign name="pushpino" size={35} color={COLORS.secondary} />
                 <Text style={[styles.subtitle, { marginStart: 5 }]}>
                   CREATE PIN
                 </Text>
@@ -178,7 +176,7 @@ function MapScreen({ navigation, route }) {
               >
                 <MaterialIcons
                   name="scatter-plot"
-                  color={colors.secondary}
+                  color={COLORS.secondary}
                   size={35}
                 />
                 <Text style={[styles.subtitle, { marginStart: 5 }]}>
@@ -196,7 +194,7 @@ function MapScreen({ navigation, route }) {
                 <Ionicons
                   name="share-social-sharp"
                   style={{ alignSelf: "center" }}
-                  color={colors.secondary}
+                  color={COLORS.secondary}
                   size={35}
                 />
                 <Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
@@ -205,7 +203,7 @@ function MapScreen({ navigation, route }) {
                 style={{
                   fontSize: 13,
                   fontWeight: "bold",
-                  color: colors.secondary,
+                  color: COLORS.secondary,
                 }}
               >
                 Recommended
@@ -227,26 +225,6 @@ function MapScreen({ navigation, route }) {
                     "purple",
                     "brown",
                   ]}
-                  /*
-                  colors={[
-                    "#8ff08c",
-                    "#b1f46b",
-                    "#d2f94e",
-                    "#f8fe40",
-                    "#ffe73a",
-                    "#f1db37",
-                    "#ffc633",
-                    "#ffaf2f",
-                    "#ff8b29",
-                    "#ff6324",
-                    "#ff4421",
-                    "#d8031d",
-                    "#960213",
-                    "#870211",
-                    "#7e0211",
-                  ]}
-                  */
-
                   start={{ x: 0, y: 0.5 }}
                   end={{ x: 1, y: 1 }}
                   style={{ borderRadius: 5 }}
@@ -266,31 +244,31 @@ function MapScreen({ navigation, route }) {
       <View style={styles.checkList}>
         <BouncyCheckbox
           style={styles.checkBox}
-          fillColor={colors.secondary}
+          fillColor={COLORS.secondary}
           size={20}
-          unfillColor={colors.white}
-          iconStyle={{ borderColor: !trafficSelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5 }}
-          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !trafficSelected ? colors.lightGrey : colors.secondary }}
+          unfillColor={COLORS.white}
+          iconStyle={{ borderColor: !trafficSelected ? COLORS.lightGrey : COLORS.secondary, borderRadius: 7, borderWidth: 1.5 }}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary }}
           onPress={() => setTraffic(!trafficSelected)}
           text="Traffic"
         />
         <BouncyCheckbox
           style={styles.checkBox}
-          fillColor={colors.secondary}
+          fillColor={COLORS.secondary}
           size={20}
-          unfillColor={colors.white}
-          iconStyle={{ borderColor: !industrySelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5 }}
-          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !industrySelected ? colors.lightGrey : colors.secondary }}
+          unfillColor={COLORS.white}
+          iconStyle={{ borderColor: !industrySelected ? COLORS.lightGrey : COLORS.secondary, borderRadius: 7, borderWidth: 1.5 }}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !industrySelected ? COLORS.lightGrey : COLORS.secondary }}
           onPress={() => setIndustry(!industrySelected)}
           text="Industry"
         />
         <BouncyCheckbox
           style={styles.checkBox}
-          fillColor={colors.secondary}
+          fillColor={COLORS.secondary}
           size={20}
-          unfillColor={colors.white}
-          iconStyle={{ borderColor: !urbanSelected ? colors.lightGrey : colors.secondary, borderRadius: 7, borderWidth: 1.5 }}
-          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !urbanSelected ? colors.lightGrey : colors.secondary }}
+          unfillColor={COLORS.white}
+          iconStyle={{ borderColor: !urbanSelected ? COLORS.lightGrey : COLORS.secondary, borderRadius: 7, borderWidth: 1.5 }}
+          textStyle={{ textDecorationLine: "none", fontWeight: 'bold', color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary }}
           onPress={() => setUrban(!urbanSelected)}
           text="Urban"
         />
@@ -320,7 +298,7 @@ function MapScreen({ navigation, route }) {
               style={{ alignSelf: "flex-end" }}
               onPress={() => setModalFilterVisible(!modalFilterVisible)}
             >
-              <Ionicons name="close" color={colors.secondary} size={25} />
+              <Ionicons name="close" color={COLORS.secondary} size={25} />
             </TouchableOpacity>
             <Text
               style={[
@@ -333,7 +311,7 @@ function MapScreen({ navigation, route }) {
             <Text
               style={[
                 styles.modalText,
-                { fontWeight: "bold", color: colors.green1 },
+                { fontWeight: "bold", color: COLORS.green1 },
               ]}
             >
               Type of contamination
@@ -342,7 +320,7 @@ function MapScreen({ navigation, route }) {
             <Text
               style={[
                 styles.modalText,
-                { fontWeight: "bold", color: colors.green1, marginTop: 10 },
+                { fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
               ]}
             >
               Show pins
@@ -350,7 +328,7 @@ function MapScreen({ navigation, route }) {
             <TouchableOpacity
               style={{
                 flexDirection: "row",
-                backgroundColor: colors.secondary,
+                backgroundColor: COLORS.secondary,
                 borderRadius: 90,
                 padding: 7,
                 margin: 5,
@@ -359,12 +337,12 @@ function MapScreen({ navigation, route }) {
               }}
               onPress={() => setPins(!pinsShown)}
             >
-              <AntDesign name={pinsShown ? "pushpino" : "pushpin"} size={25} color={colors.white} />
+              <AntDesign name={pinsShown ? "pushpino" : "pushpin"} size={25} color={COLORS.white} />
             </TouchableOpacity>
             <Text
               style={[
                 styles.modalText,
-                { fontWeight: "bold", color: colors.green1, marginTop: 10 },
+                { fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
               ]}
             >
               Filter buildings by energy certificate
@@ -373,7 +351,7 @@ function MapScreen({ navigation, route }) {
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
-                  backgroundColor: colors.secondary,
+                  backgroundColor: COLORS.secondary,
                   borderRadius: 90,
                   padding: 7,
                   margin: 5,
@@ -382,7 +360,7 @@ function MapScreen({ navigation, route }) {
                 }}
                 onPress={() => setByCertificate(!byCertificate)}
               >
-                <Ionicons name={byCertificate ? "home" : "home-outline"} size={25} color={colors.white} />
+                <Ionicons name={byCertificate ? "home" : "home-outline"} size={25} color={COLORS.white} />
               </TouchableOpacity>
               <MultiSlider
                 sliderLength={100}
@@ -399,7 +377,7 @@ function MapScreen({ navigation, route }) {
                   color: 'blue'
                 }}
                 markerStyle={{
-                  backgroundColor: colors.green1,
+                  backgroundColor: COLORS.green1,
                   height: 10,
                   width: 10,
                   bottom: -3,
@@ -415,10 +393,10 @@ function MapScreen({ navigation, route }) {
                   width: 10,
                 }}
                 selectedStyle={{
-                  backgroundColor: colors.green1,
+                  backgroundColor: COLORS.green1,
                 }}
                 unselectedStyle={{
-                  backgroundColor: colors.secondary,
+                  backgroundColor: COLORS.secondary,
                 }}
                 containerStyle={{
                   height: 40,
@@ -470,7 +448,7 @@ function MapScreen({ navigation, route }) {
           <MaterialIcons
             name="search"
             style={{ alignSelf: "center", marginStart: 10 }}
-            color={colors.secondary}
+            color={COLORS.secondary}
             size={35}
           />
           <TextInput
@@ -486,7 +464,7 @@ function MapScreen({ navigation, route }) {
             <MaterialCommunityIcons
               name="filter-menu"
               style={{ alignSelf: "center" }}
-              color={colors.secondary}
+              color={COLORS.secondary}
               size={35}
             />
           </TouchableOpacity>
@@ -518,7 +496,7 @@ function MapScreen({ navigation, route }) {
         <MaterialCommunityIcons
           name="compass"
           style={{ alignSelf: "center" }}
-          color={colors.white}
+          color={COLORS.white}
           size={35}
         />
       </TouchableOpacity>
@@ -531,7 +509,7 @@ function MapScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   stroke: {
-    backgroundColor: colors.secondary,
+    backgroundColor: COLORS.secondary,
     alignSelf: "center",
     height: 20,
     width: 5,
@@ -543,14 +521,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerSearch: {
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     width: "80%",
     height: 50,
     borderRadius: 12,
     flexDirection: "row",
   },
   containerSphere: {
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     width: 50,
     height: 50,
     marginStart: 20,
@@ -571,12 +549,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 17,
     marginStart: 10,
-    color: colors.darkGrey,
+    color: COLORS.darkGrey,
   },
   greenHighlight: {
     marginTop: 5,
     fontSize: 13,
-    color: colors.green1,
+    color: COLORS.green1,
   },
   centeredView: {
     flex: 1,
@@ -588,19 +566,19 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     borderRadius: 15,
     padding: 15,
     alignItems: "center",
   },
   textStyle: {
-    color: colors.white,
+    color: COLORS.white,
     fontWeight: "bold",
     fontSize: 15,
     textAlign: "center",
   },
   subtitle: {
-    color: colors.secondary,
+    color: COLORS.secondary,
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -627,8 +605,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 5,
     width: 100,
     height: 50,
-    borderBottomColor: colors.darkGrey,
-    backgroundColor: colors.secondary,
+    borderBottomColor: COLORS.darkGrey,
+    backgroundColor: COLORS.secondary,
   },
   btnText: {
     color: "white",
@@ -662,8 +640,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 5,
     width: 50,
     height: 50,
-    borderBottomColor: colors.darkGrey,
-    backgroundColor: colors.secondary,
+    borderBottomColor: COLORS.darkGrey,
+    backgroundColor: COLORS.secondary,
   },
   CompassText: {
     color: "white",

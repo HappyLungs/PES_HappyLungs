@@ -6,7 +6,7 @@ import {
     TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import colors from '../../config/stylesheet/colors';
+import COLORS from '../../config/stylesheet/colors';
 
 const Input = ({
     label,
@@ -25,14 +25,14 @@ const Input = ({
                 styles.inputContainer,
                 {
                     borderColor: error
-                        ? colors.red1
+                        ? COLORS.red1
                         : isFocused
-                            ? colors.secondary
-                            : colors.lightGrey,
+                            ? COLORS.secondary
+                            : COLORS.lightGrey,
                     alignItems: 'center',
                 }]}>
                 <Icon name={iconName}
-                    style={{ fontSize: 22, color: colors.green1, marginRight: 10 }}
+                    style={{ fontSize: 22, color: COLORS.green1, marginRight: 10 }}
                 />
                 <TextInput
                     autoCorrect={false}
@@ -43,11 +43,11 @@ const Input = ({
                     onBlur={() => {
                         setIsFocused(false);
                     }}
-                    style={{ color: colors.secondary, flex: 1 }}
+                    style={{ color: COLORS.secondary, flex: 1 }}
                     {...props}
                 />
             </View>
-            {error && (<Text style={{ color: colors.red1, fontSize: 12, marginTop: 7 }}>
+            {error && (<Text style={{ color: COLORS.red1, fontSize: 12, marginTop: 7 }}>
                 {error}
             </Text>)}
         </View>
@@ -58,19 +58,19 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 5,
         fontSize: 14,
-        color: colors.secondary,
+        color: COLORS.secondary,
         fontWeight: 'bold',
     },
     highlight: {
         marginBottom: 5,
         fontSize: 14,
-        color: colors.green1,
+        color: COLORS.green1,
         fontWeight: 'bold',
     },
     inputContainer: {
         borderRadius: 5,
         height: 55,
-        backgroundColor: colors.light,
+        backgroundColor: COLORS.light,
         flexDirection: 'row',
         paddingHorizontal: 15,
         borderWidth: 0.5,

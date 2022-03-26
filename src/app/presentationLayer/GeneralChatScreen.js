@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Text, StyleSheet, View } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 
 function GeneralChatScreen(props) {
   return (
@@ -15,7 +15,7 @@ function GeneralChatScreen(props) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     justifyContent: "flex-start",
     paddingTop: Platform.OS === "android" ? 30 : 0,
     alignItems: "center",

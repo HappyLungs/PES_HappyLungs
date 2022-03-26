@@ -1,5 +1,4 @@
 import { useState, useEffect, React } from 'react';
-//import React from "react";
 import {
   StyleSheet,
   View,
@@ -17,7 +16,7 @@ import {
   StackedBarChart,
 } from "react-native-chart-kit";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/COLORS";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -227,7 +226,7 @@ function StatisticsScreen({ navigation, route }) {
             <MaterialCommunityIcons
               name="filter-menu"
               style={{ alignSelf: "center" }}
-              color={colors.white}
+              color={COLORS.white}
               size={30}
             />
           </TouchableOpacity>
@@ -271,7 +270,7 @@ function StatisticsScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     justifyContent: "flex-start",
     alignItems: "center",
   },
@@ -289,8 +288,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 80,
     height: 35,
-    borderBottomColor: colors.green2,
-    backgroundColor: colors.green1,
+    borderBottomColor: COLORS.green2,
+    backgroundColor: COLORS.green1,
   },
   containerBtn: {
     alignSelf: "center",
@@ -305,17 +304,17 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingStart: 25,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   body: {
     textAlign: "left",
     alignSelf: "flex-start",
     fontSize: 10,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   containerSphere: {
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
     width: 45,
     height: 45,
     marginStart: 15,

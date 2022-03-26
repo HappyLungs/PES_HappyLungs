@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 
 import { Rating } from "react-native-ratings";
 import { ImageSlider } from "react-native-image-slider-banner";
@@ -36,13 +36,13 @@ function PinDefaultScreen({ navigation }) {
           },
           { img: "https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg" },
         ]}
-        backgroundColor={colors.green1}
+        backgroundColor={COLORS.green1}
         showHeader
         showIndicator
         onItemChanged={(item) => console.log("item", item)}
         caroselImageStyle={{ height: 250 }}
-        inActiveIndicatorStyle={{ backgroundColor: colors.lightgrey }}
-        activeIndicatorStyle={{ backgroundColor: colors.white }}
+        inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
+        activeIndicatorStyle={{ backgroundColor: COLORS.white }}
         indicatorContainerStyle={{ top: 15 }}
       ></ImageSlider>
     );
@@ -66,7 +66,7 @@ function PinDefaultScreen({ navigation }) {
             <Ionicons
               name={bookmark}
               style={{ alignSelf: "center" }}
-              color={colors.secondary}
+              color={COLORS.secondary}
               size={30}
             />
           </TouchableOpacity>
@@ -82,7 +82,7 @@ function PinDefaultScreen({ navigation }) {
             name="location-sharp"
             size={30}
             style={{ alignSelf: "center" }}
-            color={colors.secondary}
+            color={COLORS.secondary}
           />
           <Text style={styles.body}> Pin Location</Text>
           <TouchableOpacity
@@ -96,20 +96,29 @@ function PinDefaultScreen({ navigation }) {
           <Ionicons
             name="md-calendar"
             style={{ alignSelf: "center" }}
-            color={colors.secondary}
+            color={COLORS.secondary}
             size={25}
           />
           <Text style={styles.body}> dd/mm/yyyy</Text>
         </View>
         <View style={styles.containerTop}>
-          <Rating imageSize={20} fractions={0} />
+          <Rating
+            type={'custom'}
+            imageSize={20}
+            fractions={0}
+            startingValue={3}
+            ratingBackgroundColor={COLORS.secondary}
+            ratingColor={COLORS.green1}
+            tintColor={COLORS.white}
+            readonly={true}
+          />
         </View>
         <View style={styles.containerTop}>
           <TouchableOpacity style={{ marginStart: 15 }} onPress={handleShare}>
             <Ionicons
               name="share-social-sharp"
               style={{ alignSelf: "center" }}
-              color={colors.secondary}
+              color={COLORS.secondary}
               size={35}
             />
           </TouchableOpacity>
@@ -123,7 +132,7 @@ function PinDefaultScreen({ navigation }) {
             <Ionicons
               name="bar-chart"
               style={{ alignSelf: "center" }}
-              color={colors.green1}
+              color={COLORS.green1}
               size={35}
             />
             <Text style={styles.greenHighlight}> See Statistics</Text>
@@ -137,7 +146,7 @@ function PinDefaultScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     justifyContent: "flex-start",
     paddingTop: Platform.OS === "android" ? 30 : 0,
     alignItems: "flex-start",
@@ -152,13 +161,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerBtn: {
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
     alignSelf: "flex-start",
     marginTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    //padding: 10,
   },
   containerImage: {
     flexDirection: "row",
@@ -187,7 +195,7 @@ const styles = StyleSheet.create({
     marginLeft: 75,
     borderRadius: 7,
     padding: 5,
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
   },
   pinImage: {
     width: 250,
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   stroke: {
-    backgroundColor: colors.secondary,
+    backgroundColor: COLORS.secondary,
     alignSelf: "center",
     marginBottom: 10,
     width: "100%",
@@ -214,7 +222,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 22,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   subtitle: {
     textAlign: "left",
@@ -223,7 +231,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginStart: 20,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   body: {
     textAlignVertical: "center",
@@ -231,15 +239,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 15,
     marginStart: 10,
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   greenHighlight: {
     fontSize: 15,
     fontWeight: "bold",
-    color: colors.green1,
+    color: COLORS.green1,
   },
   shadow: {
-    shadowColor: "#000",
+    shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
       height: 2,
