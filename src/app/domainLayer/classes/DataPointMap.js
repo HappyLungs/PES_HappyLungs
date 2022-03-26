@@ -12,7 +12,7 @@ class DataPointMap {
 
     //Me pasan un punto un cualquier, buscar entre los mas cercanos y que devuelva 1. Ver la contaminación de ese punto
 
-  async  getLevelByHour(date, hour) {
+    async  getHourLevel(date, hour) {
         let puntos_cercanos = await this.nearerPoints();
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
@@ -20,12 +20,20 @@ class DataPointMap {
         return x.get(hour);     
     }
 
-   async getLevelByDay (date) {
-     let puntos_cercanos = await this.nearerPoints(date);
+    async getDayLevel (date) {
+        let puntos_cercanos = await this.nearerPoints(date);
 
-     let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-     let x = await punto_cercano.getMeasuresByDay(date);
-     return x;     
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getMeasuresByDay(date);
+        return x;     
+    }
+
+    async getWeekLevel (date) {
+        let puntos_cercanos = await this.nearerPoints(date);
+
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getMeasuresByWeek(date);
+        return x;  
     }
     
 

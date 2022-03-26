@@ -17,7 +17,7 @@ let DomainCtrl;
 DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length, date) {
 
     let point = new DataPointMap(latitude, length);
-    let data = await point.getLevelByDay(date);
+    let data = await point.getDayLevel(date);
     let finalData = [];
 
     for (let i = 1; i <= 24; i += 2) {
@@ -25,6 +25,21 @@ DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length, dat
     }
 
     return finalData;
+}
+
+DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length, date) {
+
+    let point = new DataPointMap(latitude, length);
+    let data = await point.getWeekLevel(date);
+    /*
+    let finalData = [];
+
+    for (let i = 1; i <= 24; i += 2) {
+        finalData.push(data.get(i));
+    }
+    */
+
+    return data;
 }
 
 DomainCtrl.prototype.createPin = function (name, location, description, media, rating, status) {
