@@ -10,7 +10,7 @@ import {
   Pressable,
 } from "react-native";
 
-import colors from "../config/stylesheet/colors";
+import COLORS from "../config/stylesheet/colors";
 
 import { Rating } from "react-native-ratings";
 import { ImageSlider } from "react-native-image-slider-banner";
@@ -81,13 +81,13 @@ function PinOwnerScreen({ navigation }) {
           },
           { img: "https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg" },
         ]}
-        backgroundColor={colors.green1}
+        backgroundColor={COLORS.green1}
         showHeader
         showIndicator
         headerRightComponent={
           <Feather
             name="trash-2"
-            color={colors.white}
+            color={COLORS.white}
             size={30}
             onPress={() => handleDelete()}
           />
@@ -95,8 +95,8 @@ function PinOwnerScreen({ navigation }) {
         headerStyle={{ padding: 5 }}
         onItemChanged={(item) => console.log("item", item)}
         caroselImageStyle={{ height: 250 }}
-        inActiveIndicatorStyle={{ backgroundColor: colors.lightgrey }}
-        activeIndicatorStyle={{ backgroundColor: colors.white }}
+        inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
+        activeIndicatorStyle={{ backgroundColor: COLORS.white }}
         indicatorContainerStyle={{ top: 15 }}
       ></ImageSlider>
     );
@@ -116,7 +116,7 @@ function PinOwnerScreen({ navigation }) {
             <Feather
               name="trash-2"
               style={{ alignSelf: "center" }}
-              color={colors.red1}
+              color={COLORS.red1}
               size={25}
             />
           </TouchableOpacity>
@@ -128,7 +128,7 @@ function PinOwnerScreen({ navigation }) {
               name="edit"
               size={24}
               style={{ marginStart: 5 }}
-              color={colors.white}
+              color={COLORS.white}
             />
             <Text style={[styles.textStyle, { marginStart: 10 }]}> Edit</Text>
           </TouchableOpacity>
@@ -145,7 +145,7 @@ function PinOwnerScreen({ navigation }) {
             name="location-sharp"
             size={30}
             style={{ alignSelf: "center" }}
-            color={colors.secondary}
+            color={COLORS.secondary}
           />
           <Text style={styles.body}> Pin Location</Text>
           <TouchableOpacity
@@ -160,20 +160,29 @@ function PinOwnerScreen({ navigation }) {
           <Ionicons
             name="md-calendar"
             style={{ alignSelf: "center" }}
-            color={colors.secondary}
+            color={COLORS.secondary}
             size={25}
           />
           <Text style={styles.body}> dd/mm/yyyy</Text>
         </View>
         <View style={styles.containerTop}>
-          <Rating imageSize={20} fractions={0} />
+          <Rating
+            type={'custom'}
+            imageSize={20}
+            fractions={0}
+            startingValue={3}
+            ratingBackgroundColor={COLORS.secondary}
+            ratingColor={COLORS.green1}
+            tintColor={COLORS.white}
+            readonly={true}
+          />
         </View>
         <View style={styles.containerTop}>
           <TouchableOpacity style={{ marginStart: 15 }} onPress={handleShare}>
             <Ionicons
               name="share-social-sharp"
               style={{ alignSelf: "center" }}
-              color={colors.secondary}
+              color={COLORS.secondary}
               size={35}
             />
           </TouchableOpacity>
@@ -187,7 +196,7 @@ function PinOwnerScreen({ navigation }) {
             <Ionicons
               name="bar-chart"
               style={{ alignSelf: "center" }}
-              color={colors.green1}
+              color={COLORS.green1}
               size={35}
             />
             <Text style={styles.greenHighlight}> See Statistics</Text>
@@ -201,7 +210,7 @@ function PinOwnerScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     justifyContent: "flex-start",
     paddingTop: Platform.OS === "android" ? 30 : 0,
     alignItems: "flex-start",
@@ -216,13 +225,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerBtn: {
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
     alignSelf: "flex-start",
     marginTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    //padding: 10,
   },
   containerImage: {
     flexDirection: "row",
@@ -251,7 +259,7 @@ const styles = StyleSheet.create({
     marginLeft: 75,
     borderRadius: 7,
     padding: 5,
-    backgroundColor: colors.green1,
+    backgroundColor: COLORS.green1,
   },
   pinImage: {
     width: 250,
@@ -267,7 +275,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   stroke: {
-    backgroundColor: colors.secondary,
+    backgroundColor: COLORS.secondary,
     alignSelf: "center",
     marginBottom: 10,
     width: "100%",
@@ -278,7 +286,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 22,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   subtitle: {
     textAlign: "left",
@@ -287,7 +295,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginStart: 20,
     fontWeight: "bold",
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   body: {
     textAlignVertical: "center",
@@ -295,12 +303,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 15,
     marginStart: 10,
-    color: "#12161b",
+    color: COLORS.secondary,
   },
   greenHighlight: {
     fontSize: 15,
     fontWeight: "bold",
-    color: colors.green1,
+    color: COLORS.green1,
   },
   centeredView: {
     flex: 1,
@@ -310,7 +318,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: colors.white,
+    backgroundColor: COLORS.white,
     borderRadius: 15,
     padding: 15,
     alignItems: "center",
@@ -321,14 +329,14 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonCancel: {
-    backgroundColor: colors.secondary,
+    backgroundColor: COLORS.secondary,
   },
   buttonDelete: {
-    backgroundColor: colors.red1,
+    backgroundColor: COLORS.red1,
     marginStart: 15,
   },
   textStyle: {
-    color: colors.white,
+    color: COLORS.white,
     fontWeight: "bold",
     fontSize: 15,
     textAlign: "center",
@@ -338,7 +346,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   shadow: {
-    shadowColor: "#000",
+    shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
       height: 2,
