@@ -83,4 +83,10 @@ PresentationCtrl.prototype.getPollutionLastDay =  function() {
 }
 */
 
+
+PresentationCtrl.prototype.getMapData = async function () { 
+	let data = this.domainCtrl.getMapData();
+	return data;
+}
+
 export { PresentationCtrl };
