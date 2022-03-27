@@ -13,4 +13,4 @@ const COLORS = {
   green2: "#669036",
 };
 
-export default COLORS;
+module.exports =  COLORS;

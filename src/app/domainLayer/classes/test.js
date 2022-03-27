@@ -27,13 +27,20 @@ var nextDay = new Date(day);
 nextDay.setDate(day.getDate() + 1);
 console.log(nextDay); // May 01 2000  
 */
-const d = "2022-02-01T00:00:00.000Z";
-const today = new Date(d)
-console.log(today)
+const today = new Date()
 
-const tomorrow = new Date(today)
-tomorrow.setDate(tomorrow.getDate() - 1)
-console.log(tomorrow)
+console.log(today)
+const lastweek = new Date(today)
+lastweek.setDate(lastweek.getDate() - 7)
+console.log(lastweek)
+
+let year = lastweek.getFullYear();
+let month = (lastweek.getMonth()+1) < 10 ? "0"+(lastweek.getMonth()+1) : lastweek.getMonth()+1;
+let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
+
+const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
+console.log(apiDate)
+
 
 /*
 let m = new MeasureStation("08019004");

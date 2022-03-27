@@ -23,7 +23,7 @@ class MeasureStation {
      * @returns date of one week ago from "date"
      */
     lastWeekDate (date) {
-        let today = new Date(date);
+        let today = date;
 
         let day = today.getDate();
         let month = today.getMonth()+1;
@@ -68,7 +68,7 @@ class MeasureStation {
         else return "h"+hour;
     }
 
-    //CALCULATORS
+    //CALCULATORS USED FOR LEVEL GETTERS
 
     /**
      * 

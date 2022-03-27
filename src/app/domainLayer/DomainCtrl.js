@@ -14,8 +14,9 @@ let DomainCtrl;
     };
 }());
 
-DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length, date) {
-
+DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length) {
+    let date = new Date();
+    console.log("DomainCtrl Date: "+date);
     let point = new DataPointMap(latitude, length);
     let data = await point.getDayLevel(date);
     let finalData = [];
@@ -27,11 +28,9 @@ DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length, dat
     return finalData;
 }
 
-DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length, date) {
-
+DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
     let point = new DataPointMap(latitude, length);
     let data = await point.getWeekLevel(date);
-
 
     return data;
 }

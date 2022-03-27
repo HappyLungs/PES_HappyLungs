@@ -16,7 +16,7 @@ import {
   StackedBarChart,
 } from "react-native-chart-kit";
 
-import COLORS from "../config/stylesheet/COLORS";
+const COLORS  = require("../config/stylesheet/colors");
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 

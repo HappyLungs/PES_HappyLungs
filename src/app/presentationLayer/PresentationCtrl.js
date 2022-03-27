@@ -19,8 +19,19 @@ let PresentationCtrl;
  * @returns { levels, tags, title, filter } 
  */
 PresentationCtrl.prototype.getPollutionLastDay = async function () {
-    let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971, "2022-03-15T00:00:00.000")
+    let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971)
     return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
+}
+
+/**
+ * 
+ * @param {*} type ["24hours", "week", "month", "year"]
+ * @param {*} latitude 
+ * @param {*} length 
+ * @returns [{AIR QUALITY},{POLLUTANTS}]
+ */
+ PresentationCtrl.prototype.getLevelStatistics = async function (type,latitude, length) {
+
 }
 
 
