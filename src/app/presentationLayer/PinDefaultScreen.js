@@ -116,7 +116,6 @@ function PinDefaultScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						marginTop: 10,
 					}}
@@ -138,7 +137,6 @@ function PinDefaultScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						marginTop: 10,
 					}}
@@ -169,7 +167,6 @@ function PinDefaultScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						alignItems: "center",
 					}}

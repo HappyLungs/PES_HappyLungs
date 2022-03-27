@@ -210,7 +210,7 @@ function CreatePinScreen({ route }) {
 				paddingHorizontal: 20,
 			}}
 		>
-			<View style={{ marginVertical: 20, backgroundColor: "red" }}>
+			<View style={{ marginVertical: 20 }}>
 				<Text style={styles.subtitle}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{locationName}{" "}

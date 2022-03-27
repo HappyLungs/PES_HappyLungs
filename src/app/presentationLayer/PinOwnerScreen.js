@@ -158,7 +158,7 @@ function PinOwnerScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", backgroundColor: "blue" }}>
+				<View style={{ flexDirection: "row" }}>
 					<Text style={styles.title}>{pin.name}</Text>
 					<TouchableOpacity
 						style={{ marginStart: 15, justifyContent: "center" }}
@@ -195,7 +195,6 @@ function PinOwnerScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						marginTop: 10,
 					}}
@@ -217,7 +216,6 @@ function PinOwnerScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						marginTop: 10,
 					}}
@@ -248,7 +246,6 @@ function PinOwnerScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						backgroundColor: "red",
 						padding: 10,
 						alignItems: "center",
 					}}
