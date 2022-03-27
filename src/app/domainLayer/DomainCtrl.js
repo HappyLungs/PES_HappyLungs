@@ -31,13 +31,7 @@ DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length, da
 
     let point = new DataPointMap(latitude, length);
     let data = await point.getWeekLevel(date);
-    /*
-    let finalData = [];
 
-    for (let i = 1; i <= 24; i += 2) {
-        finalData.push(data.get(i));
-    }
-    */
 
     return data;
 }

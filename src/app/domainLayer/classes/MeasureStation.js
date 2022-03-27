@@ -150,6 +150,13 @@ class MeasureStation {
 
     //POLLUTION LEVEL GETTERS
 
+    getdaysAndMonth(startDate, endDate) {
+        let start = new Date(startDate);
+        let end = new Date(endDate);
+
+       
+    }
+
     /**
      * Calculates the pollution level given a date with an hour
      * @param {*} date data type
@@ -178,6 +185,16 @@ class MeasureStation {
         let lastWeek = this.lastWeekDate(date);
         let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastWeek, date);
         let dailyLevel = this.calcMultipleDaysLevel(measures);
+
+        
+
+
+
+        let result = {
+            levels: dailyLevel,
+            num: dailyNum,
+            title: month
+        }
 
         return dailyLevel;
     }
