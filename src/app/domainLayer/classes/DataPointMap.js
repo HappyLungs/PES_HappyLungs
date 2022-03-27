@@ -12,6 +12,7 @@ class DataPointMap {
 
     //Me pasan un punto un cualquier, buscar entre los mas cercanos y que devuelva 1. Ver la contaminación de ese punto
 
+    //LINEAR CHART GETTERS
     async  getHourLevel(date, hour) {
         let puntos_cercanos = await this.nearerPoints();
 
@@ -36,7 +37,14 @@ class DataPointMap {
         return x;  
     }
     
+    //PIE CHART GETTERS
+    async getPollutantsQuantDay (date) {
+        let puntos_cercanos = await this.nearerPoints(date);
 
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getQuantityOfEachPollutantAtDay(date);
+        return x;     
+    }
 
     //Getters
     /*A partir de un punto (this) seleccionado por el usuario la función devolverá todos los puntos ordenados ascendentemente por 

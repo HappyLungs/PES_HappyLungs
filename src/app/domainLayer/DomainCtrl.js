@@ -12,11 +12,9 @@ let DomainCtrl;
 	};
 })();
 
-DomainCtrl.prototype.getPollutionLastDay = async function (
-	latitude,
-	length,
-	date
-) {
+DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length) {
+	let date = new Date();
+	console.log("DomainCtrl Date: " + date);
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getDayLevel(date);
 	let finalData = [];
@@ -28,13 +26,20 @@ DomainCtrl.prototype.getPollutionLastDay = async function (
 	return finalData;
 };
 
-DomainCtrl.prototype.getPollutionLastWeek = async function (
-	latitude,
-	length,
-	date
-) {
+DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getWeekLevel(date);
+
+	return data;
+};
+
+DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getPollutantsQuantDay(date);
 
 	return data;
 };
@@ -47,7 +52,7 @@ DomainCtrl.prototype.createPin = function (
 	rating,
 	status
 ) {
-	return new Pin(name, location, description, media, rating, status);
+	let newPin = new Pin(name, location, description, media, rating, status);
 	//store db
 };
 

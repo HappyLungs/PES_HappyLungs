@@ -173,7 +173,7 @@ function MapScreen({ navigation, route }) {
 									alignItems: "center",
 								}}
 								onPress={async () => {
-									let data = await presentationCtrl.getPollutionLastDay();
+									let data = await presentationCtrl.getDataStatistics();
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", { data: data });
 								}}
@@ -220,7 +220,6 @@ function MapScreen({ navigation, route }) {
 								}}
 							>
 								<LinearGradient
-									//chart
 									flex={1}
 									colors={[
 										"green",

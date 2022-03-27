@@ -95,90 +95,7 @@ function renderLinearChart(dades) {
 	);
 }
 
-function renderPieChart() {
-	const data = [
-		{
-			name: "PM10 (µg/m3)",
-			quantity: 24,
-			color: "#F94144",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "NOX (µg/m3)",
-			quantity: 13,
-			color: "#F3722C",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "O3 (µg/m3)",
-			quantity: 57,
-			color: "#F8961E",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "SO2 (µg/m3)",
-			quantity: 1,
-			color: "#F9844A",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "H2S (µg/m3)",
-			quantity: 1.2,
-			color: "#F9C74F",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "CO  (mg/m3)",
-			quantity: 0.2,
-			color: "#90BE6D",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "NO (µg/m3)",
-			quantity: 2,
-			color: "#43AA8B",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "NO2 (µg/m3)",
-			quantity: 11,
-			color: "#4D908E",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-		{
-			name: "PM2.5 (µg/m3)",
-			quantity: 19,
-			color: "#577590",
-			legendFontColor: "#7F7F7F",
-			legendFontSize: 13,
-		},
-	];
-
-	data.sort((a, b) => a.quantity < b.quantity);
-	let colorsPieChart = [
-		"#F94144",
-		"#F3722C",
-		"#F8961E",
-		"#F9844A",
-		"#F9C74F",
-		"#90BE6D",
-		"#43AA8B",
-		"#4D908E",
-		"#4D908E",
-		"#277DA1",
-	];
-	for (let i = 0; i < data.length; i++) {
-		data[i].color = colorsPieChart[i];
-	}
-
+function renderPieChart(dades) {
 	const chartConfig = {
 		backgroundGradientFrom: "#1E2923",
 		backgroundGradientFromOpacity: 0,
@@ -189,8 +106,28 @@ function renderPieChart() {
 		barPercentage: 0.5,
 		useShadowColorFromDataset: false, // optional
 	};
-
 	const screenWidth = Dimensions.get("window").width;
+
+	const data = Array.from(dades);
+
+	let colorsPieChart = [
+		"#F94144",
+		"#277DA1",
+		"#F3722C",
+		"#4D908E",
+		"#F8961E",
+		"#90BE6D",
+		"#F9844A",
+		"#43AA8B",
+		"#F9C74F",
+		"#4D908E",
+	];
+	for (let i = 0; i < data.length; i++) {
+		data[i].name += " (µg/m3)";
+		data[i].color = colorsPieChart[i];
+		data[i].legendFontColor = "#7F7F7F";
+		data[i].legendFontSize = 13;
+	}
 
 	return (
 		<View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -248,7 +185,7 @@ function StatisticsScreen({ navigation, route }) {
 				<Text style={styles.subtitle}> POLLUTION EVOLUTION</Text>
 			</View>
 			<View style={{ justifyContent: "center", alignItems: "center" }}>
-				{renderLinearChart(data)}
+				{renderLinearChart(data[0])}
 			</View>
 			<View
 				style={{
@@ -261,7 +198,7 @@ function StatisticsScreen({ navigation, route }) {
 				<Text style={styles.subtitle}> POLLUTANT QUANTITY</Text>
 			</View>
 			<View style={{ justifyContent: "center", alignItems: "center" }}>
-				{renderPieChart()}
+				{renderPieChart(data[1])}
 			</View>
 		</SafeAreaView>
 	);

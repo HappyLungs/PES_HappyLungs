@@ -2,6 +2,8 @@ import Chart from "./Chart.js"
 
 export default class ChartAirQuality extends Chart {
     constructor (title) {
-        super((title));
+        super(title);
+        this.tags;
+        this.levels;
     }
 }
