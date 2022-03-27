@@ -189,7 +189,7 @@ function PinOwnerScreen({ navigation }) {
           <TouchableOpacity
             style={{ marginStart: 180, flexDirection: "column" }}
             onPress={async () => {
-              let data = await presentationCtrl.getPollutionLastDay();
+              let data = await presentationCtrl.getDataStatistics();
               navigation.navigate("Statistics", { data: data });
             }}
           >

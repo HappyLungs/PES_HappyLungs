@@ -35,6 +35,14 @@ DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
     return data;
 }
 
+DomainCtrl.prototype.getPollutantsQuantLastDay = async function (latitude, length) {
+    let date = new Date();
+    let point = new DataPointMap(latitude, length);
+    let data = await point.getPollutantsQuantDay(date);
+
+    return data;
+}
+
 DomainCtrl.prototype.createPin = function (name, location, description, media, rating, status) {
     let newPin = new Pin(name, location, description, media, rating, status);
     //store db

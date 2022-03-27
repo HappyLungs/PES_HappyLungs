@@ -14,13 +14,24 @@ let PresentationCtrl;
 
 /**
  * 
- * getPollutin 
+ * getPollution Level
  * 
  * @returns { levels, tags, title, filter } 
  */
 PresentationCtrl.prototype.getPollutionLastDay = async function () {
-    let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971)
+    let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
     return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
+}
+
+/**
+ * 
+ * getPollutants' Quantity 
+ * 
+ * @returns { levels, tags, title, filter } 
+ */
+ PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
+    let data = await this.domainCtrl.getPollutantsQuantLastDay(41.363094, 2.112971)
+    return data;
 }
 
 /**
@@ -30,8 +41,11 @@ PresentationCtrl.prototype.getPollutionLastDay = async function () {
  * @param {*} length 
  * @returns [{AIR QUALITY},{POLLUTANTS}]
  */
- PresentationCtrl.prototype.getLevelStatistics = async function (type,latitude, length) {
-
+ PresentationCtrl.prototype.getDataStatistics = async function (/*type, latitude, length*/) {
+    let data = new Array();
+    data[0] = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
+    data[1] = await this.domainCtrl.getPollutantsQuantLastDay(41.363094, 2.112971);
+    return data;
 }
 
 
