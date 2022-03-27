@@ -62,7 +62,7 @@ DomainCtrl.prototype.getMapData = async function () {
             latitude: ms.latitud,
             length: ms.longitud,
             hour: date.getHours(),
-            wieght: level
+            weight: level
         }
         measureStationLevels.push(info)
     };
