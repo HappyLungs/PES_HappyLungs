@@ -63,4 +63,4 @@ class DataPointMap {
 
 }
 
-export {DataPointMap};
+module.exports = DataPointMap;

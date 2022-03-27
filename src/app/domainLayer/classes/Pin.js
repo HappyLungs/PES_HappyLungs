@@ -94,4 +94,4 @@ class Pin {
   }
 }
 
-export { Pin }
+module.exports = Pin

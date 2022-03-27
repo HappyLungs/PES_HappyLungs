@@ -1,5 +1,8 @@
-import { DataPointMap } from "./classes/DataPointMap.js"
-import { Pin } from "./classes/Pin"
+const DataPointMap = require("./classes/DataPointMap.js");
+const Pin = require("./classes/Pin");
+const DadesObertes = require("./services/DadesObertes");
+const MeasureStation = require("./classes/MeasureStation")
+const dadesObertes = new DadesObertes();
 
 
 let DomainCtrl;
@@ -40,7 +43,37 @@ DomainCtrl.prototype.createPin = function (name, location, description, media, r
     //store db
 }
 
+/**
+ * 
+ * @returns array with the contamination level of each measure station and its position
+ */
+DomainCtrl.prototype.getMapData = async function () {
+    let date = new Date();
+    let measureStations = new Map();
+    let allMeasures = await dadesObertes.getMeasuresDate(date);
+    allMeasures.forEach(measure => {
+        let eoiCode = measure.codi_eoi;
+        if (!measureStations.has(eoiCode)) {
+            let ms = new MeasureStation(measure.codi_eoi, measure.nom_estacio, measure.tipus_estacio, measure.latitud, measure.longitud, null);
+            measureStations.set(eoiCode,ms);
+        }
+    });
+
+    let measureStationLevels = [];
+    for (let [key, ms] of measureStations) {
+        let level = await ms.getHourLevel(date, date.getHours())
+        let info = {
+            latitude: ms.latitud,
+            length: ms.longitud,
+            hour: date.getHours(),
+            wieght: level
+        }
+        measureStationLevels.push(info)
+    };
+    return measureStationLevels;
+}
 
 
-export { DomainCtrl };
+
+module.exports = DomainCtrl;
 

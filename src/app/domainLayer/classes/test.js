@@ -1,22 +1,23 @@
 const MeasureStation = require("./MeasureStation");
+const DomainCtrl = require("../DomainCtrl")
+const dCtrl = new DomainCtrl();
 
-/*
 // Start function
 const start = async function() {
-    const d = "2022-03-15T00:00:00.000";
+    /*
+    const d = new Date();
     const h = 12;
-
     let m = new MeasureStation("08019004");
-
     console.log("Crido la funció a test.js")
     const result = await m.getWeekLevel(d);;
-
     console.log(result);
+    */
+   dCtrl.getMapData();
 }
 
 // Call start
 start();
-*/
+
 
 /*
 const d = "2022-02-01T00:00:00.000";
@@ -27,6 +28,7 @@ var nextDay = new Date(day);
 nextDay.setDate(day.getDate() + 1);
 console.log(nextDay); // May 01 2000  
 */
+/*
 const today = new Date()
 
 console.log(today)
@@ -40,6 +42,7 @@ let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
 
 const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
 console.log(apiDate)
+*/
 
 
 /*

@@ -13,17 +13,14 @@ let DadesObertes;
 }());
 
 dateApiConverter = function (date) {
-    console.log(date)
     const lastweek = new Date(date)
     lastweek.setDate(lastweek.getDate() - 7)
-    console.log(lastweek)
 
     let year = lastweek.getFullYear();
     let month = (lastweek.getMonth()+1) < 10 ? "0"+(lastweek.getMonth()+1) : lastweek.getMonth()+1;
     let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
 
     const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
-    console.log(apiDate)
     return apiDate;
 }
 
