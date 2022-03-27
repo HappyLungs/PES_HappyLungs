@@ -1,47 +1,54 @@
-import { DataPointMap } from "./classes/DataPointMap.js"
-import { Pin } from "./classes/Pin"
-
+import { DataPointMap } from "./classes/DataPointMap.js";
+import { Pin } from "./classes/Pin";
 
 let DomainCtrl;
 (function () {
-    let instance;
-    DomainCtrl = function () {
-        if (instance) return instance;
-        instance = this;
+	let instance;
+	DomainCtrl = function () {
+		if (instance) return instance;
+		instance = this;
 
-        // initialize any properties of the singleton
+		// initialize any properties of the singleton
+	};
+})();
 
-    };
-}());
+DomainCtrl.prototype.getPollutionLastDay = async function (
+	latitude,
+	length,
+	date
+) {
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getDayLevel(date);
+	let finalData = [];
 
-DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length, date) {
+	for (let i = 1; i <= 24; i += 2) {
+		finalData.push(data.get(i));
+	}
 
-    let point = new DataPointMap(latitude, length);
-    let data = await point.getDayLevel(date);
-    let finalData = [];
+	return finalData;
+};
 
-    for (let i = 1; i <= 24; i += 2) {
-        finalData.push(data.get(i));
-    }
+DomainCtrl.prototype.getPollutionLastWeek = async function (
+	latitude,
+	length,
+	date
+) {
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getWeekLevel(date);
 
-    return finalData;
-}
+	return data;
+};
 
-DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length, date) {
-
-    let point = new DataPointMap(latitude, length);
-    let data = await point.getWeekLevel(date);
-
-
-    return data;
-}
-
-DomainCtrl.prototype.createPin = function (name, location, description, media, rating, status) {
-    let newPin = new Pin(name, location, description, media, rating, status);
-    //store db
-}
-
-
+DomainCtrl.prototype.createPin = function (
+	name,
+	location,
+	description,
+	media,
+	rating,
+	status
+) {
+	return new Pin(name, location, description, media, rating, status);
+	//store db
+};
 
 export { DomainCtrl };
-
