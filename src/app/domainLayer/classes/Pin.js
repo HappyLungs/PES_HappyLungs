@@ -20,6 +20,8 @@ class Pin {
 				media +
 				" rating: " +
 				rating +
+				" date: " +
+				date +
 				" status: " +
 				status
 		);

@@ -36,10 +36,15 @@ import * as Location from "expo-location";
 import { PresentationCtrl } from "./PresentationCtrl.js";
 
 function MapScreen({ navigation, route }) {
-	const [modalPinVisible, setModalPinVisible] = useState(false);
-	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+	let presentationCtrl = new PresentationCtrl();
+
 	const location =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+	const lat = 41.363094;
+	const lng = 2.112971;
+
+	const [modalPinVisible, setModalPinVisible] = useState(false);
+	const [modalFilterVisible, setModalFilterVisible] = useState(false);
 	const [trafficSelected, setTraffic] = useState(false);
 	const [industrySelected, setIndustry] = useState(false);
 	const [urbanSelected, setUrban] = useState(false);
@@ -52,8 +57,6 @@ function MapScreen({ navigation, route }) {
 		latitudeDelta: 0.3,
 		longitudeDelta: 1.5,
 	});
-
-	let presentationCtrl = new PresentationCtrl();
 
 	const [heatpoints, setHeatpoints] = useState([
 		{
@@ -78,19 +81,17 @@ function MapScreen({ navigation, route }) {
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
   */
 	/*
-  const { tmpLat, tmpLng } = route.params;
-  if (tmpLat && tmpLng) {
+  const { lat, lng } = route.params;
+  if (lat && lng) {
     const tmpLocation = {
-      latitude: tmpLat,
-      longitude: tmpLng,
+      latitude: lat,
+      longitude: lng,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     }
     mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
   }
   */
-
-	const [selected, setSelected] = React.useState(null);
 
 	/*const onMapPress = React.useCallback((event) => {
       setMarkers((current) => [
@@ -142,7 +143,7 @@ function MapScreen({ navigation, route }) {
 							<Ionicons name="close" color={COLORS.secondary} size={25} />
 						</TouchableOpacity>
 						<Text
-							style={[styles.modalText, { fontWeight: "bold", bottom: 10 }]}
+							style={[styles.modalText, { fontWeight: "bold", bottom: 15 }]}
 						>
 							Selected location
 						</Text>
@@ -157,7 +158,7 @@ function MapScreen({ navigation, route }) {
 								onPress={() => {
 									setModalPinVisible(!modalPinVisible),
 										navigation.navigate("CreatePin", {
-											coords: { latitude: 41.366531, longitude: 2.019336 },
+											coords: { latitude: lat, longitude: lng },
 										});
 								}}
 							>
@@ -173,9 +174,16 @@ function MapScreen({ navigation, route }) {
 									alignItems: "center",
 								}}
 								onPress={async () => {
-									let data = await presentationCtrl.getDataStatistics();
+									let data = await presentationCtrl.getDataStatistics(
+										"24hours",
+										lat,
+										lng
+									);
 									setModalPinVisible(!modalPinVisible);
-									navigation.navigate("Statistics", { data: data });
+									navigation.navigate("Statistics", {
+										data: data,
+										coords: { latitude: lat, longitude: lng },
+									});
 								}}
 							>
 								<MaterialIcons
@@ -233,7 +241,15 @@ function MapScreen({ navigation, route }) {
 									end={{ x: 1, y: 1 }}
 									style={{ borderRadius: 5 }}
 								>
-									<View style={[styles.stroke]} />
+									<View
+										style={{
+											backgroundColor: COLORS.secondary,
+											alignSelf: "center",
+											height: 20,
+											width: 5,
+											right: 45,
+										}}
+									/>
 								</LinearGradient>
 							</View>
 						</View>
@@ -245,9 +261,9 @@ function MapScreen({ navigation, route }) {
 
 	function renderCheckList() {
 		return (
-			<View style={styles.checkList}>
+			<View style={{ flexDirection: "column", marginStart: 20 }}>
 				<BouncyCheckbox
-					style={styles.checkBox}
+					style={{ marginTop: 10 }}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -265,7 +281,7 @@ function MapScreen({ navigation, route }) {
 					text="Traffic"
 				/>
 				<BouncyCheckbox
-					style={styles.checkBox}
+					style={{ marginTop: 10 }}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -285,7 +301,7 @@ function MapScreen({ navigation, route }) {
 					text="Industry"
 				/>
 				<BouncyCheckbox
-					style={styles.checkBox}
+					style={{ marginTop: 10 }}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -333,7 +349,7 @@ function MapScreen({ navigation, route }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 10 },
+								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
 							]}
 						>
 							Filter
@@ -361,7 +377,7 @@ function MapScreen({ navigation, route }) {
 								backgroundColor: COLORS.secondary,
 								borderRadius: 90,
 								padding: 7,
-								margin: 5,
+								marginTop: 10,
 								marginStart: 15,
 								alignItems: "center",
 							}}
@@ -388,7 +404,8 @@ function MapScreen({ navigation, route }) {
 									backgroundColor: COLORS.secondary,
 									borderRadius: 90,
 									padding: 7,
-									margin: 5,
+									marginTop: 10,
+									marginEnd: 10,
 									marginStart: 15,
 									alignItems: "center",
 								}}
@@ -453,12 +470,12 @@ function MapScreen({ navigation, route }) {
 	}
 
 	return (
-		<SafeAreaView style={styles.background}>
-			<View style={styles.container}>
+		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
+			<View style={{ ...StyleSheet.absoluteFillObject }}>
 				<MapView
 					ref={mapRef}
 					provider={PROVIDER_GOOGLE}
-					style={styles.map}
+					style={{ ...StyleSheet.absoluteFillObject }}
 					initialRegion={{
 						latitude: 41.366531,
 						longitude: 2.019336,
@@ -483,8 +500,25 @@ function MapScreen({ navigation, route }) {
 					<Heatmap points={heatpoints} />
 				</MapView>
 			</View>
-			<View style={styles.rowContainer}>
-				<View style={[styles.containerSearch, styles.shadow]}>
+			<View
+				style={{
+					flexDirection: "row",
+					alignSelf: "flex-start",
+					margin: 10,
+				}}
+			>
+				<View
+					style={[
+						{
+							backgroundColor: COLORS.white,
+							width: "80%",
+							height: 50,
+							borderRadius: 12,
+							flexDirection: "row",
+						},
+						styles.shadow,
+					]}
+				>
 					<MaterialIcons
 						name="search"
 						style={{ alignSelf: "center", marginStart: 10 }}
@@ -498,8 +532,7 @@ function MapScreen({ navigation, route }) {
 						defaultValue={"Search a location"}
 					/>
 				</View>
-
-				<View style={[styles.containerSphere, styles.shadow]}>
+				<View style={[styles.containerFilter, styles.shadow]}>
 					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
@@ -515,11 +548,19 @@ function MapScreen({ navigation, route }) {
 				style={styles.btn}
 				onPress={() => setModalPinVisible(true)}
 			>
-				<Text style={styles.btnText}>Pin Example</Text>
+				<Text
+					style={{
+						color: "white",
+						textAlign: "center",
+						fontWeight: "bold",
+					}}
+				>
+					Pin Example
+				</Text>
 			</TouchableOpacity>
 
 			<TouchableOpacity
-				style={styles.Compass}
+				style={styles.compass}
 				onPress={() => {
 					Location.installWebGeolocationPolyfill();
 					navigator.geolocation.getCurrentPosition((position) => {
@@ -530,12 +571,7 @@ function MapScreen({ navigation, route }) {
 					});
 				}}
 			>
-				<MaterialCommunityIcons
-					name="compass"
-					style={{ alignSelf: "center" }}
-					color={COLORS.white}
-					size={35}
-				/>
+				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
 			</TouchableOpacity>
 			{renderModalPin()}
 			{renderModalFilter()}
@@ -544,40 +580,13 @@ function MapScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-	stroke: {
-		backgroundColor: COLORS.secondary,
-		alignSelf: "center",
-		height: 20,
-		width: 5,
-		right: 45,
-	},
-	background: {
-		flex: 1,
-		justifyContent: "flex-start",
-		alignItems: "center",
-	},
-	containerSearch: {
-		backgroundColor: COLORS.white,
-		width: "80%",
-		height: 50,
-		borderRadius: 12,
-		flexDirection: "row",
-	},
-	containerSphere: {
+	containerFilter: {
 		backgroundColor: COLORS.white,
 		width: 50,
 		height: 50,
 		marginStart: 20,
 		borderRadius: 12,
 		justifyContent: "center",
-	},
-	rowContainer: {
-		flexDirection: "row",
-		alignSelf: "flex-start",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "flex-start",
-		margin: 10,
 	},
 	body: {
 		textAlignVertical: "center",
@@ -597,7 +606,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		alignSelf: "center",
-		marginTop: 22,
 		width: "80%",
 	},
 	modalView: {
@@ -625,7 +633,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	shadow: {
-		shadowColor: "#000",
+		shadowColor: COLORS.black,
 		shadowOffset: {
 			width: 0,
 			height: 2,
@@ -635,7 +643,6 @@ const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	btn: {
-		marginTop: 25,
 		justifyContent: "center",
 		borderRadius: 5,
 		borderBottomWidth: 5,
@@ -644,30 +651,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: COLORS.darkGrey,
 		backgroundColor: COLORS.secondary,
 	},
-	btnText: {
-		color: "white",
-		textAlign: "center",
-		fontWeight: "bold",
-	},
-	container: {
-		...StyleSheet.absoluteFillObject,
-		height: "100%",
-		width: "100%",
-		justifyContent: "flex-end",
-		//position:'absolute',
-		alignItems: "center",
-	},
-	map: {
-		...StyleSheet.absoluteFillObject,
-	},
-	checkList: {
-		flexDirection: "column",
-		marginStart: 20,
-	},
-	checkBox: {
-		marginTop: 10,
-	},
-	Compass: {
+	compass: {
 		marginTop: 460,
 		marginRight: 10,
 		marginStart: 320,
@@ -676,13 +660,9 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 5,
 		width: 50,
 		height: 50,
+		alignItems: "center",
 		borderBottomColor: COLORS.darkGrey,
 		backgroundColor: COLORS.secondary,
-	},
-	CompassText: {
-		color: "white",
-		textAlign: "center",
-		fontWeight: "bold",
 	},
 });
 

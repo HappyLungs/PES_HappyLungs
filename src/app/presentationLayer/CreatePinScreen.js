@@ -58,6 +58,7 @@ function CreatePinScreen({ route }) {
 			isValid = false;
 		}
 		if (isValid) {
+			console.log(status);
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,

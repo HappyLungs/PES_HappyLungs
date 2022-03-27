@@ -4,7 +4,6 @@ import {
 	View,
 	Text,
 	SafeAreaView,
-	Platform,
 	TouchableOpacity,
 	Modal,
 	Pressable,
@@ -27,14 +26,15 @@ function PinOwnerScreen({ navigation, route }) {
 	const locationName =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
+	const lat = 41.363094;
+	const lng = 2.112971;
 	const [modalVisible, setModalVisible] = useState(false);
-	const lat = 37.421749;
-	const lng = -122.0841477;
-	const handleDelete = () => console.log("Delete clicked");
-	const handleEdit = () => console.log("Edit clicked");
 	const handleSeeOnMap = () => {
-		navigation.navigate("MapScreen", { tmpLat: lat, tmpLng: lng });
+		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
 	};
+
+	const handleEdit = () => console.log("Edit clicked");
+	const handleDelete = () => console.log("Delete clicked");
 	const handleShare = () => console.log("Share clicked");
 
 	function renderModal() {
@@ -261,7 +261,11 @@ function PinOwnerScreen({ navigation, route }) {
 					<TouchableOpacity
 						style={{ marginStart: 180, flexDirection: "column" }}
 						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics();
+							let data = await presentationCtrl.getDataStatistics(
+								"24hours",
+								lat,
+								lng
+							);
 							navigation.navigate("Statistics", { data: data });
 						}}
 					>

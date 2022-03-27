@@ -23,11 +23,13 @@ function PinDefaultScreen({ navigation, route }) {
 	const locationName =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
+	const lat = 41.363094;
+	const lng = 2.112971;
 	const [bookmark, setBookmark] = useState("bookmark-outline");
 	const handleSeeOnMap = () => {
-		console.log("See On Map clicked");
-		navigation.navigate("MapScreen");
+		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
 	};
+
 	const handleShare = () => console.log("Share clicked");
 
 	function renderImageCarousel() {
@@ -182,7 +184,11 @@ function PinDefaultScreen({ navigation, route }) {
 					<TouchableOpacity
 						style={{ marginStart: 180, flexDirection: "column" }}
 						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics();
+							let data = await presentationCtrl.getDataStatistics(
+								"24hours",
+								lat,
+								lng
+							);
 							navigation.navigate("Statistics", { data: data });
 						}}
 					>

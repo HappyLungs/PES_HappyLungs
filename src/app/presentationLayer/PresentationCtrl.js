@@ -41,19 +41,22 @@ PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
  *
  * @param {*} type ["24hours", "week", "month", "year"]
  * @param {*} latitude
- * @param {*} length
+ * @param {*} longitude
  * @returns [{AIR QUALITY},{POLLUTANTS}]
  */
-PresentationCtrl.prototype.getDataStatistics =
-	async function (/*type, latitude, length*/) {
-		let data = new Array();
-		data[0] = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
-		data[1] = await this.domainCtrl.getPollutantsQuantLastDay(
-			41.363094,
-			2.112971
-		);
-		return data;
-	};
+PresentationCtrl.prototype.getDataStatistics = async function (
+	type,
+	latitude,
+	longitude
+) {
+	let data = new Array();
+	data[0] = await this.domainCtrl.getPollutionLastDay(latitude, longitude);
+	data[1] = await this.domainCtrl.getPollutantsQuantLastDay(
+		latitude,
+		longitude
+	);
+	return data;
+};
 
 PresentationCtrl.prototype.createPin = function (
 	name,
