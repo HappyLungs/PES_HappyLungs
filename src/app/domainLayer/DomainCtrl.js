@@ -7,29 +7,28 @@ const dadesObertes = new DadesObertes();
 
 let DomainCtrl;
 (function () {
-    let instance;
-    DomainCtrl = function () {
-        if (instance) return instance;
-        instance = this;
+	let instance;
+	DomainCtrl = function () {
+		if (instance) return instance;
+		instance = this;
 
-        // initialize any properties of the singleton
-
-    };
-}());
+		// initialize any properties of the singleton
+	};
+})();
 
 DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length) {
-    let date = new Date();
-    console.log("DomainCtrl Date: "+date);
-    let point = new DataPointMap(latitude, length);
-    let data = await point.getDayLevel(date);
-    let finalData = [];
+	let date = new Date();
+	console.log("DomainCtrl Date: " + date);
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getDayLevel(date);
+	let finalData = [];
 
-    for (let i = 1; i <= 24; i += 2) {
-        finalData.push(data.get(i));
-    }
+	for (let i = 1; i <= 24; i += 2) {
+		finalData.push(data.get(i));
+	}
 
-    return finalData;
-}
+	return finalData;
+};
 
 DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
     let point = new DataPointMap(latitude, length);
@@ -38,10 +37,7 @@ DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
     return data;
 }
 
-DomainCtrl.prototype.createPin = function (name, location, description, media, rating, status) {
-    let newPin = new Pin(name, location, description, media, rating, status);
-    //store db
-}
+
 
 /**
  * 
@@ -75,5 +71,27 @@ DomainCtrl.prototype.getMapData = async function () {
 
 
 
-module.exports = DomainCtrl;
+DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getPollutantsQuantDay(date);
 
+	return data;
+};
+
+DomainCtrl.prototype.createPin = function (
+	name,
+	location,
+	description,
+	media,
+	rating,
+	status
+) {
+	let newPin = new Pin(name, location, description, media, rating, status);
+	//store db
+};
+
+module.exports = DomainCtrl;
