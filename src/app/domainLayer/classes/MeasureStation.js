@@ -13,6 +13,9 @@ class MeasureStation {
         this.latitud = latitud;
         this.longitud = longitud;
         this.length = length;
+        this.months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
     }
 
     /**
@@ -151,13 +154,18 @@ class MeasureStation {
             let day = dayNum.getDate();
             tags.push(day);
         }
-        console.log("tags: "+tags);
 
         let title;
-        if (date.getMonth() != lastweek.getMonth()) title = "";
-        else title = "";
+        if (date.getMonth() === lastweek.getMonth()) title = this.months[date.getMonth()+1];
+        else title = this.months[date.getMonth()+1]+" / "+this.months[lastweek.getMonth()+1];
+
+        let result = {
+            title: title,
+            tags: tags,
+            level: dailyLevel
+        }
         
-        return dailyLevel;
+        return result;
     }
 
 

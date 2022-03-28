@@ -17,8 +17,8 @@ class DataPointMap {
         let puntos_cercanos = await this.nearerPoints();
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getMeasuresByDay(date);
-        return x.get(hour);     
+        let x = await punto_cercano.getHourLevel(date, hour);
+        return x;    
     }
 
     async getDayLevel (date) {
@@ -33,7 +33,7 @@ class DataPointMap {
         let puntos_cercanos = await this.nearerPoints(date);
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getMeasuresByWeek(date);
+        let x = await punto_cercano.getWeekLevel(date);
         return x;  
     }
     
