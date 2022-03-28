@@ -1,6 +1,6 @@
 import domainCtrl from  "../domainLayer/DomainCtrl.js"
 import PersistenceCtrl from "../persistenceLayer/PersistenceCtrl.js"
-import PresentationCtrl from "../presentationLayer/PresentationCtrl.js"
+import {PresentationCtrl} from "../presentationLayer/PresentationCtrl.js"
 
 let factory = (function () {
     let instance;

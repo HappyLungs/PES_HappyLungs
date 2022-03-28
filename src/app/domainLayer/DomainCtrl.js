@@ -45,7 +45,7 @@ let DomainCtrl;
 			}
 			measureStationLevels.push(info)
 		}
-    };
+    }
     return measureStationLevels;
 }
 

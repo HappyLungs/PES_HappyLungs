@@ -36,13 +36,13 @@ import * as Location from "expo-location";
 import { PresentationCtrl } from "./PresentationCtrl.js";
 
 function MapScreen({ navigation, route }) {
-	let presentationCtrl = new PresentationCtrl();
+
 
 	const location =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 	const lat = 41.363094;
 	const lng = 2.112971;
-
+	let presentationCtrl = new PresentationCtrl();
 	const [modalPinVisible, setModalPinVisible] = useState(false);
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
 	const [trafficSelected, setTraffic] = useState(false);
@@ -58,23 +58,7 @@ function MapScreen({ navigation, route }) {
 		longitudeDelta: 1.5,
 	});
 
-	const [heatpoints, setHeatpoints] = useState([
-		{
-			latitude: 43.366531,
-			longitude: 2.019336,
-			weight: 1,
-		},
-		{
-			latitude: 42.366531,
-			longitude: 2.019336,
-			weight: 2,
-		},
-		{
-			latitude: 41.366531,
-			longitude: 2.019336,
-			weight: 3,
-		},
-	]);
+	const [heatpoints] = useState(presentationCtrl.getMapData());
 	const mapRef = useRef(null);
 
 	/*

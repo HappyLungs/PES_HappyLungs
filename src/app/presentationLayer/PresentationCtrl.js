@@ -9,6 +9,7 @@ let PresentationCtrl;
 
 		// initialize any properties of the singleton
 		this.domainCtrl = new DomainCtrl();
+		return instance;
 	};
 })();
 
@@ -32,7 +33,7 @@ PresentationCtrl.prototype.getPollutionLastDay = async function () {
 PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
 	let data = await this.domainCtrl.getPollutantsQuantLastDay(41.363094,2.112971);
 	return data;
-};
+}
 
 /**
  *
@@ -64,15 +65,15 @@ PresentationCtrl.prototype.getDataStatistics = async function (type,latitude, lo
 	}
 	
 	return data;
-};
+}
 
 PresentationCtrl.prototype.createPin = function (name,location,description,media,rating,status) {
 	return this.domainCtrl.createPin(name,location,description,media,rating,status);
-};
+}
 
 PresentationCtrl.prototype.getMapData = async function () { 
 	let data = this.domainCtrl.getMapData();
 	return data;
 }
 
-module.exports = PresentationCtrl;
+export{PresentationCtrl};
