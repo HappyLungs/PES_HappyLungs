@@ -1,4 +1,4 @@
-import { DomainCtrl } from "../domainLayer/DomainCtrl.js";
+const DomainCtrl = require("../domainLayer/DomainCtrl.js");
 
 let PresentationCtrl;
 (function () {
@@ -9,6 +9,7 @@ let PresentationCtrl;
 
 		// initialize any properties of the singleton
 		this.domainCtrl = new DomainCtrl();
+		return instance;
 	};
 })();
 
@@ -30,7 +31,10 @@ PresentationCtrl.prototype.getPollutionLastDay = async function () {
  * @returns { levels, tags, title, filter }
  */
 PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
-	let data = await this.domainCtrl.getPollutantsQuantLastDay(41.363094,2.112971);
+	let data = await this.domainCtrl.getPollutantsQuantLastDay(
+		41.363094,
+		2.112971
+	);
 	return data;
 };
 
@@ -41,17 +45,30 @@ PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
  * @param {*} longitude
  * @returns [{AIR QUALITY},{POLLUTANTS}] => [{title, tags, levels}, {¿?}]
  */
-PresentationCtrl.prototype.getDataStatistics = async function (type,latitude, longitude) {
+PresentationCtrl.prototype.getDataStatistics = async function (
+	type,
+	latitude,
+	longitude
+) {
 	let data = new Array();
 
 	switch (type) {
 		case "24hours":
-			data[0] = await this.domainCtrl.getPollutionLevelLastDay(latitude, longitude);
-			data[1] = await this.domainCtrl.getPollutantsQuantLastDay(latitude,longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastDay(
+				latitude,
+				longitude
+			);
+			data[1] = await this.domainCtrl.getPollutantsQuantLastDay(
+				latitude,
+				longitude
+			);
 			break;
 		case "week":
-			data[0] = await this.domainCtrl.getPollutionLevelLastWeek(latitude, longitude);
-			data[1] = await this.domainCtrl.x(latitude,longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastWeek(
+				latitude,
+				longitude
+			);
+			data[1] = await this.domainCtrl.x(latitude, longitude);
 			break;
 		case "month":
 			data[0] = await this.domainCtrl.getPollutionLevelLastMonth(latitude, longitude);
@@ -59,20 +76,33 @@ PresentationCtrl.prototype.getDataStatistics = async function (type,latitude, lo
 			break;
 		case "year":
 			data[0] = await this.domainCtrl.x(latitude, longitude);
-			data[1] = await this.domainCtrl.x(latitude,longitude);
+			data[1] = await this.domainCtrl.x(latitude, longitude);
 			break;
 	}
-	
+
 	return data;
 };
 
-PresentationCtrl.prototype.createPin = function (name,location,description,media,rating,status) {
-	return this.domainCtrl.createPin(name,location,description,media,rating,status);
+PresentationCtrl.prototype.createPin = function (
+	name,
+	location,
+	description,
+	media,
+	rating,
+	status
+) {
+	return this.domainCtrl.createPin(
+		name,
+		location,
+		description,
+		media,
+		rating,
+		status
+	);
 };
 
-PresentationCtrl.prototype.getMapData = async function () { 
-	let data = this.domainCtrl.getMapData();
-	return data;
-}
+PresentationCtrl.prototype.getMapData = async function () {
+	return this.domainCtrl.getMapData();
+};
 
-export { PresentationCtrl };
+module.exports = PresentationCtrl;

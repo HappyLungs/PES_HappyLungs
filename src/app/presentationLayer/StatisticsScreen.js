@@ -17,7 +17,7 @@ import {
 } from "react-native-chart-kit";
 
 import COLORS from "../config/stylesheet/colors";
-import { PresentationCtrl } from "./PresentationCtrl.js";
+const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 

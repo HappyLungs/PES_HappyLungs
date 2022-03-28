@@ -13,7 +13,7 @@ import { Rating } from "react-native-ratings";
 import { ImageSlider } from "react-native-image-slider-banner";
 import { Ionicons } from "@expo/vector-icons";
 
-import { PresentationCtrl } from "./PresentationCtrl.js";
+const PresentationCtrl = require("./PresentationCtrl.js");
 
 function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();

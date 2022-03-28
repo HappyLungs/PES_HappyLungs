@@ -1,4 +1,5 @@
-class Pin {
+export default class Pin {
+	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(name, location, description, media, rating, date, status) {
 		this.name = name;
 		this.location = location;
@@ -113,4 +114,5 @@ class Pin {
 	getActualDate() {}
 }
 
-module.exports = Pin
+export { Pin };
+//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
