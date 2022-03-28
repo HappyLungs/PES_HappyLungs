@@ -1,9 +1,9 @@
-const DataPointMapModel = require('./../models/dataPointMap.model')
+const MeasureStation = require('./../models/measureStation.model')
 
-exports.createDataPointMap = async (params) => {
+exports.createMeasureStation = async (params) => {
     return new Promise((resolve, reject) => {
         console.log(params);
-        DataPointMapModel
+        MeasureStation
         .create(params)
         .then((data) => { 
             resolve(data) })
@@ -12,9 +12,9 @@ exports.createDataPointMap = async (params) => {
 }
 
 
-exports.findDataPointMap = async (where = {}) => {
+exports.findMeasureStation = async (where = {}) => {
     return new Promise((resolve, reject) => {
-        DataPointMapModel
+        MeasureStation
         .findOne(where)
         .then((data) => {
             resolve(data)
@@ -27,7 +27,7 @@ exports.findDataPointMap = async (where = {}) => {
 
 exports.insertMany = async (params) => {
     return new Promise((resolve, reject) => {
-        DataPointMapModel
+        MeasureStation
         .insertMany(params)
         .then((data) => {
             resolve(data)
@@ -39,9 +39,9 @@ exports.insertMany = async (params) => {
     })
 }
 
-exports.aggregateDataPointMap = async (aggregateArr) => {
+exports.aggregateMeasureStation = async (aggregateArr) => {
     return new Promise((resolve, reject) => {
-        DataPointMapModel
+        MeasureStation
         .aggregate(aggregateArr)
         .then((data) => resolve(data))
         .catch((error) => reject(error))

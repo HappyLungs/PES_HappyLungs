@@ -1,5 +1,5 @@
-// create dataPointMap schema
-const DataPointMapSchema = new global.Schema({
+// create measureStation schema
+const MeasureStationSchema = new global.Schema({
     eoiCode: Number,
     stationName: String,
     stationType: String,
@@ -17,5 +17,5 @@ const DataPointMapSchema = new global.Schema({
     },
     georeference: [Number]
 });
-  const DataPointMap = global.mongoose.model("DataPointMap", DataPointMapSchema);
-  module.exports = DataPointMap;
+  const MeasureStation = global.mongoose.model("MeasureStation", MeasureStationSchema);
+  module.exports = MeasureStation;

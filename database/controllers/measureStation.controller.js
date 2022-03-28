@@ -3,7 +3,7 @@ const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 
-const dataPointMap = require("./../datalayers/dataPointMap.datalayer");
+const measureStation = require("./../datalayers/measureStation.datalayer");
 
 exports.find = async (request, response) => {
     let params = {};
@@ -25,10 +25,10 @@ exports.find = async (request, response) => {
 
     let aggregateArr = createAggregateArray(match, date);
     console.log(JSON.stringify(aggregateArr));
-    dataPointMap
-    .aggregateDataPointMap(aggregateArr)
-    .then((dataPointMapData) => {
-        response.send(dataPointMapData);
+    measureStation
+    .aggregateMeasureStation(aggregateArr)
+    .then((measureStationData) => {
+        response.send(measureStationData);
     })
     .catch((err) => {
         response.send(err);
@@ -38,12 +38,12 @@ exports.find = async (request, response) => {
     /*if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
         const where = {};
         where._id = mongodb.ObjectId(id);
-        dataPointMap.findDataPointMap(where)
-        .then((dataPointMapData) => {
-            if (dataPointMapData !== null && typeof dataPointMapData !== undefined) {
+        measureStation.findmeasureStation(where)
+        .then((measureStationData) => {
+            if (measureStationData !== null && typeof measureStationData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
                 responseObj.message = "Success";
-                responseObj.data    = dataPointMapData;
+                responseObj.data    = measureStationData;
             } else {
                 responseObj.status  = errorCodes.DATA_NOT_FOUND;
                 responseObj.message = "No record found";
@@ -77,13 +77,13 @@ exports.create = async (request, response, next) => {
         response.send(responseObj);
         return;
     }
-    dataPointMap.createDataPointMap(params)
-    .then((dataPointMapData) => {
-        console.log(dataPointMapData);
-        if (dataPointMapData !== null && typeof dataPointMapData !== undefined) {
+    measureStation.createmeasureStation(params)
+    .then((measureStationData) => {
+        console.log(measureStationData);
+        if (measureStationData !== null && typeof measureStationData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
-            responseObj.data    = dataPointMapData;
+            responseObj.data    = measureStationData;
         } else {
             responseObj.status  = errorCodes.DATA_NOT_FOUND;
             responseObj.message = "No record found";
@@ -111,13 +111,13 @@ exports.insertMultiple = async (request, response) => {
         response.send(responseObj);
         return;
     }
-    dataPointMap.insertMany(params.insertions)
-    .then((dataPointMapData) => {
-        console.log(dataPointMapData);
-        if (dataPointMapData !== null && typeof dataPointMapData !== undefined) {
+    measureStation.insertMany(params.insertions)
+    .then((measureStationData) => {
+        console.log(measureStationData);
+        if (measureStationData !== null && typeof measureStationData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
-            responseObj.data    = dataPointMapData;
+            responseObj.data    = measureStationData;
         } else {
             responseObj.status  = errorCodes.DATA_NOT_FOUND;
             responseObj.message = "No record found";
@@ -152,7 +152,7 @@ function createAggregateArray (match, date) {
                     '$and': [
                       {
                         '$eq': [
-                          '$dataPointMap', '$$id'
+                          '$measureStation', '$$id'
                         ]
                       }, {
                         '$eq': [
