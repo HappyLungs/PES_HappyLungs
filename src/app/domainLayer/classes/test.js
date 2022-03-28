@@ -2,23 +2,25 @@ const MeasureStation = require("./MeasureStation");
 const DomainCtrl = require("../DomainCtrl")
 const dCtrl = new DomainCtrl();
 
+
 // Start function
 const start = async function() {
-    /*
-    const d = new Date();
-    const h = 12;
-    let m = new MeasureStation("08019004");
-    console.log("Crido la funció a test.js")
-    const result = await m.getWeekLevel(d);;
-    console.log(result);
-    */
-   let x = await dCtrl.getMapData()
-   //let x  = await dCtrl.getPollutionLevelLastWeek(41.363094, 2.112971);
+    
+    //const d = new Date();
+    //const h = 12;
+    //let m = new MeasureStation("08019004");
+    //console.log("Crido la funció a test.js")
+    //const result = await m.getWeekLevel(d);;
+    //console.log(result);
+
+   let x = await dCtrl.getPollutionLevelLastMonth(41.363094, 2.112971)
+   //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
    console.log(x);
 }
 
-// Call start
 start();
+
+
 
 
 /*

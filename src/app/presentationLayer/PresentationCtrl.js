@@ -39,7 +39,7 @@ PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
  * @param {*} type ["24hours", "week", "month", "year"]
  * @param {*} latitude
  * @param {*} longitude
- * @returns [{AIR QUALITY},{POLLUTANTS}]
+ * @returns [{AIR QUALITY},{POLLUTANTS}] => [{title, tags, levels}, {¿?}]
  */
 PresentationCtrl.prototype.getDataStatistics = async function (type,latitude, longitude) {
 	let data = new Array();
@@ -54,7 +54,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (type,latitude, lo
 			data[1] = await this.domainCtrl.x(latitude,longitude);
 			break;
 		case "month":
-			data[0] = await this.domainCtrl.x(latitude, longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastMonth(latitude, longitude);
 			data[1] = await this.domainCtrl.x(latitude,longitude);
 			break;
 		case "year":

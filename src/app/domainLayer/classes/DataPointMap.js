@@ -25,7 +25,7 @@ class DataPointMap {
         let puntos_cercanos = await this.nearerPoints(date);
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getMeasuresByDay(date);
+        let x = await punto_cercano.getDayLevel(date);
         return x;     
     }
 
@@ -35,6 +35,14 @@ class DataPointMap {
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
         let x = await punto_cercano.getWeekLevel(date);
         return x;  
+    }
+
+    async getMonthLevel (date) {
+        let puntos_cercanos = await this.nearerPoints(date);
+
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getMonthLevel(date);
+        return x;
     }
     
     //PIE CHART GETTERS
