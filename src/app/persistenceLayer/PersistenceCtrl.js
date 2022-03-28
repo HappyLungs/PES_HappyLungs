@@ -93,5 +93,5 @@ PersistenceCtrl.prototype.deleteRequest = async function (endpoint, query) {
     return res;
 }
 
-        
+
 module.exports = PersistenceCtrl;

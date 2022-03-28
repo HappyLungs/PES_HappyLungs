@@ -75,4 +75,4 @@ PresentationCtrl.prototype.getMapData = async function () {
 	return data;
 }
 
-export { PresentationCtrl };
+module.exports = PresentationCtrl;
