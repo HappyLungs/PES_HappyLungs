@@ -16,34 +16,13 @@ let DomainCtrl;
 	};
 })();
 
-DomainCtrl.prototype.getPollutionLastDay = async function (latitude, length) {
-	let date = new Date();
-	console.log("DomainCtrl Date: " + date);
-	let point = new DataPointMap(latitude, length);
-	let data = await point.getDayLevel(date);
-	let finalData = [];
-
-	for (let i = 1; i <= 24; i += 2) {
-		finalData.push(data.get(i));
-	}
-
-	return finalData;
-};
-
-DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
-    let point = new DataPointMap(latitude, length);
-    let data = await point.getWeekLevel(date);
-
-    return data;
-}
-
-
+//MAP
 
 /**
  * 
  * @returns array with the contamination level of each measure station and its position
  */
-DomainCtrl.prototype.getMapData = async function () {
+ DomainCtrl.prototype.getMapData = async function () {
     let date = new Date();
     let measureStations = new Map();
     let allMeasures = await dadesObertes.getMeasuresDate(date);
@@ -58,23 +37,70 @@ DomainCtrl.prototype.getMapData = async function () {
     let measureStationLevels = [];
     for (let [key, ms] of measureStations) {
         let level = await ms.getHourLevel(date, date.getHours())
-        let info = {
-            latitude: ms.latitud,
-            length: ms.longitud,
-            hour: date.getHours(),
-            weight: level
-        }
-        measureStationLevels.push(info)
+		if (level != null) {
+			let info = {
+				latitude: ms.latitud,
+				length: ms.longitud,
+				weight: level
+			}
+			measureStationLevels.push(info)
+		}
     };
     return measureStationLevels;
 }
 
+//STATISTICS - AIR QUALITY
 
 
-DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
-	latitude,
-	length
-) {
+DomainCtrl.prototype.getPollutionLevelLastDay = async function (latitude, length) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getDayLevel(date);
+	
+	let finalData = [];
+	for (let i = 1; i <= 24; i += 2) {
+		finalData.push(data.get(i));
+	}
+
+	return finalData;
+};
+
+DomainCtrl.prototype.getPollutionLevelLastWeek = async function (latitude, length) {
+    let date = new Date();
+	let point = new DataPointMap(latitude, length);
+    let data = await point.getWeekLevel(date);
+
+    return data;
+}
+
+DomainCtrl.prototype.getPollutionLevelLastMonth = async function (latitude, length) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getMonthLevel(date);
+
+	let finalTags = [];
+	let finalLevels = [];
+	for (let i = 0; i <= 30; i += 2) {
+		finalTags.push(data.tags[i]);
+		finalLevels.push(data.level[i]);
+	}
+
+	data.tags = finalTags;
+	data.levels = finalLevels;
+
+	return data;
+}
+
+//STATISTICS - POLLUTANTS
+
+DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
+    let point = new DataPointMap(latitude, length);
+    let data = await point.getWeekLevel(date);
+
+    return data;
+}
+
+DomainCtrl.prototype.getPollutantsQuantLastDay = async function (latitude,length) {
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getPollutantsQuantDay(date);

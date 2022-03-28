@@ -12,7 +12,9 @@ const start = async function() {
     const result = await m.getWeekLevel(d);;
     console.log(result);
     */
-   dCtrl.getMapData();
+   let x = await dCtrl.getMapData()
+   //let x  = await dCtrl.getPollutionLevelLastWeek(41.363094, 2.112971);
+   console.log(x);
 }
 
 // Call start
