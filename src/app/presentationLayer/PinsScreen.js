@@ -3,7 +3,8 @@ import React from "react";
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import { Pin } from "../domainLayer/classes/Pin";
+
+import Pin from "../domainLayer/classes/Pin"; //elimnar fake
 
 function PinsScreen({ navigation }) {
 	const getDate = (date) => {

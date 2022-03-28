@@ -16,7 +16,7 @@ import { ImageSlider } from "react-native-image-slider-banner";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-import { PresentationCtrl } from "./PresentationCtrl.js";
+const PresentationCtrl = require("./PresentationCtrl.js");
 
 function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();

@@ -17,7 +17,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import { PresentationCtrl } from "./PresentationCtrl.js";
+const PresentationCtrl = require("./PresentationCtrl.js");
 import Input from "./components/Input";
 
 function CreatePinScreen({ route }) {
