@@ -50,9 +50,9 @@ DomainCtrl.prototype.getMapData = async function () {
 		let level = await ms.getHourLevel(date, date.getHours());
 		if (level != null) {
 			let info = {
-				latitude: ms.latitud,
-				length: ms.longitud,
-				weight: level,
+				latitude: parseInt(ms.latitud),
+				longitude: parseInt(ms.longitud),
+				weight: parseInt(level),
 			};
 			measureStationLevels.push(info);
 		}
