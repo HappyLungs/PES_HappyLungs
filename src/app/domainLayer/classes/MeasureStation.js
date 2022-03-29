@@ -267,13 +267,14 @@ class MeasureStation {
         } else {
             return pollutantData[hour];
         }
+        return 0;
     }
 
     /**
      * Calculates the total quantity of a specific pollutant on a date.
-     * @param {*} pollutantData 
-     * @param {*} date 
-     * @returns Returns the total quantity of a specific pollutant on a date
+     * @param {Integer} pollutantData 
+     * @param {Date} date 
+     * @returns {Integer} Returns the total quantity of a specific pollutant on a date
      */
     getQuantityOfAPollutantDay(pollutantData, date) {
         let total = 0;
@@ -294,7 +295,7 @@ class MeasureStation {
 
     /**
      * Calculates the quantities of each pollutant on a date.
-     * @param {*} date
+     * @param {Date} date
      * @returns Returns the quantities of each pollutant on a date-
      */
     async getQuantityOfEachPollutantDay(date) {
@@ -309,7 +310,7 @@ class MeasureStation {
             let pollutant = pollutantData.contaminant;
             let quant = this.getQuantityOfAPollutantDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
 
-            if ( detectedPollutants.includes(pollutant) ) {
+            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
 
                 detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
 
@@ -325,7 +326,7 @@ class MeasureStation {
 
     /**
      * Calculates the quantities of each pollutant on a week.
-     * @param {*} date
+     * @param {Date} date
      * @returns Returns the quantities of each pollutant on a week-
      */
     async getQuantityOfEachPollutantWeek(date) {
@@ -338,11 +339,11 @@ class MeasureStation {
         let detectedPollutants = [];
 
         measures.forEach(pollutantData => {
-
+            
             let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
+            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data);
 
-            if ( detectedPollutants.includes(pollutant) ) {
+            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
 
                 detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
 
@@ -351,6 +352,11 @@ class MeasureStation {
                 detectedPollutants.push({name: pollutant, quantity: quant});
                 
             }
+        })
+
+        detectedPollutants.forEach(pollutant => {
+            let num = pollutant.quantity / 7;
+            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
         })
 
         return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
@@ -370,13 +376,13 @@ class MeasureStation {
 
         //Pollutants used to calculate the contamination level with the LevelCalculator
         let detectedPollutants = [];
-
+        
         measures.forEach(pollutantData => {
-
+            
             let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
-
-            if ( detectedPollutants.includes(pollutant) ) {
+            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data)/30;
+            console.log(pollutant, quant);
+            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
 
                 detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
 
@@ -386,6 +392,13 @@ class MeasureStation {
                 
             }
         })
+
+        detectedPollutants.forEach(pollutant => {
+            let num = pollutant.quantity;
+            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
+        })
+
+        console.log(detectedPollutants);
 
         return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
         
@@ -408,9 +421,9 @@ class MeasureStation {
         measures.forEach(pollutantData => {
 
             let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
+            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data);   //get the pollutant quantity of the day (total/24 or just total)
 
-            if ( detectedPollutants.includes(pollutant) ) {
+            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
 
                 detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
 
@@ -419,6 +432,11 @@ class MeasureStation {
                 detectedPollutants.push({name: pollutant, quantity: quant});
                 
             }
+        })
+
+        detectedPollutants.forEach(pollutant => {
+            let num = pollutant.quantity / 365;
+            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
         })
 
         return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending

@@ -67,9 +67,9 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 		 const initHeatPoints = async () => {
 			 setHeatpoints(await presentationCtrl.getMapData());
 		 }
-		 console.log('prevoius');
+		 //console.log('prevoius');
 		 await initHeatPoints();
-		 console.log(heatpoints);
+		 //console.log(heatpoints);
 	 },[])
 	const mapRef = useRef(null);
 	//setHeatpoints(await presentationCtrl.getMapData());
