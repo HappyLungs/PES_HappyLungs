@@ -1,3 +1,5 @@
+const persistenceCtrl = require("./persistenceLayer/PersistanceCtrl");
+pCtrl = new persistenceCtrl();
 export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(name, location, description, media, rating, date, status) {
@@ -5,11 +7,12 @@ export default class Pin {
 		this.location = location;
 		//maybe afegir locationName apart de les coords
 		//o es pot treure el nom del lloc a traves de les coords? idk
+		//idk either :/
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
 		this.date = date;
-		this.status = status; //t'he canviat 'public' per 'status', public es una reserved word de js
+		this.status = status; 
 		console.log(
 			"name: " +
 				name +
@@ -27,15 +30,42 @@ export default class Pin {
 				status
 		);
 
-		//add to data base function
+		//add pin to dataBase
+		let res = {};
+		res = await pCtrl.postRequest("/newPin", {
+			title: this.name,
+			description: this.description,
+			latitude: this.location,
+			length: this.location,
+			date: this.date,
+			public: this.status,
+			creatorEmail: "falta_afegir_mail@gmail.com"
+		});
+		console.log(res);
 
-		//addCalendarEvent(name, location, description);
+		//ad pin creation to google calendar
+		addCalendarEvent(name, location, description);
 	}
+
+
 
 	create_pin(name, location, description, media, rating, status) {}
 
 	edit_pin(name, location, description, media, rating, status) {
 		//consultar pin a la base de dades i enviar i guardar info nova amb la funció d'editar
+		//NOT SURE HOW TO OBTAIN THE IDgit 
+		let _id = "623cf0b5f98986305e8af47f";
+		let put = {};
+		put = await pCtrl.putRequest("/pin?_id=" + _id, {
+			title: name,
+			description: description,
+			latitude: location,
+			length: location,
+			date: date,
+			public: status,
+			creatorEmail: "falta_afegir_mail@gmail.com"
+		});
+		console.log(put);
 	}
 
 	//Getters
