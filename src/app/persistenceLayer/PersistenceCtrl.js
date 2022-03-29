@@ -6,7 +6,7 @@ let PersistenceCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.DB_URI = "http://13.37.231.86:2000/v1";
+        this.DB_URI = "http://15.237.124.151:2000/v1";
     };
 }());
 

@@ -18,8 +18,13 @@ let DomainCtrl;
 //MAP
 
 /**
+<<<<<<< HEAD
+ * Gets all data needed to implement the heat map
+ * @returns {Array<Object>} array with th position and the pollution level of every measure station
+=======
  *
  * @returns array with the contamination level of each measure station and its position
+>>>>>>> 5caeb2b26a912c5a2b35237082be239f6cf39778
  */
 DomainCtrl.prototype.getMapData = async function () {
 	let date = new Date();
@@ -57,6 +62,12 @@ DomainCtrl.prototype.getMapData = async function () {
 
 //STATISTICS - AIR QUALITY
 
+/**
+ * Calculate the pollution level at every hour of a day in one point
+ * @param {Integer} latitude
+ * @param {Integer} length
+ * @returns {}
+ */
 DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 	latitude,
 	length
@@ -65,12 +76,17 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getDayLevel(date);
 
-	let finalData = [];
-	for (let i = 1; i <= 24; i += 2) {
-		finalData.push(data.get(i));
+	let finalTags = [];
+	let finalLevels = [];
+	for (let i = 1; i < 24; i += 2) {
+		finalTags.push(data.tags[i]);
+		finalLevels.push(data.levels[i]);
 	}
 
-	return finalData;
+	data.tags = finalTags;
+	data.levels = finalLevels;
+
+	return data;
 };
 
 DomainCtrl.prototype.getPollutionLevelLastWeek = async function (
@@ -96,11 +112,11 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 	let finalLevels = [];
 	for (let i = 0; i <= 30; i += 2) {
 		finalTags.push(data.tags[i]);
-		finalLevels.push(data.level[i]);
+		finalLevels.push(data.levels[i]);
 	}
 
-	data.tags = finalTags;
-	data.levels = finalLevels;
+	//data.tags = finalTags;
+	//data.levels = finalLevels;
 
 	return data;
 };
@@ -121,7 +137,6 @@ DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getPollutantsQuantDay(date);
-
 	return data;
 };
 

@@ -1,3 +1,4 @@
+const TouchHistoryMath = require("react-native/Libraries/Interaction/TouchHistoryMath");
 const DadesObertes = require("../services/DadesObertes");
 const LevelCalculator = require("../services/LevelCalculator");
 
@@ -19,9 +20,9 @@ class MeasureStation {
     }
 
     /**
-     * 
-     * @param {*} hour : Int representing an hour from 1 to 24
-     * @returns  hour with an h and a 0 if hour < 10 (example: hour = 5 -> "h05" | hour = 10 -> "h10")
+     * Convert an hour into DadesObertes API hour format
+     * @param {Integer} hour hour from 1 to 24
+     * @returns  hour with an h, and if hour < 10 also with a 0 (example: hour = 5 -> "h05" | hour = 10 -> "h10")
      */
     hour2JsonHour(hour) {
         if (hour < 10) return "h0"+hour;
@@ -31,10 +32,10 @@ class MeasureStation {
     //CALCULATORS USED FOR LEVEL GETTERS
 
     /**
-     * 
-     * @param {*} measure 
-     * @param {*} hour 
-     * @returns 
+     * Given a measure from Dades Obertes API and an hour, returns the pollution level at this hour
+     * @param {JSON} measure measure of one pollutant at one date
+     * @param {Integer} hour hour from 1 to 24
+     * @returns pollution level of measure "measure" at hour "hour"
      */
     calcHourQuantity(measure, hour) {
         if(typeof measure[hour] === 'undefined'){
@@ -56,9 +57,9 @@ class MeasureStation {
     /**
      * Given the Dades Obertes measures of a day in one measure station and an hour, calculates the
      * pollution level at this hour in this measure station
-     * @param {*} measures 
-     * @param {*} hour 
-     * @returns pollution level at hour "hour" (Integer)
+     * @param {JSON} measures measures of all pollutants at one day
+     * @param {Integer} hour hour from 1 to 24
+     * @returns {Integer} pollution level at hour "hour" 
      */
     calcHourLevel(measures, hour) {
         let calculatorData = new Map();
@@ -77,6 +78,12 @@ class MeasureStation {
         return level;
     }
 
+    /**
+     * Given the Dades Obertes measures of a day in one measure station, calculates the
+     * pollution level at this day in this measure station
+     * @param {JSON} measures measures of all pollutants at one day
+     * @returns {Array<Integer>} all levels of every hour of measures
+     */
     calcDayLevel(measures) {
         let hourlyLevel = [];
 
@@ -88,6 +95,12 @@ class MeasureStation {
         return hourlyLevel;
     }
 
+    /**
+     * Given the Dades Obertes measures of a day in one measure station and an hour, calculates the
+     * pollution level at this hour in this measure station
+     * @param {JSON} measures measures of all pollutants at different days
+     * @returns {Array<Integer>} all levels of every day in measures
+     */
     calcMultipleDaysLevel(measures) {
         let dayMeasures = new Map();
 
@@ -110,17 +123,11 @@ class MeasureStation {
 
     //POLLUTION LEVEL GETTERS
 
-    getdaysAndMonth(startDate, endDate) {
-        let start = new Date(startDate);
-        let end = new Date(endDate);
-
-       
-    }
-
     /**
-     * Calculates the pollution level given a date with an hour
-     * @param {*} date data type
-     * @returns pollution level at the date and hour in "date"
+     * Calculates the pollution level at one hour of a day
+     * @param {Date} date date
+     * @param {Integer} hour hour
+     * @returns {Integer} pollution level at the date "date" and hour "hour"
      */
     async getHourLevel(date, hour) {
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
@@ -131,16 +138,51 @@ class MeasureStation {
 
     /**
      * Calculates the pollution level at every hour of the day
-     * @param {*} date 
-     * @returns 
-     */
+     * @param {Date} date date
+     * @returns {Array<Integer>} pollution level at every hour of a day
+     */ 
     async getDayLevel(date) {
-        let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
-        let hourlyLevel = this.calcDayLevel(measures);
+        let hour = date.getHours();
+        let last24hours = new Date(date.getTime() - (24 * 60 * 60 * 1000));
+        
+        let title = "";
+        let tags = [];
+        let hourlyLevel = []; 
+        if (date.getDate() === last24hours.getDate()) {
+            title = date.getDate()+" - "+TouchHistoryMath.months[date.getMonth()]
+            let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
+            hourlyLevel = this.calcDayLevel(measures);
+        } else {
+            title = last24hours.getDate()+"/"+date.getDate()+" - "+this.months[date.getMonth()]
+            let measuresYesterday = await dadesObertes.getMeasuresDay(this.eoiCode, last24hours);
+            let hourlyLevelYestarday = this.calcDayLevel(measuresYesterday);
+            let measuresToday = await dadesObertes.getMeasuresDay(this.eoiCode, date);
+            let hourlyLevelToday = this.calcDayLevel(measuresToday);
 
-        return hourlyLevel;
+            for (let i = hour-1; i < 24; i++) {
+                hourlyLevel.push(hourlyLevelYestarday[i]);
+                tags.push(i+1);
+            }
+            for (let i = 0; i < hour -1; i ++) {
+                hourlyLevel.push(hourlyLevelToday[i]);
+                tags.push(i+1);
+            }
+        }
+
+        let result = {
+            title: title,
+            tags: tags,
+            levels: hourlyLevel
+        }
+
+        return result;
     }
 
+    /**
+     * Calculates the pollution level at every day of a week
+     * @param {Date} date date
+     * @returns {Array<Integer>} pollution level of the latest 7 days from date
+     */ 
     async getWeekLevel(date) {
         let lastweek = new Date(date)
         lastweek.setDate(lastweek.getDate() - 6)
@@ -156,13 +198,45 @@ class MeasureStation {
         }
 
         let title;
-        if (date.getMonth() === lastweek.getMonth()) title = this.months[date.getMonth()+1];
-        else title = this.months[date.getMonth()+1]+" / "+this.months[lastweek.getMonth()+1];
-
+        if (date.getMonth() === lastweek.getMonth()) title = this.months[date.getMonth()];
+        else title = this.months[date.getMonth()]+" - "+this.months[lastweek.getMonth()];
+        
         let result = {
             title: title,
             tags: tags,
-            level: dailyLevel
+            levels: dailyLevel
+        }
+        
+        return result;
+    }
+
+    /**
+     * Calculates the pollution level at every day of a month
+     * @param {Date} date date
+     * @returns {Array<Integer>} pollution level of the latest 30 days from date
+     */ 
+     async getMonthLevel(date) {
+        let lastmonth = new Date(date)
+        lastmonth.setDate(lastmonth.getDate() - 30)
+        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastmonth, date);
+        let dailyLevel = this.calcMultipleDaysLevel(measures);
+
+        let tags = [];
+        for(let i = 0; i < 30; ++i) {
+            let dayNum = new Date(lastmonth)
+            dayNum.setDate(dayNum.getDate()+i);
+            let day = dayNum.getDate();
+            tags.push(day);
+        }
+
+        let title;
+        if (date.getMonth() === lastmonth.getMonth()) title = this.months[date.getMonth()];
+        else title = this.months[lastmonth.getMonth()]+" - "+this.months[date.getMonth()];
+        
+        let result = {
+            title: title,
+            tags: tags,
+            levels: dailyLevel
         }
         
         return result;
@@ -245,6 +319,33 @@ class MeasureStation {
         })
 
         return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
+    }
+
+    //OTHERS
+    
+    distance(lat2,lon2) {
+
+        var lat1 = this.latitud;
+        var lon1 = this.longitud;
+
+        var R = 6371; // km
+        var dLat = this.toRad(lat2-lat1);
+        var dLon = this.toRad(lon2-lon1);
+        var lat1 = this.toRad(lat1);
+        var lat2 = this.toRad(lat2);
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c;
+        return d;
+    }
+    //Conversor
+    toRad(Value) {
+        return Value * Math.PI / 180;
+    }
+
+    deg2rad(deg) {
+        return deg * (Math.PI/180)
     }
 
     /*--------------------BORRAR A PARTIT D'AQUI------------------*/
@@ -352,30 +453,7 @@ class MeasureStation {
 
     }
     
-    distance(lat2,lon2) {
 
-        var lat1 = this.latitud;
-        var lon1 = this.longitud;
-
-        var R = 6371; // km
-        var dLat = this.toRad(lat2-lat1);
-        var dLon = this.toRad(lon2-lon1);
-        var lat1 = this.toRad(lat1);
-        var lat2 = this.toRad(lat2);
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = R * c;
-        return d;
-    }
-    //Conversor
-    toRad(Value) {
-        return Value * Math.PI / 180;
-    }
-
-    deg2rad(deg) {
-        return deg * (Math.PI/180)
-    }
 
 
 

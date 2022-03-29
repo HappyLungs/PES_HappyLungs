@@ -8,9 +8,8 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 
 //Controllers
 const UserController = require("../controllers/user.controller");
-const DataPointMap = require("../controllers/dataPointMap.controller");
-const PollutantDayMeasure = require("../controllers/pollutantDayMeasure.controller");
-const Measure = require("../controllers/measure.controller");
+const MeasureStationController = require("../controllers/measureStation.controller");
+const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
 
 /*  User */
@@ -29,66 +28,46 @@ router.post(
 );
 /* /User */
 
-/*  DataPointMap  */
+/*  MeasureStation  */
 router.get(
-    "/dataPointMap",
+    "/measureStation",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    DataPointMap.find
+    MeasureStationController.find
 );
 router.post(
-    "/newDataPointMap",
+    "/newMeasureStation",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    DataPointMap.create
+    MeasureStationController.create
 );
 router.post(
-    "/insertMultipleDataPointMap",
+    "/insertMultipleMeasureStation",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    DataPointMap.insertMultiple
+    MeasureStationController.insertMultiple
 );
-/* /DataPointMap */
+/* /MeasureStation */
 
 /* PollutantDayMeasure */
 router.get(
     "/pollutantDayMeasure",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    PollutantDayMeasure.find
+    PollutantDayMeasureController.find
 );
 router.post(
     "/newPollutantDayMeasure",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    PollutantDayMeasure.create
+    PollutantDayMeasureController.create
 );
 router.post(
     "/insertMultiplePollutantDayMeasure",
     licenseMiddleware.validate,
-    PollutantDayMeasure.insertMultiple
+    PollutantDayMeasureController.insertMultiple
 );
 /* /PollutantDayMeasure */
-
-/*   Measure  */
-router.get(
-    "/measure",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    Measure.find
-);
-router.post(
-    "/newMeasure",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    Measure.create
-);
-router.post(
-    "/insertMultipleMeasures",
-    licenseMiddleware.validate,
-    Measure.insertMultiple
-);
-/*  /Measure  */
 
 /*  Pin */
 router.post(
