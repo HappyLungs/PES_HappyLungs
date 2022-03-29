@@ -23,12 +23,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function StatisticsScreen({ navigation, route }) {
 	const { data } = route.params;
+	const [tmpDades, setDades] = useState(data);
 	const { coords } = route.params;
-	const [tmpDades, setDades] = useState(null);
 	let presentationCtrl = new PresentationCtrl();
 
 	const setInterval = async (option) => {
-		console.log(option);
 		let tmp = await presentationCtrl.getDataStatistics(
 			option,
 			coords.latitude,
@@ -181,12 +180,12 @@ function StatisticsScreen({ navigation, route }) {
 				</View>
 				{renderOptions()}
 				<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
-				{renderLinearChart(data[0])}
+				{renderLinearChart(tmpDades[0])}
 				<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
 				<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
 					(µg/m3)
 				</Text>
-				{renderPieChart(data[1])}
+				{renderPieChart(tmpDades[1])}
 			</View>
 		</SafeAreaView>
 	);
