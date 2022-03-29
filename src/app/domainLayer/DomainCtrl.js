@@ -123,13 +123,6 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 
 //STATISTICS - POLLUTANTS
 
-DomainCtrl.prototype.getPollutionLastWeek = async function (latitude, length) {
-	let point = new DataPointMap(latitude, length);
-	let data = await point.getWeekLevel(date);
-
-	return data;
-};
-
 DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
 	latitude,
 	length
@@ -139,6 +132,39 @@ DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
 	let data = await point.getPollutantsQuantDay(date);
 	return data;
 };
+
+DomainCtrl.prototype.getPollutantsQuantLastWeek = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getPollutantsQuantWeek(date);
+
+	return data;
+}
+
+DomainCtrl.prototype.getPollutantsQuantLastMonth = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getPollutantsQuantMonth(date);
+
+	return data;
+}
+
+DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getPollutantsQuantYear(date);
+
+	return data;
+}
 
 DomainCtrl.prototype.createPin = function (
 	name,
