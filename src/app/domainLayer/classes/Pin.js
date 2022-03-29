@@ -1,5 +1,5 @@
-const persistenceCtrl = require("./persistenceLayer/PersistanceCtrl");
-pCtrl = new persistenceCtrl();
+//const persistenceCtrl = require("./persistenceLayer/PersistanceCtrl");
+//pCtrl = new persistenceCtrl();
 export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(name, location, description, media, rating, date, status) {
@@ -12,7 +12,7 @@ export default class Pin {
 		this.media = media;
 		this.rating = rating;
 		this.date = date;
-		this.status = status; 
+		this.status = status;
 		console.log(
 			"name: " +
 				name +
@@ -31,7 +31,7 @@ export default class Pin {
 		);
 
 		//add pin to dataBase
-		let res = {};
+		/*let res = {};
 		res = await pCtrl.postRequest("/newPin", {
 			title: this.name,
 			description: this.description,
@@ -42,21 +42,19 @@ export default class Pin {
 			creatorEmail: "falta_afegir_mail@gmail.com"
 		});
 		console.log(res);
-
+*/
 		//ad pin creation to google calendar
-		addCalendarEvent(name, location, description);
+		//addCalendarEvent(name, location, description);
 	}
-
-
 
 	create_pin(name, location, description, media, rating, status) {}
 
 	edit_pin(name, location, description, media, rating, status) {
 		//consultar pin a la base de dades i enviar i guardar info nova amb la funció d'editar
-		//NOT SURE HOW TO OBTAIN THE IDgit 
+		//NOT SURE HOW TO OBTAIN THE IDgit
 		let _id = "623cf0b5f98986305e8af47f";
 		let put = {};
-		put = await pCtrl.putRequest("/pin?_id=" + _id, {
+		/*put = await pCtrl.putRequest("/pin?_id=" + _id, {
 			title: name,
 			description: description,
 			latitude: location,
@@ -66,6 +64,7 @@ export default class Pin {
 			creatorEmail: "falta_afegir_mail@gmail.com"
 		});
 		console.log(put);
+		*/
 	}
 
 	//Getters

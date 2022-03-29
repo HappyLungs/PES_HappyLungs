@@ -64,11 +64,14 @@ DomainCtrl.prototype.getMapData = async function () {
 
 /**
  * Calculate the pollution level at every hour of a day in one point
- * @param {Integer} latitude 
- * @param {Integer} length 
- * @returns {} 
+ * @param {Integer} latitude
+ * @param {Integer} length
+ * @returns {}
  */
-DomainCtrl.prototype.getPollutionLevelLastDay = async function (latitude, length) {
+DomainCtrl.prototype.getPollutionLevelLastDay = async function (
+	latitude,
+	length
+) {
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getDayLevel(date);
@@ -134,7 +137,6 @@ DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getPollutantsQuantDay(date);
-
 	return data;
 };
 
