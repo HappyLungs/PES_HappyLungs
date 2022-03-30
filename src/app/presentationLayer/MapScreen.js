@@ -21,7 +21,6 @@ import MapView, {
 	Marker,
 	Heatmap,
 	PROVIDER_GOOGLE,
-	ProviderPropType,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
