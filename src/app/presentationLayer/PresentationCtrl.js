@@ -84,7 +84,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 			);
 			break;
 		case "year":
-			data[0] = await this.domainCtrl.x(latitude, longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastYear(latitude, longitude);
 			data[1] = await this.domainCtrl.getPollutantsQuantLastYear(
 				latitude, 
 				longitude

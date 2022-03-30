@@ -242,6 +242,54 @@ class MeasureStation {
         return result;
     }
 
+    /**
+     * Calculates the pollution level at every month of last year
+     * @param {Date} date date
+     * @returns {Array<Integer>} pollution level of the latest 30 days from date
+     */ 
+    async getYearLevel(date) {
+        let lastYear = new Date(date);
+        lastYear.setMonth(lastYear.getMonth() - 10);
+        lastYear.setDate(0);
+        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastYear, date);
+
+
+        let measuresByMonth = new Map();
+        measures.forEach(measure => {
+            let measureDate = new Date(measure.data);
+            let auxMonth = (parseInt(measureDate.getMonth())<9 ? "0"+(parseInt(measureDate.getMonth())+1).toString() : (parseInt(measureDate.getMonth())+1).toString());
+            let month = measureDate.getFullYear().toString()+auxMonth;
+            if (! measuresByMonth.has(month)) measuresByMonth.set(month, [measure]);
+            else {
+                measuresByMonth.get(month).push(measure);
+                //measuresByMonth.set(month, m);
+            }
+        })
+        let measuresByMonthOrdered = new Map([...measuresByMonth.entries()].sort());
+
+        let tags = [];
+        let monthlyLevel = [];
+        for(let [month, measures] of measuresByMonthOrdered) {
+            tags.push(month.slice(-2));
+            let dailyLevel = this.calcMultipleDaysLevel(measures);
+            let monthLevel = Math.round(dailyLevel.reduce((a, b) => a + b, 0) / dailyLevel.length);
+            monthlyLevel.push(monthLevel);
+        }
+
+        let title;
+        if (date.getFullYear() === lastYear.getFullYear()) title = date.getFullYear();
+        else title = lastYear.getFullYear()+" / "+date.getFullYear();
+        
+        let result = {
+            title: title,
+            tags: tags,
+            levels: monthlyLevel
+        }
+        
+        
+        return result;
+    }
+
 
     //CALCULATORS USED FOR POLLUTANTS QUANTITTY
 
