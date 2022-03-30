@@ -21,6 +21,7 @@ import MapView, {
 	Marker,
 	Heatmap,
 	PROVIDER_GOOGLE,
+	InfoWindow,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -31,6 +32,10 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 
 import * as Location from "expo-location";
+
+import { formatRelative } from "date-fns";
+
+
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -46,18 +51,7 @@ function MapScreen({navigation, route}) {
 	const location =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 	
-	/**
-	 * Function to set a default latitude
-	 */
-	const lat = 41.363094;
-
-	/**
-	 * Function to set a default longitude
-	 */
-	const lng = 2.112971;
-	/**
-	 * 
-	 */
+	
 	let presentationCtrl = new PresentationCtrl();
 
 	/**
@@ -97,6 +91,12 @@ function MapScreen({navigation, route}) {
 
 	
 	const [markers, setMarkers] = useState([]);
+	const [actualMarker, setActualMarker] = useState({
+		latitude: 41.366531,
+		longitude: 2.019336,
+	});
+	const [selected, setSelected] = useState(null);
+		
 
 	/**
 	 * Function to set a default region
@@ -155,33 +155,34 @@ function MapScreen({navigation, route}) {
 	}
 	*/
 
+	
+	const onMapPress = React.useCallback((e)=> {
+		//e.persist()
+		setMarkers(current => [
+			...current,
+			{
+			latitude: actualMarker.latitude,
+			longitude: actualMarker.longitude,
+			time: new Date(),
+			},
+		]);
+		setModalPinVisible(!modalPinVisible)
+	});
+
+	const onModal = React.useCallback((e) => {
+		e.persist()
+		setActualMarker({latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude,})
+		setModalPinVisible(true)
+	}) 
+
 	/**
 	 * Function to set a reference point of the map 
 	 */
-	const mapRef = useRef(null);
-	/*const onMapPress = React.useCallback(({lat, lng}) => {
-		setMarkers((current) => [
-			...current,
-			{
-				latitude: lat,
-				longitude: lng,
-			},
-		]);
-	}, []);
+	 const mapRef = useRef(null);
 
-	funció al return
-	{markers.map((marker) => (
-		<Marker
-			key={`${marker.latitude}-${marker.longitude}`}
-			coordinate={{
-				latitude: marker.latitude,
-				longitude: marker.longitude,
-			}}
-			onPress={() => {
-				setSelected(marker);
-			}}
-		/>
-	))} */
+	 const onMapLoad = React.useCallback((map) => {
+		 mapRef.current = map;
+	 })
 
 	/**
 	 * Function to go with zoom in, to the requested location
@@ -233,12 +234,7 @@ function MapScreen({navigation, route}) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={() => {
-									setModalPinVisible(!modalPinVisible),
-										navigation.navigate("CreatePin", {
-											coords: {latitude: lat, longitude: lng},
-										});
-								}}
+								onPress={onMapPress}
 							>
 								<AntDesign name="pushpino" size={35} color={COLORS.secondary}/>
 								<Text style={[styles.subtitle, {marginStart: 5}]}>
@@ -564,10 +560,23 @@ function MapScreen({navigation, route}) {
 						longitudeDelta: 1.5,
 					}}
 					onRegionChangeComplete={(region) => setRegion(region)}
-					//onPress={onMapPress}
+					onPress = {onModal}
+					onLoad = {onMapLoad}
 				>
 					
+				{markers.map(marker => (
+					<Marker
+					key = {marker.time.toISOString()}
+					coordinate = {{
+						latitude: marker.latitude,
+						longitude: marker.longitude}}
+					onPress={() => {
+						setSelected(marker);
 
+					}}
+					/>
+				))}
+				
 					<Heatmap
 						points={heatpoints}
 						radius={50}
@@ -619,20 +628,7 @@ function MapScreen({navigation, route}) {
 				</View>
 			</View>
 
-			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => setModalPinVisible(true)}
-			>
-				<Text
-					style={{
-						color: "white",
-						textAlign: "center",
-						fontWeight: "bold",
-					}}
-				>
-					Pin Example
-				</Text>
-			</TouchableOpacity>
+			
 
 			<TouchableOpacity
 				style={styles.compass}
@@ -730,7 +726,7 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.secondary,
 	},
 	compass: {
-		marginTop: 460,
+		marginTop: 480,
 		marginRight: 10,
 		marginStart: 320,
 		justifyContent: "center",
