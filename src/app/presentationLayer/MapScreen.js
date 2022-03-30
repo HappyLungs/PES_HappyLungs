@@ -34,20 +34,77 @@ import * as Location from "expo-location";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
- function MapScreen({navigation, route}) {
+/**
+ * Map screen, with all its components
+ * @param {navigation} [ parameter to navigate to the other screens or controllers ]
+ * @param {route} [ route to navigate to the other screens or controllers ]
+ */
+function MapScreen({navigation, route}) {
+	/**
+	 * Function to set a default location
+	 */
 	const location =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+	
+	/**
+	 * Function to set a default latitude
+	 */
 	const lat = 41.363094;
+
+	/**
+	 * Function to set a default longitude
+	 */
 	const lng = 2.112971;
+	/**
+	 * 
+	 */
 	let presentationCtrl = new PresentationCtrl();
+
+	/**
+	 *
+	 */
 	const [modalPinVisible, setModalPinVisible] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [trafficSelected, setTraffic] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [industrySelected, setIndustry] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [urbanSelected, setUrban] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [pinsShown, setPins] = useState(true);
+
+	/**
+	 * 
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
+
+	
 	const [markers, setMarkers] = useState([]);
+
+	/**
+	 * Function to set a default region
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {latitudeDelta} [ parameter to set a max distance to the central point in terms of latitude ]
+	 * @param {longitudeDelta} [ parameter to set a max distance to the central point in terms of longitude ]
+	 */
 	const [region, setRegion] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -56,13 +113,23 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 	});
 
 	//const [heatpoints] = useState(presentationCtrl.getMapData());
+
+	/**
+	 * Function to set a default hetpoint
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {weight} [  ]
+	 */
 	const [heatpoints, setHeatpoints] = useState([{
 		latitude: 41.366531,
 		longitude: 2.019336,
 		weight: 3
 	}]);
 
-	 useEffect(async () => {
+	/**
+	 * 
+	 */
+	useEffect(async () => {
 		 const initHeatPoints = async () => {
 			 setHeatpoints(await presentationCtrl.getMapData());
 		 }
@@ -70,36 +137,29 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 		 await initHeatPoints();
 		 //console.log(heatpoints);
 	 },[])
-	const mapRef = useRef(null);
+	
 	//setHeatpoints(await presentationCtrl.getMapData());
 	/*
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
-  */
-	/*
-  const { lat, lng } = route.params;
-  if (lat && lng) {
-    const tmpLocation = {
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }
-    mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
-  }
-  */
+	*/
+		/*
+	const { lat, lng } = route.params;
+	if (lat && lng) {
+		const tmpLocation = {
+		latitude: lat,
+		longitude: lng,
+		latitudeDelta: 0.01,
+		longitudeDelta: 0.01,
+		}
+		mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+	}
+	*/
 
-	/*const onMapPress = React.useCallback((event) => {
-      setMarkers((current) => [
-        ...current,
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-
-	const onMapPress = React.useCallback(({lat, lng}) => {
+	/**
+	 * Function to set a reference point of the map 
+	 */
+	const mapRef = useRef(null);
+	/*const onMapPress = React.useCallback(({lat, lng}) => {
 		setMarkers((current) => [
 			...current,
 			{
@@ -109,6 +169,25 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 		]);
 	}, []);
 
+	funció al return
+	{markers.map((marker) => (
+		<Marker
+			key={`${marker.latitude}-${marker.longitude}`}
+			coordinate={{
+				latitude: marker.latitude,
+				longitude: marker.longitude,
+			}}
+			onPress={() => {
+				setSelected(marker);
+			}}
+		/>
+	))} */
+
+	/**
+	 * Function to go with zoom in, to the requested location
+	 * @param {lat} [ parameter to recive a latitude ]
+	 * @param {lng} [ parameter to recive a longitude ]
+	 */
 	const panTo = React.useCallback(({lat, lng}) => {
 		const location = {
 			latitude: lat,
@@ -119,6 +198,10 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
+
+	/**
+	 * 
+	 */
 	function renderModalPin() {
 		return (
 			<Modal
@@ -317,6 +400,9 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 		);
 	}
 
+	/**
+	 * 
+	 */
 	function renderModalFilter() {
 		return (
 			<Modal
@@ -478,20 +564,9 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 						longitudeDelta: 1.5,
 					}}
 					onRegionChangeComplete={(region) => setRegion(region)}
-					onPress={onMapPress}
+					//onPress={onMapPress}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={`${marker.latitude}-${marker.longitude}`}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setSelected(marker);
-							}}
-						/>
-					))}
+					
 
 					<Heatmap
 						points={heatpoints}
@@ -579,6 +654,9 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 	);
 }
 
+/**
+ * Function to define all the styles needed in this screen
+ */
 const styles = StyleSheet.create({
 	containerFilter: {
 		backgroundColor: COLORS.white,
