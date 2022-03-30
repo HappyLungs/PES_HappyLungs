@@ -44,6 +44,14 @@ class DataPointMap {
         let x = await punto_cercano.getMonthLevel(date);
         return x;
     }
+
+    async getYearLevel (date) {
+        let puntos_cercanos = await this.nearerPoints(date);
+
+        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
+        let x = await punto_cercano.getYearLevel(date);
+        return x;
+    }
     
     //PIE CHART GETTERS
     async getPollutantsQuantDay (date) {

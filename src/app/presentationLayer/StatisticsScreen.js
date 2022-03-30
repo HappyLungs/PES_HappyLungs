@@ -90,23 +90,10 @@ function StatisticsScreen({ navigation, route }) {
 		};
 		const screenWidth = Dimensions.get("window").width;
 		const data = {
-			labels: [
-				"00",
-				"02",
-				"04",
-				"06",
-				"08",
-				"10",
-				"12",
-				"14",
-				"16",
-				"18",
-				"20",
-				"22",
-			],
+			labels: dades.tags,
 			datasets: [
 				{
-					data: Array.from(dades),
+					data: Array.from(dades.levels),
 					color: (opacity = 1) => "#4d4d4d", // optional
 					strokeWidth: 2, // optional
 				},

@@ -242,6 +242,52 @@ class MeasureStation {
         return result;
     }
 
+    /**
+     * Calculates the pollution level at every month of last year
+     * @param {Date} date date
+     * @returns {Array<Integer>} pollution level of the latest 30 days from date
+     */ 
+    async getYearLevel(date) {
+        let lastYear = new Date(date);
+        lastYear.setMonth(lastYear.getMonth() - 12);
+        lastYear.setDate(0);
+        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastYear, date);
+
+
+        let measuresByMonth = new Map();
+        measures.forEach(measure => {
+            let month = new Date(measure.data);
+            month = month.getMonth();
+            if (! measuresByMonth.has(month)) measuresByMonth.set(month, [measure]);
+            else {
+                measuresByMonth.get(month).push(measure);
+                //measuresByMonth.set(month, m);
+            }
+        })
+
+        let tags = [];
+        let monthlyLevel = [];
+        measuresByMonth.forEach( function(month, measures) {
+            tags.push(this.month+1);
+            let dailyLevel = this.calcMultipleDaysLevel(measures);
+            let monthLevel = dailyLevel.reduce((a, b) => a + b, 0) / dailyLevel.length;
+            monthlyLevel.push(monthLevel);
+        })
+
+        let title;
+        if (date.getFullYear() === lastmonth.getFullYear()) title = date.getFullYear();
+        else title = lastYear.getFullYear()+" / "+date.getFullYear();
+        
+        let result = {
+            title: title,
+            tags: tags,
+            levels: dailyLevel
+        }
+        
+        
+        return result;
+    }
+
 
     //POLLUTANTS QUANTITTY CALCULATOR
 

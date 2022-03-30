@@ -86,6 +86,12 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (latitude, length
 	return data;
 };
 
+/**
+ * 
+ * @param {*} latitude 
+ * @param {*} length 
+ * @returns {}
+ */
 DomainCtrl.prototype.getPollutionLevelLastWeek = async function (
 	latitude,
 	length
@@ -111,6 +117,20 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 		finalTags.push(data.tags[i]);
 		finalLevels.push(data.levels[i]);
 	}
+
+	//data.tags = finalTags;
+	//data.levels = finalLevels;
+
+	return data;
+};
+
+DomainCtrl.prototype.getPollutionLevelLastYear = async function (
+	latitude,
+	length
+) {
+	let date = new Date();
+	let point = new DataPointMap(latitude, length);
+	let data = await point.getYearLevel(date);
 
 	//data.tags = finalTags;
 	//data.levels = finalLevels;
