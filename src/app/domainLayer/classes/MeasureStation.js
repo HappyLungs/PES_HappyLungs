@@ -249,39 +249,41 @@ class MeasureStation {
      */ 
     async getYearLevel(date) {
         let lastYear = new Date(date);
-        lastYear.setMonth(lastYear.getMonth() - 12);
+        lastYear.setMonth(lastYear.getMonth() - 10);
         lastYear.setDate(0);
         let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastYear, date);
 
 
         let measuresByMonth = new Map();
         measures.forEach(measure => {
-            let month = new Date(measure.data);
-            month = month.getMonth();
+            let measureDate = new Date(measure.data);
+            let auxMonth = (parseInt(measureDate.getMonth())<9 ? "0"+(parseInt(measureDate.getMonth())+1).toString() : (parseInt(measureDate.getMonth())+1).toString());
+            let month = measureDate.getFullYear().toString()+auxMonth;
             if (! measuresByMonth.has(month)) measuresByMonth.set(month, [measure]);
             else {
                 measuresByMonth.get(month).push(measure);
                 //measuresByMonth.set(month, m);
             }
         })
+        let measuresByMonthOrdered = new Map([...measuresByMonth.entries()].sort());
 
         let tags = [];
         let monthlyLevel = [];
-        measuresByMonth.forEach( function(month, measures) {
-            tags.push(this.month+1);
+        for(let [month, measures] of measuresByMonthOrdered) {
+            tags.push(month.slice(-2));
             let dailyLevel = this.calcMultipleDaysLevel(measures);
-            let monthLevel = dailyLevel.reduce((a, b) => a + b, 0) / dailyLevel.length;
+            let monthLevel = Math.round(dailyLevel.reduce((a, b) => a + b, 0) / dailyLevel.length);
             monthlyLevel.push(monthLevel);
-        })
+        }
 
         let title;
-        if (date.getFullYear() === lastmonth.getFullYear()) title = date.getFullYear();
+        if (date.getFullYear() === lastYear.getFullYear()) title = date.getFullYear();
         else title = lastYear.getFullYear()+" / "+date.getFullYear();
         
         let result = {
             title: title,
             tags: tags,
-            levels: dailyLevel
+            levels: monthlyLevel
         }
         
         
