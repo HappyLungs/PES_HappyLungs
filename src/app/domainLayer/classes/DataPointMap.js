@@ -14,43 +14,67 @@ class DataPointMap {
 
     //LINEAR CHART GETTERS
     async  getHourLevel(date, hour) {
-        let puntos_cercanos = await this.nearerPoints();
+        let nearPoints = await this.nearerPoints();
 
-        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getHourLevel(date, hour);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getHourLevel(date, hour);
         return x;    
     }
 
     async getDayLevel (date) {
-        let puntos_cercanos = await this.nearerPoints(date);
+        let nearPoints = await this.nearerPoints(date);
 
-        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getDayLevel(date);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getDayLevel(date);
         return x;     
     }
 
     async getWeekLevel (date) {
-        let puntos_cercanos = await this.nearerPoints(date);
+        let nearPoints = await this.nearerPoints(date);
 
-        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getWeekLevel(date);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getWeekLevel(date);
         return x;  
     }
 
     async getMonthLevel (date) {
-        let puntos_cercanos = await this.nearerPoints(date);
+        let nearPoints = await this.nearerPoints(date);
 
-        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getMonthLevel(date);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getMonthLevel(date);
         return x;
     }
     
     //PIE CHART GETTERS
     async getPollutantsQuantDay (date) {
-        let puntos_cercanos = await this.nearerPoints(date);
+        let nearPoints = await this.nearerPoints(date);
 
-        let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getQuantityOfEachPollutantAtDay(date);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getQuantityOfEachPollutantDay(date);
+        return x;     
+    }
+
+    async getPollutantsQuantWeek (date) {
+        let nearPoints = await this.nearerPoints(date);
+
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getQuantityOfEachPollutantWeek(date);
+        return x;     
+    }
+
+    async getPollutantsQuantMonth (date) {
+        let nearPoints = await this.nearerPoints(date);
+
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getQuantityOfEachPollutantMonth(date);
+        return x;     
+    }
+    
+    async getPollutantsQuantYear (date) {
+        let nearPoints = await this.nearerPoints(date);
+
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let x = await nearPoint.getQuantityOfEachPollutantYear(date);
         return x;     
     }
 
