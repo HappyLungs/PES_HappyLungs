@@ -19,3 +19,11 @@ Receives certain parameters and completes a database call, returning the result.
 ## Model
 
 The definition of the model.
+
+## Node modules
+
+- express
+- dotenv
+- mongoose
+- express-validator
+- jsonwebtoken

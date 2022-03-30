@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 
 import {
 	Text,
@@ -21,7 +21,6 @@ import MapView, {
 	Marker,
 	Heatmap,
 	PROVIDER_GOOGLE,
-	ProviderPropType,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -35,20 +34,77 @@ import * as Location from "expo-location";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-function MapScreen({ navigation, route }) {
+/**
+ * Map screen, with all its components
+ * @param {navigation} [ parameter to navigate to the other screens or controllers ]
+ * @param {route} [ route to navigate to the other screens or controllers ]
+ */
+function MapScreen({navigation, route}) {
+	/**
+	 * Function to set a default location
+	 */
 	const location =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+	
+	/**
+	 * Function to set a default latitude
+	 */
 	const lat = 41.363094;
+
+	/**
+	 * Function to set a default longitude
+	 */
 	const lng = 2.112971;
+	/**
+	 * 
+	 */
 	let presentationCtrl = new PresentationCtrl();
+
+	/**
+	 *
+	 */
 	const [modalPinVisible, setModalPinVisible] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [trafficSelected, setTraffic] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [industrySelected, setIndustry] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [urbanSelected, setUrban] = useState(false);
+
+	/**
+	 * 
+	 */
 	const [pinsShown, setPins] = useState(true);
+
+	/**
+	 * 
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
+
+	
 	const [markers, setMarkers] = useState([]);
+
+	/**
+	 * Function to set a default region
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {latitudeDelta} [ parameter to set a max distance to the central point in terms of latitude ]
+	 * @param {longitudeDelta} [ parameter to set a max distance to the central point in terms of longitude ]
+	 */
 	const [region, setRegion] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -57,53 +113,53 @@ function MapScreen({ navigation, route }) {
 	});
 
 	//const [heatpoints] = useState(presentationCtrl.getMapData());
-	const [heatpoints, setHeatpoints] = useState([
-		{
-			latitude: 43.366531,
-			longitude: 2.019336,
-			weight: 1,
-		},
-		{
-			latitude: 42.366531,
-			longitude: 2.019336,
-			weight: 2,
-		},
-		{
-			latitude: 41.366531,
-			longitude: 2.019336,
-			weight: 3,
-		},
-	]);
-	const mapRef = useRef(null);
 
+	/**
+	 * Function to set a default hetpoint
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {weight} [  ]
+	 */
+	const [heatpoints, setHeatpoints] = useState([{
+		latitude: 41.366531,
+		longitude: 2.019336,
+		weight: 3
+	}]);
+
+	/**
+	 * 
+	 */
+	useEffect(async () => {
+		 const initHeatPoints = async () => {
+			 setHeatpoints(await presentationCtrl.getMapData());
+		 }
+		 //console.log('prevoius');
+		 await initHeatPoints();
+		 //console.log(heatpoints);
+	 },[])
+	
+	//setHeatpoints(await presentationCtrl.getMapData());
 	/*
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
-  */
-	/*
-  const { lat, lng } = route.params;
-  if (lat && lng) {
-    const tmpLocation = {
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }
-    mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
-  }
-  */
+	*/
+		/*
+	const { lat, lng } = route.params;
+	if (lat && lng) {
+		const tmpLocation = {
+		latitude: lat,
+		longitude: lng,
+		latitudeDelta: 0.01,
+		longitudeDelta: 0.01,
+		}
+		mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+	}
+	*/
 
-	/*const onMapPress = React.useCallback((event) => {
-      setMarkers((current) => [
-        ...current,
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-
-	const onMapPress = React.useCallback(({ lat, lng }) => {
+	/**
+	 * Function to set a reference point of the map 
+	 */
+	const mapRef = useRef(null);
+	/*const onMapPress = React.useCallback(({lat, lng}) => {
 		setMarkers((current) => [
 			...current,
 			{
@@ -113,7 +169,26 @@ function MapScreen({ navigation, route }) {
 		]);
 	}, []);
 
-	const panTo = React.useCallback(({ lat, lng }) => {
+	funció al return
+	{markers.map((marker) => (
+		<Marker
+			key={`${marker.latitude}-${marker.longitude}`}
+			coordinate={{
+				latitude: marker.latitude,
+				longitude: marker.longitude,
+			}}
+			onPress={() => {
+				setSelected(marker);
+			}}
+		/>
+	))} */
+
+	/**
+	 * Function to go with zoom in, to the requested location
+	 * @param {lat} [ parameter to recive a latitude ]
+	 * @param {lng} [ parameter to recive a longitude ]
+	 */
+	const panTo = React.useCallback(({lat, lng}) => {
 		const location = {
 			latitude: lat,
 			longitude: lng,
@@ -123,6 +198,10 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
+
+	/**
+	 * 
+	 */
 	function renderModalPin() {
 		return (
 			<Modal
@@ -136,18 +215,18 @@ function MapScreen({ navigation, route }) {
 				<View style={styles.centeredView}>
 					<View style={[styles.modalView, styles.shadow]}>
 						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
+							style={{alignSelf: "flex-end"}}
 							onPress={() => setModalPinVisible(!modalPinVisible)}
 						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
+							<Ionicons name="close" color={COLORS.secondary} size={25}/>
 						</TouchableOpacity>
 						<Text
-							style={[styles.modalText, { fontWeight: "bold", bottom: 15 }]}
+							style={[styles.modalText, {fontWeight: "bold", bottom: 15}]}
 						>
 							Selected location
 						</Text>
 						<Text style={styles.greenHighlight}> {location}</Text>
-						<View style={{ flexDirection: "column", marginTop: 10 }}>
+						<View style={{flexDirection: "column", marginTop: 10}}>
 							<TouchableOpacity
 								style={{
 									flexDirection: "row",
@@ -157,12 +236,12 @@ function MapScreen({ navigation, route }) {
 								onPress={() => {
 									setModalPinVisible(!modalPinVisible),
 										navigation.navigate("CreatePin", {
-											coords: { latitude: lat, longitude: lng },
+											coords: {latitude: lat, longitude: lng},
 										});
 								}}
 							>
-								<AntDesign name="pushpino" size={35} color={COLORS.secondary} />
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+								<AntDesign name="pushpino" size={35} color={COLORS.secondary}/>
+								<Text style={[styles.subtitle, {marginStart: 5}]}>
 									CREATE PIN
 								</Text>
 							</TouchableOpacity>
@@ -181,7 +260,7 @@ function MapScreen({ navigation, route }) {
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
 										data: data,
-										coords: { latitude: lat, longitude: lng },
+										coords: {latitude: lat, longitude: lng},
 									});
 								}}
 							>
@@ -190,7 +269,7 @@ function MapScreen({ navigation, route }) {
 									color={COLORS.secondary}
 									size={35}
 								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+								<Text style={[styles.subtitle, {marginStart: 5}]}>
 									SEE STATISTICS
 								</Text>
 							</TouchableOpacity>
@@ -204,11 +283,11 @@ function MapScreen({ navigation, route }) {
 							>
 								<Ionicons
 									name="share-social-sharp"
-									style={{ alignSelf: "center" }}
+									style={{alignSelf: "center"}}
 									color={COLORS.secondary}
 									size={35}
 								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
+								<Text style={[styles.subtitle, {marginStart: 5}]}>SHARE</Text>
 							</TouchableOpacity>
 							<Text
 								style={{
@@ -236,9 +315,9 @@ function MapScreen({ navigation, route }) {
 										"purple",
 										"brown",
 									]}
-									start={{ x: 0, y: 0.5 }}
-									end={{ x: 1, y: 1 }}
-									style={{ borderRadius: 5 }}
+									start={{x: 0, y: 0.5}}
+									end={{x: 1, y: 1}}
+									style={{borderRadius: 5}}
 								>
 									<View
 										style={{
@@ -260,9 +339,9 @@ function MapScreen({ navigation, route }) {
 
 	function renderCheckList() {
 		return (
-			<View style={{ flexDirection: "column", marginStart: 20 }}>
+			<View style={{flexDirection: "column", marginStart: 20}}>
 				<BouncyCheckbox
-					style={{ marginTop: 10 }}
+					style={{marginTop: 10}}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -280,7 +359,7 @@ function MapScreen({ navigation, route }) {
 					text="Traffic"
 				/>
 				<BouncyCheckbox
-					style={{ marginTop: 10 }}
+					style={{marginTop: 10}}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -300,7 +379,7 @@ function MapScreen({ navigation, route }) {
 					text="Industry"
 				/>
 				<BouncyCheckbox
-					style={{ marginTop: 10 }}
+					style={{marginTop: 10}}
 					fillColor={COLORS.secondary}
 					size={20}
 					unfillColor={COLORS.white}
@@ -321,6 +400,9 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
+	/**
+	 * 
+	 */
 	function renderModalFilter() {
 		return (
 			<Modal
@@ -336,19 +418,19 @@ function MapScreen({ navigation, route }) {
 						style={[
 							styles.modalView,
 							styles.shadow,
-							{ alignItems: "flex-start" },
+							{alignItems: "flex-start"},
 						]}
 					>
 						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
+							style={{alignSelf: "flex-end"}}
 							onPress={() => setModalFilterVisible(!modalFilterVisible)}
 						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
+							<Ionicons name="close" color={COLORS.secondary} size={25}/>
 						</TouchableOpacity>
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
+								{fontWeight: "bold", alignSelf: "center", bottom: 15},
 							]}
 						>
 							Filter
@@ -356,7 +438,7 @@ function MapScreen({ navigation, route }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1 },
+								{fontWeight: "bold", color: COLORS.green1},
 							]}
 						>
 							Type of contamination
@@ -365,7 +447,7 @@ function MapScreen({ navigation, route }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
+								{fontWeight: "bold", color: COLORS.green1, marginTop: 10},
 							]}
 						>
 							Show pins
@@ -391,12 +473,12 @@ function MapScreen({ navigation, route }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
+								{fontWeight: "bold", color: COLORS.green1, marginTop: 10},
 							]}
 						>
 							Filter buildings by energy certificate
 						</Text>
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
+						<View style={{flexDirection: "row", alignItems: "center"}}>
 							<TouchableOpacity
 								style={{
 									flexDirection: "row",
@@ -469,12 +551,12 @@ function MapScreen({ navigation, route }) {
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-			<View style={{ ...StyleSheet.absoluteFillObject }}>
+		<SafeAreaView style={{flex: 1, alignItems: "center"}}>
+			<View style={{...StyleSheet.absoluteFillObject}}>
 				<MapView
 					ref={mapRef}
 					provider={PROVIDER_GOOGLE}
-					style={{ ...StyleSheet.absoluteFillObject }}
+					style={{...StyleSheet.absoluteFillObject}}
 					initialRegion={{
 						latitude: 41.366531,
 						longitude: 2.019336,
@@ -482,21 +564,15 @@ function MapScreen({ navigation, route }) {
 						longitudeDelta: 1.5,
 					}}
 					onRegionChangeComplete={(region) => setRegion(region)}
-					onPress={onMapPress}
+					//onPress={onMapPress}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={`${marker.latitude}-${marker.longitude}`}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setSelected(marker);
-							}}
-						/>
-					))}
-					<Heatmap points={heatpoints} />
+					
+
+					<Heatmap
+						points={heatpoints}
+						radius={50}
+					/>
+
 				</MapView>
 			</View>
 			<View
@@ -520,7 +596,7 @@ function MapScreen({ navigation, route }) {
 				>
 					<MaterialIcons
 						name="search"
-						style={{ alignSelf: "center", marginStart: 10 }}
+						style={{alignSelf: "center", marginStart: 10}}
 						color={COLORS.secondary}
 						size={35}
 					/>
@@ -535,7 +611,7 @@ function MapScreen({ navigation, route }) {
 					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
-							style={{ alignSelf: "center" }}
+							style={{alignSelf: "center"}}
 							color={COLORS.secondary}
 							size={35}
 						/>
@@ -570,7 +646,7 @@ function MapScreen({ navigation, route }) {
 					});
 				}}
 			>
-				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
+				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35}/>
 			</TouchableOpacity>
 			{renderModalPin()}
 			{renderModalFilter()}
@@ -578,6 +654,9 @@ function MapScreen({ navigation, route }) {
 	);
 }
 
+/**
+ * Function to define all the styles needed in this screen
+ */
 const styles = StyleSheet.create({
 	containerFilter: {
 		backgroundColor: COLORS.white,

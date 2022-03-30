@@ -40,9 +40,9 @@ PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
 
 /**
  *
- * @param {*} type ["24hours", "week", "month", "year"]
- * @param {*} latitude
- * @param {*} longitude
+ * @param {String} type ["24hours", "week", "month", "year"]
+ * @param {Float} latitude
+ * @param {Float} longitude
  * @returns [{AIR QUALITY},{POLLUTANTS}] => [{title, tags, levels}, {¿?}]
  */
 PresentationCtrl.prototype.getDataStatistics = async function (
@@ -68,18 +68,29 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 				latitude,
 				longitude
 			);
-			data[1] = await this.domainCtrl.x(latitude, longitude);
+			data[1] = await this.domainCtrl.getPollutantsQuantLastWeek(
+				latitude, 
+				longitude
+			);
 			break;
 		case "month":
-			data[0] = await this.domainCtrl.getPollutionLevelLastMonth(latitude, longitude);
-			data[1] = await this.domainCtrl.x(latitude,longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastMonth(
+				latitude,
+				longitude
+			);
+			data[1] = await this.domainCtrl.getPollutantsQuantLastMonth(
+				latitude, 
+				longitude
+			);
 			break;
 		case "year":
 			data[0] = await this.domainCtrl.getPollutionLevelLastYear(latitude, longitude);
-			data[1] = await this.domainCtrl.x(latitude, longitude);
+			data[1] = await this.domainCtrl.getPollutantsQuantLastYear(
+				latitude, 
+				longitude
+			);
 			break;
 	}
-
 	return data;
 };
 
