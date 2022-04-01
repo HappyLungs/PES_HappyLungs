@@ -21,7 +21,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
 import Input from "./components/Input";
 
-function CreatePinScreen({ route }) {
+function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { coords } = route.params;
@@ -248,18 +248,38 @@ function CreatePinScreen({ route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinModeSelector()}
-				<TouchableOpacity style={styles.containerEditBtn} onPress={validate}>
-					<Text
-						style={{
-							textAlign: "center",
-							fontWeight: "bold",
-							fontSize: 15,
-							color: COLORS.white,
-						}}
+				<View style={{ flexDirection: "row", marginTop: 20 }}>
+					<TouchableOpacity
+						style={[styles.containerCancelBtn, styles.shadow]}
+						onPress={() => navigation.navigate("MapScreen")}
 					>
-						Save Pin
-					</Text>
-				</TouchableOpacity>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Cancel
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.containerSaveBtn, styles.shadow]}
+						onPress={validate}
+					>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Save pin
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</SafeAreaView>
 	);
@@ -271,17 +291,29 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 5,
 	},
-	containerEditBtn: {
+	containerSaveBtn: {
 		width: 110,
 		flexDirection: "row",
 		alignItems: "center",
 		alignContent: "center",
 		justifyContent: "center",
-		marginLeft: 200,
+		marginLeft: 50,
 		marginTop: 10,
 		padding: 10,
 		borderRadius: 10,
 		backgroundColor: COLORS.green1,
+	},
+	containerCancelBtn: {
+		width: 110,
+		flexDirection: "row",
+		alignItems: "center",
+		alignContent: "center",
+		justifyContent: "center",
+		marginLeft: 50,
+		marginTop: 10,
+		padding: 10,
+		borderRadius: 10,
+		backgroundColor: COLORS.red1,
 	},
 	subtitle: {
 		textAlign: "left",
@@ -305,6 +337,16 @@ const styles = StyleSheet.create({
 		height: 45,
 		resizeMode: "cover",
 		marginStart: 25,
+	},
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 });
 
