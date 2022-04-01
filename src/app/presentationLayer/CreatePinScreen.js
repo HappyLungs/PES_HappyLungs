@@ -17,14 +17,12 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
 import Input from "./components/Input";
 
 function CreatePinScreen({ route }) {
 	let presentationCtrl = new PresentationCtrl();
-
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
 	const { coords } = route.params;
 	const [date, setDate] = useState(new Date());
@@ -129,10 +127,10 @@ function CreatePinScreen({ route }) {
 		return (
 			<View style={styles.containerImage}>
 				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
-					<Image
-						style={styles.image}
-						fadeDuration={250}
-						source={require("../../assets/addButton.png")}
+					<MaterialIcons
+						name="library-add"
+						size={25}
+						color={COLORS.secondary}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity style={{ flexDirection: "row" }}>
@@ -214,7 +212,7 @@ function CreatePinScreen({ route }) {
 			<View style={{ marginVertical: 20 }}>
 				<Text style={styles.subtitle}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{locationName}{" "}
+					{[coords.latitude, "   ", coords.longitude]}
 				</Text>
 				<Input
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
