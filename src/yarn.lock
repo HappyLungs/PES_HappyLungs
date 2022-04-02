@@ -1244,9 +1244,9 @@
     "getenv" "^1.0.0"
     "sucrase" "^3.20.0"
 
-"@expo/ngrok-bin-win32-x64@2.3.40":
-  "integrity" "sha512-a8xtUxX/Ftp2ho+/+VR5GCg0ttP9MNzYj58TVjfiKMkl4mVrbFVIzEinRzmy7PhiOWxqGQSCOdzEfa6C2G4nEA=="
-  "resolved" "https://registry.npmjs.org/@expo/ngrok-bin-win32-x64/-/ngrok-bin-win32-x64-2.3.40.tgz"
+"@expo/ngrok-bin-win32-ia32@2.3.40":
+  "integrity" "sha512-RAunwOAskfU0R5mYlxxB+bihLJ4nLRx5/x+q5nIq1muYmaqLvGtkQQHZKzgHJANJ7ZIbzfJY57IN2UICpibgIQ=="
+  "resolved" "https://registry.npmjs.org/@expo/ngrok-bin-win32-ia32/-/ngrok-bin-win32-ia32-2.3.40.tgz"
   "version" "2.3.40"
 
 "@expo/ngrok-bin@2.3.40":

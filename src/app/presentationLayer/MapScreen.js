@@ -37,6 +37,15 @@ import { formatRelative } from "date-fns";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
+
+
+async function callGeocodeAPI(latitude, longitude){
+	const location = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`);
+	if(!location.ok) return '';
+	const result = await location.json();
+	return result.results[0].formatted_address;
+}
+
 /**
  * Map screen, with all its components
  * @param {navigation} [ parameter to navigate to the other screens or controllers ]
@@ -46,8 +55,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 * Function to set a default location
 	 */
-	const location =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+
 
 	let presentationCtrl = new PresentationCtrl();
 
@@ -90,6 +98,7 @@ function MapScreen({ navigation, route }) {
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
+		title: 'inexistente',
 	});
 	const [selected, setSelected] = useState(null);
 
@@ -172,14 +181,18 @@ function MapScreen({ navigation, route }) {
 		setModalPinVisible(!modalPinVisible);
 	});
 
-	const onModal = React.useCallback((e) => {
-		e.persist();
+	const onModal = async (event) => {
+		event.persist();
+		const latitude = event.nativeEvent.coordinate.latitude;
+		const longitude = event.nativeEvent.coordinate.longitude
+		const title = await callGeocodeAPI(latitude, longitude);
 		setActualMarker({
-			latitude: e.nativeEvent.coordinate.latitude,
-			longitude: e.nativeEvent.coordinate.longitude,
+			latitude,
+			longitude,
+			title,
 		});
 		setModalPinVisible(true);
-	});
+	};
 
 	/**
 	 * Function to set a reference point of the map
@@ -231,7 +244,7 @@ function MapScreen({ navigation, route }) {
 						>
 							Selected location
 						</Text>
-						<Text style={styles.greenHighlight}> {location}</Text>
+						<Text style={styles.greenHighlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
 								style={{
