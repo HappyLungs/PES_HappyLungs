@@ -34,3 +34,16 @@ exports.findPin = async (where = {}) => {
         })
     })
 };
+
+exports.deletePin = async (where = {}) => {
+    return new Promise((resolve, reject) => {
+        PinModel
+        .deleteOne(where)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+}
