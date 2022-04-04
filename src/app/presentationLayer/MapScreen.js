@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import {
 	Text,
@@ -21,7 +21,7 @@ import MapView, {
 	Marker,
 	Heatmap,
 	PROVIDER_GOOGLE,
-	ProviderPropType,
+	InfoWindow,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -33,22 +33,82 @@ import usePlacesAutocomplete, {
 
 import * as Location from "expo-location";
 
+import { formatRelative } from "date-fns";
+
 const PresentationCtrl = require("./PresentationCtrl.js");
 
+
+
+async function callGeocodeAPI(latitude, longitude){
+	const location = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`);
+	if(!location.ok) return '';
+	const result = await location.json();
+	return result.results[0].formatted_address;
+}
+
+/**
+ * Map screen, with all its components
+ * @param {navigation} [ parameter to navigate to the other screens or controllers ]
+ * @param {route} [ route to navigate to the other screens or controllers ]
+ */
 function MapScreen({ navigation, route }) {
-	const location =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-	const lat = 41.363094;
-	const lng = 2.112971;
+	/**
+	 * Function to set a default location
+	 */
+
+
 	let presentationCtrl = new PresentationCtrl();
+
+	/**
+	 *
+	 */
 	const [modalPinVisible, setModalPinVisible] = useState(false);
+
+	/**
+	 *
+	 */
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+
+	/**
+	 *
+	 */
 	const [trafficSelected, setTraffic] = useState(false);
+
+	/**
+	 *
+	 */
 	const [industrySelected, setIndustry] = useState(false);
+
+	/**
+	 *
+	 */
 	const [urbanSelected, setUrban] = useState(false);
+
+	/**
+	 *
+	 */
 	const [pinsShown, setPins] = useState(true);
+
+	/**
+	 *
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
+
 	const [markers, setMarkers] = useState([]);
+	const [actualMarker, setActualMarker] = useState({
+		latitude: 41.366531,
+		longitude: 2.019336,
+		title: 'inexistente',
+	});
+	const [selected, setSelected] = useState(null);
+
+	/**
+	 * Function to set a default region
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {latitudeDelta} [ parameter to set a max distance to the central point in terms of latitude ]
+	 * @param {longitudeDelta} [ parameter to set a max distance to the central point in terms of longitude ]
+	 */
 	const [region, setRegion] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -57,62 +117,97 @@ function MapScreen({ navigation, route }) {
 	});
 
 	//const [heatpoints] = useState(presentationCtrl.getMapData());
+
+	/**
+	 * Function to set a default hetpoint
+	 * @param {latitude} [ parameter to set a default latitude ]
+	 * @param {longitude} [ parameter to set a default longitude ]
+	 * @param {weight} [  ]
+	 */
 	const [heatpoints, setHeatpoints] = useState([
-		{
-			latitude: 43.366531,
-			longitude: 2.019336,
-			weight: 1,
-		},
-		{
-			latitude: 42.366531,
-			longitude: 2.019336,
-			weight: 2,
-		},
 		{
 			latitude: 41.366531,
 			longitude: 2.019336,
 			weight: 3,
 		},
 	]);
-	const mapRef = useRef(null);
 
+	/**
+	 *
+	 */
+	useEffect(async () => {
+		const initHeatPoints = async () => {
+			setHeatpoints(await presentationCtrl.getMapData());
+		};
+		//console.log('prevoius');
+		await initHeatPoints();
+		//console.log(heatpoints);
+	}, []);
+
+	//setHeatpoints(await presentationCtrl.getMapData());
 	/*
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
-  */
+	*/
 	/*
-  const { lat, lng } = route.params;
-  if (lat && lng) {
-    const tmpLocation = {
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }
-    mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
-  }
-  */
+	const { lat, lng } = route.params;
+	if (lat && lng) {
+		const tmpLocation = {
+		latitude: lat,
+		longitude: lng,
+		latitudeDelta: 0.01,
+		longitudeDelta: 0.01,
+		}
+		mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+	}
+	*/
 
-	/*const onMapPress = React.useCallback((event) => {
-      setMarkers((current) => [
-        ...current,
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          time: new Date(),
-        },
-      ]);
-    }, []); */
-
-	const onMapPress = React.useCallback(({ lat, lng }) => {
+	const onMapPress = React.useCallback((e) => {
+		//e.persist()
+		navigation.navigate("CreatePin", {
+			coords: {
+				latitude: actualMarker.latitude,
+				longitude: actualMarker.longitude,
+			},
+		});
+		//falta condicionar això perq només passi quan realment es crea un pin
 		setMarkers((current) => [
 			...current,
 			{
-				latitude: lat,
-				longitude: lng,
+				latitude: actualMarker.latitude,
+				longitude: actualMarker.longitude,
+				time: new Date(),
 			},
 		]);
-	}, []);
+		setModalPinVisible(!modalPinVisible);
+	});
 
+	const onModal = async (event) => {
+		event.persist();
+		const latitude = event.nativeEvent.coordinate.latitude;
+		const longitude = event.nativeEvent.coordinate.longitude
+		const title = await callGeocodeAPI(latitude, longitude);
+		setActualMarker({
+			latitude,
+			longitude,
+			title,
+		});
+		setModalPinVisible(true);
+	};
+
+	/**
+	 * Function to set a reference point of the map
+	 */
+	const mapRef = useRef(null);
+
+	const onMapLoad = React.useCallback((map) => {
+		mapRef.current = map;
+	});
+
+	/**
+	 * Function to go with zoom in, to the requested location
+	 * @param {lat} [ parameter to recive a latitude ]
+	 * @param {lng} [ parameter to recive a longitude ]
+	 */
 	const panTo = React.useCallback(({ lat, lng }) => {
 		const location = {
 			latitude: lat,
@@ -123,6 +218,9 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
+	/**
+	 *
+	 */
 	function renderModalPin() {
 		return (
 			<Modal
@@ -146,7 +244,7 @@ function MapScreen({ navigation, route }) {
 						>
 							Selected location
 						</Text>
-						<Text style={styles.greenHighlight}> {location}</Text>
+						<Text style={styles.greenHighlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
 								style={{
@@ -154,12 +252,7 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={() => {
-									setModalPinVisible(!modalPinVisible),
-										navigation.navigate("CreatePin", {
-											coords: { latitude: lat, longitude: lng },
-										});
-								}}
+								onPress={onMapPress}
 							>
 								<AntDesign name="pushpino" size={35} color={COLORS.secondary} />
 								<Text style={[styles.subtitle, { marginStart: 5 }]}>
@@ -321,6 +414,9 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
+	/**
+	 *
+	 */
 	function renderModalFilter() {
 		return (
 			<Modal
@@ -482,11 +578,12 @@ function MapScreen({ navigation, route }) {
 						longitudeDelta: 1.5,
 					}}
 					onRegionChangeComplete={(region) => setRegion(region)}
-					onPress={onMapPress}
+					onPress={onModal}
+					onLoad={onMapLoad}
 				>
 					{markers.map((marker) => (
 						<Marker
-							key={`${marker.latitude}-${marker.longitude}`}
+							key={marker.time.toISOString()}
 							coordinate={{
 								latitude: marker.latitude,
 								longitude: marker.longitude,
@@ -496,7 +593,8 @@ function MapScreen({ navigation, route }) {
 							}}
 						/>
 					))}
-					<Heatmap points={heatpoints} />
+
+					<Heatmap points={heatpoints} radius={50} />
 				</MapView>
 			</View>
 			<View
@@ -544,21 +642,6 @@ function MapScreen({ navigation, route }) {
 			</View>
 
 			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => setModalPinVisible(true)}
-			>
-				<Text
-					style={{
-						color: "white",
-						textAlign: "center",
-						fontWeight: "bold",
-					}}
-				>
-					Pin Example
-				</Text>
-			</TouchableOpacity>
-
-			<TouchableOpacity
 				style={styles.compass}
 				onPress={() => {
 					Location.installWebGeolocationPolyfill();
@@ -577,7 +660,9 @@ function MapScreen({ navigation, route }) {
 		</SafeAreaView>
 	);
 }
-
+/**
+ * Function to define all the styles needed in this screen
+ */
 const styles = StyleSheet.create({
 	containerFilter: {
 		backgroundColor: COLORS.white,
@@ -651,7 +736,7 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.secondary,
 	},
 	compass: {
-		marginTop: 460,
+		marginTop: 480,
 		marginRight: 10,
 		marginStart: 320,
 		justifyContent: "center",

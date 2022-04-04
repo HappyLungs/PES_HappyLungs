@@ -26,6 +26,10 @@ La api conté els sgüents components:
 
   Diferents fitxers per tal de reutilitzar la major quantitat de codi possible. Per exemple disposem d'un fitxer de codis d'error/èxit (200, 400, ...).
 
+- Middlewares:
+  
+  On es defineix la seguretat de la API, mitjançant autoritzacions (necessitat d'una clau per fer requests, etc...)
+
 - Model:
 
   On es defineix cada classe en un JSON Schema.
@@ -42,4 +46,4 @@ La api conté els sgüents components:
 
 Hem decidit que la API s'estigui executant en segon plà al servidor d'AWS mitjançant pm2.
 
-Per facilitar les crides al programa principal, hem fet un fitxer que inclou diverses funcions específiques per fer un "GET", un "POST", etc mitjançant el mòdul d'Axios. D'aquesta manera si es vol fer una crida a la base de dades des de qualsevol punt del codi, simplement s'han d'importar les funcions del fitxer i passar-li la ruta per a dur a terme la funcionalitat dessitjada i els paràmetres que es vulguin passar.
+Per facilitar les crides al programa principal, hem fet un fitxer que inclou diverses funcions específiques per fer un "GET", un "POST", etc mitjançant el mòdul d'Axios. D'aquesta manera si es vol fer una crida a la base de dades des de qualsevol punt del codi, simplement s'han d'importar les funcions del fitxer i passar-li la ruta per a dur a terme la funcionalitat dessitjada i els paràmetres que es vulguin passar, a més de passar els headers necessaris per tal que s'acceptin les requests.

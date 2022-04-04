@@ -23,12 +23,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function StatisticsScreen({ navigation, route }) {
 	const { data } = route.params;
+	const [tmpDades, setDades] = useState(data);
 	const { coords } = route.params;
-	const [tmpDades, setDades] = useState(null);
+	const [selectedInterval, setSelectedInterval] = useState("24hours");
 	let presentationCtrl = new PresentationCtrl();
 
 	const setInterval = async (option) => {
-		console.log(option);
+		setSelectedInterval(option);
 		let tmp = await presentationCtrl.getDataStatistics(
 			option,
 			coords.latitude,
@@ -43,7 +44,20 @@ function StatisticsScreen({ navigation, route }) {
 		return (
 			<TouchableOpacity
 				onPress={setInterval.bind(this, props.option)}
-				style={[styles.btn, styles.shadow]}
+				style={[
+					styles.btn,
+					styles.shadow,
+					{
+						backgroundColor:
+							selectedInterval === props.option
+								? COLORS.darkGrey
+								: COLORS.green1,
+						borderBottomColor:
+							selectedInterval === props.option
+								? COLORS.secondary
+								: COLORS.green2,
+					},
+				]}
 			>
 				<Text
 					style={{
@@ -90,23 +104,10 @@ function StatisticsScreen({ navigation, route }) {
 		};
 		const screenWidth = Dimensions.get("window").width;
 		const data = {
-			labels: [
-				"00",
-				"02",
-				"04",
-				"06",
-				"08",
-				"10",
-				"12",
-				"14",
-				"16",
-				"18",
-				"20",
-				"22",
-			],
+			labels: dades.tags,
 			datasets: [
 				{
-					data: Array.from(dades),
+					data: dades.levels,
 					color: (opacity = 1) => "#4d4d4d", // optional
 					strokeWidth: 2, // optional
 				},
@@ -139,8 +140,6 @@ function StatisticsScreen({ navigation, route }) {
 		};
 		const screenWidth = Dimensions.get("window").width;
 
-		const data = Array.from(dades);
-
 		let colorsPieChart = [
 			"#F94144",
 			"#277DA1",
@@ -153,17 +152,16 @@ function StatisticsScreen({ navigation, route }) {
 			"#F9C74F",
 			"#4D908E",
 		];
-		for (let i = 0; i < data.length; i++) {
-			data[i].name += " (µg/m3)";
-			data[i].color = colorsPieChart[i];
-			data[i].legendFontColor = COLORS.darkGrey;
-			data[i].legendFontSize = 13;
+		for (let i = 0; i < dades.length; i++) {
+			dades[i].color = colorsPieChart[i];
+			dades[i].legendFontColor = COLORS.darkGrey;
+			dades[i].legendFontSize = 13;
 		}
 
 		return (
 			<View style={{ alignItems: "center" }}>
 				<PieChart
-					data={data}
+					data={dades}
 					width={screenWidth}
 					height={200}
 					chartConfig={chartConfig}
@@ -197,9 +195,12 @@ function StatisticsScreen({ navigation, route }) {
 				</View>
 				{renderOptions()}
 				<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
-				{renderLinearChart(data[0])}
-				<Text style={[styles.body, { margin: 10 }]}>POLLUTANT QUANTITY</Text>
-				{renderPieChart(data[1])}
+				{renderLinearChart(tmpDades[0])}
+				<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
+				<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
+					(µg/m3 per day)
+				</Text>
+				{renderPieChart(tmpDades[1])}
 			</View>
 		</SafeAreaView>
 	);
