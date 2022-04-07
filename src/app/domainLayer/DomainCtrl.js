@@ -50,9 +50,9 @@ DomainCtrl.prototype.getMapData = async function () {
 		let level = await ms.getHourLevel(date, date.getHours());
 		if (level != null) {
 			let info = {
-				latitude: parseInt(ms.latitud),
-				longitude: parseInt(ms.longitud),
-				weight: parseInt(level),
+				latitude: parseFloat(ms.latitud),
+				longitude: parseFloat(ms.longitud),
+				weight: parseFloat(level),
 			};
 			measureStationLevels.push(info);
 		}
@@ -83,8 +83,8 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 		finalLevels.push(data.levels[i]);
 	}
 
-	data.tags = finalTags;
-	data.levels = finalLevels;
+	//data.tags = finalTags;
+	//data.levels = finalLevels;
 
 	return data;
 };

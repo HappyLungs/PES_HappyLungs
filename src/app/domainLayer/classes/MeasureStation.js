@@ -15,8 +15,8 @@ class MeasureStation {
         this.longitud = longitud;
         this.length = length;
         this.months = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
+            "July", "August", "September", "October", "November", "December"
+        ];
     }
 
     /**
@@ -59,7 +59,7 @@ class MeasureStation {
      * pollution level at this hour in this measure station
      * @param {JSON} measures measures of all pollutants at one day
      * @param {Integer} hour hour from 1 to 24
-     * @returns {Integer} pollution level at hour "hour" 
+     * @returns {Integer} pollution level at hour "hour"
      */
     calcHourLevel(measures, hour) {
         let calculatorData = new Map();
@@ -71,7 +71,7 @@ class MeasureStation {
                 let quantity = this.calcHourQuantity(measure, this.hour2JsonHour(hour));
                 calculatorData.set(pollutant,quantity);
             }
-            
+
         });
 
         let level = levelCalculator.calculateLevelHour(calculatorData);
@@ -140,14 +140,14 @@ class MeasureStation {
      * Calculates the pollution level at every hour of the day
      * @param {Date} date date
      * @returns {Array<Integer>} pollution level at every hour of a day
-     */ 
+     */
     async getDayLevel(date) {
         let hour = date.getHours();
         let last24hours = new Date(date.getTime() - (24 * 60 * 60 * 1000));
-        
+
         let title = "";
         let tags = [];
-        let hourlyLevel = []; 
+        let hourlyLevel = [];
         if (date.getDate() === last24hours.getDate()) {
             title = date.getDate()+" - "+TouchHistoryMath.months[date.getMonth()]
             let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
@@ -182,7 +182,7 @@ class MeasureStation {
      * Calculates the pollution level at every day of a week
      * @param {Date} date date
      * @returns {Array<Integer>} pollution level of the latest 7 days from date
-     */ 
+     */
     async getWeekLevel(date) {
         let lastweek = new Date(date)
         lastweek.setDate(lastweek.getDate() - 6)
@@ -200,13 +200,13 @@ class MeasureStation {
         let title;
         if (date.getMonth() === lastweek.getMonth()) title = this.months[date.getMonth()];
         else title = this.months[date.getMonth()]+" - "+this.months[lastweek.getMonth()];
-        
+
         let result = {
             title: title,
             tags: tags,
             levels: dailyLevel
         }
-        
+
         return result;
     }
 
@@ -214,8 +214,8 @@ class MeasureStation {
      * Calculates the pollution level at every day of a month
      * @param {Date} date date
      * @returns {Array<Integer>} pollution level of the latest 30 days from date
-     */ 
-     async getMonthLevel(date) {
+     */
+    async getMonthLevel(date) {
         let lastmonth = new Date(date)
         lastmonth.setDate(lastmonth.getDate() - 30)
         let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastmonth, date);
@@ -232,13 +232,13 @@ class MeasureStation {
         let title;
         if (date.getMonth() === lastmonth.getMonth()) title = this.months[date.getMonth()];
         else title = this.months[lastmonth.getMonth()]+" - "+this.months[date.getMonth()];
-        
+
         let result = {
             title: title,
             tags: tags,
             levels: dailyLevel
         }
-        
+
         return result;
     }
 
@@ -247,9 +247,9 @@ class MeasureStation {
 
     /**
      * Calculates the quantity of the pollutant (pollutantData) at an hour. If there's
-        no data of it takes the last detected data on that point.
-     * @param {*} pollutantData 
-     * @param {*} hour 
+     no data of it takes the last detected data on that point.
+     * @param {*} pollutantData
+     * @param {*} hour
      * @returns Returns the quantity of the pollutant (pollutantData) at an hour
      */
     getPollutantQuantityByHour(pollutantData, hour) {
@@ -271,8 +271,8 @@ class MeasureStation {
 
     /**
      * Calculates the total quantity of a specific pollutant on a date.
-     * @param {*} pollutantData 
-     * @param {*} date 
+     * @param {*} pollutantData
+     * @param {*} date
      * @returns Returns the total quantity of a specific pollutant on a date
      */
     getQuantityOfAPollutantAtDay(pollutantData, date) {
@@ -281,7 +281,7 @@ class MeasureStation {
         for (let i = 1; i < 25; ++i) {
             if (i >= 10) {
                 jsonHour = 'h'+i;
-                
+
             } else {
                 jsonHour = 'h0'+i;
             }
@@ -314,7 +314,7 @@ class MeasureStation {
             } else {
 
                 detectedPollutants.push({name: pollutant, quantity: quant});
-                
+
             }
         })
 
@@ -322,7 +322,7 @@ class MeasureStation {
     }
 
     //OTHERS
-    
+
     distance(lat2,lon2) {
 
         var lat1 = this.latitud;
@@ -334,8 +334,8 @@ class MeasureStation {
         var lat1 = this.toRad(lat1);
         var lat2 = this.toRad(lat2);
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         var d = R * c;
         return d;
     }
@@ -350,7 +350,7 @@ class MeasureStation {
 
     /*--------------------BORRAR A PARTIT D'AQUI------------------*/
 
-    
+
     /*
         Returns the contamination level on this MeasureStation at the hour "hour" on the day date
     */
@@ -360,7 +360,7 @@ class MeasureStation {
         let jsonHour = null;
         if(hour >= 10) jsonHour = 'h'+hour;
         else jsonHour = 'h0'+hour;
-        
+
         //Database query to get the measures taken in this MeasureStation on the day date
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
 
@@ -370,13 +370,13 @@ class MeasureStation {
 
         //Gets the pollutant of each measure and its quantity in the hour "hour" and saves it into "data"
         measures.forEach(pollutantData => {
-            
+
             let pollutant = pollutantData.contaminant;
 
             if (availablePollutants.includes(pollutant) ){
                 let pollutant = pollutantData.contaminant;
                 let quantity = this.getPollutantQuantityByHour(pollutantData, jsonHour)
-                
+
                 data.set(pollutant, quantity)
             }
         })
@@ -384,21 +384,21 @@ class MeasureStation {
 
         //Calculates the contamination level
         let level = levelCalculator.calculateLevelHour(data)
-        
+
         return level;
     }
 
-    
+
 
     /*
         Returns the contamination level on this MeasureStation at the hour "hour" of the day date
     */
     async getMeasuresByDay(date) {
-        
+
         //Database query to get the measures taken in this MeasureStation on the day date
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
         let availablePollutants = ['CO', 'NO2', 'O3', 'PM10', 'PM2.5', 'SO2'];
-        
+
         let hourlyLevel = new Map();
 
         for (let h = 1; h <= 24; ++h) {
@@ -410,9 +410,9 @@ class MeasureStation {
             let pollutantQuantity = new Map();
 
             measures.forEach(pollutantData => {
-            
+
                 let pollutant = pollutantData.contaminant;
-    
+
                 if (availablePollutants.includes(pollutant) ){
                     let quantity = this.getPollutantQuantityByHour(pollutantData, jsonHour);
                     pollutantQuantity.set(pollutant, quantity);
@@ -429,30 +429,26 @@ class MeasureStation {
 
         /*
             measures.forEach(pollutantData => {
-                
-                let pollutant = pollutantData.contaminant;
 
+                let pollutant = pollutantData.contaminant;
                 if (availablePollutants.includes(pollutant) ){
                     let totalHours = 0;
                     let quantitySum = 0;
                     for (let h = 1; h <= 24; ++h) {
                         if(hour >= 10) jsonHour = 'h'+hour;
                         else jsonHour = 'h0'+hour;
-
                         let quantity = pollutantData[h]
-
                         if (! quantity === 'undefined') {
                             quantitySum += quantity;
-                            totalHours += 1; 
+                            totalHours += 1;
                         }
                     }
                 }
-
             }
         */
 
     }
-    
+
 
 
 
