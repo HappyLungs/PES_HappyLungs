@@ -59,9 +59,10 @@ function CreatePinScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				date,
+				getDate(),
 				status
 			);
+			navigation.navigate("MapScreen");
 		}
 	};
 
@@ -200,7 +201,7 @@ function CreatePinScreen({ navigation, route }) {
 			}}
 		>
 			<View style={{ marginVertical: 20 }}>
-				<Text style={styles.subtitle}>Location</Text>
+				<Text style={[styles.subtitle, { marginTop: 0 }]}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{[coords.latitude, "   ", coords.longitude]}
 				</Text>

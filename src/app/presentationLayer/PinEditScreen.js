@@ -27,8 +27,7 @@ function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
+	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
 	console.log(pin);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [date, setDate] = useState(pin.date);
@@ -40,12 +39,48 @@ function PinEditScreen({ navigation, route }) {
 	const [image2, setImage2] = useState(media[1]);
 
 	const [inputs, setInputs] = useState({
-		title: "",
-		description: "",
+		title: pin.name,
+		description: pin.description,
 	});
 	const [errors, setErrors] = useState({});
 
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+	const validate = () => {
+		Keyboard.dismiss();
+		let isValid = true;
+		const tmpMedia = [...media];
+
+		if (!inputs.title) {
+			handleError("Please insert the title", "title");
+			isValid = false;
+		}
+		if (!inputs.description) {
+			handleError("Please insert a description", "description");
+			isValid = false;
+		}
+		if (isValid) {
+			let editedPin = presentationCtrl.editPin(
+				inputs.title,
+				pin.location,
+				inputs.description,
+				tmpMedia,
+				rating,
+				getDate(),
+				status
+			);
+			console.log(inputs.title);
+			navigation.navigate("OwnerPin", { pin: editedPin });
+		}
+	};
+
+	const handleError = (error, input) => {
+		setErrors((prevState) => ({ ...prevState, [input]: error }));
+	};
+
+	const handleOnChange = (text, input) => {
+		setInputs((prevState) => ({ ...prevState, [input]: text }));
+	};
 
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -123,6 +158,45 @@ function PinEditScreen({ navigation, route }) {
 		);
 	}
 
+	function renderDateSelector() {
+		return (
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 10,
+					paddingVertical: 5,
+				}}
+			>
+				<TouchableOpacity onPress={showDatePicker}>
+					<Ionicons
+						name="md-calendar"
+						style={{ alignSelf: "center" }}
+						color={COLORS.secondary}
+						size={25}
+					/>
+					<DateTimePickerModal
+						//style={styles.datePickerStyle}
+						mode="date"
+						onConfirm={handleConfirmDate}
+						onCancel={hideDatePicker}
+						isVisible={isDatePickerVisible}
+					/>
+				</TouchableOpacity>
+				<Text
+					style={{
+						textAlignVertical: "center",
+						fontSize: 15,
+						marginStart: 20,
+						color: COLORS.secondary,
+					}}
+				>
+					{" "}
+					{getDate()}
+				</Text>
+			</View>
+		);
+	}
+
 	function renderPinStatusSelector() {
 		return (
 			<View style={{ padding: 10 }}>
@@ -154,7 +228,7 @@ function PinEditScreen({ navigation, route }) {
 			}}
 		>
 			<View style={{ marginVertical: 20 }}>
-				<Text style={styles.subtitle}>Location</Text>
+				<Text style={[styles.subtitle, { marginTop: 0 }]}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{locationName}
 				</Text>
@@ -162,36 +236,20 @@ function PinEditScreen({ navigation, route }) {
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
+					defaultValue={pin.name}
 					label="Title"
-					placeholder="Enter the pin title"
 					error={errors.title}
 				/>
-				<Text style={styles.title}>{pin.name}</Text>
-				<Text style={[styles.body, { marginTop: 20 }]}>{pin.description}</Text>
+				<Input
+					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
+					onFocus={() => handleError(null, "description")}
+					iconName="description"
+					defaultValue={pin.description}
+					label="Description"
+					error={errors.description}
+				/>
 				<Text style={styles.subtitle}> Date</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						padding: 10,
-					}}
-				>
-					<TouchableOpacity onPress={showDatePicker}>
-						<Ionicons
-							name="md-calendar"
-							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={25}
-						/>
-						<DateTimePickerModal
-							//style={styles.datePickerStyle}
-							mode="date"
-							onConfirm={handleConfirmDate}
-							onCancel={hideDatePicker}
-							isVisible={isDatePickerVisible}
-						/>
-					</TouchableOpacity>
-					<Text style={[styles.body, { marginStart: 10 }]}>{getDate()}</Text>
-				</View>
+				{renderDateSelector()}
 				<Text style={styles.subtitle}> Images</Text>
 				{renderImageSelector()}
 				<Text style={styles.subtitle}> Rate</Text>
@@ -209,7 +267,40 @@ function PinEditScreen({ navigation, route }) {
 					}}
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
+				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinStatusSelector()}
+				<View style={{ flexDirection: "row", marginTop: 20 }}>
+					<TouchableOpacity
+						style={[styles.containerCancelBtn, styles.shadow]}
+						onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
+					>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Cancel
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.containerSaveChanges, styles.shadow]}
+						onPress={validate}
+					>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Save changes
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</SafeAreaView>
 	);
@@ -238,6 +329,30 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.green1,
+	},
+	containerSaveChanges: {
+		width: 120,
+		flexDirection: "row",
+		alignItems: "center",
+		alignContent: "center",
+		justifyContent: "center",
+		marginLeft: 50,
+		marginTop: 10,
+		padding: 10,
+		borderRadius: 10,
+		backgroundColor: COLORS.green1,
+	},
+	containerCancelBtn: {
+		width: 110,
+		flexDirection: "row",
+		alignItems: "center",
+		alignContent: "center",
+		justifyContent: "center",
+		marginLeft: 50,
+		marginTop: 10,
+		padding: 10,
+		borderRadius: 10,
+		backgroundColor: COLORS.red1,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

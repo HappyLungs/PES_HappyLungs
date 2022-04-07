@@ -69,7 +69,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 				longitude
 			);
 			data[1] = await this.domainCtrl.getPollutantsQuantLastWeek(
-				latitude, 
+				latitude,
 				longitude
 			);
 			break;
@@ -79,14 +79,17 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 				longitude
 			);
 			data[1] = await this.domainCtrl.getPollutantsQuantLastMonth(
-				latitude, 
+				latitude,
 				longitude
 			);
 			break;
 		case "year":
-			data[0] = await this.domainCtrl.getPollutionLevelLastYear(latitude, longitude);
+			data[0] = await this.domainCtrl.getPollutionLevelLastYear(
+				latitude,
+				longitude
+			);
 			data[1] = await this.domainCtrl.getPollutantsQuantLastYear(
-				latitude, 
+				latitude,
 				longitude
 			);
 			break;
@@ -103,6 +106,24 @@ PresentationCtrl.prototype.createPin = function (
 	status
 ) {
 	return this.domainCtrl.createPin(
+		name,
+		location,
+		description,
+		media,
+		rating,
+		status
+	);
+};
+
+PresentationCtrl.prototype.editPin = function (
+	name,
+	location,
+	description,
+	media,
+	rating,
+	status
+) {
+	return this.domainCtrl.editPin(
 		name,
 		location,
 		description,

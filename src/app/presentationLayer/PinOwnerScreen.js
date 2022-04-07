@@ -292,7 +292,6 @@ const styles = StyleSheet.create({
 		color: COLORS.secondary,
 	},
 	body: {
-		alignSelf: "center",
 		fontSize: 15,
 		color: COLORS.secondary,
 	},
