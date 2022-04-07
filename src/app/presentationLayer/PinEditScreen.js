@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-function PinOwnerScreen({ navigation, route }) {
+function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
@@ -34,7 +34,7 @@ function PinOwnerScreen({ navigation, route }) {
 	};
 
 	const handleEdit = () => {
-		navigation.navigate("EditPinScreen", { pin: pin });
+		navigation.navigate("EditPinScreen");
 	};
 	const handleDelete = () => console.log("Delete clicked");
 	const handleShare = () => console.log("Share clicked");
@@ -342,4 +342,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default PinOwnerScreen;
+export default PinEditScreen;

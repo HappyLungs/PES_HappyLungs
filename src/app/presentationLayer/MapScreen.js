@@ -37,11 +37,11 @@ import { formatRelative } from "date-fns";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-
-
-async function callGeocodeAPI(latitude, longitude){
-	const location = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`);
-	if(!location.ok) return '';
+async function callGeocodeAPI(latitude, longitude) {
+	const location = await fetch(
+		`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`
+	);
+	if (!location.ok) return "";
 	const result = await location.json();
 	return result.results[0].formatted_address;
 }
@@ -55,7 +55,6 @@ function MapScreen({ navigation, route }) {
 	/**
 	 * Function to set a default location
 	 */
-
 
 	let presentationCtrl = new PresentationCtrl();
 
@@ -98,7 +97,7 @@ function MapScreen({ navigation, route }) {
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
-		title: 'inexistente',
+		title: "inexistente",
 	});
 	const [selected, setSelected] = useState(null);
 
@@ -184,7 +183,7 @@ function MapScreen({ navigation, route }) {
 	const onModal = async (event) => {
 		event.persist();
 		const latitude = event.nativeEvent.coordinate.latitude;
-		const longitude = event.nativeEvent.coordinate.longitude
+		const longitude = event.nativeEvent.coordinate.longitude;
 		const title = await callGeocodeAPI(latitude, longitude);
 		setActualMarker({
 			latitude,
@@ -268,13 +267,16 @@ function MapScreen({ navigation, route }) {
 								onPress={async () => {
 									let data = await presentationCtrl.getDataStatistics(
 										"24hours",
-										lat,
-										lng
+										actualMarker.latitude,
+										actualMarker.longitude
 									);
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
 										data: data,
-										coords: { latitude: lat, longitude: lng },
+										coords: {
+											latitude: actualMarker.latitude,
+											longitude: actualMarker.latitude,
+										},
 									});
 								}}
 							>
