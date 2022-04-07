@@ -17,14 +17,12 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
 import Input from "./components/Input";
 
-function CreatePinScreen({ route }) {
+function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
-
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 
 	const { coords } = route.params;
 	const [date, setDate] = useState(new Date());
@@ -129,10 +127,10 @@ function CreatePinScreen({ route }) {
 		return (
 			<View style={styles.containerImage}>
 				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
-					<Image
-						style={styles.image}
-						fadeDuration={250}
-						source={require("../../assets/addButton.png")}
+					<MaterialIcons
+						name="library-add"
+						size={25}
+						color={COLORS.secondary}
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity style={{ flexDirection: "row" }}>
@@ -214,7 +212,7 @@ function CreatePinScreen({ route }) {
 			<View style={{ marginVertical: 20 }}>
 				<Text style={styles.subtitle}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{locationName}{" "}
+					{[coords.latitude, "   ", coords.longitude]}
 				</Text>
 				<Input
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
@@ -250,18 +248,38 @@ function CreatePinScreen({ route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinModeSelector()}
-				<TouchableOpacity style={styles.containerEditBtn} onPress={validate}>
-					<Text
-						style={{
-							textAlign: "center",
-							fontWeight: "bold",
-							fontSize: 15,
-							color: COLORS.white,
-						}}
+				<View style={{ flexDirection: "row", marginTop: 20 }}>
+					<TouchableOpacity
+						style={[styles.containerCancelBtn, styles.shadow]}
+						onPress={() => navigation.navigate("MapScreen")}
 					>
-						Save Pin
-					</Text>
-				</TouchableOpacity>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Cancel
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.containerSaveBtn, styles.shadow]}
+						onPress={validate}
+					>
+						<Text
+							style={{
+								textAlign: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							Save pin
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</SafeAreaView>
 	);
@@ -273,17 +291,29 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 5,
 	},
-	containerEditBtn: {
+	containerSaveBtn: {
 		width: 110,
 		flexDirection: "row",
 		alignItems: "center",
 		alignContent: "center",
 		justifyContent: "center",
-		marginLeft: 200,
+		marginLeft: 50,
 		marginTop: 10,
 		padding: 10,
 		borderRadius: 10,
 		backgroundColor: COLORS.green1,
+	},
+	containerCancelBtn: {
+		width: 110,
+		flexDirection: "row",
+		alignItems: "center",
+		alignContent: "center",
+		justifyContent: "center",
+		marginLeft: 50,
+		marginTop: 10,
+		padding: 10,
+		borderRadius: 10,
+		backgroundColor: COLORS.red1,
 	},
 	subtitle: {
 		textAlign: "left",
@@ -307,6 +337,16 @@ const styles = StyleSheet.create({
 		height: 45,
 		resizeMode: "cover",
 		marginStart: 25,
+	},
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 });
 

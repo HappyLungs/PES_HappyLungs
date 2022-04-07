@@ -23,12 +23,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function StatisticsScreen({ navigation, route }) {
 	const { data } = route.params;
+	const [tmpDades, setDades] = useState(data);
 	const { coords } = route.params;
-	const [tmpDades, setDades] = useState(null);
+	const [selectedInterval, setSelectedInterval] = useState("24hours");
 	let presentationCtrl = new PresentationCtrl();
 
 	const setInterval = async (option) => {
-		console.log(option);
+		setSelectedInterval(option);
 		let tmp = await presentationCtrl.getDataStatistics(
 			option,
 			coords.latitude,
@@ -43,7 +44,20 @@ function StatisticsScreen({ navigation, route }) {
 		return (
 			<TouchableOpacity
 				onPress={setInterval.bind(this, props.option)}
-				style={[styles.btn, styles.shadow]}
+				style={[
+					styles.btn,
+					styles.shadow,
+					{
+						backgroundColor:
+							selectedInterval === props.option
+								? COLORS.darkGrey
+								: COLORS.green1,
+						borderBottomColor:
+							selectedInterval === props.option
+								? COLORS.secondary
+								: COLORS.green2,
+					},
+				]}
 			>
 				<Text
 					style={{
@@ -181,12 +195,12 @@ function StatisticsScreen({ navigation, route }) {
 				</View>
 				{renderOptions()}
 				<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
-				{renderLinearChart(data[0])}
+				{renderLinearChart(tmpDades[0])}
 				<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
 				<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
-					(µg/m3)
+					(µg/m3 per day)
 				</Text>
-				{renderPieChart(data[1])}
+				{renderPieChart(tmpDades[1])}
 			</View>
 		</SafeAreaView>
 	);

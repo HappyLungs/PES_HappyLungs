@@ -13,7 +13,7 @@ const start = async function() {
     //const result = await m.getWeekLevel(d);;
     //console.log(result);
 
-   let x = await dCtrl.getPollutionLevelLastMonth(41.363094, 2.112971)
+   let x = await dCtrl.getPollutionLevelLastYear(41.363094, 2.112971)
    //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
    console.log(x);
 }
