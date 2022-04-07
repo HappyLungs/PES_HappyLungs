@@ -4,17 +4,22 @@ import {
 	View,
 	Text,
 	SafeAreaView,
+	Keyboard,
+	Image,
 	TouchableOpacity,
 	Modal,
+	Alert,
 	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
 
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
-import { ImageSlider } from "react-native-image-slider-banner";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import Input from "./components/Input";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -22,114 +27,120 @@ function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	const media = Array.from(pin.media);
 	const locationName =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
-	const lat = 41.363094;
-	const lng = 2.112971;
+	console.log(pin);
 	const [modalVisible, setModalVisible] = useState(false);
-	const handleSeeOnMap = () => {
-		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
+	const [date, setDate] = useState(pin.date);
+
+	const [status, setStatus] = useState(pin.status);
+	const [rating, setRating] = useState(pin.rating);
+	const [media, setMedia] = useState(Array.from(pin.media));
+	const [image1, setImage1] = useState(media[0]);
+	const [image2, setImage2] = useState(media[1]);
+
+	const [inputs, setInputs] = useState({
+		title: "",
+		description: "",
+	});
+	const [errors, setErrors] = useState({});
+
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+	const pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			aspect: [4, 3],
+			quality: 1,
+		});
+		if (!result.cancelled) {
+			console.log(result.uri);
+			const tmpMedia = [...media];
+			if (tmpMedia.length >= 2) {
+				Alert.alert("Max 2 images!");
+			} else {
+				tmpMedia.push(result.uri);
+				setMedia([...media, result.uri]);
+				console.log(
+					"media size: " +
+						tmpMedia.length +
+						" content: " +
+						tmpMedia[tmpMedia.length - 1]
+				);
+				if (!image1) setImage1(result.uri);
+				else if (!image2) setImage2(result.uri);
+			}
+		}
 	};
 
-	const handleEdit = () => {
-		navigation.navigate("EditPinScreen");
+	const showDatePicker = () => {
+		setDatePickerVisibility(true);
 	};
-	const handleDelete = () => console.log("Delete clicked");
-	const handleShare = () => console.log("Share clicked");
 
-	function renderModal() {
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
+
+	const handleConfirmDate = (date) => {
+		setDate(date);
+		hideDatePicker();
+	};
+
+	const getDate = () => {
+		let tempDate = date.toString().split(" ");
+		return date !== ""
+			? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
+			: "";
+	};
+
+	function renderImageSelector() {
 		return (
-			<Modal
-				animationType="fade"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					setModalVisible(!modalVisible);
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 10,
+					paddingVertical: 5,
 				}}
 			>
-				<View style={styles.centeredView}>
-					<View style={[styles.modalView, styles.shadow]}>
-						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
-							Are you sure?
-						</Text>
-						<Text style={styles.modalText}>
-							Do you really want to delete this pin? This process cannot be
-							undone.
-						</Text>
-						<View style={{ flexDirection: "row" }}>
-							<Pressable
-								style={[
-									styles.button,
-									{ backgroundColor: COLORS.secondary },
-									styles.shadow,
-								]}
-								onPress={() => setModalVisible(!modalVisible)}
-							>
-								<Text style={styles.textStyle}>Cancel</Text>
-							</Pressable>
-							<Pressable
-								style={[
-									styles.button,
-									{ backgroundColor: COLORS.red1, marginStart: 15 },
-									styles.shadow,
-								]}
-								onPress={() => setModalVisible(!modalVisible)}
-							>
-								<Text style={styles.textStyle}>Delete</Text>
-							</Pressable>
-						</View>
-					</View>
-				</View>
-			</Modal>
+				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
+					<MaterialIcons
+						name="library-add"
+						size={25}
+						color={COLORS.secondary}
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity style={{ flexDirection: "row" }}>
+					{media[0] && (
+						<Image source={{ uri: media[0] }} style={styles.selectedImages} />
+					)}
+				</TouchableOpacity>
+				<TouchableOpacity style={{ flexDirection: "row" }}>
+					{media[1] && (
+						<Image source={{ uri: media[1] }} style={styles.selectedImages} />
+					)}
+				</TouchableOpacity>
+			</View>
 		);
 	}
 
-	function renderImageCarousel() {
+	function renderPinStatusSelector() {
 		return (
-			<ImageSlider
-				data={
-					media.length > 1
-						? [
-								{
-									img: media[0],
-								},
-								{
-									img: media[1],
-								},
-						  ]
-						: media.length > 0
-						? [
-								{
-									img: media[1],
-								},
-						  ]
-						: [
-								{
-									img: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
-								},
-						  ]
-				}
-				backgroundColor={COLORS.green1}
-				showHeader
-				showIndicator
-				closeIconColor={COLORS.white}
-				headerRightComponent={
-					<Feather
-						name="trash-2"
-						color={COLORS.white}
-						size={30}
-						onPress={() => handleDelete()}
-					/>
-				}
-				headerStyle={{ padding: 5 }}
-				onItemChanged={(item) => console.log("item", item)}
-				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
-				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
-				indicatorContainerStyle={{ top: 15 }}
-			/>
+			<View style={{ padding: 10 }}>
+				<BouncyCheckbox
+					fillColor={COLORS.green1}
+					size={25}
+					unfillColor={COLORS.white}
+					isChecked={status}
+					iconStyle={{ borderColor: COLORS.secondary }}
+					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
+					onPress={() => setStatus(!status)}
+					text={
+						status
+							? "This pin will be visible to other people."
+							: "This pin will only be visible to you."
+					}
+				/>
+			</View>
 		);
 	}
 
@@ -139,147 +150,66 @@ function PinEditScreen({ navigation, route }) {
 				flex: 1,
 				flexDirection: "column",
 				backgroundColor: COLORS.white,
+				paddingHorizontal: 20,
 			}}
 		>
-			<View
-				style={[
-					{
-						height: 250,
-						borderBottomColor: COLORS.secondary,
-						borderBottomWidth: 2,
-					},
-					styles.shadow,
-				]}
-			>
-				{renderImageCarousel()}
-			</View>
-			<View
-				style={{
-					flex: 1,
-					marginTop: 15,
-					marginHorizontal: 20,
-				}}
-			>
-				<View style={{ flexDirection: "row" }}>
-					<Text style={styles.title}>{pin.name}</Text>
-					<TouchableOpacity
-						style={{ marginStart: 15, justifyContent: "center" }}
-						onPress={() => setModalVisible(true)}
-					>
-						<Feather
-							name="trash-2"
+			<View style={{ marginVertical: 20 }}>
+				<Text style={styles.subtitle}>Location</Text>
+				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
+					{locationName}
+				</Text>
+				<Input
+					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
+					onFocus={() => handleError(null, "title")}
+					iconName="title"
+					label="Title"
+					placeholder="Enter the pin title"
+					error={errors.title}
+				/>
+				<Text style={styles.title}>{pin.name}</Text>
+				<Text style={[styles.body, { marginTop: 20 }]}>{pin.description}</Text>
+				<Text style={styles.subtitle}> Date</Text>
+				<View
+					style={{
+						flexDirection: "row",
+						padding: 10,
+					}}
+				>
+					<TouchableOpacity onPress={showDatePicker}>
+						<Ionicons
+							name="md-calendar"
 							style={{ alignSelf: "center" }}
-							color={COLORS.red1}
+							color={COLORS.secondary}
 							size={25}
 						/>
+						<DateTimePickerModal
+							//style={styles.datePickerStyle}
+							mode="date"
+							onConfirm={handleConfirmDate}
+							onCancel={hideDatePicker}
+							isVisible={isDatePickerVisible}
+						/>
 					</TouchableOpacity>
-					<TouchableOpacity
-						style={[
-							{
-								flexDirection: "row",
-								justifyContent: "center",
-								width: 90,
-								marginLeft: 125,
-								borderRadius: 7,
-								padding: 5,
-								backgroundColor: COLORS.green1,
-							},
-							styles.shadow,
-						]}
-						onPress={handleEdit}
-					>
-						<Feather name="edit" size={24} color={COLORS.white} />
-						<Text style={[styles.textStyle, { marginStart: 5 }]}> Edit</Text>
-					</TouchableOpacity>
+					<Text style={[styles.body, { marginStart: 10 }]}>{getDate()}</Text>
 				</View>
-				{renderModal()}
-				<Text style={[styles.body, { marginTop: 20 }]}>{pin.description}</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						padding: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons
-						name="location-sharp"
-						size={30}
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{locationName}</Text>
-				</View>
-				<TouchableOpacity
-					style={{ alignSelf: "flex-start", marginStart: 10 }}
-					onPress={handleSeeOnMap}
-				>
-					<Text style={styles.greenHighlight}>See on map</Text>
-				</TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						padding: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={30}
-					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
-				</View>
+				<Text style={styles.subtitle}> Images</Text>
+				{renderImageSelector()}
+				<Text style={styles.subtitle}> Rate</Text>
 				<Rating
 					type={"custom"}
 					imageSize={20}
 					fractions={0}
-					startingValue={pin.rating}
+					startingValue={rating}
 					ratingBackgroundColor={COLORS.secondary}
 					ratingColor={COLORS.green1}
 					tintColor={COLORS.white}
-					readonly={true}
 					style={{
 						padding: 10,
-						marginTop: 10,
 						alignSelf: "flex-start",
 					}}
+					onFinishRating={(newRating) => setRating(newRating)}
 				/>
-				<View
-					style={{
-						flexDirection: "row",
-						padding: 10,
-						alignItems: "center",
-					}}
-				>
-					<TouchableOpacity onPress={handleShare}>
-						<Ionicons
-							name="share-social-sharp"
-							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={35}
-						/>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ marginStart: 180, flexDirection: "column" }}
-						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics(
-								"24hours",
-								lat,
-								lng
-							);
-							navigation.navigate("Statistics", { data: data });
-						}}
-					>
-						<Ionicons
-							name="bar-chart"
-							style={{ alignSelf: "center" }}
-							color={COLORS.green1}
-							size={35}
-						/>
-						<Text style={styles.greenHighlight}>See Statistics</Text>
-					</TouchableOpacity>
-				</View>
+				{renderPinStatusSelector()}
 			</View>
 		</SafeAreaView>
 	);
@@ -289,6 +219,14 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 22,
 		fontWeight: "bold",
+		color: COLORS.secondary,
+	},
+	subtitle: {
+		textAlign: "left",
+		alignSelf: "flex-start",
+		fontSize: 15,
+		fontWeight: "bold",
+		marginTop: 10,
 		color: COLORS.secondary,
 	},
 	body: {

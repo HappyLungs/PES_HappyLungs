@@ -14,10 +14,9 @@ import COLORS from "../config/stylesheet/colors";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Rating } from "react-native-ratings";
 import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Rating } from "react-native-ratings";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
 import Input from "./components/Input";
 
@@ -27,9 +26,7 @@ function CreatePinScreen({ navigation, route }) {
 	const { coords } = route.params;
 	const [date, setDate] = useState(new Date());
 	const [status, setStatus] = useState(false);
-
 	const [rating, setRating] = useState(3);
-
 	const [media, setMedia] = useState([]);
 	const [image1, setImage1] = useState(null);
 	const [image2, setImage2] = useState(null);
@@ -56,7 +53,6 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			console.log(status);
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
@@ -91,12 +87,6 @@ function CreatePinScreen({ navigation, route }) {
 			} else {
 				tmpMedia.push(result.uri);
 				setMedia([...media, result.uri]);
-				console.log(
-					"media size: " +
-						tmpMedia.length +
-						" content: " +
-						tmpMedia[tmpMedia.length - 1]
-				);
 				if (!image1) setImage1(result.uri);
 				else if (!image2) setImage2(result.uri);
 			}
@@ -180,7 +170,7 @@ function CreatePinScreen({ navigation, route }) {
 		);
 	}
 
-	function renderPinModeSelector() {
+	function renderPinStatusSelector() {
 		return (
 			<View style={{ padding: 10 }}>
 				<BouncyCheckbox
@@ -247,7 +237,7 @@ function CreatePinScreen({ navigation, route }) {
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
-				{renderPinModeSelector()}
+				{renderPinStatusSelector()}
 				<View style={{ flexDirection: "row", marginTop: 20 }}>
 					<TouchableOpacity
 						style={[styles.containerCancelBtn, styles.shadow]}
