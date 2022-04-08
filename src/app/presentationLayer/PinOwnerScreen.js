@@ -114,14 +114,6 @@ function PinOwnerScreen({ navigation, route }) {
 				showHeader
 				showIndicator
 				closeIconColor={COLORS.white}
-				headerRightComponent={
-					<Feather
-						name="trash-2"
-						color={COLORS.white}
-						size={30}
-						onPress={() => handleDelete()}
-					/>
-				}
 				headerStyle={{ padding: 5 }}
 				onItemChanged={(item) => console.log("item", item)}
 				caroselImageStyle={{ height: 250 }}
@@ -288,6 +280,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 22,
 		fontWeight: "bold",
+		alignSelf: "center",
 		color: COLORS.secondary,
 	},
 	body: {

@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import Draggable from "react-draggable";
 
-export default function GeneralChatScreen(props) {
+function GeneralChatScreen(props) {
 	return (
 		<View style={styles.background}>
 			<Text style={{ marginTop: 300 }}> General Chat Screen</Text>
@@ -22,3 +21,5 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 });
+
+export default GeneralChatScreen;

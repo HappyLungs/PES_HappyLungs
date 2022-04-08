@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 22,
 		fontWeight: "bold",
+		alignSelf: "center",
 		color: COLORS.secondary,
 	},
 	body: {

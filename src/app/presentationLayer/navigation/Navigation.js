@@ -50,7 +50,13 @@ function MapStack() {
 			<Stack.Screen
 				name="CreatePin"
 				component={CreatePinScreen}
-				options={{ title: "Create pin" }}
+				options={{
+					title: "Create pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+				}}
 			/>
 		</Stack.Navigator>
 	);

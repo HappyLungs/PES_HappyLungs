@@ -8,6 +8,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	Modal,
+	Animated,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
@@ -92,6 +93,16 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	const [byCertificate, setByCertificate] = useState(false);
+
+	const translation = useRef(new Animated.Value(50)).current;
+
+	useEffect(() => {
+		Animated.timing(translation, {
+			toValue: 0,
+			duration: 1000,
+			useNativeDriver: true,
+		}).start();
+	}, []);
 
 	const [markers, setMarkers] = useState([]);
 	const [actualMarker, setActualMarker] = useState({
@@ -631,7 +642,13 @@ function MapScreen({ navigation, route }) {
 						defaultValue={"Search a location"}
 					/>
 				</View>
-				<View style={[styles.containerFilter, styles.shadow]}>
+				<Animated.View
+					style={[
+						styles.containerFilter,
+						styles.shadow,
+						{ transform: [{ translateX: translation }] },
+					]}
+				>
 					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
@@ -640,23 +657,33 @@ function MapScreen({ navigation, route }) {
 							size={35}
 						/>
 					</TouchableOpacity>
-				</View>
+				</Animated.View>
 			</View>
-
-			<TouchableOpacity
-				style={styles.compass}
-				onPress={() => {
-					Location.installWebGeolocationPolyfill();
-					navigator.geolocation.getCurrentPosition((position) => {
-						panTo({
-							lat: position.coords.latitude,
-							lng: position.coords.longitude,
-						});
-					});
+			<Animated.View
+				style={{
+					transform: [{ translateX: translation }],
 				}}
 			>
-				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
-			</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.compass}
+					onPress={() => {
+						Location.installWebGeolocationPolyfill();
+						navigator.geolocation.getCurrentPosition((position) => {
+							panTo({
+								lat: position.coords.latitude,
+								lng: position.coords.longitude,
+							});
+						});
+					}}
+				>
+					<MaterialCommunityIcons
+						name="compass"
+						color={COLORS.white}
+						size={35}
+					/>
+				</TouchableOpacity>
+			</Animated.View>
+
 			{renderModalPin()}
 			{renderModalFilter()}
 		</SafeAreaView>
