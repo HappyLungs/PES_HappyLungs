@@ -25,7 +25,6 @@ function PinOwnerScreen({ navigation, route }) {
 	const media = Array.from(pin.media);
 	const locationName =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
 	const lat = 41.363094;
 	const lng = 2.112971;
 	const [modalVisible, setModalVisible] = useState(false);
@@ -102,7 +101,7 @@ function PinOwnerScreen({ navigation, route }) {
 						: media.length > 0
 						? [
 								{
-									img: media[1],
+									img: media[0],
 								},
 						  ]
 						: [

@@ -5,9 +5,9 @@ import {
 	Text,
 	SafeAreaView,
 	Keyboard,
-	Image,
 	TouchableOpacity,
 	Alert,
+	ImageBackground,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
@@ -17,7 +17,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 function CreatePinScreen({ navigation, route }) {
@@ -30,14 +30,13 @@ function CreatePinScreen({ navigation, route }) {
 	const [media, setMedia] = useState([]);
 	const [image1, setImage1] = useState(null);
 	const [image2, setImage2] = useState(null);
-
 	const [inputs, setInputs] = useState({
 		title: "",
 		description: "",
 	});
 	const [errors, setErrors] = useState({});
-
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+	const [deleteMode, setDeleteMode] = useState(false);
 
 	const validate = () => {
 		Keyboard.dismiss();
@@ -83,7 +82,7 @@ function CreatePinScreen({ navigation, route }) {
 		if (!result.cancelled) {
 			const tmpMedia = [...media];
 			if (tmpMedia.length >= 2) {
-				Alert.alert("Max 2 images!");
+				Alert.alert("You can only attach 2 pictures!");
 			} else {
 				tmpMedia.push(result.uri);
 				setMedia([...media, result.uri]);
@@ -91,7 +90,6 @@ function CreatePinScreen({ navigation, route }) {
 				else if (!image2) setImage2(result.uri);
 			}
 		}
-		console.log(image1);
 	};
 
 	const showDatePicker = () => {
@@ -132,19 +130,82 @@ function CreatePinScreen({ navigation, route }) {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={console.log(image1)}
-					style={{ flexDirection: "row" }}
+					onLongPress={() => {
+						setDeleteMode(!deleteMode);
+					}}
+					style={[
+						{
+							flexDirection: "row",
+							marginStart: 35,
+							width: 75,
+							height: 75,
+						},
+						styles.shadow,
+					]}
 				>
-					{image1 && (
-						<Image source={{ uri: image1 }} style={styles.selectedImages} />
+					{media[0] && (
+						<ImageBackground
+							source={{ uri: media[0] }}
+							style={{
+								width: 75,
+								height: 75,
+								alignItems: "flex-end",
+							}}
+							imageStyle={{ borderRadius: 5, resizeMode: "cover" }}
+						>
+							{deleteMode && (
+								<Entypo
+									style={{ left: 10, bottom: 10 }}
+									name="circle-with-cross"
+									size={20}
+									color={COLORS.red1}
+									onPress={() => {
+										setImage1(null);
+										media.splice(0, 1);
+									}}
+								/>
+							)}
+						</ImageBackground>
 					)}
 				</TouchableOpacity>
+
 				<TouchableOpacity
-					onPress={console.log(image2)}
-					style={{ flexDirection: "row" }}
+					onLongPress={() => {
+						setDeleteMode(!deleteMode);
+					}}
+					style={[
+						{
+							flexDirection: "row",
+							marginStart: 35,
+							width: 75,
+							height: 75,
+						},
+						styles.shadow,
+					]}
 				>
-					{image2 && (
-						<Image source={{ uri: image2 }} style={styles.selectedImages} />
+					{media[1] && (
+						<ImageBackground
+							source={{ uri: media[1] }}
+							style={{
+								width: 75,
+								height: 75,
+								alignItems: "flex-end",
+							}}
+							imageStyle={{ borderRadius: 5, resizeMode: "cover" }}
+						>
+							{deleteMode && (
+								<Entypo
+									style={{ left: 10, bottom: 10 }}
+									name="circle-with-cross"
+									size={20}
+									color={COLORS.red1}
+									onPress={() => {
+										media.splice(1, 1);
+										setImage2(null);
+									}}
+								/>
+							)}
+						</ImageBackground>
 					)}
 				</TouchableOpacity>
 			</View>
@@ -243,7 +304,7 @@ function CreatePinScreen({ navigation, route }) {
 				/>
 				<Text style={styles.subtitle}> Date</Text>
 				{renderDateSelector()}
-				<Text style={styles.subtitle}> Images</Text>
+				<Text style={styles.subtitle}> Pictures</Text>
 				{renderImageSelector()}
 				<Text style={styles.subtitle}> Rate</Text>
 				<Rating
@@ -297,6 +358,14 @@ function CreatePinScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+	subtitle: {
+		textAlign: "left",
+		alignSelf: "flex-start",
+		fontSize: 15,
+		fontWeight: "bold",
+		marginTop: 10,
+		color: COLORS.secondary,
+	},
 	containerSaveBtn: {
 		width: 110,
 		flexDirection: "row",
@@ -320,30 +389,6 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 10,
 		backgroundColor: COLORS.red1,
-	},
-	subtitle: {
-		textAlign: "left",
-		alignSelf: "flex-start",
-		fontSize: 15,
-		fontWeight: "bold",
-		marginTop: 10,
-		color: COLORS.secondary,
-	},
-	image: {
-		alignSelf: "center",
-		justifyContent: "flex-start",
-		width: 30,
-		height: 30,
-		resizeMode: "contain",
-	},
-	selectedImages: {
-		alignSelf: "flex-start",
-		justifyContent: "flex-start",
-		width: 75,
-		height: 75,
-		borderRadius: 5,
-		resizeMode: "cover",
-		marginStart: 35,
 	},
 	shadow: {
 		shadowColor: COLORS.black,
