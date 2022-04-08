@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import Input from "./components/Input";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -18,7 +19,6 @@ import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 const PresentationCtrl = require("./PresentationCtrl.js");
-import Input from "./components/Input";
 
 function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -81,7 +81,6 @@ function CreatePinScreen({ navigation, route }) {
 			quality: 1,
 		});
 		if (!result.cancelled) {
-			console.log(result.uri);
 			const tmpMedia = [...media];
 			if (tmpMedia.length >= 2) {
 				Alert.alert("Max 2 images!");
@@ -92,6 +91,7 @@ function CreatePinScreen({ navigation, route }) {
 				else if (!image2) setImage2(result.uri);
 			}
 		}
+		console.log(image1);
 	};
 
 	const showDatePicker = () => {
@@ -116,7 +116,14 @@ function CreatePinScreen({ navigation, route }) {
 
 	function renderImageSelector() {
 		return (
-			<View style={styles.containerImage}>
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 10,
+					paddingVertical: 5,
+					alignItems: "center",
+				}}
+			>
 				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
 					<MaterialIcons
 						name="library-add"
@@ -124,12 +131,18 @@ function CreatePinScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					onPress={console.log(image1)}
+					style={{ flexDirection: "row" }}
+				>
 					{image1 && (
 						<Image source={{ uri: image1 }} style={styles.selectedImages} />
 					)}
 				</TouchableOpacity>
-				<TouchableOpacity style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					onPress={console.log(image2)}
+					style={{ flexDirection: "row" }}
+				>
 					{image2 && (
 						<Image source={{ uri: image2 }} style={styles.selectedImages} />
 					)}
@@ -140,7 +153,14 @@ function CreatePinScreen({ navigation, route }) {
 
 	function renderDateSelector() {
 		return (
-			<View style={styles.containerImage}>
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 10,
+					paddingVertical: 5,
+					alignItems: "center",
+				}}
+			>
 				<TouchableOpacity onPress={showDatePicker}>
 					<Ionicons
 						name="md-calendar"
@@ -277,11 +297,6 @@ function CreatePinScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-	containerImage: {
-		flexDirection: "row",
-		paddingHorizontal: 10,
-		paddingVertical: 5,
-	},
 	containerSaveBtn: {
 		width: 110,
 		flexDirection: "row",
@@ -324,10 +339,11 @@ const styles = StyleSheet.create({
 	selectedImages: {
 		alignSelf: "flex-start",
 		justifyContent: "flex-start",
-		width: 45,
-		height: 45,
+		width: 75,
+		height: 75,
+		borderRadius: 5,
 		resizeMode: "cover",
-		marginStart: 25,
+		marginStart: 35,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

@@ -17,7 +17,7 @@ import CreatePinScreen from "../CreatePinScreen";
 import PinOwnerScreen from "../PinOwnerScreen";
 import PinEditScreen from "../PinEditScreen";
 import PinDefaultScreen from "../PinDefaultScreen";
-import colors from "../../config/stylesheet/colors";
+import COLORS from "../../config/stylesheet/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,10 +28,10 @@ function MapStack() {
 		<Stack.Navigator
 			initialRouteName="MapScreen"
 			screenOptions={{
-				tabBarActiveTintColor: colors.green1,
-				tabBarInactiveTintColor: colors.secondary,
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
 				tabBarShowLabel: false,
-				headerTintColor: colors.secondary,
+				headerTintColor: COLORS.secondary,
 				headerTitleAlign: "center",
 				headerTitleStyle: {
 					fontWeight: "bold",
@@ -61,11 +61,16 @@ function PinStack() {
 		<Stack.Navigator
 			initialRouteName="PinsScreen"
 			screenOptions={{
-				tabBarActiveTintColor: colors.green1,
-				tabBarInactiveTintColor: colors.secondary,
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
 				tabBarShowLabel: false,
-				headerTintColor: colors.secondary,
+				headerTintColor: COLORS.secondary,
 				headerTitleAlign: "center",
+				headerStyle: {
+					style: {
+						backgroundColor: COLORS.green1,
+					},
+				},
 				headerTitleStyle: {
 					fontWeight: "bold",
 					fontSize: 27,
@@ -87,12 +92,20 @@ function PinStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
-				options={{ title: "" }}
+				options={{
+					title: "",
+				}}
 			/>
 			<Stack.Screen
 				name="EditPinScreen"
 				component={PinEditScreen}
-				options={{ title: "" }}
+				options={{
+					title: "Editing pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+				}}
 			/>
 		</Stack.Navigator>
 	);
@@ -103,10 +116,10 @@ function AppTabs() {
 		<Tab.Navigator
 			initialRouteName="Map"
 			screenOptions={{
-				tabBarActiveTintColor: colors.green1,
-				tabBarInactiveTintColor: colors.secondary,
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
 				tabBarShowLabel: false,
-				headerTintColor: colors.secondary,
+				headerTintColor: COLORS.secondary,
 				headerTitleAlign: "center",
 				headerTitleStyle: {
 					fontWeight: "bold",

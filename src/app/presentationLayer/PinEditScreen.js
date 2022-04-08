@@ -7,19 +7,17 @@ import {
 	Keyboard,
 	Image,
 	TouchableOpacity,
-	Modal,
 	Alert,
-	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import Input from "./components/Input";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
-import Input from "./components/Input";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -28,8 +26,6 @@ function PinEditScreen({ navigation, route }) {
 
 	const { pin } = route.params;
 	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
-	console.log(pin);
-	const [modalVisible, setModalVisible] = useState(false);
 	const [date, setDate] = useState(pin.date);
 
 	const [status, setStatus] = useState(pin.status);
@@ -37,7 +33,7 @@ function PinEditScreen({ navigation, route }) {
 	const [media, setMedia] = useState(Array.from(pin.media));
 	const [image1, setImage1] = useState(media[0]);
 	const [image2, setImage2] = useState(media[1]);
-
+	console.log("media: " + media);
 	const [inputs, setInputs] = useState({
 		title: pin.name,
 		description: pin.description,
@@ -135,6 +131,7 @@ function PinEditScreen({ navigation, route }) {
 					flexDirection: "row",
 					paddingHorizontal: 10,
 					paddingVertical: 5,
+					alignItems: "center",
 				}}
 			>
 				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
@@ -144,12 +141,16 @@ function PinEditScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					style={[{ flexDirection: "row", marginStart: 35 }, styles.shadow]}
+				>
 					{media[0] && (
 						<Image source={{ uri: media[0] }} style={styles.selectedImages} />
 					)}
 				</TouchableOpacity>
-				<TouchableOpacity style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					style={[{ flexDirection: "row", marginStart: 35 }, styles.shadow]}
+				>
 					{media[1] && (
 						<Image source={{ uri: media[1] }} style={styles.selectedImages} />
 					)}
@@ -353,6 +354,14 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 10,
 		backgroundColor: COLORS.red1,
+	},
+	selectedImages: {
+		alignSelf: "flex-start",
+		justifyContent: "flex-start",
+		width: 75,
+		height: 75,
+		borderRadius: 5,
+		resizeMode: "cover",
 	},
 	shadow: {
 		shadowColor: COLORS.black,
