@@ -419,7 +419,7 @@ function MapScreen({ navigation, route }) {
 	}
 
 	const fakeProfileData = {
-		username: "Ricard Guixaró",
+		username: "Ricard",
 		points: 200,
 	};
 
@@ -430,79 +430,83 @@ function MapScreen({ navigation, route }) {
 			<View
 				style={[
 					{
-						height: 110,
+						height: 150,
 						flexDirection: "row",
 						paddingHorizontal: 20,
-						backgroundColor: COLORS.white,
 						alignItems: "center",
+						backgroundColor: COLORS.white,
 					},
 					styles.shadow,
 				]}
 			>
-				<View style={{ flex: 1, marginTop: 25 }}>
-					<View>
-						<Text
-							style={[
-								{ fontSize: 15, fontWeight: "bold", color: COLORS.secondary },
-							]}
-						>
-							Good Morning
-						</Text>
+				<View
+					style={{
+						flexDirection: "column",
+					}}
+				>
+					<View
+						style={{
+							flexDirection: "row",
+							marginTop: 25,
+							marginBottom: 10,
+						}}
+					>
 						<Text
 							style={[
 								{ fontSize: 20, fontWeight: "bold", color: COLORS.secondary },
 							]}
 						>
-							{profile.username}
+							{profile.username},
+						</Text>
+						<Text
+							style={[
+								{ fontSize: 19, marginStart: 5, color: COLORS.secondary },
+							]}
+						>
+							Welcome Back!
 						</Text>
 					</View>
-				</View>
-				<TouchableOpacity
-					style={[
-						{
-							backgroundColor: COLORS.green1,
-							height: 40,
-							paddingRight: 10,
-							paddingLeft: 5,
-							borderRadius: 12,
-							marginTop: 30,
-						},
-						styles.shadow,
-					]}
-					onPress={() => {
-						console.log("pressed points");
-					}}
-				>
 					<View
 						style={{
-							flex: 1,
 							flexDirection: "row",
-							alignItems: "center",
-							justifyContent: "center",
 						}}
 					>
 						<View
-							style={{
-								width: 25,
-								height: 25,
-								alignItems: "center",
-								justifyContent: "center",
-								borderRadius: 20,
-								backgroundColor: COLORS.green2,
-							}}
-						>
-							<AntDesign name="Trophy" size={18} color={COLORS.white} />
-						</View>
-						<Text
 							style={[
-								{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
+								{
+									backgroundColor: COLORS.lightGrey,
+									width: "80%",
+									height: 50,
+									borderRadius: 12,
+									flexDirection: "row",
+								},
+								styles.shadow,
 							]}
 						>
-							{profile.points}
-						</Text>
-						<Text style={[{ marginLeft: 3, color: COLORS.white }]}>points</Text>
+							<MaterialIcons
+								name="search"
+								style={{ alignSelf: "center", marginStart: 10 }}
+								color={COLORS.secondary}
+								size={35}
+							/>
+							<TextInput
+								multiline={false}
+								maxLength={30}
+								style={styles.body}
+								defaultValue={"Search a location"}
+							/>
+						</View>
+						<View style={[styles.container, styles.shadow]}>
+							<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+								<MaterialCommunityIcons
+									name="filter-menu"
+									color={COLORS.secondary}
+									size={35}
+								/>
+							</TouchableOpacity>
+						</View>
 					</View>
-				</TouchableOpacity>
+				</View>
 			</View>
 		);
 	}
@@ -659,7 +663,12 @@ function MapScreen({ navigation, route }) {
 
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-			<View style={{ marginTop: 100, ...StyleSheet.absoluteFillObject }}>
+			<View
+				style={{
+					marginTop: 100,
+					...StyleSheet.absoluteFillObject,
+				}}
+			>
 				<MapView
 					ref={mapRef}
 					provider={PROVIDER_GOOGLE}
@@ -691,48 +700,7 @@ function MapScreen({ navigation, route }) {
 				</MapView>
 			</View>
 			{renderHeader(profile)}
-			<View
-				style={{
-					flexDirection: "row",
-					alignSelf: "flex-start",
-					margin: 10,
-				}}
-			>
-				<View
-					style={[
-						{
-							backgroundColor: COLORS.white,
-							width: "80%",
-							height: 50,
-							borderRadius: 12,
-							flexDirection: "row",
-						},
-						styles.shadow,
-					]}
-				>
-					<MaterialIcons
-						name="search"
-						style={{ alignSelf: "center", marginStart: 10 }}
-						color={COLORS.secondary}
-						size={35}
-					/>
-					<TextInput
-						multiline={false}
-						maxLength={30}
-						style={styles.body}
-						defaultValue={"Search a location"}
-					/>
-				</View>
-				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
-						<MaterialCommunityIcons
-							name="filter-menu"
-							color={COLORS.secondary}
-							size={35}
-						/>
-					</TouchableOpacity>
-				</View>
-			</View>
+
 			<View
 				style={[
 					styles.container,
@@ -780,7 +748,7 @@ const styles = StyleSheet.create({
 		textAlignVertical: "center",
 		alignSelf: "center",
 		justifyContent: "center",
-		fontSize: 17,
+		fontSize: 15,
 		marginStart: 10,
 		color: COLORS.darkGrey,
 	},

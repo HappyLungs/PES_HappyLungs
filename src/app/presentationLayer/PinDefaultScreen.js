@@ -48,7 +48,7 @@ function PinDefaultScreen({ navigation, route }) {
 						: media.length > 0
 						? [
 								{
-									img: media[1],
+									img: media[0],
 								},
 						  ]
 						: [
@@ -62,7 +62,7 @@ function PinDefaultScreen({ navigation, route }) {
 				showIndicator
 				closeIconColor={COLORS.white}
 				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
+				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightGrey }}
 				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
 				indicatorContainerStyle={{ top: 15 }}
 			/>

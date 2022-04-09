@@ -329,9 +329,19 @@ function PinEditScreen({ navigation, route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinStatusSelector()}
-				<View style={{ flexDirection: "row" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-around",
+						marginTop: 10,
+					}}
+				>
 					<TouchableOpacity
-						style={[styles.containerCancelBtn, styles.shadow]}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.red1 },
+						]}
 						onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
 					>
 						<Text
@@ -346,7 +356,11 @@ function PinEditScreen({ navigation, route }) {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={[styles.containerSaveChanges, styles.shadow]}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.green1 },
+						]}
 						onPress={validate}
 					>
 						<Text
@@ -375,29 +389,10 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		color: COLORS.secondary,
 	},
-	containerSaveChanges: {
+	containerBtn: {
 		width: 120,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
 		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.green1,
-	},
-	containerCancelBtn: {
-		width: 110,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
-		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.red1,
+		borderRadius: 5,
 	},
 	shadow: {
 		shadowColor: COLORS.black,
