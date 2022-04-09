@@ -3,10 +3,12 @@ import {
 	Text,
 	StyleSheet,
 	View,
+	FlatList,
 	TouchableOpacity,
 	ImageBackground,
+	Image,
+	SafeAreaView,
 } from "react-native";
-import { FlatGrid } from "react-native-super-grid";
 
 import COLORS from "../config/stylesheet/colors";
 
@@ -32,99 +34,94 @@ function PinsScreen({ navigation }) {
 		getDate(new Date()),
 		true
 	);
-	const [items, setItems] = React.useState([
+	const items = [
 		{ name: "UPC FIB", code: COLORS.secondary, date: pin.date },
 		{ name: "PALAU REIAL", code: COLORS.secondary, date: pin.date },
 		{ name: "CAMP NOU", code: COLORS.secondary, date: pin.date },
-	]);
+	];
+
+	const renderItem = ({ item }) => (
+		<View
+			style={[
+				styles.shadow,
+				{ borderRadius: 10, backgroundColor: COLORS.white },
+			]}
+		>
+			<TouchableOpacity
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+				}}
+				onPress={() => console.log("item")}
+			>
+				<Image
+					source={{ uri: pin.media[0] }}
+					style={{
+						width: 85,
+						height: 85,
+						borderTopLeftRadius: 10,
+						borderBottomLeftRadius: 10,
+					}}
+				/>
+				<View style={{ margin: 10, alignSelf: "flex-start" }}>
+					<Text style={styles.itemName}>{item.name}</Text>
+					<Text style={styles.itemCode}>{item.date} </Text>
+				</View>
+			</TouchableOpacity>
+		</View>
+	);
 
 	return (
-		<View style={styles.background}>
-			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
-			>
-				<Text style={styles.btnText}>Pin Owner View</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => navigation.navigate("DefaultPin", { pin: pin })}
-			>
-				<Text style={styles.btnText}>Pin Default View</Text>
-			</TouchableOpacity>
-			<FlatGrid
-				itemDimension={130}
-				data={items}
-				style={styles.gridView}
-				// staticDimension={300}
-				// fixed
-				spacing={10}
-				renderItem={({ item }) => (
-					<View
-						style={[
-							styles.itemContainer,
-							{ borderWidth: 2, borderColor: item.code },
-						]}
-					>
-						<ImageBackground
-							source={{
-								uri: pin.media[0],
-							}}
-							style={{
-								width: 175,
-								height: 145,
-								justifyContent: "flex-end",
-							}}
-							imageStyle={{ borderRadius: 5 }}
-						>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				backgroundColor: COLORS.light,
+				flexDirection: "column",
+				paddingHorizontal: 20,
+			}}
+		>
+			<View style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					style={styles.btn}
+					onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
+				>
+					<Text style={styles.btnText}>Pin Owner View</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.btn}
+					onPress={() => navigation.navigate("DefaultPin", { pin: pin })}
+				>
+					<Text style={styles.btnText}>Pin Default View</Text>
+				</TouchableOpacity>
+			</View>
+			<View style={[{ marginTop: 20, flex: 1 }]}>
+				<FlatList
+					contentContainerStyle={{ padding: 10 }}
+					scrollEnabled={true}
+					data={items}
+					keyExtractor={(item) => `${item.name}`}
+					renderItem={renderItem}
+					showsVerticalScrollIndicator={false}
+					ItemSeparatorComponent={() => {
+						return (
 							<View
 								style={{
-									alignSelf: "flex-start",
-									padding: 3,
-									paddingHorizontal: 10,
 									width: "100%",
-									borderTopRightRadius: 3,
-									borderTopLeftRadius: 3,
-									backgroundColor: COLORS.white,
+									height: 20,
+									backgroundColor: COLORS.light,
 								}}
-							>
-								<Text style={styles.itemName}>{item.name}</Text>
-								<Text style={styles.itemCode}>{item.date}</Text>
-							</View>
-							<View
-								style={{
-									position: "absolute",
-									right: "-1%",
-									bottom: "86%",
-									width: 50,
-									borderBottomWidth: 1,
-									borderLeftWidth: 1,
-									backgroundColor: "#3498db",
-									borderColor: item.code,
-									borderRadius: 3,
-									padding: 3,
-								}}
-							>
-								<Text style={styles.status}>PRIVATE</Text>
-							</View>
-						</ImageBackground>
-					</View>
-				)}
-			/>
-		</View>
+							></View>
+						);
+					}}
+				></FlatList>
+			</View>
+		</SafeAreaView>
 	);
 }
 
 //https://wix.github.io/react-native-navigation/docs/style-animations/
 
 const styles = StyleSheet.create({
-	background: {
-		flex: 1,
-		backgroundColor: COLORS.white,
-		justifyContent: "flex-start",
-		paddingTop: Platform.OS === "android" ? 30 : 0,
-		alignItems: "center",
-	},
 	btn: {
 		justifyContent: "center",
 		borderRadius: 5,
@@ -150,20 +147,29 @@ const styles = StyleSheet.create({
 		width: 180,
 	},
 	itemName: {
-		fontSize: 15,
+		fontSize: 17,
 		fontWeight: "bold",
 		color: COLORS.secondary,
 	},
 	itemCode: {
 		fontSize: 12,
-		fontWeight: "bold",
-		color: COLORS.green1,
+		color: COLORS.darkGrey,
 	},
 	status: {
 		alignSelf: "center",
 		fontSize: 10,
 		fontWeight: "bold",
 		color: COLORS.white,
+	},
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 });
 
