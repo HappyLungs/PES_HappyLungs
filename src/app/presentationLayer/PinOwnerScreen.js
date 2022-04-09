@@ -25,7 +25,6 @@ function PinOwnerScreen({ navigation, route }) {
 	const media = Array.from(pin.media);
 	const locationName =
 		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
 	const lat = 41.363094;
 	const lng = 2.112971;
 	const [modalVisible, setModalVisible] = useState(false);
@@ -33,7 +32,9 @@ function PinOwnerScreen({ navigation, route }) {
 		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
 	};
 
-	const handleEdit = () => console.log("Edit clicked");
+	const handleEdit = () => {
+		navigation.navigate("EditPinScreen", { pin: pin });
+	};
 	const handleDelete = () => console.log("Delete clicked");
 	const handleShare = () => console.log("Share clicked");
 
@@ -100,7 +101,7 @@ function PinOwnerScreen({ navigation, route }) {
 						: media.length > 0
 						? [
 								{
-									img: media[1],
+									img: media[0],
 								},
 						  ]
 						: [
@@ -113,15 +114,6 @@ function PinOwnerScreen({ navigation, route }) {
 				showHeader
 				showIndicator
 				closeIconColor={COLORS.white}
-				headerRightComponent={
-					<Feather
-						name="trash-2"
-						color={COLORS.white}
-						size={30}
-						onPress={() => handleDelete()}
-					/>
-				}
-				headerStyle={{ padding: 5 }}
 				onItemChanged={(item) => console.log("item", item)}
 				caroselImageStyle={{ height: 250 }}
 				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
@@ -158,28 +150,23 @@ function PinOwnerScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row" }}>
-					<Text style={styles.title}>{pin.name}</Text>
+				<View style={{ flexDirection: "row", height: 35 }}>
+					<Text style={[styles.title, { width: "65%" }]}>{pin.name}</Text>
 					<TouchableOpacity
-						style={{ marginStart: 15, justifyContent: "center" }}
+						style={{ justifyContent: "center" }}
 						onPress={() => setModalVisible(true)}
 					>
-						<Feather
-							name="trash-2"
-							style={{ alignSelf: "center" }}
-							color={COLORS.red1}
-							size={25}
-						/>
+						<Feather name="trash-2" color={COLORS.red1} size={20} />
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
 							{
 								flexDirection: "row",
 								justifyContent: "center",
+								alignItems: "center",
 								width: 90,
-								marginLeft: 125,
-								borderRadius: 7,
-								padding: 5,
+								marginStart: 10,
+								borderRadius: 5,
 								backgroundColor: COLORS.green1,
 							},
 							styles.shadow,
@@ -191,7 +178,7 @@ function PinOwnerScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 				{renderModal()}
-				<Text style={[styles.body, { marginTop: 20 }]}>{pin.description}</Text>
+				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
 				<View
 					style={{
 						flexDirection: "row",
@@ -247,6 +234,7 @@ function PinOwnerScreen({ navigation, route }) {
 					style={{
 						flexDirection: "row",
 						padding: 10,
+						justifyContent: "space-between",
 						alignItems: "center",
 					}}
 				>
@@ -259,7 +247,7 @@ function PinOwnerScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={{ marginStart: 180, flexDirection: "column" }}
+						style={{ flexDirection: "column" }}
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
@@ -287,6 +275,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 22,
 		fontWeight: "bold",
+		alignSelf: "center",
 		color: COLORS.secondary,
 	},
 	body: {

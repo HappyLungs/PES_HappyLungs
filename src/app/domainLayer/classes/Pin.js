@@ -76,11 +76,6 @@ export default class Pin {
 		return this.show_charts;
 	}
 
-	//returns true if public pin
-	get status() {
-		return this.status;
-	}
-
 	show_recomended_IDs() {}
 
 	show_charts() {}

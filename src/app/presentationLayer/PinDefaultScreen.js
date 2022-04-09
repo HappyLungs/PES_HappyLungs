@@ -96,10 +96,10 @@ function PinDefaultScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row" }}>
-					<Text style={styles.title}>{pin.name}</Text>
+				<View style={{ flexDirection: "row", height: 35 }}>
+					<Text style={[styles.title, { width: "85%" }]}>{pin.name}</Text>
 					<TouchableOpacity
-						style={{ marginStart: 200, justifyContent: "center" }}
+						style={{ justifyContent: "center" }}
 						onPress={() =>
 							setBookmark(
 								bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
@@ -114,7 +114,7 @@ function PinDefaultScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 20 }]}>{pin.description}</Text>
+				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
 				<View
 					style={{
 						flexDirection: "row",
@@ -170,6 +170,7 @@ function PinDefaultScreen({ navigation, route }) {
 					style={{
 						flexDirection: "row",
 						padding: 10,
+						justifyContent: "space-between",
 						alignItems: "center",
 					}}
 				>
@@ -182,7 +183,7 @@ function PinDefaultScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={{ marginStart: 180, flexDirection: "column" }}
+						style={{ flexDirection: "column" }}
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
@@ -210,6 +211,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 22,
 		fontWeight: "bold",
+		alignSelf: "center",
 		color: COLORS.secondary,
 	},
 	body: {

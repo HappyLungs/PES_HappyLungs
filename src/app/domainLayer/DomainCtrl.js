@@ -1,5 +1,5 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-//import Pin from "./classes/Pin";
+import Pin from "./classes/Pin";
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
@@ -85,9 +85,9 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 };
 
 /**
- * 
- * @param {*} latitude 
- * @param {*} length 
+ *
+ * @param {*} latitude
+ * @param {*} length
  * @returns {}
  */
 DomainCtrl.prototype.getPollutionLevelLastWeek = async function (
@@ -157,7 +157,7 @@ DomainCtrl.prototype.getPollutantsQuantLastWeek = async function (
 	let data = await point.getPollutantsQuantWeek(date);
 
 	return data;
-}
+};
 
 DomainCtrl.prototype.getPollutantsQuantLastMonth = async function (
 	latitude,
@@ -168,7 +168,7 @@ DomainCtrl.prototype.getPollutantsQuantLastMonth = async function (
 	let data = await point.getPollutantsQuantMonth(date);
 
 	return data;
-}
+};
 
 DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
 	latitude,
@@ -179,7 +179,7 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
 	let data = await point.getPollutantsQuantYear(date);
 
 	return data;
-}
+};
 
 DomainCtrl.prototype.createPin = function (
 	name,
@@ -190,6 +190,21 @@ DomainCtrl.prototype.createPin = function (
 	status
 ) {
 	let newPin = new Pin(name, location, description, media, rating, status);
+	return newPin;
+	//store db
+};
+
+DomainCtrl.prototype.editPin = function (
+	name,
+	location,
+	description,
+	media,
+	rating,
+	status
+) {
+	//edit not create
+	let newPin = new Pin(name, location, description, media, rating, status);
+	return newPin;
 	//store db
 };
 

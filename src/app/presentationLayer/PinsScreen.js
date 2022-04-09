@@ -1,6 +1,12 @@
 import React from "react";
-
-import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+	Text,
+	StyleSheet,
+	View,
+	TouchableOpacity,
+	ImageBackground,
+} from "react-native";
+import { FlatGrid } from "react-native-super-grid";
 
 import COLORS from "../config/stylesheet/colors";
 
@@ -26,12 +32,14 @@ function PinsScreen({ navigation }) {
 		getDate(new Date()),
 		true
 	);
+	const [items, setItems] = React.useState([
+		{ name: "UPC FIB", code: COLORS.secondary, date: pin.date },
+		{ name: "PALAU REIAL", code: COLORS.secondary, date: pin.date },
+		{ name: "CAMP NOU", code: COLORS.secondary, date: pin.date },
+	]);
 
-	let locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
 	return (
 		<View style={styles.background}>
-			<Text style={{ marginTop: 300 }}> Pins Screen</Text>
 			<TouchableOpacity
 				style={styles.btn}
 				onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
@@ -44,9 +52,70 @@ function PinsScreen({ navigation }) {
 			>
 				<Text style={styles.btnText}>Pin Default View</Text>
 			</TouchableOpacity>
+			<FlatGrid
+				itemDimension={130}
+				data={items}
+				style={styles.gridView}
+				// staticDimension={300}
+				// fixed
+				spacing={10}
+				renderItem={({ item }) => (
+					<View
+						style={[
+							styles.itemContainer,
+							{ borderWidth: 2, borderColor: item.code },
+						]}
+					>
+						<ImageBackground
+							source={{
+								uri: pin.media[0],
+							}}
+							style={{
+								width: 175,
+								height: 145,
+								justifyContent: "flex-end",
+							}}
+							imageStyle={{ borderRadius: 5 }}
+						>
+							<View
+								style={{
+									alignSelf: "flex-start",
+									padding: 3,
+									paddingHorizontal: 10,
+									width: "100%",
+									borderTopRightRadius: 3,
+									borderTopLeftRadius: 3,
+									backgroundColor: COLORS.white,
+								}}
+							>
+								<Text style={styles.itemName}>{item.name}</Text>
+								<Text style={styles.itemCode}>{item.date}</Text>
+							</View>
+							<View
+								style={{
+									position: "absolute",
+									right: "-1%",
+									bottom: "86%",
+									width: 50,
+									borderBottomWidth: 1,
+									borderLeftWidth: 1,
+									backgroundColor: "#3498db",
+									borderColor: item.code,
+									borderRadius: 3,
+									padding: 3,
+								}}
+							>
+								<Text style={styles.status}>PRIVATE</Text>
+							</View>
+						</ImageBackground>
+					</View>
+				)}
+			/>
 		</View>
 	);
 }
+
+//https://wix.github.io/react-native-navigation/docs/style-animations/
 
 const styles = StyleSheet.create({
 	background: {
@@ -57,7 +126,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	btn: {
-		marginTop: 25,
 		justifyContent: "center",
 		borderRadius: 5,
 		borderBottomWidth: 5,
@@ -71,6 +139,31 @@ const styles = StyleSheet.create({
 		color: COLORS.white,
 		textAlign: "center",
 		fontWeight: "bold",
+	},
+	gridView: {
+		marginTop: 10,
+		flex: 1,
+	},
+	itemContainer: {
+		borderRadius: 5,
+		height: 150,
+		width: 180,
+	},
+	itemName: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.secondary,
+	},
+	itemCode: {
+		fontSize: 12,
+		fontWeight: "bold",
+		color: COLORS.green1,
+	},
+	status: {
+		alignSelf: "center",
+		fontSize: 10,
+		fontWeight: "bold",
+		color: COLORS.white,
 	},
 });
 
