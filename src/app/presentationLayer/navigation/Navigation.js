@@ -65,7 +65,7 @@ const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
 	};
 };
 
-function MapStack() {
+function RootStack() {
 	return (
 		<Stack.Navigator
 			initialRouteName="MapScreen"
@@ -85,14 +85,21 @@ function MapStack() {
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}
-				options={{ title: "Happy Lungs" }}
+				options={{
+					title: "Happy Lungs",
+				}}
 				initialParams={{ tmpLat: false, tmpLng: false }}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
 			<Stack.Screen
 				name="CreatePin"
 				component={CreatePinScreen}
-				options={{ title: "Create pin" }}
+				options={{
+					title: "Create pin",
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+				}}
 			/>
 		</Stack.Navigator>
 	);
@@ -118,7 +125,9 @@ function PinStack() {
 			<Stack.Screen
 				name="PinsScreen"
 				component={PinsScreen}
-				options={{ title: "My Pins" }}
+				options={{
+					title: "My Pins",
+				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
 			<Stack.Screen
@@ -198,7 +207,7 @@ function AppTabs() {
 			/>
 			<Tab.Screen
 				name="Map"
-				component={MapStack}
+				component={RootStack}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Feather name="map" size={size} color={color} />

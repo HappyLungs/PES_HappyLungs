@@ -434,7 +434,7 @@ function MapScreen({ navigation, route }) {
 						style={[
 							styles.modalView,
 							styles.shadow,
-							{ alignItems: "flex-start", backgroundColor: "blue" },
+							{ alignItems: "flex-start" },
 						]}
 					>
 						<TouchableOpacity

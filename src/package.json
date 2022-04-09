@@ -48,6 +48,7 @@
     "react-native-ratings": "^8.1.0",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-super-grid": "^4.2.0",
     "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
     "react-router": "^6.2.2",
