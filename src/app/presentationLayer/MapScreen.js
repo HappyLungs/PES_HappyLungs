@@ -577,10 +577,10 @@ function MapScreen({navigation, route}) {
 					/>
 				))}
 				
-					<Heatmap
-						points={heatpoints}
-						radius={50}
-					/>
+				<Heatmap
+					points={heatpoints}
+					radius={50}
+				/>
 
 				</MapView>
 			</View>
