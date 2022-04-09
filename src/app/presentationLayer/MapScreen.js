@@ -11,10 +11,12 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+	Ionicons,
+	MaterialIcons,
+	MaterialCommunityIcons,
+	AntDesign,
+} from "@expo/vector-icons";
 
 import { LinearGradient } from "expo-linear-gradient";
 import MapView, {
@@ -416,6 +418,95 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
+	const fakeProfileData = {
+		username: "Ricard Guixaró",
+		points: 200,
+	};
+
+	const [profile, setProfile] = useState(fakeProfileData);
+
+	function renderHeader(profile) {
+		return (
+			<View
+				style={[
+					{
+						height: 110,
+						flexDirection: "row",
+						paddingHorizontal: 20,
+						backgroundColor: COLORS.white,
+						alignItems: "center",
+					},
+					styles.shadow,
+				]}
+			>
+				<View style={{ flex: 1, marginTop: 25 }}>
+					<View>
+						<Text
+							style={[
+								{ fontSize: 15, fontWeight: "bold", color: COLORS.secondary },
+							]}
+						>
+							Good Morning
+						</Text>
+						<Text
+							style={[
+								{ fontSize: 20, fontWeight: "bold", color: COLORS.secondary },
+							]}
+						>
+							{profile.username}
+						</Text>
+					</View>
+				</View>
+				<TouchableOpacity
+					style={[
+						{
+							backgroundColor: COLORS.green1,
+							height: 40,
+							paddingRight: 10,
+							paddingLeft: 5,
+							borderRadius: 12,
+							marginTop: 30,
+						},
+						styles.shadow,
+					]}
+					onPress={() => {
+						console.log("pressed points");
+					}}
+				>
+					<View
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
+					>
+						<View
+							style={{
+								width: 25,
+								height: 25,
+								alignItems: "center",
+								justifyContent: "center",
+								borderRadius: 20,
+								backgroundColor: COLORS.green2,
+							}}
+						>
+							<AntDesign name="Trophy" size={18} color={COLORS.white} />
+						</View>
+						<Text
+							style={[
+								{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
+							]}
+						>
+							{profile.points}
+						</Text>
+						<Text style={[{ marginLeft: 3, color: COLORS.white }]}>points</Text>
+					</View>
+				</TouchableOpacity>
+			</View>
+		);
+	}
+
 	/**
 	 *
 	 */
@@ -438,7 +529,7 @@ function MapScreen({ navigation, route }) {
 						]}
 					>
 						<TouchableOpacity
-							style={{ alignSelf: "flex-end", backgroundColor: "green" }}
+							style={{ alignSelf: "flex-end" }}
 							onPress={() => setModalFilterVisible(!modalFilterVisible)}
 						>
 							<Ionicons name="close" color={COLORS.secondary} size={25} />
@@ -568,7 +659,7 @@ function MapScreen({ navigation, route }) {
 
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-			<View style={{ ...StyleSheet.absoluteFillObject }}>
+			<View style={{ marginTop: 100, ...StyleSheet.absoluteFillObject }}>
 				<MapView
 					ref={mapRef}
 					provider={PROVIDER_GOOGLE}
@@ -599,6 +690,7 @@ function MapScreen({ navigation, route }) {
 					<Heatmap points={heatpoints} radius={50} />
 				</MapView>
 			</View>
+			{renderHeader(profile)}
 			<View
 				style={{
 					flexDirection: "row",
@@ -631,32 +723,41 @@ function MapScreen({ navigation, route }) {
 						defaultValue={"Search a location"}
 					/>
 				</View>
-				<View style={[styles.containerFilter, styles.shadow]}>
+				<View style={[styles.container, styles.shadow]}>
 					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
-							style={{ alignSelf: "center" }}
 							color={COLORS.secondary}
 							size={35}
 						/>
 					</TouchableOpacity>
 				</View>
 			</View>
-
-			<TouchableOpacity
-				style={styles.compass}
-				onPress={() => {
-					Location.installWebGeolocationPolyfill();
-					navigator.geolocation.getCurrentPosition((position) => {
-						panTo({
-							lat: position.coords.latitude,
-							lng: position.coords.longitude,
-						});
-					});
-				}}
+			<View
+				style={[
+					styles.container,
+					styles.shadow,
+					{ marginTop: 480, marginRight: 10, marginStart: 320 },
+				]}
 			>
-				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
-			</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => {
+						Location.installWebGeolocationPolyfill();
+						navigator.geolocation.getCurrentPosition((position) => {
+							panTo({
+								lat: position.coords.latitude,
+								lng: position.coords.longitude,
+							});
+						});
+					}}
+				>
+					<MaterialCommunityIcons
+						name="compass"
+						color={COLORS.secondary}
+						size={35}
+					/>
+				</TouchableOpacity>
+			</View>
 			{renderModalPin()}
 			{renderModalFilter()}
 		</SafeAreaView>
@@ -666,13 +767,14 @@ function MapScreen({ navigation, route }) {
  * Function to define all the styles needed in this screen
  */
 const styles = StyleSheet.create({
-	containerFilter: {
+	container: {
 		backgroundColor: COLORS.white,
 		width: 50,
 		height: 50,
 		marginStart: 20,
 		borderRadius: 12,
 		justifyContent: "center",
+		alignItems: "center",
 	},
 	body: {
 		textAlignVertical: "center",
@@ -734,19 +836,6 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 5,
 		width: 100,
 		height: 50,
-		borderBottomColor: COLORS.darkGrey,
-		backgroundColor: COLORS.secondary,
-	},
-	compass: {
-		marginTop: 480,
-		marginRight: 10,
-		marginStart: 320,
-		justifyContent: "center",
-		borderRadius: 5,
-		borderBottomWidth: 5,
-		width: 50,
-		height: 50,
-		alignItems: "center",
 		borderBottomColor: COLORS.darkGrey,
 		backgroundColor: COLORS.secondary,
 	},

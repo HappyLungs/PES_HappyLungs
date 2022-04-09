@@ -87,6 +87,7 @@ function RootStack() {
 				component={MapScreen}
 				options={{
 					title: "Happy Lungs",
+					headerShown: false,
 				}}
 				initialParams={{ tmpLat: false, tmpLng: false }}
 			/>
