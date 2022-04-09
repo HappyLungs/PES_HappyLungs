@@ -8,7 +8,6 @@ import {
 	TextInput,
 	TouchableOpacity,
 	Modal,
-	Animated,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
@@ -93,16 +92,6 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	const [byCertificate, setByCertificate] = useState(false);
-
-	const translation = useRef(new Animated.Value(50)).current;
-
-	useEffect(() => {
-		Animated.timing(translation, {
-			toValue: 0,
-			duration: 1000,
-			useNativeDriver: true,
-		}).start();
-	}, []);
 
 	const [markers, setMarkers] = useState([]);
 	const [actualMarker, setActualMarker] = useState({
@@ -445,11 +434,11 @@ function MapScreen({ navigation, route }) {
 						style={[
 							styles.modalView,
 							styles.shadow,
-							{ alignItems: "flex-start" },
+							{ alignItems: "flex-start", backgroundColor: "blue" },
 						]}
 					>
 						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
+							style={{ alignSelf: "flex-end", backgroundColor: "green" }}
 							onPress={() => setModalFilterVisible(!modalFilterVisible)}
 						>
 							<Ionicons name="close" color={COLORS.secondary} size={25} />
@@ -642,13 +631,7 @@ function MapScreen({ navigation, route }) {
 						defaultValue={"Search a location"}
 					/>
 				</View>
-				<Animated.View
-					style={[
-						styles.containerFilter,
-						styles.shadow,
-						{ transform: [{ translateX: translation }] },
-					]}
-				>
+				<View style={[styles.containerFilter, styles.shadow]}>
 					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
@@ -657,33 +640,23 @@ function MapScreen({ navigation, route }) {
 							size={35}
 						/>
 					</TouchableOpacity>
-				</Animated.View>
+				</View>
 			</View>
-			<Animated.View
-				style={{
-					transform: [{ translateX: translation }],
+
+			<TouchableOpacity
+				style={styles.compass}
+				onPress={() => {
+					Location.installWebGeolocationPolyfill();
+					navigator.geolocation.getCurrentPosition((position) => {
+						panTo({
+							lat: position.coords.latitude,
+							lng: position.coords.longitude,
+						});
+					});
 				}}
 			>
-				<TouchableOpacity
-					style={styles.compass}
-					onPress={() => {
-						Location.installWebGeolocationPolyfill();
-						navigator.geolocation.getCurrentPosition((position) => {
-							panTo({
-								lat: position.coords.latitude,
-								lng: position.coords.longitude,
-							});
-						});
-					}}
-				>
-					<MaterialCommunityIcons
-						name="compass"
-						color={COLORS.white}
-						size={35}
-					/>
-				</TouchableOpacity>
-			</Animated.View>
-
+				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
+			</TouchableOpacity>
 			{renderModalPin()}
 			{renderModalFilter()}
 		</SafeAreaView>

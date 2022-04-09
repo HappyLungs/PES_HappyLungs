@@ -320,7 +320,7 @@ function CreatePinScreen({ navigation, route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinStatusSelector()}
-				<View style={{ flexDirection: "row", marginTop: 20 }}>
+				<View style={{ flexDirection: "row" }}>
 					<TouchableOpacity
 						style={[styles.containerCancelBtn, styles.shadow]}
 						onPress={() => navigation.navigate("MapScreen")}

@@ -48,6 +48,8 @@ function PinsScreen({ navigation }) {
 	);
 }
 
+//https://wix.github.io/react-native-navigation/docs/style-animations/
+
 const styles = StyleSheet.create({
 	background: {
 		flex: 1,

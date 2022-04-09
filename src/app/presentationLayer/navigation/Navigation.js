@@ -1,11 +1,15 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import {
+	createStackNavigator,
+	HeaderStyleInterpolators,
+	TransitionPresets,
+} from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import "react-native-gesture-handler";
 
 //screens
 import MapScreen from "../MapScreen";
@@ -21,7 +25,45 @@ import COLORS from "../../config/stylesheet/colors";
 
 const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
+
+const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
+	const progress = Animated.add(
+		current.progress.interpolate({
+			inputRange: [0, 1],
+			outputRange: [0, 1],
+			extrapolate: "clamp",
+		}),
+		next
+			? next.progress.interpolate({
+					inputRange: [0, 1],
+					outputRange: [0, 1],
+					extrapolate: "clamp",
+			  })
+			: 0
+	);
+
+	return {
+		cardStyle: {
+			transform: [
+				{
+					translateX: Animated.multiply(
+						progress.interpolate({
+							inputRange: [0, 1, 2],
+							outputRange: [
+								screen.width, // Focused, but offscreen in the beginning
+								0, // Fully focused
+								screen.width * -0.3, // Fully unfocused
+							],
+							extrapolate: "clamp",
+						}),
+						inverted
+					),
+				},
+			],
+		},
+	};
+};
 
 function MapStack() {
 	return (
@@ -50,13 +92,7 @@ function MapStack() {
 			<Stack.Screen
 				name="CreatePin"
 				component={CreatePinScreen}
-				options={{
-					title: "Create pin",
-					headerTintColor: COLORS.white,
-					headerStyle: {
-						backgroundColor: COLORS.green1,
-					},
-				}}
+				options={{ title: "Create pin" }}
 			/>
 		</Stack.Navigator>
 	);
@@ -72,11 +108,6 @@ function PinStack() {
 				tabBarShowLabel: false,
 				headerTintColor: COLORS.secondary,
 				headerTitleAlign: "center",
-				headerStyle: {
-					style: {
-						backgroundColor: COLORS.green1,
-					},
-				},
 				headerTitleStyle: {
 					fontWeight: "bold",
 					fontSize: 27,
@@ -93,13 +124,21 @@ function PinStack() {
 			<Stack.Screen
 				name="DefaultPin"
 				component={PinDefaultScreen}
-				options={{ title: "" }}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+				}}
 			/>
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
 				options={{
 					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
 				}}
 			/>
 			<Stack.Screen
@@ -111,6 +150,7 @@ function PinStack() {
 					headerStyle: {
 						backgroundColor: COLORS.green1,
 					},
+					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
 		</Stack.Navigator>

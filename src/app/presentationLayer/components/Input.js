@@ -45,6 +45,7 @@ const Input = ({
 				<TextInput
 					autoCorrect={false}
 					defaultValue={defaultValue}
+					maxLength={label === "Title" ? 11 : 100}
 					onFocus={() => {
 						onFocus();
 						setIsFocused(true);
