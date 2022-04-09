@@ -135,6 +135,35 @@ exports.update = async(request, response, next) => {
     })
 };
 
+exports.delete = (request, response, next) => {
+    let params = {};
+    if (request.params._id) {
+        params = request.params;
+    } else {
+        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
+        responseObj.message = "Required parameters missing";
+        responseObj.data    = {};
+        response.send(responseObj);
+        return;
+    }
+    pinDatalayer
+    .deletePin(params)
+    .then((result) => {
+        responseObj.status  = errorCodes.SUCCESS;
+        responseObj.message = "Pin deleted successfully";
+        responseObj.data    = result;
+        response.send(responseObj);
+        return;
+    })
+    .catch((error) => {
+        responseObj.status  = errorCodes.SYNTAX_ERROR;
+        responseObj.message = error;
+        responseObj.data    = {};
+        response.send(responseObj);
+        return;
+    })
+};
+
 exports.validate = (method) => {
     switch(method) {
         case "createPin":

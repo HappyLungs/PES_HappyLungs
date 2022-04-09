@@ -35,7 +35,7 @@ class MeasureStation {
      * Given a measure from Dades Obertes API and an hour, returns the pollution level at this hour
      * @param {JSON} measure measure of one pollutant at one date
      * @param {Integer} hour hour from 1 to 24
-     * @returns {Integer} pollution level of measure "measure" at hour "hour"
+     * @returns pollution level of measure "measure" at hour "hour"
      */
     calcHourQuantity(measure, hour) {
         if(typeof measure[hour] === 'undefined'){
@@ -238,7 +238,7 @@ class MeasureStation {
             tags: tags,
             levels: dailyLevel
         }
-        
+
         return result;
     }
 
@@ -246,7 +246,7 @@ class MeasureStation {
      * Calculates the pollution level at every month of last year
      * @param {Date} date date
      * @returns {Array<Integer>} pollution level of the latest 30 days from date
-     */ 
+     */
     async getYearLevel(date) {
         let lastYear = new Date(date);
         lastYear.setMonth(lastYear.getMonth() - 10);
@@ -279,19 +279,19 @@ class MeasureStation {
         let title;
         if (date.getFullYear() === lastYear.getFullYear()) title = date.getFullYear();
         else title = lastYear.getFullYear()+" / "+date.getFullYear();
-        
+
         let result = {
             title: title,
             tags: tags,
             levels: monthlyLevel
         }
-        
-        
+
+
         return result;
     }
 
 
-    //CALCULATORS USED FOR POLLUTANTS QUANTITTY
+    //POLLUTANTS QUANTITTY CALCULATOR
 
     /**
      * Calculates the quantity of the pollutant (pollutantData) at an hour. If there's
@@ -315,16 +315,15 @@ class MeasureStation {
         } else {
             return pollutantData[hour];
         }
-        return 0;
     }
 
     /**
      * Calculates the total quantity of a specific pollutant on a date.
-     * @param {Integer} pollutantData 
-     * @param {Date} date 
+     * @param {Integer} pollutantData
+     * @param {Date} date
      * @returns {Integer} Returns the total quantity of a specific pollutant on a date
      */
-    getQuantityOfAPollutantDay(pollutantData, date) {
+    getQuantityOfAPollutantAtDay(pollutantData, date) {
         let total = 0;
         let jsonHour = null;
         for (let i = 1; i < 25; ++i) {
@@ -339,14 +338,12 @@ class MeasureStation {
         return total;
     }
 
-    //POLLUTANTS QUANTITY GETTERS
-
     /**
      * Calculates the quantities of each pollutant on a date.
-     * @param {Date} date
+     * @param {*} date
      * @returns Returns the quantities of each pollutant on a date-
      */
-    async getQuantityOfEachPollutantDay(date) {
+    async getQuantityOfEachPollutantAtDay(date) {
         //Database query to get the measures taken in this MeasureStation on the day date
         let measuresOfTheDay = await dadesObertes.getMeasuresDay(this.eoiCode, date);
 
@@ -356,9 +353,9 @@ class MeasureStation {
         measuresOfTheDay.forEach(pollutantData => {
 
             let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
+            let quant = this.getQuantityOfAPollutantAtDay(pollutantData, date);   //get the pollutant quantity of the day (total/24 or just total)
 
-            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
+            if ( detectedPollutants.includes(pollutant) ) {
 
                 detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
 
@@ -370,125 +367,6 @@ class MeasureStation {
         })
 
         return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
-    }
-
-    /**
-     * Calculates the quantities of each pollutant on a week.
-     * @param {Date} date
-     * @returns Returns the quantities of each pollutant on a week-
-     */
-    async getQuantityOfEachPollutantWeek(date) {
-        let lastweek = new Date(date);
-        lastweek.setDate(lastweek.getDate() - 6);        
-        //Database query to get the measures taken in this MeasureStation on that date
-        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastweek, date);
-
-        //Pollutants used to calculate the contamination level with the LevelCalculator
-        let detectedPollutants = [];
-
-        measures.forEach(pollutantData => {
-            
-            let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data);
-
-            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
-
-                detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
-
-            } else {
-
-                detectedPollutants.push({name: pollutant, quantity: quant});
-                
-            }
-        })
-
-        detectedPollutants.forEach(pollutant => {
-            let num = pollutant.quantity / 7;
-            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
-        })
-
-        return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
-        
-    }
-
-    /**
-     * Calculates the quantities of each pollutant on a month.
-     * @param {*} date
-     * @returns Returns the quantities of each pollutant on a month.
-     */
-     async getQuantityOfEachPollutantMonth(date) {
-        let lastmonth = new Date(date);
-        lastmonth.setDate(lastmonth.getDate() - 30);        
-        //Database query to get the measures taken in this MeasureStation on that date
-        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastmonth, date);
-
-        //Pollutants used to calculate the contamination level with the LevelCalculator
-        let detectedPollutants = [];
-        
-        measures.forEach(pollutantData => {
-            
-            let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data)/30;
-            console.log(pollutant, quant);
-            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
-
-                detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
-
-            } else {
-
-                detectedPollutants.push({name: pollutant, quantity: quant});
-                
-            }
-        })
-
-        detectedPollutants.forEach(pollutant => {
-            let num = pollutant.quantity;
-            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
-        })
-
-        console.log(detectedPollutants);
-
-        return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
-        
-    }
-    
-    /**
-     * Calculates the quantities of each pollutant on a Year.
-     * @param {*} date
-     * @returns Returns the quantities of each pollutant on a Year.
-     */
-     async getQuantityOfEachPollutantYear(date) {
-        let lastyear = new Date(date);
-        lastyear.setDate(lastyear.getDate() - 365);        
-        //Database query to get the measures taken in this MeasureStation on that date
-        let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastyear, date);
-
-        //Pollutants used to calculate the contamination level with the LevelCalculator
-        let detectedPollutants = [];
-
-        measures.forEach(pollutantData => {
-
-            let pollutant = pollutantData.contaminant;
-            let quant = this.getQuantityOfAPollutantDay(pollutantData, pollutantData.data);   //get the pollutant quantity of the day (total/24 or just total)
-
-            if ( detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant) ) {
-
-                detectedPollutants.find(detectedPollutant => detectedPollutant.name === pollutant).quantity += quant;
-
-            } else {
-
-                detectedPollutants.push({name: pollutant, quantity: quant});
-                
-            }
-        })
-
-        detectedPollutants.forEach(pollutant => {
-            let num = pollutant.quantity / 365;
-            pollutant.quantity = Math.round((num + Number.EPSILON) * 100) / 100;
-        })
-
-        return detectedPollutants.sort((p1, p2) => {return p2.quantity - p1.quantity;}); //sort it descending
-        
     }
 
     //OTHERS
