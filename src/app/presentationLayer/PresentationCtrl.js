@@ -1,4 +1,5 @@
 const DomainCtrl = require("../domainLayer/DomainCtrl.js");
+import Pin from "../domainLayer/classes/Pin"; //elimnar fake
 
 let PresentationCtrl;
 (function () {
@@ -131,6 +132,97 @@ PresentationCtrl.prototype.editPin = function (
 		rating,
 		status
 	);
+};
+
+PresentationCtrl.prototype.fetchPins = async function () {
+	//fake
+	const fakePins = [
+		new Pin(
+			"FIB UPC",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title:
+					"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			[
+				"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
+				"https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg",
+			],
+			4,
+			"Fri Apr 08 2022",
+			"Public"
+		),
+		new Pin(
+			"PALAU REIAL",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title: "Av. Diagonal, 686, 08034 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			[
+				"https://www.bcncatfilmcommission.com/sites/default/files/styles/fancybox/public/locations/Districte%20(3).jpg",
+			],
+			4,
+			"Fri Apr 08 2022",
+			"Private"
+		),
+		new Pin(
+			"CAMP NOU",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
+			4,
+			"Fri Apr 08 2022",
+			"Public"
+		),
+		new Pin(
+			"CAMP NOUu",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
+			4,
+			"Fri Apr 08 2022",
+			"Private"
+		),
+		new Pin(
+			"CAMP NOUuu",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
+			4,
+			"Fri Apr 08 2022",
+			"Public"
+		),
+		new Pin(
+			"CAMP NOUuuu",
+			{
+				latitude: 41.38941,
+				longitude: 2.113436,
+				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
+			},
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
+			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
+			4,
+			"Fri Apr 08 2022",
+			"Public"
+		),
+	];
+	return fakePins;
 };
 
 PresentationCtrl.prototype.getMapData = async function () {

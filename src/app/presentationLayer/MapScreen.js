@@ -503,7 +503,7 @@ function MapScreen({ navigation, route }) {
 								multiline={false}
 								maxLength={30}
 								style={styles.body}
-								defaultValue={"Search a location"}
+								placeholder={"Search a location"}
 							/>
 						</View>
 						<View style={[styles.container, styles.shadow]}>
@@ -755,9 +755,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	body: {
-		textAlignVertical: "center",
-		alignSelf: "center",
-		justifyContent: "center",
 		fontSize: 15,
 		marginStart: 10,
 		color: COLORS.darkGrey,

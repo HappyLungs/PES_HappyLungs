@@ -128,6 +128,7 @@ function PinStack() {
 				component={PinsScreen}
 				options={{
 					title: "My Pins",
+					headerShown: false,
 				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
