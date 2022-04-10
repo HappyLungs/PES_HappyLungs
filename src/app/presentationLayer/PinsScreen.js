@@ -12,7 +12,7 @@ import COLORS from "../config/stylesheet/colors";
 import PinList from "./components/PinList";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 function PinsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -20,6 +20,11 @@ function PinsScreen({ navigation }) {
 	const [filteredData, setFilteredData] = useState([]);
 	const [masterData, setMasterData] = useState([]);
 	const [search, setSearch] = useState("");
+	const [recentFilter, setRecentFilter] = useState(false);
+	const [privacyFilter, setPrivacyFilter] = useState("All");
+	const [typeFilter, setTypeFilter] = useState("All");
+
+	const isMyPin = [true, false, true, false, true, true];
 
 	useEffect(() => {
 		fetchPins();
@@ -34,10 +39,54 @@ function PinsScreen({ navigation }) {
 		setFilteredData(data);
 	};
 
+	const customFilter = (filter) => {
+		console.log(filter);
+	};
+
+	const filterByPrivacy = () => {
+		let privacy = "All";
+		if (privacyFilter === "All") privacy = "Public";
+		else if (privacyFilter === "Public") privacy = "Private";
+		setPrivacyFilter(privacy);
+		if (privacy === "All") {
+			setFilteredData(masterData);
+		} else if (privacy === "Public") {
+			const newData = masterData.filter((item, index) => {
+				return (item.status === "Public") & isMyPin[index];
+			});
+			setFilteredData(newData);
+		} else {
+			const newData = masterData.filter((item, index) => {
+				return (item.status === "Private") & isMyPin[index];
+			});
+			setFilteredData(newData);
+		}
+	};
+	const filterByType = () => {
+		let type = "All";
+		if (typeFilter === "All") type = "Created";
+		else if (typeFilter === "Created") type = "Saved";
+		setTypeFilter(type);
+		if (type === "All") {
+			setFilteredData(masterData);
+		} else if (type === "Created") {
+			const newData = masterData.filter((item, index) => {
+				//return item.status === "Created"; //real
+				return isMyPin[index]; //fake
+			});
+			setFilteredData(newData);
+		} else {
+			const newData = masterData.filter((item, index) => {
+				//return item.status === "Saved"; 	//real
+				return !isMyPin[index]; //fake
+			});
+			setFilteredData(newData);
+		}
+	};
+
 	const searchFilter = (text) => {
 		if (text) {
 			const newData = masterData.filter((item) => {
-				console.log(item.name);
 				const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
 				const textData = text.toUpperCase();
 				return itemData.indexOf(textData) > -1;
@@ -59,7 +108,6 @@ function PinsScreen({ navigation }) {
 			<View
 				style={[
 					{
-						height: 150,
 						flexDirection: "row",
 						paddingHorizontal: 20,
 						alignItems: "center",
@@ -70,28 +118,23 @@ function PinsScreen({ navigation }) {
 			>
 				<View
 					style={{
+						flex: 1,
 						flexDirection: "column",
 					}}
 				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 25,
-							marginBottom: 10,
-						}}
+					<Text
+						style={[
+							{
+								fontSize: 20,
+								fontWeight: "bold",
+								color: COLORS.secondary,
+								marginTop: 35,
+								marginBottom: 10,
+							},
+						]}
 					>
-						<Text
-							style={[
-								{
-									fontSize: 20,
-									fontWeight: "bold",
-									color: COLORS.secondary,
-								},
-							]}
-						>
-							My Pins
-						</Text>
-					</View>
+						My Pins
+					</Text>
 					<View
 						style={{
 							flexDirection: "row",
@@ -101,7 +144,6 @@ function PinsScreen({ navigation }) {
 							style={[
 								{
 									backgroundColor: COLORS.lightGrey,
-									width: "80%",
 									height: 50,
 									borderRadius: 12,
 									flexDirection: "row",
@@ -118,12 +160,90 @@ function PinsScreen({ navigation }) {
 							<TextInput
 								multiline={false}
 								maxLength={30}
+								width={175}
 								value={search}
-								style={styles.body}
+								style={[styles.body, { marginStart: 10 }]}
 								placeholder={"Search"}
 								onChangeText={(text) => searchFilter(text)}
 							/>
 						</View>
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-evenly",
+							marginVertical: 15,
+						}}
+					>
+						<TouchableOpacity
+							style={[
+								{
+									backgroundColor: recentFilter
+										? COLORS.green1
+										: COLORS.secondary,
+									height: 40,
+									width: 80,
+									borderRadius: 12,
+									paddingHorizontal: 5,
+									justifyContent: "center",
+									alignItems: "center",
+								},
+								styles.shadow,
+							]}
+							onPress={() => {
+								setRecentFilter(!recentFilter);
+								customFilter("recentFilter");
+							}}
+						>
+							<Text style={styles.containerTxt}>Recent</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								{
+									backgroundColor:
+										privacyFilter === "All" ? COLORS.secondary : COLORS.green1,
+									height: 40,
+									width: 80,
+									paddingHorizontal: 5,
+									borderRadius: 12,
+									justifyContent: "center",
+									alignItems: "center",
+								},
+								styles.shadow,
+							]}
+							onPress={() => {
+								setPrivacyFilter(
+									privacyFilter === "All"
+										? "Public"
+										: privacyFilter === "Public"
+										? "Private"
+										: "All"
+								);
+								filterByPrivacy();
+							}}
+						>
+							<Text style={styles.containerTxt}>{privacyFilter}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								{
+									backgroundColor:
+										typeFilter === "All" ? COLORS.secondary : COLORS.green1,
+									height: 40,
+									width: 80,
+									paddingHorizontal: 5,
+									borderRadius: 12,
+									justifyContent: "center",
+									alignItems: "center",
+								},
+								styles.shadow,
+							]}
+							onPress={() => {
+								filterByType();
+							}}
+						>
+							<Text style={styles.containerTxt}>{typeFilter}</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</View>
@@ -139,9 +259,6 @@ function PinsScreen({ navigation }) {
 			}}
 		>
 			{renderHeader()}
-			<View style={{ backgroundColor: COLORS.light }}>
-				<Text>Most Recent</Text>
-			</View>
 			<View style={[{ marginTop: 20, flex: 1, paddingHorizontal: 20 }]}>
 				{renderPinList()}
 			</View>
@@ -154,8 +271,12 @@ function PinsScreen({ navigation }) {
 const styles = StyleSheet.create({
 	body: {
 		fontSize: 15,
-		marginStart: 10,
 		color: COLORS.darkGrey,
+	},
+	containerTxt: {
+		fontSize: 13,
+		color: COLORS.white,
+		fontWeight: "bold",
 	},
 	shadow: {
 		shadowColor: COLORS.black,
