@@ -9,9 +9,9 @@ import {
 	Image,
 	SafeAreaView,
 } from "react-native";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
-
 import Pin from "../domainLayer/classes/Pin"; //elimnar fake
 
 function PinsScreen({ navigation }) {
@@ -24,7 +24,12 @@ function PinsScreen({ navigation }) {
 	//fake
 	let pin = new Pin(
 		"FIB UPC",
-		{ latitude: 41.38941, longitude: 2.113436 },
+		{
+			latitude: 41.38941,
+			longitude: 2.113436,
+			title:
+				"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona",
+		},
 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 		[
 			"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
@@ -35,9 +40,27 @@ function PinsScreen({ navigation }) {
 		true
 	);
 	const items = [
-		{ name: "UPC FIB", code: COLORS.secondary, date: pin.date },
-		{ name: "PALAU REIAL", code: COLORS.secondary, date: pin.date },
-		{ name: "CAMP NOU", code: COLORS.secondary, date: pin.date },
+		{
+			name: "UPC FIB",
+			code: COLORS.secondary,
+			date: pin.date,
+			locationTitle: pin.location.title,
+			status: "Public",
+		},
+		{
+			name: "PALAU REIAL",
+			code: COLORS.secondary,
+			date: pin.date,
+			locationTitle: pin.location.title,
+			status: "Private",
+		},
+		{
+			name: "WWWWWWWWWWWW",
+			code: COLORS.secondary,
+			date: pin.date,
+			locationTitle: pin.location.title,
+			status: "Public",
+		},
 	];
 
 	const renderItem = ({ item }) => (
@@ -47,27 +70,124 @@ function PinsScreen({ navigation }) {
 				{ borderRadius: 10, backgroundColor: COLORS.white },
 			]}
 		>
-			<TouchableOpacity
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-				}}
-				onPress={() => console.log("item")}
-			>
-				<Image
-					source={{ uri: pin.media[0] }}
-					style={{
-						width: 85,
-						height: 85,
-						borderTopLeftRadius: 10,
-						borderBottomLeftRadius: 10,
-					}}
-				/>
-				<View style={{ margin: 10, alignSelf: "flex-start" }}>
-					<Text style={styles.itemName}>{item.name}</Text>
-					<Text style={styles.itemCode}>{item.date} </Text>
+			<View style={{ flexDirection: "column" }}>
+				<View style={{ flexDirection: "row" }}>
+					<TouchableOpacity
+						style={{
+							flexDirection: "row",
+							flex: 1,
+							alignItems: "center",
+						}}
+						onPress={() => console.log("item")}
+					>
+						<Image
+							source={{ uri: pin.media[0] }}
+							style={{
+								width: 85,
+								height: 85,
+								borderTopLeftRadius: 10,
+							}}
+						/>
+						<View
+							style={{
+								flex: 1,
+								marginHorizontal: 10,
+								alignSelf: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<Text style={styles.itemName}>{item.name}</Text>
+								<View
+									style={{
+										backgroundColor: COLORS.blue2,
+										alignSelf: "flex-end",
+										margin: 5,
+										padding: 2,
+										borderRadius: 5,
+									}}
+								>
+									<Text
+										style={[
+											styles.itemName,
+											{
+												color: COLORS.white,
+												fontSize: 12,
+												fontWeight: "bold",
+											},
+										]}
+									>
+										{item.status}
+									</Text>
+								</View>
+							</View>
+							<View style={{ flexDirection: "row", marginVertical: 2 }}>
+								<Ionicons
+									name="location-sharp"
+									style={{ alignSelf: "center" }}
+									color={COLORS.green1}
+									size={13}
+								/>
+								<Text
+									numberOfLines={1}
+									style={[styles.itemCode, { flex: 1, flexWrap: "wrap" }]}
+								>
+									{item.locationTitle}
+								</Text>
+							</View>
+							<View style={{ flexDirection: "row", marginVertical: 2 }}>
+								<Ionicons
+									name="md-calendar"
+									style={{ alignSelf: "center" }}
+									color={COLORS.green1}
+									size={13}
+								/>
+								<Text style={styles.itemCode}>{item.date}</Text>
+							</View>
+						</View>
+					</TouchableOpacity>
 				</View>
-			</TouchableOpacity>
+				<View
+					style={{
+						height: 30,
+						flexDirection: "row",
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							flex: 1.5,
+							flexDirection: "row",
+							backgroundColor: COLORS.secondary,
+							borderBottomLeftRadius: 10,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() => console.log("edit")}
+					>
+						<Feather name="edit" size={15} color={COLORS.white} />
+						<Text style={styles.btnText}>Edit</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							backgroundColor: COLORS.red1,
+							borderBottomRightRadius: 10,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() => console.log("delete")}
+					>
+						<Feather name="trash-2" size={15} color={COLORS.white} />
+						<Text style={styles.btnText}>Delete</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
 		</View>
 	);
 
@@ -133,26 +253,19 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.secondary,
 	},
 	btnText: {
+		fontSize: 13,
 		color: COLORS.white,
-		textAlign: "center",
 		fontWeight: "bold",
-	},
-	gridView: {
-		marginTop: 10,
-		flex: 1,
-	},
-	itemContainer: {
-		borderRadius: 5,
-		height: 150,
-		width: 180,
+		marginHorizontal: 10,
 	},
 	itemName: {
-		fontSize: 17,
+		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.secondary,
 	},
 	itemCode: {
 		fontSize: 12,
+		alignSelf: "flex-end",
 		color: COLORS.darkGrey,
 	},
 	status: {

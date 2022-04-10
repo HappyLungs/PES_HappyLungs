@@ -20,14 +20,12 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const { pin } = route.params;
 	const media = Array.from(pin.media);
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
-	const lat = 41.363094;
-	const lng = 2.112971;
 	const [bookmark, setBookmark] = useState("bookmark-outline");
 	const handleSeeOnMap = () => {
-		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
+		navigation.navigate("MapScreen", {
+			latitude: pin.location.latitude,
+			longitude: pin.location.longitude,
+		});
 	};
 
 	const handleShare = () => console.log("Share clicked");
@@ -128,7 +126,9 @@ function PinDefaultScreen({ navigation, route }) {
 						style={{ alignSelf: "center" }}
 						color={COLORS.secondary}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{locationName}</Text>
+					<Text style={[styles.body, { marginStart: 10 }]}>
+						{pin.location.title}
+					</Text>
 				</View>
 				<TouchableOpacity
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
@@ -187,8 +187,8 @@ function PinDefaultScreen({ navigation, route }) {
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
-								lat,
-								lng
+								pin.location.latitude,
+								pin.location.longitude
 							);
 							navigation.navigate("Statistics", { data: data });
 						}}

@@ -150,11 +150,11 @@ function MapScreen({ navigation, route }) {
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
 	*/
 	/*
-	const { lat, lng } = route.params;
-	if (lat && lng) {
+	const { latitude, longitude } = route.params;
+	if (latitude && longitude) {
 		const tmpLocation = {
-		latitude: lat,
-		longitude: lng,
+		latitude: latitude,
+		longitude: longitude,
 		latitudeDelta: 0.01,
 		longitudeDelta: 0.01,
 		}
@@ -168,6 +168,7 @@ function MapScreen({ navigation, route }) {
 			coords: {
 				latitude: actualMarker.latitude,
 				longitude: actualMarker.longitude,
+				title: actualMarker.title,
 			},
 		});
 		//falta condicionar això perq només passi quan realment es crea un pin
@@ -453,17 +454,26 @@ function MapScreen({ navigation, route }) {
 					>
 						<Text
 							style={[
-								{ fontSize: 20, fontWeight: "bold", color: COLORS.secondary },
+								{
+									fontSize: 20,
+									fontWeight: "bold",
+									color: COLORS.secondary,
+								},
 							]}
 						>
 							{profile.username},
-						</Text>
-						<Text
-							style={[
-								{ fontSize: 19, marginStart: 5, color: COLORS.secondary },
-							]}
-						>
-							Welcome Back!
+							<Text
+								style={[
+									{
+										fontSize: 18,
+										fontWeight: "normal",
+										color: COLORS.secondary,
+									},
+								]}
+							>
+								{" "}
+								Welcome Back!
+							</Text>
 						</Text>
 					</View>
 					<View
