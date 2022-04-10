@@ -59,7 +59,7 @@ function CreatePinScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				getDate(),
-				status
+				status === true ? "Public" : "False"
 			);
 			navigation.navigate("MapScreen");
 		}
@@ -335,16 +335,7 @@ function CreatePinScreen({ navigation, route }) {
 						]}
 						onPress={() => navigation.navigate("MapScreen")}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Cancel
-						</Text>
+						<Text style={styles.containerTxt}>Cancel</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
@@ -354,16 +345,7 @@ function CreatePinScreen({ navigation, route }) {
 						]}
 						onPress={validate}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Save pin
-						</Text>
+						<Text style={styles.containerTxt}>Save pin</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -384,6 +366,12 @@ const styles = StyleSheet.create({
 		width: 120,
 		padding: 10,
 		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

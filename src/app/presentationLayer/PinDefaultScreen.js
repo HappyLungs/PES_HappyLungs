@@ -19,8 +19,11 @@ function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
+	const saved = route.params;
 	const media = Array.from(pin.media);
-	const [bookmark, setBookmark] = useState("bookmark-outline");
+	const [bookmark, setBookmark] = useState(
+		saved ? "bookmark" : "bookmark-outline"
+	);
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
 			latitude: pin.location.latitude,
@@ -98,10 +101,12 @@ function PinDefaultScreen({ navigation, route }) {
 					<Text style={[styles.title, { width: "85%" }]}>{pin.name}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
-						onPress={() =>
-							setBookmark(
-								bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
-							)
+						onPress={
+							() =>
+								setBookmark(
+									bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
+								)
+							//add/remove to/from pins list
 						}
 					>
 						<Ionicons
@@ -134,7 +139,7 @@ function PinDefaultScreen({ navigation, route }) {
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.greenHighlight}>See on map</Text>
+					<Text style={styles.highlight}>See on map</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -199,7 +204,7 @@ function PinDefaultScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.greenHighlight}>See Statistics</Text>
+						<Text style={styles.highlight}>See Statistics</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -209,7 +214,7 @@ function PinDefaultScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
 	title: {
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: "bold",
 		alignSelf: "center",
 		color: COLORS.secondary,
@@ -219,7 +224,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.secondary,
 	},
-	greenHighlight: {
+	highlight: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.green1,

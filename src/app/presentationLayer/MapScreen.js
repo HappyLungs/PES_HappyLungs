@@ -246,7 +246,7 @@ function MapScreen({ navigation, route }) {
 						>
 							Selected location
 						</Text>
-						<Text style={styles.greenHighlight}> {actualMarker.title}</Text>
+						<Text style={styles.highlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
 								style={{
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
 		marginStart: 10,
 		color: COLORS.darkGrey,
 	},
-	greenHighlight: {
+	highlight: {
 		marginTop: 5,
 		fontSize: 13,
 		color: COLORS.green1,

@@ -9,23 +9,7 @@ export default class Pin {
 		this.media = media;
 		this.rating = rating;
 		this.date = date;
-		this.status = status;
-		console.log(
-			"name: " +
-				name +
-				" location: " +
-				location +
-				" description: " +
-				description +
-				" media: " +
-				media +
-				" rating: " +
-				rating +
-				" date: " +
-				date +
-				" status: " +
-				status
-		);
+		this.status = status; //"Public" || "Private"
 
 		//add pin to dataBase
 		/*let res = {};

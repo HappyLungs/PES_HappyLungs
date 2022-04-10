@@ -27,7 +27,7 @@ function PinEditScreen({ navigation, route }) {
 	const { pin } = route.params;
 	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
 	const [date, setDate] = useState(pin.date);
-	const [status, setStatus] = useState(pin.status);
+	const [status, setStatus] = useState(pin.status === "Public");
 	const [rating, setRating] = useState(pin.rating);
 	const [media, setMedia] = useState(Array.from(pin.media));
 	const [image1, setImage1] = useState(media[0]);
@@ -61,8 +61,9 @@ function PinEditScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				getDate(),
-				status
+				status === true ? "Public" : "Private"
 			);
+			navigation.popToTop();
 			navigation.navigate("OwnerPin", { pin: editedPin });
 		}
 	};
@@ -342,18 +343,9 @@ function PinEditScreen({ navigation, route }) {
 							styles.shadow,
 							{ backgroundColor: COLORS.red1 },
 						]}
-						onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
+						onPress={() => navigation.popToTop()}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Cancel
-						</Text>
+						<Text style={styles.containerTxt}>Cancel</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
@@ -363,16 +355,7 @@ function PinEditScreen({ navigation, route }) {
 						]}
 						onPress={validate}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Save changes
-						</Text>
+						<Text style={styles.containerTxt}>Save changes</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -393,6 +376,12 @@ const styles = StyleSheet.create({
 		width: 120,
 		padding: 10,
 		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

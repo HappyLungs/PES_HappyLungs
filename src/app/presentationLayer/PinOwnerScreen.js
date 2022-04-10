@@ -174,7 +174,7 @@ function PinOwnerScreen({ navigation, route }) {
 								width: 90,
 								marginStart: 10,
 								borderRadius: 5,
-								backgroundColor: COLORS.green1,
+								backgroundColor: COLORS.secondary,
 							},
 							styles.shadow,
 						]}
@@ -207,7 +207,7 @@ function PinOwnerScreen({ navigation, route }) {
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.greenHighlight}>See on map</Text>
+					<Text style={styles.highlight}>See on map</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -272,7 +272,7 @@ function PinOwnerScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.greenHighlight}>See Statistics</Text>
+						<Text style={styles.highlight}>See Statistics</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -282,7 +282,7 @@ function PinOwnerScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
 	title: {
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: "bold",
 		alignSelf: "center",
 		color: COLORS.secondary,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.secondary,
 	},
-	greenHighlight: {
+	highlight: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.green1,
