@@ -10,7 +10,8 @@ import {
 import COLORS from "../config/stylesheet/colors";
 
 import { Rating } from "react-native-ratings";
-import { ImageSlider } from "react-native-image-slider-banner";
+import ImageCarousel from "./components/ImageCarousel";
+
 import { Ionicons } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
@@ -20,7 +21,6 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const { pin } = route.params;
 	const saved = route.params;
-	const media = Array.from(pin.media);
 	const [bookmark, setBookmark] = useState(
 		saved ? "bookmark" : "bookmark-outline"
 	);
@@ -33,43 +33,6 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const handleShare = () => console.log("Share clicked");
 
-	function renderImageCarousel() {
-		return (
-			<ImageSlider
-				data={
-					media.length > 1
-						? [
-								{
-									img: media[0],
-								},
-								{
-									img: media[1],
-								},
-						  ]
-						: media.length > 0
-						? [
-								{
-									img: media[0],
-								},
-						  ]
-						: [
-								{
-									img: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
-								},
-						  ]
-				}
-				backgroundColor={COLORS.green1}
-				showHeader
-				showIndicator
-				closeIconColor={COLORS.white}
-				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightGrey }}
-				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
-				indicatorContainerStyle={{ top: 15 }}
-			/>
-		);
-	}
-
 	return (
 		<SafeAreaView
 			style={{
@@ -79,16 +42,9 @@ function PinDefaultScreen({ navigation, route }) {
 			}}
 		>
 			<View
-				style={[
-					{
-						height: 250,
-						borderBottomColor: COLORS.secondary,
-						borderBottomWidth: 2,
-					},
-					styles.shadow,
-				]}
+				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
-				{renderImageCarousel()}
+				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{

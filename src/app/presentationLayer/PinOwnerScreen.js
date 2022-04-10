@@ -9,9 +9,9 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import ImageCarousel from "./components/ImageCarousel";
 
 import { Rating } from "react-native-ratings";
-import { ImageSlider } from "react-native-image-slider-banner";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
@@ -20,7 +20,6 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	const media = Array.from(pin.media);
 
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
@@ -79,9 +78,10 @@ function PinOwnerScreen({ navigation, route }) {
 									{ backgroundColor: COLORS.red1, marginStart: 15 },
 									styles.shadow,
 								]}
-								onPress={() =>
-									setDeleteConfirmationVisible(!deleteConfirmationVisible)
-								}
+								onPress={() => {
+									setDeleteConfirmationVisible(!deleteConfirmationVisible);
+									handleDelete();
+								}}
 							>
 								<Text style={styles.textStyle}>Delete</Text>
 							</TouchableOpacity>
@@ -89,44 +89,6 @@ function PinOwnerScreen({ navigation, route }) {
 					</View>
 				</View>
 			</Modal>
-		);
-	}
-
-	function renderImageCarousel() {
-		return (
-			<ImageSlider
-				data={
-					media.length > 1
-						? [
-								{
-									img: media[0],
-								},
-								{
-									img: media[1],
-								},
-						  ]
-						: media.length > 0
-						? [
-								{
-									img: media[0],
-								},
-						  ]
-						: [
-								{
-									img: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
-								},
-						  ]
-				}
-				backgroundColor={COLORS.green1}
-				showHeader
-				showIndicator
-				closeIconColor={COLORS.white}
-				onItemChanged={(item) => console.log("item", item)}
-				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightGrey }}
-				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
-				indicatorContainerStyle={{ top: 15 }}
-			/>
 		);
 	}
 
@@ -139,16 +101,9 @@ function PinOwnerScreen({ navigation, route }) {
 			}}
 		>
 			<View
-				style={[
-					{
-						height: 250,
-						borderBottomColor: COLORS.secondary,
-						borderBottomWidth: 2,
-					},
-					styles.shadow,
-				]}
+				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
-				{renderImageCarousel()}
+				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{

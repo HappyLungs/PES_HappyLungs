@@ -82,6 +82,8 @@ function PinsScreen({ navigation }) {
 			});
 			setFilteredData(newData);
 		}
+		//searchFilter might be necessary
+		//searchFilter(search);
 	};
 
 	const searchFilter = (text) => {

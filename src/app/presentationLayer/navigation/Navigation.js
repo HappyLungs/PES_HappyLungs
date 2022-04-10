@@ -138,8 +138,6 @@ function PinStack() {
 				options={{
 					title: "",
 					...TransitionPresets.SlideFromRightIOS,
-					gestureEnabled: true,
-					gestureDirection: "horizontal",
 				}}
 			/>
 			<Stack.Screen
@@ -148,8 +146,6 @@ function PinStack() {
 				options={{
 					title: "",
 					...TransitionPresets.SlideFromRightIOS,
-					gestureEnabled: true,
-					gestureDirection: "horizontal",
 				}}
 			/>
 			<Stack.Screen
