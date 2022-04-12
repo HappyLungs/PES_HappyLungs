@@ -49,14 +49,19 @@ function PinsScreen({ navigation }) {
 			return standarizeDate(item1.date) <= standarizeDate(item2.date);
 		});
 		setMasterData(data);
-		setFilteredData(data);
-		filterByDate(true);
+		setFilteredData(sortedData);
+		setAuxiliarFilterData(sortedData);
+		//filterByDate(true);
 	};
 
 	const filterBySearch = (text) => {
 		if (text) {
+			if (savedFilter || createdFilter) {
+				setSavedFilter(false);
+				setCreatedFilter(false);
+			}
 			let newData = [];
-			if (savedFilter || createdFilter || ratingFilter || dateFilter) {
+			if (ratingFilter || dateFilter) {
 				newData = filteredData.filter((item) => {
 					const itemData = item.name
 						? item.name.toUpperCase()
@@ -77,7 +82,7 @@ function PinsScreen({ navigation }) {
 			setFilteredData(newData);
 			setSearch(text);
 		} else {
-			if (savedFilter || createdFilter || ratingFilter || dateFilter) {
+			if (ratingFilter || dateFilter) {
 				setFilteredData(auxiliarFilterData);
 			} else {
 				setFilteredData(masterData);
@@ -92,7 +97,7 @@ function PinsScreen({ navigation }) {
 		}
 		if (selected) {
 			let newData = [];
-			if (search != "" || createdFilter || savedFilter) {
+			if (createdFilter || savedFilter) {
 				newData = [...filteredData].sort(function (item1, item2) {
 					return standarizeDate(item1.date) <= standarizeDate(item2.date);
 				});
@@ -104,7 +109,7 @@ function PinsScreen({ navigation }) {
 			}
 			setFilteredData(newData);
 		} else {
-			if (search != "" || createdFilter || savedFilter) {
+			if (createdFilter || savedFilter) {
 				if (createdFilter || savedFilter) setFilteredData(auxiliarFilterData2);
 				else setFilteredData(auxiliarFilterData);
 			} else {
@@ -133,7 +138,7 @@ function PinsScreen({ navigation }) {
 		}
 		if (selected) {
 			let newData = [];
-			if (search != "" || createdFilter || savedFilter) {
+			if (createdFilter || savedFilter) {
 				newData = [...filteredData].sort(function (item1, item2) {
 					return item1.rating <= item2.rating;
 				});
@@ -145,7 +150,7 @@ function PinsScreen({ navigation }) {
 			}
 			setFilteredData(newData);
 		} else {
-			if (search != "" || createdFilter || savedFilter) {
+			if (createdFilter || savedFilter) {
 				if (createdFilter || savedFilter) setFilteredData(auxiliarFilterData2);
 				else setFilteredData(auxiliarFilterData);
 			} else {
@@ -159,7 +164,7 @@ function PinsScreen({ navigation }) {
 	const filterCreated = (selected) => {
 		if (selected) {
 			let newData = [];
-			if (search != "" || dateFilter || ratingFilter || savedFilter) {
+			if (dateFilter || ratingFilter || savedFilter) {
 				if (savedFilter) {
 					setSavedFilter(false);
 					newData = auxiliarFilterData.filter((item, index) => {
@@ -183,7 +188,7 @@ function PinsScreen({ navigation }) {
 			}
 			setFilteredData(newData);
 		} else {
-			if (search != "" || ratingFilter || dateFilter) {
+			if (ratingFilter || dateFilter) {
 				setFilteredData(auxiliarFilterData);
 			} else {
 				setFilteredData(masterData);
@@ -196,7 +201,7 @@ function PinsScreen({ navigation }) {
 	const filterSaved = (selected) => {
 		if (selected) {
 			let newData = [];
-			if (search != "" || dateFilter || ratingFilter || createdFilter) {
+			if (dateFilter || ratingFilter || createdFilter) {
 				if (createdFilter) {
 					setCreatedFilter(false);
 					newData = auxiliarFilterData.filter((item, index) => {
@@ -219,7 +224,7 @@ function PinsScreen({ navigation }) {
 			}
 			setFilteredData(newData);
 		} else {
-			if (search != "" || ratingFilter || dateFilter) {
+			if (ratingFilter || dateFilter) {
 				setFilteredData(auxiliarFilterData);
 			} else {
 				setFilteredData(masterData);
