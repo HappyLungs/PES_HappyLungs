@@ -10,7 +10,8 @@ import {
 import COLORS from "../config/stylesheet/colors";
 
 import { Rating } from "react-native-ratings";
-import { ImageSlider } from "react-native-image-slider-banner";
+import ImageCarousel from "./components/ImageCarousel";
+
 import { Ionicons } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
@@ -19,55 +20,18 @@ function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	const media = Array.from(pin.media);
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-
-	const lat = 41.363094;
-	const lng = 2.112971;
-	const [bookmark, setBookmark] = useState("bookmark-outline");
+	const saved = route.params;
+	const [bookmark, setBookmark] = useState(
+		saved ? "bookmark" : "bookmark-outline"
+	);
 	const handleSeeOnMap = () => {
-		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
+		navigation.navigate("MapScreen", {
+			latitude: pin.location.latitude,
+			longitude: pin.location.longitude,
+		});
 	};
 
 	const handleShare = () => console.log("Share clicked");
-
-	function renderImageCarousel() {
-		return (
-			<ImageSlider
-				data={
-					media.length > 1
-						? [
-								{
-									img: media[0],
-								},
-								{
-									img: media[1],
-								},
-						  ]
-						: media.length > 0
-						? [
-								{
-									img: media[1],
-								},
-						  ]
-						: [
-								{
-									img: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
-								},
-						  ]
-				}
-				backgroundColor={COLORS.green1}
-				showHeader
-				showIndicator
-				closeIconColor={COLORS.white}
-				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
-				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
-				indicatorContainerStyle={{ top: 15 }}
-			/>
-		);
-	}
 
 	return (
 		<SafeAreaView
@@ -78,16 +42,9 @@ function PinDefaultScreen({ navigation, route }) {
 			}}
 		>
 			<View
-				style={[
-					{
-						height: 250,
-						borderBottomColor: COLORS.secondary,
-						borderBottomWidth: 2,
-					},
-					styles.shadow,
-				]}
+				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
-				{renderImageCarousel()}
+				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{
@@ -100,10 +57,12 @@ function PinDefaultScreen({ navigation, route }) {
 					<Text style={[styles.title, { width: "85%" }]}>{pin.name}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
-						onPress={() =>
-							setBookmark(
-								bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
-							)
+						onPress={
+							() =>
+								setBookmark(
+									bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
+								)
+							//add/remove to/from pins list
 						}
 					>
 						<Ionicons
@@ -128,13 +87,15 @@ function PinDefaultScreen({ navigation, route }) {
 						style={{ alignSelf: "center" }}
 						color={COLORS.secondary}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{locationName}</Text>
+					<Text style={[styles.body, { marginStart: 10 }]}>
+						{pin.location.title}
+					</Text>
 				</View>
 				<TouchableOpacity
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.greenHighlight}>See on map</Text>
+					<Text style={styles.highlight}>See on map</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -187,8 +148,8 @@ function PinDefaultScreen({ navigation, route }) {
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
-								lat,
-								lng
+								pin.location.latitude,
+								pin.location.longitude
 							);
 							navigation.navigate("Statistics", { data: data });
 						}}
@@ -199,7 +160,7 @@ function PinDefaultScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.greenHighlight}>See Statistics</Text>
+						<Text style={styles.highlight}>See Statistics</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -209,7 +170,7 @@ function PinDefaultScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
 	title: {
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: "bold",
 		alignSelf: "center",
 		color: COLORS.secondary,
@@ -219,7 +180,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.secondary,
 	},
-	greenHighlight: {
+	highlight: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.green1,

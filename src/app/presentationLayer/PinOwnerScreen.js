@@ -6,15 +6,13 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Modal,
-	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import ImageCarousel from "./components/ImageCarousel";
 
 import { Rating } from "react-native-ratings";
-import { ImageSlider } from "react-native-image-slider-banner";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -22,14 +20,16 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	const media = Array.from(pin.media);
-	const locationName =
-		"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona";
-	const lat = 41.363094;
-	const lng = 2.112971;
-	const [modalVisible, setModalVisible] = useState(false);
+	console.log(pin.date);
+
+	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
+		useState(false);
+
 	const handleSeeOnMap = () => {
-		navigation.navigate("MapScreen", { lat: lat, lgn: lng });
+		navigation.navigate("MapScreen", {
+			latitude: pin.location.latitude,
+			longitude: pin.location.longitude,
+		});
 	};
 
 	const handleEdit = () => {
@@ -38,88 +38,58 @@ function PinOwnerScreen({ navigation, route }) {
 	const handleDelete = () => console.log("Delete clicked");
 	const handleShare = () => console.log("Share clicked");
 
-	function renderModal() {
+	function renderDeleteConfirmation() {
 		return (
 			<Modal
-				animationType="fade"
+				animationType="slide"
 				transparent={true}
-				visible={modalVisible}
+				visible={deleteConfirmationVisible}
 				onRequestClose={() => {
-					setModalVisible(!modalVisible);
+					setDeleteConfirmationVisible(!deleteConfirmationVisible);
 				}}
 			>
 				<View style={styles.centeredView}>
 					<View style={[styles.modalView, styles.shadow]}>
-						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
+						<Text
+							style={[styles.modalText, { fontWeight: "bold", fontSize: 16 }]}
+						>
 							Are you sure?
 						</Text>
-						<Text style={styles.modalText}>
-							Do you really want to delete this pin? This process cannot be
-							undone.
+						<Text style={[styles.modalText, { fontSize: 15 }]}>
+							Do you really want to delete this pin? This cannot be undone.
 						</Text>
-						<View style={{ flexDirection: "row" }}>
-							<Pressable
+						<View
+							style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+						>
+							<TouchableOpacity
 								style={[
-									styles.button,
+									styles.containerBtn,
 									{ backgroundColor: COLORS.secondary },
 									styles.shadow,
 								]}
-								onPress={() => setModalVisible(!modalVisible)}
+								onPress={() =>
+									setDeleteConfirmationVisible(!deleteConfirmationVisible)
+								}
 							>
 								<Text style={styles.textStyle}>Cancel</Text>
-							</Pressable>
-							<Pressable
+							</TouchableOpacity>
+							<TouchableOpacity
 								style={[
-									styles.button,
+									styles.containerBtn,
 									{ backgroundColor: COLORS.red1, marginStart: 15 },
 									styles.shadow,
 								]}
-								onPress={() => setModalVisible(!modalVisible)}
+								onPress={() => {
+									setDeleteConfirmationVisible(!deleteConfirmationVisible);
+									handleDelete();
+								}}
 							>
 								<Text style={styles.textStyle}>Delete</Text>
-							</Pressable>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
 			</Modal>
-		);
-	}
-
-	function renderImageCarousel() {
-		return (
-			<ImageSlider
-				data={
-					media.length > 1
-						? [
-								{
-									img: media[0],
-								},
-								{
-									img: media[1],
-								},
-						  ]
-						: media.length > 0
-						? [
-								{
-									img: media[0],
-								},
-						  ]
-						: [
-								{
-									img: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
-								},
-						  ]
-				}
-				backgroundColor={COLORS.green1}
-				showHeader
-				showIndicator
-				closeIconColor={COLORS.white}
-				onItemChanged={(item) => console.log("item", item)}
-				caroselImageStyle={{ height: 250 }}
-				inActiveIndicatorStyle={{ backgroundColor: COLORS.lightgrey }}
-				activeIndicatorStyle={{ backgroundColor: COLORS.white }}
-				indicatorContainerStyle={{ top: 15 }}
-			/>
 		);
 	}
 
@@ -132,16 +102,9 @@ function PinOwnerScreen({ navigation, route }) {
 			}}
 		>
 			<View
-				style={[
-					{
-						height: 250,
-						borderBottomColor: COLORS.secondary,
-						borderBottomWidth: 2,
-					},
-					styles.shadow,
-				]}
+				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
-				{renderImageCarousel()}
+				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{
@@ -154,7 +117,7 @@ function PinOwnerScreen({ navigation, route }) {
 					<Text style={[styles.title, { width: "65%" }]}>{pin.name}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
-						onPress={() => setModalVisible(true)}
+						onPress={() => setDeleteConfirmationVisible(true)}
 					>
 						<Feather name="trash-2" color={COLORS.red1} size={20} />
 					</TouchableOpacity>
@@ -167,7 +130,7 @@ function PinOwnerScreen({ navigation, route }) {
 								width: 90,
 								marginStart: 10,
 								borderRadius: 5,
-								backgroundColor: COLORS.green1,
+								backgroundColor: COLORS.secondary,
 							},
 							styles.shadow,
 						]}
@@ -177,7 +140,7 @@ function PinOwnerScreen({ navigation, route }) {
 						<Text style={[styles.textStyle, { marginStart: 5 }]}> Edit</Text>
 					</TouchableOpacity>
 				</View>
-				{renderModal()}
+				{renderDeleteConfirmation()}
 				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
 				<View
 					style={{
@@ -192,13 +155,15 @@ function PinOwnerScreen({ navigation, route }) {
 						style={{ alignSelf: "center" }}
 						color={COLORS.secondary}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{locationName}</Text>
+					<Text style={[styles.body, { marginStart: 10 }]}>
+						{pin.location.title}
+					</Text>
 				</View>
 				<TouchableOpacity
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.greenHighlight}>See on map</Text>
+					<Text style={styles.highlight}>See on map</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -251,8 +216,8 @@ function PinOwnerScreen({ navigation, route }) {
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
-								lat,
-								lng
+								pin.location.latitude,
+								pin.location.longitude
 							);
 							navigation.navigate("Statistics", { data: data });
 						}}
@@ -263,7 +228,7 @@ function PinOwnerScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.greenHighlight}>See Statistics</Text>
+						<Text style={styles.highlight}>See Statistics</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -273,7 +238,7 @@ function PinOwnerScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
 	title: {
-		fontSize: 22,
+		fontSize: 20,
 		fontWeight: "bold",
 		alignSelf: "center",
 		color: COLORS.secondary,
@@ -283,7 +248,7 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: COLORS.secondary,
 	},
-	greenHighlight: {
+	highlight: {
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.green1,
@@ -300,21 +265,24 @@ const styles = StyleSheet.create({
 	},
 	centeredView: {
 		flex: 1,
-		justifyContent: "center",
+		justifyContent: "flex-end",
 		alignItems: "center",
 		marginTop: 22,
 	},
 	modalView: {
-		margin: 20,
 		backgroundColor: COLORS.white,
-		borderRadius: 15,
+		borderColor: COLORS.secondary,
+		borderTopWidth: 2,
 		padding: 15,
-		alignItems: "center",
+		backgroundColor: COLORS.white,
 	},
 	button: {
-		borderRadius: 10,
-		padding: 10,
 		elevation: 2,
+	},
+	containerBtn: {
+		width: 90,
+		padding: 10,
+		borderRadius: 5,
 	},
 	textStyle: {
 		color: COLORS.white,

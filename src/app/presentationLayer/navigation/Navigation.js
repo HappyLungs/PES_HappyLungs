@@ -87,6 +87,7 @@ function RootStack() {
 				component={MapScreen}
 				options={{
 					title: "Happy Lungs",
+					headerShown: false,
 				}}
 				initialParams={{ tmpLat: false, tmpLng: false }}
 			/>
@@ -127,6 +128,7 @@ function PinStack() {
 				component={PinsScreen}
 				options={{
 					title: "My Pins",
+					headerShown: false,
 				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
@@ -136,8 +138,6 @@ function PinStack() {
 				options={{
 					title: "",
 					...TransitionPresets.SlideFromRightIOS,
-					gestureEnabled: true,
-					gestureDirection: "horizontal",
 				}}
 			/>
 			<Stack.Screen
@@ -146,8 +146,6 @@ function PinStack() {
 				options={{
 					title: "",
 					...TransitionPresets.SlideFromRightIOS,
-					gestureEnabled: true,
-					gestureDirection: "horizontal",
 				}}
 			/>
 			<Stack.Screen

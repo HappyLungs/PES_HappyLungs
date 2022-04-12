@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import Input from "./components/Input";
+import InputField from "./components/InputField";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -58,8 +58,8 @@ function CreatePinScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				getDate(),
-				status
+				transformDate(date),
+				status === true ? "Public" : "False"
 			);
 			navigation.navigate("MapScreen");
 		}
@@ -101,15 +101,30 @@ function CreatePinScreen({ navigation, route }) {
 	};
 
 	const handleConfirmDate = (date) => {
-		setDate(date);
 		hideDatePicker();
+		setDate(date);
 	};
 
-	const getDate = () => {
-		let tempDate = date.toString().split(" ");
-		return date !== ""
-			? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
-			: "";
+	const transformDate = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const standarizeDate = () => {
+		var tmp = transformDate(date);
+		var standarizedDate = "";
+		return standarizedDate.concat(
+			tmp.slice(3, 5),
+			"/",
+			tmp.slice(0, 2),
+			"/",
+			tmp.slice(6, 10)
+		);
 	};
 
 	function renderImageSelector() {
@@ -232,6 +247,7 @@ function CreatePinScreen({ navigation, route }) {
 					<DateTimePickerModal
 						//style={styles.datePickerStyle}
 						mode="date"
+						date={new Date(standarizeDate())}
 						onConfirm={handleConfirmDate}
 						onCancel={hideDatePicker}
 						isVisible={isDatePickerVisible}
@@ -246,7 +262,7 @@ function CreatePinScreen({ navigation, route }) {
 					}}
 				>
 					{" "}
-					{getDate()}
+					{transformDate(date)}
 				</Text>
 			</View>
 		);
@@ -286,7 +302,7 @@ function CreatePinScreen({ navigation, route }) {
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{[coords.latitude, "   ", coords.longitude]}
 				</Text>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
@@ -294,7 +310,7 @@ function CreatePinScreen({ navigation, route }) {
 					placeholder="Enter the pin title"
 					error={errors.title}
 				/>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
@@ -320,36 +336,32 @@ function CreatePinScreen({ navigation, route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinStatusSelector()}
-				<View style={{ flexDirection: "row" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-around",
+						marginTop: 10,
+					}}
+				>
 					<TouchableOpacity
-						style={[styles.containerCancelBtn, styles.shadow]}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.red1 },
+						]}
 						onPress={() => navigation.navigate("MapScreen")}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Cancel
-						</Text>
+						<Text style={styles.containerTxt}>Cancel</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={[styles.containerSaveBtn, styles.shadow]}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.green1 },
+						]}
 						onPress={validate}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Save pin
-						</Text>
+						<Text style={styles.containerTxt}>Save pin</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -366,29 +378,16 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		color: COLORS.secondary,
 	},
-	containerSaveBtn: {
-		width: 110,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
+	containerBtn: {
+		width: 120,
 		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.green1,
+		borderRadius: 5,
 	},
-	containerCancelBtn: {
-		width: 110,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
-		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.red1,
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

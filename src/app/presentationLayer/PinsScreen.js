@@ -1,169 +1,497 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-	Text,
 	StyleSheet,
 	View,
+	SafeAreaView,
+	Text,
+	TextInput,
 	TouchableOpacity,
-	ImageBackground,
+	ScrollView,
+	FlatList,
 } from "react-native";
-import { FlatGrid } from "react-native-super-grid";
 
 import COLORS from "../config/stylesheet/colors";
+import PinList from "./components/PinList";
+const PresentationCtrl = require("./PresentationCtrl.js");
 
-import Pin from "../domainLayer/classes/Pin"; //elimnar fake
+import { MaterialIcons } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 function PinsScreen({ navigation }) {
-	const getDate = (date) => {
-		let tempDate = date.toString().split(" ");
-		return date !== ""
-			? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
-			: "";
-	};
-	//fake
-	let pin = new Pin(
-		"FIB UPC",
-		{ latitude: 41.38941, longitude: 2.113436 },
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-		[
-			"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
-			"https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg",
-		],
-		4,
-		getDate(new Date()),
-		true
-	);
-	const [items, setItems] = React.useState([
-		{ name: "UPC FIB", code: COLORS.secondary, date: pin.date },
-		{ name: "PALAU REIAL", code: COLORS.secondary, date: pin.date },
-		{ name: "CAMP NOU", code: COLORS.secondary, date: pin.date },
-	]);
+	let presentationCtrl = new PresentationCtrl();
 
-	return (
-		<View style={styles.background}>
-			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
+	const [masterData, setMasterData] = useState([]);
+	const [filteredData, setFilteredData] = useState([]);
+	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
+	const [auxiliarFilterData2, setAuxiliarFilterData2] = useState([]);
+	const [search, setSearch] = useState("");
+	const [dateFilter, setDateFilter] = useState(true);
+	const [ratingFilter, setRatingFilter] = useState(false);
+	const [createdFilter, setCreatedFilter] = useState(false);
+	const [savedFilter, setSavedFilter] = useState(false);
+
+	const AnimationRefFilter1 = useRef(null);
+	const AnimationRefFilter2 = useRef(null);
+	const AnimationRefFilter3 = useRef(null);
+	const AnimationRefFilter4 = useRef(null);
+	const isMyPin = [true, false, true, false, true, true];
+
+	useEffect(() => {
+		fetchPins();
+		return () => {};
+	}, []);
+
+	const fetchPins = async () => {
+		//get pins from db
+		//ought to fetch them before navigate
+		const data = await presentationCtrl.fetchPins();
+		const sortedData = [...data].sort(function (item1, item2) {
+			return standarizeDate(item1.date) <= standarizeDate(item2.date);
+		});
+		setMasterData(data);
+		setFilteredData(sortedData);
+		setAuxiliarFilterData(sortedData);
+	};
+
+	const filterBySearch = (text) => {
+		if (text) {
+			setAuxiliarFilterData(filteredData);
+			setFilteredData(
+				masterData.filter((item) => {
+					const itemData = item.name
+						? item.name.toUpperCase()
+						: "".toUpperCase();
+					const textData = text.toUpperCase();
+					return itemData.indexOf(textData) > -1;
+				})
+			);
+		} else {
+			setFilteredData(masterData);
+		}
+		setSearch(text);
+	};
+
+	const filterByDateAuxiliar = (data) => {
+		return [...data].sort(function (item1, item2) {
+			return standarizeDate(item1.date) <= standarizeDate(item2.date);
+		});
+	};
+
+	const standarizeDate = (date) => {
+		var standarizedDate = "";
+		return standarizedDate.concat(
+			date.slice(6, 10),
+			"/",
+			date.slice(3, 5),
+			"/",
+			date.slice(0, 2)
+		);
+	};
+
+	const filterByDate = () => {
+		if (!dateFilter) {
+			let newData = [];
+			if (createdFilter || savedFilter) {
+				newData = filterByDateAuxiliar(filteredData);
+			} else {
+				newData = filterByDateAuxiliar(masterData);
+				setAuxiliarFilterData(newData);
+			}
+			setFilteredData(newData);
+		} else {
+			if (createdFilter || savedFilter) {
+				setFilteredData(auxiliarFilterData2);
+			} else {
+				setFilteredData(masterData);
+				setAuxiliarFilterData(masterData);
+			}
+		}
+		setDateFilter(!dateFilter);
+	};
+
+	const filterByRatingAuxiliar = (data) => {
+		return [...data].sort(function (item1, item2) {
+			return item1.rating <= item2.rating;
+		});
+	};
+
+	const filterByRating = () => {
+		if (!ratingFilter) {
+			let newData = [];
+			if (createdFilter || savedFilter) {
+				newData = filterByRatingAuxiliar(filteredData);
+			} else {
+				newData = filterByRatingAuxiliar(masterData);
+				setAuxiliarFilterData(newData);
+			}
+			setFilteredData(newData);
+		} else {
+			if (createdFilter || savedFilter) {
+				setFilteredData(auxiliarFilterData2);
+			} else {
+				setFilteredData(masterData);
+				setAuxiliarFilterData(masterData);
+			}
+		}
+		setRatingFilter(!ratingFilter);
+	};
+
+	const filterCreated = () => {
+		if (!createdFilter) {
+			let newData = [];
+			if (savedFilter) {
+				setSavedFilter(false);
+				newData = auxiliarFilterData.filter((item, index) => {
+					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
+			} else if (dateFilter || ratingFilter) {
+				newData = filteredData.filter((item, index) => {
+					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
+			} else {
+				newData = masterData.filter((item, index) => {
+					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData(filteredData);
+			}
+			setFilteredData(newData);
+		} else {
+			if (ratingFilter || dateFilter) {
+				setFilteredData(auxiliarFilterData);
+			} else {
+				setFilteredData(masterData);
+				setAuxiliarFilterData(masterData);
+			}
+		}
+		setCreatedFilter(!createdFilter);
+	};
+
+	const filterSaved = () => {
+		if (!savedFilter) {
+			let newData = [];
+			if (createdFilter) {
+				setCreatedFilter(false);
+				newData = auxiliarFilterData.filter((item, index) => {
+					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
+			} else if (ratingFilter || createdFilter) {
+				newData = filteredData.filter((item, index) => {
+					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
+			} else {
+				newData = masterData.filter((item, index) => {
+					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData(filteredData);
+			}
+			setFilteredData(newData);
+		} else {
+			if (ratingFilter || dateFilter) {
+				setFilteredData(auxiliarFilterData);
+			} else {
+				setFilteredData(masterData);
+				setAuxiliarFilterData(masterData);
+			}
+		}
+		setSavedFilter(!savedFilter);
+	};
+
+	function renderHeader() {
+		return (
+			<View
+				style={[
+					{
+						flexDirection: "row",
+						paddingHorizontal: 20,
+						alignItems: "center",
+						backgroundColor: COLORS.white,
+						borderBottomLeftRadius: 20,
+						borderBottomRightRadius: 20,
+					},
+					styles.shadow,
+				]}
 			>
-				<Text style={styles.btnText}>Pin Owner View</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.btn}
-				onPress={() => navigation.navigate("DefaultPin", { pin: pin })}
-			>
-				<Text style={styles.btnText}>Pin Default View</Text>
-			</TouchableOpacity>
-			<FlatGrid
-				itemDimension={130}
-				data={items}
-				style={styles.gridView}
-				// staticDimension={300}
-				// fixed
-				spacing={10}
-				renderItem={({ item }) => (
-					<View
+				<View
+					style={{
+						flex: 1,
+						flexDirection: "column",
+					}}
+				>
+					<Text
 						style={[
-							styles.itemContainer,
-							{ borderWidth: 2, borderColor: item.code },
+							{
+								fontSize: 20,
+								fontWeight: "bold",
+								color: COLORS.secondary,
+								marginTop: 35,
+								marginBottom: 10,
+							},
 						]}
 					>
-						<ImageBackground
-							source={{
-								uri: pin.media[0],
-							}}
-							style={{
-								width: 175,
-								height: 145,
-								justifyContent: "flex-end",
-							}}
-							imageStyle={{ borderRadius: 5 }}
+						My Pins
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+						}}
+					>
+						<View
+							style={[
+								{
+									backgroundColor: COLORS.lightGrey,
+									height: 40,
+									borderRadius: 12,
+									flexDirection: "row",
+								},
+								styles.shadow,
+							]}
 						>
-							<View
-								style={{
-									alignSelf: "flex-start",
-									padding: 3,
-									paddingHorizontal: 10,
-									width: "100%",
-									borderTopRightRadius: 3,
-									borderTopLeftRadius: 3,
-									backgroundColor: COLORS.white,
+							<MaterialIcons
+								name="search"
+								style={{ alignSelf: "center", marginStart: 10 }}
+								color={COLORS.secondary}
+								size={35}
+							/>
+							<TextInput
+								multiline={false}
+								maxLength={30}
+								width={175}
+								value={search}
+								style={[styles.body, { marginStart: 10 }]}
+								placeholder={"Search"}
+								onChangeText={(text) => {
+									setDateFilter(false);
+									setRatingFilter(false);
+									setCreatedFilter(false);
+									setSavedFilter(false);
+									filterBySearch(text);
 								}}
-							>
-								<Text style={styles.itemName}>{item.name}</Text>
-								<Text style={styles.itemCode}>{item.date}</Text>
-							</View>
-							<View
-								style={{
-									position: "absolute",
-									right: "-1%",
-									bottom: "86%",
-									width: 50,
-									borderBottomWidth: 1,
-									borderLeftWidth: 1,
-									backgroundColor: "#3498db",
-									borderColor: item.code,
-									borderRadius: 3,
-									padding: 3,
-								}}
-							>
-								<Text style={styles.status}>PRIVATE</Text>
-							</View>
-						</ImageBackground>
+							/>
+						</View>
 					</View>
-				)}
-			/>
-		</View>
+					<ScrollView
+						horizontal={true}
+						showsHorizontalScrollIndicator={false}
+						style={{
+							flexDirection: "row",
+							marginVertical: 15,
+							height: 40,
+						}}
+						contentContainerStyle={{
+							justifyContent: "space-evenly",
+							alignItems: "center",
+						}}
+					>
+						<TouchableOpacity
+							style={[
+								{
+									borderRadius: 12,
+									borderColor: COLORS.lightGrey,
+									borderWidth: 1,
+									marginHorizontal: 7,
+								},
+								dateFilter ? styles.shadowSelected : styles.shadow,
+							]}
+							onPress={() => {
+								setSearch("");
+								setRatingFilter(false);
+								filterByDate();
+								AnimationRefFilter1.current?.pulse(1000);
+							}}
+						>
+							<Animatable.View
+								ref={AnimationRefFilter1}
+								style={{
+									backgroundColor: dateFilter ? COLORS.green1 : COLORS.white,
+									borderRadius: 12,
+									height: 30,
+									justifyContent: "center",
+									alignItems: "center",
+									paddingHorizontal: 15,
+								}}
+								animation="pulse"
+								duration={1000}
+								onPress={{}}
+							>
+								<Text
+									style={[
+										styles.containerTxt,
+										{ color: dateFilter ? COLORS.white : COLORS.secondary },
+									]}
+								>
+									Most Recent
+								</Text>
+							</Animatable.View>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								{
+									borderRadius: 12,
+									borderColor: COLORS.lightGrey,
+									borderWidth: 1,
+									marginHorizontal: 7,
+								},
+								ratingFilter ? styles.shadowSelected : styles.shadow,
+							]}
+							onPress={() => {
+								setSearch("");
+								setDateFilter(false);
+								filterByRating();
+								AnimationRefFilter2.current?.pulse(1000);
+							}}
+						>
+							<Animatable.View
+								ref={AnimationRefFilter2}
+								style={{
+									backgroundColor: ratingFilter ? COLORS.green1 : COLORS.white,
+									height: 30,
+									paddingHorizontal: 15,
+									borderRadius: 12,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								animation="pulse"
+								duration={1000}
+							>
+								<Text
+									style={[
+										styles.containerTxt,
+										{ color: ratingFilter ? COLORS.white : COLORS.secondary },
+									]}
+								>
+									Best Rated
+								</Text>
+							</Animatable.View>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								{
+									borderRadius: 12,
+									borderColor: COLORS.lightGrey,
+									borderWidth: 1,
+									marginHorizontal: 7,
+								},
+								createdFilter ? styles.shadowSelected : styles.shadow,
+							]}
+							onPress={() => {
+								setSearch("");
+								filterCreated();
+								AnimationRefFilter3.current?.pulse(1000);
+							}}
+						>
+							<Animatable.View
+								ref={AnimationRefFilter3}
+								style={{
+									backgroundColor: createdFilter ? COLORS.green1 : COLORS.white,
+									height: 30,
+									paddingHorizontal: 15,
+									borderRadius: 12,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								animation="pulse"
+								duration={1000}
+							>
+								<Text
+									style={[
+										styles.containerTxt,
+										{ color: createdFilter ? COLORS.white : COLORS.secondary },
+									]}
+								>
+									Created
+								</Text>
+							</Animatable.View>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								{
+									borderRadius: 12,
+									borderColor: COLORS.lightGrey,
+									borderWidth: 1,
+									marginHorizontal: 7,
+								},
+								savedFilter ? styles.shadowSelected : styles.shadow,
+							]}
+							onPress={() => {
+								setSearch("");
+								filterSaved();
+								AnimationRefFilter4.current?.pulse(1000);
+							}}
+						>
+							<Animatable.View
+								ref={AnimationRefFilter4}
+								style={{
+									backgroundColor: savedFilter ? COLORS.green1 : COLORS.white,
+									height: 30,
+									paddingHorizontal: 15,
+									borderRadius: 12,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								animation="pulse"
+								duration={1000}
+								onPress={{}}
+							>
+								<Text
+									style={[
+										styles.containerTxt,
+										{ color: savedFilter ? COLORS.white : COLORS.secondary },
+									]}
+								>
+									Saved
+								</Text>
+							</Animatable.View>
+						</TouchableOpacity>
+					</ScrollView>
+				</View>
+			</View>
+		);
+	}
+
+	return (
+		<SafeAreaView
+			style={{
+				flex: 1,
+				backgroundColor: COLORS.light,
+				flexDirection: "column",
+			}}
+		>
+			{renderHeader()}
+			<View style={[{ flex: 1, paddingHorizontal: 20 }]}>
+				<PinList pinList={filteredData} navigation={navigation}></PinList>
+			</View>
+		</SafeAreaView>
 	);
 }
 
 //https://wix.github.io/react-native-navigation/docs/style-animations/
 
 const styles = StyleSheet.create({
-	background: {
-		flex: 1,
-		backgroundColor: COLORS.white,
-		justifyContent: "flex-start",
-		paddingTop: Platform.OS === "android" ? 30 : 0,
-		alignItems: "center",
-	},
-	btn: {
-		justifyContent: "center",
-		borderRadius: 5,
-		borderBottomWidth: 5,
-		borderRadius: 5,
-		width: 100,
-		height: 50,
-		borderBottomColor: COLORS.darkGrey,
-		backgroundColor: COLORS.secondary,
-	},
-	btnText: {
-		color: COLORS.white,
-		textAlign: "center",
-		fontWeight: "bold",
-	},
-	gridView: {
-		marginTop: 10,
-		flex: 1,
-	},
-	itemContainer: {
-		borderRadius: 5,
-		height: 150,
-		width: 180,
-	},
-	itemName: {
+	body: {
 		fontSize: 15,
-		fontWeight: "bold",
-		color: COLORS.secondary,
+		color: COLORS.darkGrey,
 	},
-	itemCode: {
-		fontSize: 12,
+	containerTxt: {
+		fontSize: 13,
 		fontWeight: "bold",
-		color: COLORS.green1,
 	},
-	status: {
-		alignSelf: "center",
-		fontSize: 10,
-		fontWeight: "bold",
-		color: COLORS.white,
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	shadowSelected: {
+		elevation: 10,
+		shadowColor: COLORS.green1,
 	},
 });
 
