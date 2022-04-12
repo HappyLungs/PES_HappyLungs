@@ -31,6 +31,7 @@ const PinList = ({ pinList, navigation }) => {
 					{
 						borderRadius: 10,
 						backgroundColor: COLORS.white,
+						marginBottom: 10,
 					},
 				]}
 			>
@@ -211,8 +212,7 @@ const PinList = ({ pinList, navigation }) => {
 					<View
 						style={{
 							width: "100%",
-							height: 20,
-							backgroundColor: COLORS.light,
+							marginTop: 10,
 						}}
 					></View>
 				);
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
-		elevation: 5,
+		elevation: 8,
 	},
 });
 

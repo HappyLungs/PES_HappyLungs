@@ -20,6 +20,7 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
+	console.log(pin.date);
 
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);

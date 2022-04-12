@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import Input from "./components/Input";
+import InputField from "./components/InputField";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -60,7 +60,7 @@ function PinEditScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				getDate(),
+				date,
 				status === true ? "Public" : "Private"
 			);
 			navigation.popToTop();
@@ -108,15 +108,29 @@ function PinEditScreen({ navigation, route }) {
 	};
 
 	const handleConfirmDate = (date) => {
-		setDate(date);
 		hideDatePicker();
+		setDate(transformDate(date));
 	};
 
-	const getDate = () => {
-		let tempDate = date.toString().split(" ");
-		return date !== ""
-			? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
-			: "";
+	const transformDate = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const standarizeDate = () => {
+		var standarizedDate = "";
+		return standarizedDate.concat(
+			date.slice(3, 5),
+			"/",
+			date.slice(0, 2),
+			"/",
+			date.slice(6, 10)
+		);
 	};
 
 	function renderImageSelector() {
@@ -236,8 +250,8 @@ function PinEditScreen({ navigation, route }) {
 						size={25}
 					/>
 					<DateTimePickerModal
-						//style={styles.datePickerStyle}
 						mode="date"
+						date={new Date(standarizeDate())}
 						onConfirm={handleConfirmDate}
 						onCancel={hideDatePicker}
 						isVisible={isDatePickerVisible}
@@ -252,7 +266,7 @@ function PinEditScreen({ navigation, route }) {
 					}}
 				>
 					{" "}
-					{getDate()}
+					{date}
 				</Text>
 			</View>
 		);
@@ -293,7 +307,7 @@ function PinEditScreen({ navigation, route }) {
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{locationName}
 				</Text>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
@@ -301,7 +315,7 @@ function PinEditScreen({ navigation, route }) {
 					label="Title"
 					error={errors.title}
 				/>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"

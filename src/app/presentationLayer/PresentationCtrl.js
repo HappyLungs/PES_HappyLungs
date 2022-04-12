@@ -150,8 +150,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 				"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
 				"https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg",
 			],
-			4,
-			"Fri Apr 08 2022",
+			5,
+			"03/04/2022",
 			"Public"
 		),
 		new Pin(
@@ -165,8 +165,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			[
 				"https://www.bcncatfilmcommission.com/sites/default/files/styles/fancybox/public/locations/Districte%20(3).jpg",
 			],
-			4,
-			"Fri Apr 08 2022",
+			4.5,
+			"11/04/2022",
 			"Private"
 		),
 		new Pin(
@@ -179,7 +179,7 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
 			4,
-			"Fri Apr 08 2022",
+			"09/04/2022",
 			"Public"
 		),
 		new Pin(
@@ -191,8 +191,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			},
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			4,
-			"Fri Apr 08 2022",
+			5,
+			"10/04/2022",
 			"Private"
 		),
 		new Pin(
@@ -204,8 +204,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			},
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			4,
-			"Fri Apr 08 2022",
+			2,
+			"11/03/2022",
 			"Public"
 		),
 		new Pin(
@@ -217,8 +217,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			},
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			4,
-			"Fri Apr 08 2022",
+			1,
+			"12/04/2022",
 			"Public"
 		),
 	];

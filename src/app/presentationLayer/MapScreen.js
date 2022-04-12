@@ -436,6 +436,8 @@ function MapScreen({ navigation, route }) {
 						paddingHorizontal: 20,
 						alignItems: "center",
 						backgroundColor: COLORS.white,
+						borderBottomLeftRadius: 20,
+						borderBottomRightRadius: 20,
 					},
 					styles.shadow,
 				]}
