@@ -2,7 +2,7 @@ To develop each task we are going to create a new branch. First we get info abou
 
 ```
 git stash
-git checkout -b Branch/Of/Task
+git checkout -b numTask/layer/function
 ```
 
 Execute the following commands to push:
@@ -15,4 +15,4 @@ git pull
 git push
 ```
 
-To merge your branch with the main branch go to github > branches and push the botton "New pull request"
+To merge your branch with the main branch go to github > branches and push the botton "New pull request". Add as reviewer someone who would need your code.
