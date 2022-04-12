@@ -56,42 +56,26 @@ function PinsScreen({ navigation }) {
 
 	const filterBySearch = (text) => {
 		if (text) {
-			if (savedFilter || createdFilter) {
-				setSavedFilter(false);
-				setCreatedFilter(false);
-			}
-			let newData = [];
-			if (ratingFilter || dateFilter) {
-				newData = filteredData.filter((item) => {
-					const itemData = item.name
-						? item.name.toUpperCase()
-						: "".toUpperCase();
-					const textData = text.toUpperCase();
-					return itemData.indexOf(textData) > -1;
-				});
-			} else {
-				newData = masterData.filter((item) => {
-					const itemData = item.name
-						? item.name.toUpperCase()
-						: "".toUpperCase();
-					const textData = text.toUpperCase();
-					return itemData.indexOf(textData) > -1;
-				});
-				setAuxiliarFilterData(filteredData);
-			}
+			setDateFilter(false);
+			setRatingFilter(false);
+			setCreatedFilter(false);
+			setSavedFilter(false);
+			let newData = masterData.filter((item) => {
+				const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+				const textData = text.toUpperCase();
+				return itemData.indexOf(textData) > -1;
+			});
+			setAuxiliarFilterData(filteredData);
 			setFilteredData(newData);
 			setSearch(text);
 		} else {
-			if (ratingFilter || dateFilter) {
-				setFilteredData(auxiliarFilterData);
-			} else {
-				setFilteredData(masterData);
-			}
+			setFilteredData(masterData);
 			setSearch(text);
 		}
 	};
 
 	const filterByDate = (selected) => {
+		setSearch("");
 		if (ratingFilter) {
 			setRatingFilter(false);
 		}
@@ -132,6 +116,8 @@ function PinsScreen({ navigation }) {
 	};
 
 	const filterByRating = (selected) => {
+		setSearch("");
+
 		if (dateFilter) {
 			setDateFilter(false);
 			//zero filter
@@ -162,6 +148,8 @@ function PinsScreen({ navigation }) {
 	};
 
 	const filterCreated = (selected) => {
+		setSearch("");
+
 		if (selected) {
 			let newData = [];
 			if (dateFilter || ratingFilter || savedFilter) {
@@ -199,6 +187,7 @@ function PinsScreen({ navigation }) {
 	};
 
 	const filterSaved = (selected) => {
+		setSearch("");
 		if (selected) {
 			let newData = [];
 			if (dateFilter || ratingFilter || createdFilter) {
