@@ -51,57 +51,30 @@ function PinsScreen({ navigation }) {
 		setMasterData(data);
 		setFilteredData(sortedData);
 		setAuxiliarFilterData(sortedData);
-		//filterByDate(true);
 	};
 
 	const filterBySearch = (text) => {
 		if (text) {
-			setDateFilter(false);
-			setRatingFilter(false);
-			setCreatedFilter(false);
-			setSavedFilter(false);
-			let newData = masterData.filter((item) => {
-				const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
-				const textData = text.toUpperCase();
-				return itemData.indexOf(textData) > -1;
-			});
 			setAuxiliarFilterData(filteredData);
-			setFilteredData(newData);
-			setSearch(text);
+			setFilteredData(
+				masterData.filter((item) => {
+					const itemData = item.name
+						? item.name.toUpperCase()
+						: "".toUpperCase();
+					const textData = text.toUpperCase();
+					return itemData.indexOf(textData) > -1;
+				})
+			);
 		} else {
 			setFilteredData(masterData);
-			setSearch(text);
 		}
+		setSearch(text);
 	};
 
-	const filterByDate = (selected) => {
-		setSearch("");
-		if (ratingFilter) {
-			setRatingFilter(false);
-		}
-		if (selected) {
-			let newData = [];
-			if (createdFilter || savedFilter) {
-				newData = [...filteredData].sort(function (item1, item2) {
-					return standarizeDate(item1.date) <= standarizeDate(item2.date);
-				});
-			} else {
-				newData = [...masterData].sort(function (item1, item2) {
-					return standarizeDate(item1.date) <= standarizeDate(item2.date);
-				});
-				setAuxiliarFilterData(newData);
-			}
-			setFilteredData(newData);
-		} else {
-			if (createdFilter || savedFilter) {
-				if (createdFilter || savedFilter) setFilteredData(auxiliarFilterData2);
-				else setFilteredData(auxiliarFilterData);
-			} else {
-				setFilteredData(masterData);
-				setAuxiliarFilterData(masterData);
-			}
-		}
-		setDateFilter(!dateFilter);
+	const filterByDateAuxiliar = (data) => {
+		return [...data].sort(function (item1, item2) {
+			return standarizeDate(item1.date) <= standarizeDate(item2.date);
+		});
 	};
 
 	const standarizeDate = (date) => {
@@ -115,30 +88,46 @@ function PinsScreen({ navigation }) {
 		);
 	};
 
-	const filterByRating = (selected) => {
-		setSearch("");
-
-		if (dateFilter) {
-			setDateFilter(false);
-			//zero filter
-		}
-		if (selected) {
+	const filterByDate = () => {
+		if (!dateFilter) {
 			let newData = [];
 			if (createdFilter || savedFilter) {
-				newData = [...filteredData].sort(function (item1, item2) {
-					return item1.rating <= item2.rating;
-				});
+				newData = filterByDateAuxiliar(filteredData);
 			} else {
-				newData = [...masterData].sort(function (item1, item2) {
-					return item1.rating <= item2.rating;
-				});
+				newData = filterByDateAuxiliar(masterData);
 				setAuxiliarFilterData(newData);
 			}
 			setFilteredData(newData);
 		} else {
 			if (createdFilter || savedFilter) {
-				if (createdFilter || savedFilter) setFilteredData(auxiliarFilterData2);
-				else setFilteredData(auxiliarFilterData);
+				setFilteredData(auxiliarFilterData2);
+			} else {
+				setFilteredData(masterData);
+				setAuxiliarFilterData(masterData);
+			}
+		}
+		setDateFilter(!dateFilter);
+	};
+
+	const filterByRatingAuxiliar = (data) => {
+		return [...data].sort(function (item1, item2) {
+			return item1.rating <= item2.rating;
+		});
+	};
+
+	const filterByRating = () => {
+		if (!ratingFilter) {
+			let newData = [];
+			if (createdFilter || savedFilter) {
+				newData = filterByRatingAuxiliar(filteredData);
+			} else {
+				newData = filterByRatingAuxiliar(masterData);
+				setAuxiliarFilterData(newData);
+			}
+			setFilteredData(newData);
+		} else {
+			if (createdFilter || savedFilter) {
+				setFilteredData(auxiliarFilterData2);
 			} else {
 				setFilteredData(masterData);
 				setAuxiliarFilterData(masterData);
@@ -147,27 +136,20 @@ function PinsScreen({ navigation }) {
 		setRatingFilter(!ratingFilter);
 	};
 
-	const filterCreated = (selected) => {
-		setSearch("");
-
-		if (selected) {
+	const filterCreated = () => {
+		if (!createdFilter) {
 			let newData = [];
-			if (dateFilter || ratingFilter || savedFilter) {
-				if (savedFilter) {
-					setSavedFilter(false);
-					newData = auxiliarFilterData.filter((item, index) => {
-						return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-					});
-				} else {
-					newData = filteredData.filter((item, index) => {
-						//return item.status === 'created'; //real
-						return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-					});
-					if (dateFilter || ratingFilter) {
-					}
-				}
+			if (savedFilter) {
+				setSavedFilter(false);
+				newData = auxiliarFilterData.filter((item, index) => {
+					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
 				setAuxiliarFilterData2(newData);
-				//setAuxiliarFilterData(newData);
+			} else if (dateFilter || ratingFilter) {
+				newData = filteredData.filter((item, index) => {
+					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
 			} else {
 				newData = masterData.filter((item, index) => {
 					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
@@ -186,25 +168,20 @@ function PinsScreen({ navigation }) {
 		setCreatedFilter(!createdFilter);
 	};
 
-	const filterSaved = (selected) => {
-		setSearch("");
-		if (selected) {
+	const filterSaved = () => {
+		if (!savedFilter) {
 			let newData = [];
-			if (dateFilter || ratingFilter || createdFilter) {
-				if (createdFilter) {
-					setCreatedFilter(false);
-					newData = auxiliarFilterData.filter((item, index) => {
-						return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-					});
-				} else {
-					newData = filteredData.filter((item, index) => {
-						return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-					});
-					if (dateFilter || ratingFilter) {
-					}
-				}
+			if (createdFilter) {
+				setCreatedFilter(false);
+				newData = auxiliarFilterData.filter((item, index) => {
+					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
 				setAuxiliarFilterData2(newData);
-				//setAuxiliarFilterData(newData);
+			} else if (ratingFilter || createdFilter) {
+				newData = filteredData.filter((item, index) => {
+					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
+				});
+				setAuxiliarFilterData2(newData);
 			} else {
 				newData = masterData.filter((item, index) => {
 					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
@@ -286,7 +263,13 @@ function PinsScreen({ navigation }) {
 								value={search}
 								style={[styles.body, { marginStart: 10 }]}
 								placeholder={"Search"}
-								onChangeText={(text) => filterBySearch(text)}
+								onChangeText={(text) => {
+									setDateFilter(false);
+									setRatingFilter(false);
+									setCreatedFilter(false);
+									setSavedFilter(false);
+									filterBySearch(text);
+								}}
 							/>
 						</View>
 					</View>
@@ -314,7 +297,9 @@ function PinsScreen({ navigation }) {
 								dateFilter ? styles.shadowSelected : styles.shadow,
 							]}
 							onPress={() => {
-								filterByDate(!dateFilter);
+								setSearch("");
+								setRatingFilter(false);
+								filterByDate();
 								AnimationRefFilter1.current?.pulse(1000);
 							}}
 						>
@@ -353,7 +338,9 @@ function PinsScreen({ navigation }) {
 								ratingFilter ? styles.shadowSelected : styles.shadow,
 							]}
 							onPress={() => {
-								filterByRating(!ratingFilter);
+								setSearch("");
+								setDateFilter(false);
+								filterByRating();
 								AnimationRefFilter2.current?.pulse(1000);
 							}}
 						>
@@ -391,7 +378,8 @@ function PinsScreen({ navigation }) {
 								createdFilter ? styles.shadowSelected : styles.shadow,
 							]}
 							onPress={() => {
-								filterCreated(!createdFilter);
+								setSearch("");
+								filterCreated();
 								AnimationRefFilter3.current?.pulse(1000);
 							}}
 						>
@@ -429,7 +417,8 @@ function PinsScreen({ navigation }) {
 								savedFilter ? styles.shadowSelected : styles.shadow,
 							]}
 							onPress={() => {
-								filterSaved(!savedFilter);
+								setSearch("");
+								filterSaved();
 								AnimationRefFilter4.current?.pulse(1000);
 							}}
 						>
