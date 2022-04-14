@@ -21,10 +21,27 @@ app.get('/api/courses', (req,res) => {
 });
 
 app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
+   
 
-   let fecha = new Date(req.params.date);
-   console.log(fecha.getHours);
-   if(req.params.date === 'today') fecha = new Date();
+   if(isNaN(parseInt(req.params.longitude)))  {
+       res.status(400).send('Parametro de longitud no introducidO correctamente');
+       return;
+   }
+   if(isNaN(parseInt(req.params.latitude)))  {
+    
+    res.status(400).send('Parametro de latitud no introducido correctamente');
+    return; 
+    }
+    let fecha = new Date(req.params.date);
+
+    if(req.params.date === 'today') fecha = new Date();
+
+   
+   if(isNaN(fecha)) {
+    res.status(400).send(`El parametro: ${req.params.date} no es válido para el atributo fecha`);
+    return;  
+   } 
+
 
 
     const punto = new DataPointMap((req.params.latitude), (req.params.longitude));

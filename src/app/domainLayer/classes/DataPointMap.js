@@ -129,15 +129,13 @@ class DataPointMap {
      distance in an Array of Arrays data structure.
      */
    async nearerPoints(date) {
-        let mas_prox = 6371000;
         let points = [];
-        let point1 = new MeasureStation("08015001", "Franciaa", "urbana" , 41.443584, 2.23889, null );
-        let distancia = point1.distance(this.latitude,this.longitud);
         let distanciaTotal = 0;
         let all_points = await dadesObertes.getMeasuresDate(date);
         all_points.forEach(c_point => {
             let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
             let d = m_s.distance(this.latitude,this.longitud);
+
             distanciaTotal += d;
             points.push([d,c_point]);
         });
