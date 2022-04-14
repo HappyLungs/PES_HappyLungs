@@ -1,5 +1,7 @@
 const express = require('express')
 const Joi = require('joi');
+const date = require('joi/lib/types/date');
+const DataPointMap = require('../app/domainLayer/classes/DataPointMap');
 const app = express();
 
 
@@ -18,11 +20,20 @@ app.get('/api/courses', (req,res) => {
    res.send(courses)
 });
 
-app.get('/api/courses/:id', (req,res) => {
-    const course = courses.find(c =>   c.id === parseInt(req.params.id));
+app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
+
+   let fecha = new Date(req.params.date);
+   console.log(fecha.getHours);
+   if(req.params.date === 'today') fecha = new Date();
+
+
+    const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
+    const valor_contaminación = await punto.getDayLevel(fecha)
+    console.log(valor_contaminación)
+
     
-    if(!course) res.status(404).send('No existe el ID') // 404 Error
-    else res.send(course)
+    if(!valor_contaminación) res.status(404).send('No existe el ID') // 404 Error
+    else res.send(valor_contaminación)
 })
 
 app.post('/api/courses', (req,res) => {
@@ -45,7 +56,7 @@ app.post('/api/courses', (req,res) => {
         name: req.body.name,
     };
     courses.push(course);
-    res.send(course);
+    res.send(JSON.parse(course));
 })
 
 /*
