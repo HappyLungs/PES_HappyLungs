@@ -1,12 +1,15 @@
 export default class User {
-    email
+	constructor(username, email, points, healthState, profilePicture) {
+		this.username = username;
+		this.email = email;
+		this.points = points;
+		this.healthState = healthState;
+		this.profilePicture = profilePicture;
+	}
 
-    constructor (email) {
-        this.email = email;
-    }
-    
-    //Getters
-    get UserMail () {
-        return this.email;
-    }
+	//Getters
+	get UserMail() {
+		return this.email;
+	}
 }
+export { User };

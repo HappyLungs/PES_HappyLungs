@@ -17,12 +17,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import COLORS from "../config/stylesheet/colors";
 
 function ProfileScreen({ navigation }) {
-	const [state1, setState1] = useState(false);
-	const [state2, setState2] = useState(false);
-	const [state3, setState3] = useState(false);
 	const fakeUserData = {
 		username: "Username",
+		email: "username@email.com",
 		points: 200,
+		healthState: [true, false, true],
+		picture: {
+			uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+		},
 	};
 	const [user, setUser] = useState(fakeUserData);
 
@@ -51,9 +53,7 @@ function ProfileScreen({ navigation }) {
 					}}
 				>
 					<ImageBackground
-						source={{
-							uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
-						}}
+						source={user.picture}
 						style={[
 							{
 								borderRadius: 20,
@@ -93,7 +93,12 @@ function ProfileScreen({ navigation }) {
 						justifyContent: "flex-start",
 					}}
 				>
-					<TouchableOpacity style={{ alignItems: "flex-end" }}>
+					<TouchableOpacity
+						style={{ alignItems: "flex-end" }}
+						onPress={() => {
+							navigation.navigate("ProfileEditScreen");
+						}}
+					>
 						<Feather name="edit-3" size={30} color={COLORS.secondary} />
 					</TouchableOpacity>
 					<View
@@ -216,33 +221,30 @@ function ProfileScreen({ navigation }) {
 						marginVertical: 15,
 					}}
 				>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							setState1(!state1);
-						}}
-					>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
+								{
+									backgroundColor: user.healthState[0]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
 						</View>
 						<Text style={styles.textState}>Cardiorespiratory problems</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state2 && state3) setState3(false);
-							setState2(!state2);
-						}}
-					>
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
+								{
+									backgroundColor: user.healthState[1]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<MaterialIcons
@@ -252,24 +254,22 @@ function ProfileScreen({ navigation }) {
 							/>
 						</View>
 						<Text style={styles.textState}>Pregnant</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state3 && state2) setState2(false);
-							setState3(!state3);
-						}}
-					>
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
+								{
+									backgroundColor: user.healthState[2]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
 						</View>
 						<Text style={styles.textState}>Elderly</Text>
-					</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 			<View
@@ -365,6 +365,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 14,
 		textAlign: "center",
+		marginTop: 5,
 	},
 });
 
