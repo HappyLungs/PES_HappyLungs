@@ -6,6 +6,7 @@ import {
 	TransitionPresets,
 } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -22,48 +23,11 @@ import PinOwnerScreen from "../PinOwnerScreen";
 import PinEditScreen from "../PinEditScreen";
 import PinDefaultScreen from "../PinDefaultScreen";
 import COLORS from "../../config/stylesheet/colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
-
-const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
-	const progress = Animated.add(
-		current.progress.interpolate({
-			inputRange: [0, 1],
-			outputRange: [0, 1],
-			extrapolate: "clamp",
-		}),
-		next
-			? next.progress.interpolate({
-					inputRange: [0, 1],
-					outputRange: [0, 1],
-					extrapolate: "clamp",
-			  })
-			: 0
-	);
-
-	return {
-		cardStyle: {
-			transform: [
-				{
-					translateX: Animated.multiply(
-						progress.interpolate({
-							inputRange: [0, 1, 2],
-							outputRange: [
-								screen.width, // Focused, but offscreen in the beginning
-								0, // Fully focused
-								screen.width * -0.3, // Fully unfocused
-							],
-							extrapolate: "clamp",
-						}),
-						inverted
-					),
-				},
-			],
-		},
-	};
-};
 
 function RootStack() {
 	return (
@@ -164,6 +128,40 @@ function PinStack() {
 	);
 }
 
+function navigate() {
+	const navigation = useNavigation();
+	navigation.navigate("MapScreen");
+}
+
+function ProfileStack() {
+	return (
+		<Stack.Navigator
+			initialRouteName="ProfileScreen"
+			screenOptions={{
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
+				tabBarShowLabel: false,
+				headerTintColor: COLORS.secondary,
+				headerTitleAlign: "center",
+				headerTitleStyle: {
+					fontWeight: "bold",
+					fontSize: 27,
+				},
+				headerShown: true,
+			}}
+		>
+			<Stack.Screen
+				name="ProfileScreen"
+				component={ProfileScreen}
+				options={{
+					title: "",
+					headerShown: false,
+				}}
+			/>
+		</Stack.Navigator>
+	);
+}
+
 function AppTabs() {
 	return (
 		<Tab.Navigator
@@ -216,12 +214,13 @@ function AppTabs() {
 			/>
 			<Tab.Screen
 				name="Profile"
-				component={ProfileScreen}
+				component={ProfileStack}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name="person-outline" size={size} color={color} />
 					),
-					title: "Profile",
+					//title: "Profile",
+					headerShown: false,
 				}}
 				//header username
 			/>
