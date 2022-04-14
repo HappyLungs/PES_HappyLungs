@@ -20,6 +20,7 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 
 function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
+	//should pass userId, and then retrieve the updated data
 
 	const fakeUserData = {
 		username: "Username",
@@ -80,7 +81,8 @@ function ProfileEditScreen({ navigation }) {
 				profilePicture
 			);
 			navigation.popToTop();
-			//navigation.navigate("ProfileScreen", { pin: editedPin });
+			navigation.navigate("ProfileScreen", { user: updatedUser }); //not correct, should pass userId and then retrieve the data
+			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
 		}
 	};
 
@@ -171,9 +173,6 @@ function ProfileEditScreen({ navigation }) {
 			<View
 				style={{
 					alignSelf: "center",
-					marginHorizontal: 30,
-					alignItems: "flex-start",
-					flexDirection: "column",
 				}}
 			>
 				<Text style={[styles.textOption, { fontSize: 17 }]}>Health State</Text>
@@ -183,32 +182,30 @@ function ProfileEditScreen({ navigation }) {
 						marginVertical: 15,
 					}}
 				>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							setState1(!state1);
-						}}
-					>
-						<View
+					<View style={{ alignItems: "center", width: 115 }}>
+						<TouchableOpacity
+							onPress={() => {
+								setState1(!state1);
+							}}
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
 							]}
 						>
 							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
-						</View>
+						</TouchableOpacity>
 						<Text style={styles.textState}>Cardiorespiratory problems</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state2 && state3) setState3(false);
-							setState2(!state2);
-						}}
-					>
-						<View
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
+						<TouchableOpacity
+							onPress={() => {
+								if (!state2 && state3) setState3(false);
+								setState2(!state2);
+							}}
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
 							]}
 						>
@@ -217,64 +214,54 @@ function ProfileEditScreen({ navigation }) {
 								size={35}
 								color={COLORS.white}
 							/>
-						</View>
+						</TouchableOpacity>
 						<Text style={styles.textState}>Pregnant</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state3 && state2) setState2(false);
-							setState3(!state3);
-						}}
-					>
-						<View
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
+						<TouchableOpacity
+							onPress={() => {
+								if (!state3 && state2) setState2(false);
+								setState3(!state3);
+							}}
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
 							]}
 						>
 							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
-						</View>
+						</TouchableOpacity>
 						<Text style={styles.textState}>Elderly</Text>
+					</View>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-evenly",
+						marginTop: 50,
+					}}
+				>
+					<TouchableOpacity
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.red1 },
+						]}
+						onPress={() => navigation.popToTop()}
+					>
+						<Text style={styles.containerTxt}>Cancel</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.green1 },
+						]}
+						onPress={validate}
+					>
+						<Text style={styles.containerTxt}>Update</Text>
 					</TouchableOpacity>
 				</View>
-			</View>
-			<View
-				style={{
-					alignSelf: "center",
-					backgroundColor: COLORS.lightGrey,
-					height: 6,
-					marginBottom: 15,
-					width: "100%",
-				}}
-			/>
-			<View
-				style={{
-					flexDirection: "row",
-					justifyContent: "space-around",
-					marginTop: 10,
-				}}
-			>
-				<TouchableOpacity
-					style={[
-						styles.containerBtn,
-						styles.shadow,
-						{ backgroundColor: COLORS.red1 },
-					]}
-					onPress={() => navigation.popToTop()}
-				>
-					<Text style={styles.containerTxt}>Cancel</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={[
-						styles.containerBtn,
-						styles.shadow,
-						{ backgroundColor: COLORS.green1 },
-					]}
-					onPress={validate}
-				>
-					<Text style={styles.containerTxt}>Save changes</Text>
-				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -329,7 +316,7 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 120,
+		width: 110,
 		padding: 10,
 		borderRadius: 5,
 	},

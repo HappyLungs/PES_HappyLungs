@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
 	Text,
@@ -6,6 +6,7 @@ import {
 	View,
 	TouchableOpacity,
 	ImageBackground,
+	Share,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -15,9 +16,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
+import { UrlTile } from "react-native-maps";
 
-function ProfileScreen({ navigation }) {
-	const fakeUserData = {
+function ProfileScreen({ navigation, route }) {
+	//should know userId, and then retrieve the user data (updated or not)
+
+	//const { user } = route.params;
+
+	const user = {
 		username: "Username",
 		email: "username@email.com",
 		points: 200,
@@ -26,8 +32,36 @@ function ProfileScreen({ navigation }) {
 			uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
 		},
 	};
-	const [user, setUser] = useState(fakeUserData);
 
+	function settings() {
+		//navigation.navigate("SettingsScreen");
+		//maybe a popup
+	}
+
+	function calendar() {
+		//no se que ha de fer
+	}
+
+	function rewards() {}
+
+	async function share() {
+		try {
+			await Share.share({
+				title: "Happy Lungs",
+				message: "Breath Safely, Breath With Us",
+				url: "https://happylungsproject.org/", //url és ios only
+			});
+		} catch (err) {
+			console.log(err);
+		}
+		//logOut user
+		//navigation.navigate("LogInScreen");
+	}
+
+	function logOut() {
+		//logOut user
+		//navigation.navigate("LogInScreen");
+	}
 	return (
 		<View
 			style={{
@@ -225,6 +259,7 @@ function ProfileScreen({ navigation }) {
 						<View
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{
 									backgroundColor: user.healthState[0]
 										? COLORS.green1
@@ -240,6 +275,7 @@ function ProfileScreen({ navigation }) {
 						<View
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{
 									backgroundColor: user.healthState[1]
 										? COLORS.green1
@@ -259,6 +295,7 @@ function ProfileScreen({ navigation }) {
 						<View
 							style={[
 								styles.containerState,
+								styles.shadow,
 								{
 									backgroundColor: user.healthState[2]
 										? COLORS.green1
@@ -289,24 +326,37 @@ function ProfileScreen({ navigation }) {
 					flexDirection: "column",
 				}}
 			>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => settings()}
+					style={styles.containerOption}
+				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Settings</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => calendar()}
+					style={styles.containerOption}
+				>
 					<Ionicons name="md-calendar" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Calendar</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => rewards()}
+					style={styles.containerOption}
+				>
 					<AntDesign name="Trophy" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Rewards</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => share()}
+					style={styles.containerOption}
+				>
 					<Feather name="users" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Tell Your Friend</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
+				onPress={() => logOut()}
 				style={[
 					styles.containerOption,
 					{ marginHorizontal: 30, marginBottom: 20 },
