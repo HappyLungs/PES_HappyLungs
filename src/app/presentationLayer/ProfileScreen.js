@@ -36,7 +36,13 @@ function ProfileScreen({ navigation }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
-			<View style={{ flexDirection: "row", paddingHorizontal: 20 }}>
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 20,
+					marginTop: 50,
+				}}
+			>
 				<View
 					style={{
 						flex: 2,
@@ -85,9 +91,11 @@ function ProfileScreen({ navigation }) {
 					style={{
 						flex: 2,
 						justifyContent: "flex-start",
-						marginTop: 15,
 					}}
 				>
+					<TouchableOpacity style={{ alignItems: "flex-end" }}>
+						<Feather name="edit-3" size={30} color={COLORS.secondary} />
+					</TouchableOpacity>
 					<View
 						style={{
 							marginTop: 10,

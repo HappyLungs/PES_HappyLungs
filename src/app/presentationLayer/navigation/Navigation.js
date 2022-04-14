@@ -155,17 +155,7 @@ function ProfileStack() {
 				component={ProfileScreen}
 				options={{
 					title: "",
-					headerShown: true,
-					headerRightContainerStyle: {
-						alignContent: "flex-end",
-						alignSelf: "center",
-						marginEnd: 20,
-					},
-					headerRight: () => (
-						<TouchableOpacity onPress={navigate}>
-							<Feather name="edit-3" size={24} color={COLORS.secondary} />
-						</TouchableOpacity>
-					),
+					headerShown: false,
 				}}
 			/>
 		</Stack.Navigator>
