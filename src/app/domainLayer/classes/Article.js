@@ -1,10 +1,11 @@
 import Comment from "./Comment.js";
+import BaseClass from "./BaseClass.js";
 
- class Article {
+ class Article extends BaseClass{
     
-    constructor (title) {
-        //this.user = User.currentUser();
-        this.user = "Manolo"
+    constructor (title, userID) {
+        super();
+        this.userID = userID
         if(title === undefined || title === "") throw "Un articulo necesita título";
         else this.title = title;
         this.date = new Date();
@@ -13,8 +14,9 @@ import Comment from "./Comment.js";
     
 
    add_comment(comment){
-       console.log(comment)
      this.comments.push(comment);
+
+
    }
     
 

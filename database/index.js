@@ -37,12 +37,19 @@ app.use("/v1/", function(req, res, next) {
 
 // V1 Routes
 const IndexRoutesV1 = require("./routes/index.route.js");
+const IndexRoutesArticles = require("./routes/articles.route.js");
+
 app.use("/v1/", IndexRoutesV1);
+
+app.use("/api/articles", IndexRoutesArticles);
+
 
 function listen() {
     if (app.get("env") === "test") return;
     app.listen(process.env.PORT);
     console.log("Express app started on port " + process.env.PORT);
 }
+
+
 
 connect();
