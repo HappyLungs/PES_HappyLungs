@@ -3,7 +3,7 @@ const router = express.Router();
 const articlesController = require('../controllers/articles.controller')
 router.post(
   "/",
-  articlesController.post
+  articlesController.create
   
 );
 
