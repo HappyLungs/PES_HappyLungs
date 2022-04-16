@@ -40,4 +40,49 @@ async function create (request, response) {
 
 };
 
-export {create}
+
+
+async function find (request, response) {
+    console.log(request);
+    let id;
+    if (request.query._id) {
+        id = request.query._id;
+    } else {
+        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
+        responseObj.message = "Required parameters missing";
+        responseObj.data    = {};
+        response.send(responseObj);
+        return;
+    }
+    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+        const where = {};
+        where._id = mongodb.ObjectId(id);
+        articleDataLayer.findArticle(where)
+        .then((articleData) => {
+            if (articleData !== null && typeof articleData !== undefined) {
+                responseObj.status  = errorCodes.SUCCESS;
+                responseObj.message = "Success";
+                responseObj.data    = articleData;
+            } else {
+                responseObj.status  = errorCodes.DATA_NOT_FOUND;
+                responseObj.message = "No record found";
+                responseObj.data    = {};
+            }
+            response.send(responseObj);
+        })
+        .catch(error => {
+            responseObj.status  = errorCodes.SYNTAX_ERROR;
+            responseObj.message = error;
+            responseObj.data    = {};
+            response.send(responseObj);
+        });
+    } else {
+        responseObj.status  = errorCodes.SYNTAX_ERROR;
+        responseObj.message = "Invalid id";
+        responseObj.data    = {};
+        response.send(responseObj);
+    }
+    return;
+};
+
+export {create, find}

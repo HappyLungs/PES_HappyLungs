@@ -7,4 +7,9 @@ router.post(
   
 );
 
+router.get(
+    "/",
+  commentsController.find
+    );
+
 module.exports = router;

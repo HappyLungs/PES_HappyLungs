@@ -7,4 +7,10 @@ router.post(
   
 );
 
+router.get(
+  "/",
+  articlesController.find
+  
+);
+
 module.exports = router;

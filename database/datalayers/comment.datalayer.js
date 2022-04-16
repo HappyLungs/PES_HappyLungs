@@ -13,5 +13,17 @@ async function createComment (params) {
 
 
 }
+async function findComment (where = {}) {
+    return new Promise((resolve, reject) => {
+        Comment
+        .findOne(where)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+};
 
-export {createComment}
+export {createComment, findComment}

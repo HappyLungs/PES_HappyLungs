@@ -13,4 +13,17 @@ async function createArticle (params) {
 
 
 }
-export {createArticle}
+
+async function findArticle (where = {}) {
+    return new Promise((resolve, reject) => {
+        Article
+        .findOne(where)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+};
+export {createArticle, findArticle}
