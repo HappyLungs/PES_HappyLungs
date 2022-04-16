@@ -8,4 +8,11 @@ export default class Comment extends BaseClass{
      this.date = new Date();
    }
 
+   get getBody(){
+      return this.body;
+   }
+   get getDate(){
+      return this.body;
+   }
+
 }

@@ -1,7 +1,10 @@
-export default class User {
-    email
+import BaseClass from "./BaseClass.js";
+
+export default class User extends BaseClass {
+    
 
     constructor (email) {
+        super();
         this.email = email;
     }
     
@@ -9,4 +12,9 @@ export default class User {
     get UserMail () {
         return this.email;
     }
+
+    get userID() {
+        return this.id;
+    }
+
 }
