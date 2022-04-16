@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import COLORS from "../../config/stylesheet/colors";
 
-const Input = ({
+const InputField = ({
 	label,
 	defaultValue,
 	iconName,
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Input;
+export default InputField;

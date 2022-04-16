@@ -1,8 +1,12 @@
-require("./MeasureStation");
-const DomainCtrl = require("../DomainCtrl")
-const dCtrl = new DomainCtrl();
+const { default: Article } = require("./Article");
 
 
+
+
+
+
+
+/*
 // Start function
 const start = async function() {
     
@@ -56,3 +60,4 @@ let date="2022-03-03T00:00:00.000";
 let d = m.getWeekLevel(date)
 console.log(d)
 */
+

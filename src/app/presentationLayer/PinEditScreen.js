@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import Input from "./components/Input";
+import InputField from "./components/InputField";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -27,7 +27,7 @@ function PinEditScreen({ navigation, route }) {
 	const { pin } = route.params;
 	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
 	const [date, setDate] = useState(pin.date);
-	const [status, setStatus] = useState(pin.status);
+	const [status, setStatus] = useState(pin.status === "Public");
 	const [rating, setRating] = useState(pin.rating);
 	const [media, setMedia] = useState(Array.from(pin.media));
 	const [image1, setImage1] = useState(media[0]);
@@ -60,9 +60,10 @@ function PinEditScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				getDate(),
-				status
+				date,
+				status === true ? "Public" : "Private"
 			);
+			navigation.popToTop();
 			navigation.navigate("OwnerPin", { pin: editedPin });
 		}
 	};
@@ -107,15 +108,29 @@ function PinEditScreen({ navigation, route }) {
 	};
 
 	const handleConfirmDate = (date) => {
-		setDate(date);
 		hideDatePicker();
+		setDate(transformDate(date));
 	};
 
-	const getDate = () => {
-		let tempDate = date.toString().split(" ");
-		return date !== ""
-			? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
-			: "";
+	const transformDate = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const standarizeDate = () => {
+		var standarizedDate = "";
+		return standarizedDate.concat(
+			date.slice(3, 5),
+			"/",
+			date.slice(0, 2),
+			"/",
+			date.slice(6, 10)
+		);
 	};
 
 	function renderImageSelector() {
@@ -235,8 +250,8 @@ function PinEditScreen({ navigation, route }) {
 						size={25}
 					/>
 					<DateTimePickerModal
-						//style={styles.datePickerStyle}
 						mode="date"
+						date={new Date(standarizeDate())}
 						onConfirm={handleConfirmDate}
 						onCancel={hideDatePicker}
 						isVisible={isDatePickerVisible}
@@ -251,7 +266,7 @@ function PinEditScreen({ navigation, route }) {
 					}}
 				>
 					{" "}
-					{getDate()}
+					{date}
 				</Text>
 			</View>
 		);
@@ -292,7 +307,7 @@ function PinEditScreen({ navigation, route }) {
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{locationName}
 				</Text>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
@@ -300,7 +315,7 @@ function PinEditScreen({ navigation, route }) {
 					label="Title"
 					error={errors.title}
 				/>
-				<Input
+				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
@@ -329,36 +344,32 @@ function PinEditScreen({ navigation, route }) {
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
 				{renderPinStatusSelector()}
-				<View style={{ flexDirection: "row" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-around",
+						marginTop: 10,
+					}}
+				>
 					<TouchableOpacity
-						style={[styles.containerCancelBtn, styles.shadow]}
-						onPress={() => navigation.navigate("OwnerPin", { pin: pin })}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.red1 },
+						]}
+						onPress={() => navigation.popToTop()}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Cancel
-						</Text>
+						<Text style={styles.containerTxt}>Cancel</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={[styles.containerSaveChanges, styles.shadow]}
+						style={[
+							styles.containerBtn,
+							styles.shadow,
+							{ backgroundColor: COLORS.green1 },
+						]}
 						onPress={validate}
 					>
-						<Text
-							style={{
-								textAlign: "center",
-								fontWeight: "bold",
-								fontSize: 15,
-								color: COLORS.white,
-							}}
-						>
-							Save changes
-						</Text>
+						<Text style={styles.containerTxt}>Save changes</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -375,29 +386,16 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		color: COLORS.secondary,
 	},
-	containerSaveChanges: {
+	containerBtn: {
 		width: 120,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
 		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.green1,
+		borderRadius: 5,
 	},
-	containerCancelBtn: {
-		width: 110,
-		flexDirection: "row",
-		alignItems: "center",
-		alignContent: "center",
-		justifyContent: "center",
-		marginLeft: 50,
-		marginTop: 10,
-		padding: 10,
-		borderRadius: 10,
-		backgroundColor: COLORS.red1,
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	shadow: {
 		shadowColor: COLORS.black,

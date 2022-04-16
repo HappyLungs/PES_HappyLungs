@@ -4,31 +4,12 @@ export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(name, location, description, media, rating, date, status) {
 		this.name = name;
-		this.location = location;
-		//maybe afegir locationName apart de les coords
-		//o es pot treure el nom del lloc a traves de les coords? idk
-		//idk either :/
+		this.location = location; //location has {latitude, longitude, title}
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
 		this.date = date;
-		this.status = status;
-		console.log(
-			"name: " +
-				name +
-				" location: " +
-				location +
-				" description: " +
-				description +
-				" media: " +
-				media +
-				" rating: " +
-				rating +
-				" date: " +
-				date +
-				" status: " +
-				status
-		);
+		this.status = status; //"Public" || "Private"
 
 		//add pin to dataBase
 		/*let res = {};
