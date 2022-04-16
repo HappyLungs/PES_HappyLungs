@@ -1,4 +1,4 @@
-const MeasureStation = require("./MeasureStation");
+require("./MeasureStation");
 const DomainCtrl = require("../DomainCtrl")
 const dCtrl = new DomainCtrl();
 

@@ -25,8 +25,7 @@ function dateApiConverter (date) {
     let month = (lastweek.getMonth()+1) < 10 ? "0"+(lastweek.getMonth()+1) : lastweek.getMonth()+1;
     let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
 
-    const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
-    return apiDate;
+    return year + "-" + month + "-" + day + "T00:00:00.000";
 }
 
 /**

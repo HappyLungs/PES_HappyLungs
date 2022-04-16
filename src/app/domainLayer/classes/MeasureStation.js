@@ -48,7 +48,6 @@ class MeasureStation {
 
                 }
             }
-            hour = hour;
         } else {
             return measure[hour];
         }
@@ -74,8 +73,7 @@ class MeasureStation {
             
         });
 
-        let level = levelCalculator.calculateLevelHour(calculatorData);
-        return level;
+        return levelCalculator.calculateLevelHour(calculatorData);
     }
 
     /**
@@ -131,9 +129,7 @@ class MeasureStation {
      */
     async getHourLevel(date, hour) {
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
-        let level = calcHourLevel(measures, hour);
-
-        return level
+        return calcHourLevel(measures, hour)
     }
 
     /**
@@ -145,7 +141,7 @@ class MeasureStation {
         let hour = date.getHours();
         let last24hours = new Date(date.getTime() - (24 * 60 * 60 * 1000));
         
-        let title = "";
+        let title;
         let tags = [];
         let hourlyLevel = []; 
         if (date.getDate() === last24hours.getDate()) {
@@ -169,13 +165,11 @@ class MeasureStation {
             }
         }
 
-        let result = {
+        return {
             title: title,
             tags: tags,
             levels: hourlyLevel
-        }
-
-        return result;
+        };
     }
 
     /**
@@ -200,14 +194,12 @@ class MeasureStation {
         let title;
         if (date.getMonth() === lastweek.getMonth()) title = this.months[date.getMonth()];
         else title = this.months[date.getMonth()]+" - "+this.months[lastweek.getMonth()];
-        
-        let result = {
+
+        return {
             title: title,
             tags: tags,
             levels: dailyLevel
-        }
-        
-        return result;
+        };
     }
 
     /**
@@ -232,14 +224,12 @@ class MeasureStation {
         let title;
         if (date.getMonth() === lastmonth.getMonth()) title = this.months[date.getMonth()];
         else title = this.months[lastmonth.getMonth()]+" - "+this.months[date.getMonth()];
-        
-        let result = {
+
+        return {
             title: title,
             tags: tags,
             levels: dailyLevel
-        }
-
-        return result;
+        };
     }
 
     /**
@@ -280,14 +270,11 @@ class MeasureStation {
         if (date.getFullYear() === lastYear.getFullYear()) title = date.getFullYear();
         else title = lastYear.getFullYear()+" / "+date.getFullYear();
 
-        let result = {
+        return {
             title: title,
             tags: tags,
             levels: monthlyLevel
-        }
-
-
-        return result;
+        };
     }
 
 
@@ -311,7 +298,6 @@ class MeasureStation {
 
                 }
             }
-            hour = hour;
         } else {
             return pollutantData[hour];
         }
@@ -383,9 +369,9 @@ class MeasureStation {
         var lat2 = this.toRad(lat2);
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
         Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = R * c;
-        return d;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        return R * c;
     }
     //Conversor
     toRad(Value) {
@@ -431,9 +417,7 @@ class MeasureStation {
 
 
         //Calculates the contamination level
-        let level = levelCalculator.calculateLevelHour(data)
-        
-        return level;
+        return levelCalculator.calculateLevelHour(data);
     }
 
     

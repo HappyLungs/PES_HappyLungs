@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
 	},
 	btn: {
 		justifyContent: "center",
-		borderRadius: 5,
 		borderBottomWidth: 5,
 		borderRadius: 5,
 		width: 100,
