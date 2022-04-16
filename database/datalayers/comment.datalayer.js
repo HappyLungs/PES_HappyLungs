@@ -1,10 +1,10 @@
-const Article = require("../models/article.model");
+const Comment = require("../models/comment.model");
 
 
-async function createArticle (params) {
+async function createComment (params) {
     return new Promise((resolve, reject) => {
         console.log(params);
-        Article
+        Comment
         .create(params)
         .then((data) => { 
             resolve(data) })
@@ -13,4 +13,5 @@ async function createArticle (params) {
 
 
 }
-export {createArticle}
+
+export {createComment}

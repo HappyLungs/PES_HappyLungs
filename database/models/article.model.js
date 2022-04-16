@@ -4,7 +4,7 @@ const ArticleSchema = new global.Schema({
     user_id: String,
     title: String,
     /*
-    Faltaría comments 
+    Faltaría comments  y Date ++
     */
 }); 
   const Article = global.mongoose.model("Article", ArticleSchema);

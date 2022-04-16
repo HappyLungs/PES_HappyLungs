@@ -1,9 +1,8 @@
-const articleDataLayer = require("./../datalayers/article.datalayer");
+const commentDataLayer = require("./../datalayers/comment.datalayer");
 
 
 async function create (request, response) {
- //   const article = new Article("Titulo de prueba", "3333333");
-   // res.send(article);
+
 
     let params = {};
     if (request.body.params) {
@@ -15,13 +14,13 @@ async function create (request, response) {
         response.send(responseObj);
         return;
     }
-    articleDataLayer.createArticle(params)
-    .then((articleData) => {
-        console.log(articleData);
-        if (articleData !== null && typeof articleData !== undefined) {
+    commentDataLayer.createComment(params)
+    .then((commentData) => {
+        console.log(commentData);
+        if (articleData !== null && typeof commentData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
-            responseObj.data    = articleData;
+            responseObj.data    = commentData;
         } else {
             responseObj.status  = errorCodes.DATA_NOT_FOUND;
             responseObj.message = "No record found";
