@@ -359,17 +359,17 @@ class MeasureStation {
     
     distance(lat2,lon2) {
 
-        var lat1 = this.latitud;
-        var lon1 = this.longitud;
+        let lat1 = this.latitud;
+        const lon1 = this.longitud;
 
-        var R = 6371; // km
-        var dLat = this.toRad(lat2-lat1);
-        var dLon = this.toRad(lon2-lon1);
-        var lat1 = this.toRad(lat1);
+        const R = 6371; // km
+        const dLat = this.toRad(lat2 - lat1);
+        const dLon = this.toRad(lon2 - lon1);
+        lat1 = this.toRad(lat1);
         var lat2 = this.toRad(lat2);
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return R * c;
     }
