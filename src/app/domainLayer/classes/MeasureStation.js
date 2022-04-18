@@ -39,12 +39,12 @@ class MeasureStation {
      */
     calcHourQuantity(measure, hour) {
         if(typeof measure[hour] === 'undefined'){
-            hour = hour.toString().slice(-2);
-            for(let i = parseInt(hour); i >= 1; --i){
-                if(hour >= 10)  hour = 'h'+ i;
-                else hour= 'h0'+i;
-                if(typeof measure[hour] !== 'undefined') {
-                    return measure[hour];
+            let ahour = hour.toString().slice(-2);
+            for(let i = parseInt(ahour); i >= 1; --i){
+                if(ahour >= 10)  ahour = 'h'+ i;
+                else ahour= 'h0'+i;
+                if(typeof measure[ahour] !== 'undefined') {
+                    return measure[ahour];
 
                 }
             }

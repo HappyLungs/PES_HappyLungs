@@ -13,7 +13,7 @@ const start = async function() {
     //const d = new Date();
     //const h = 12;
     //let m = new MeasureStation("08019004");
-    //console.log("Crido la funció a test.js")
+    //console.log("Crido la funció a maltest.js")
     //const result = await m.getWeekLevel(d);;
     //console.log(result);
 

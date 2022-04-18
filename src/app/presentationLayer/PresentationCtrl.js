@@ -1,5 +1,5 @@
 const DomainCtrl = require("../domainLayer/DomainCtrl.js");
-import Pin from "../domainLayer/classes/Pin"; //elimnar fake
+import Pin from "../domainLayer/classes/Pin"; //eliminar fake
 
 let PresentationCtrl;
 (function () {

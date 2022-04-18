@@ -1,6 +1,6 @@
 import Chart from "./Chart.js"
 
-class ChartPollutants {
+class ChartPollutants extends Chart{
     constructor (title) {
         super(title);
         this.pollutants;
