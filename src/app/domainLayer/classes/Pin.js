@@ -32,7 +32,7 @@ export default class Pin {
 
 	edit_pin(name, location, description, media, rating, status) {
 		//consultar pin a la base de dades i enviar i guardar info nova amb la funció d'editar
-		//NOT SURE HOW TO OBTAIN THE IDgit
+		//NOT SURE HOW TO OBTAIN THE ID
 		let _id = "623cf0b5f98986305e8af47f";
 		let put = {};
 		/*put = await pCtrl.putRequest("/pin?_id=" + _id, {
@@ -57,6 +57,11 @@ export default class Pin {
 		return this.show_charts;
 	}
 
+	getLocationPins(location) {
+		//returns pins around the location
+		//speaks with DB
+	}
+
 	show_recomended_IDs() {}
 
 	show_charts() {}
@@ -73,6 +78,10 @@ export default class Pin {
 
 		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
 
+		let today = new Date().toISOString().slice(0, 10);
+		const isoStrStart = today + 'T12:00:00-00:00';
+		const isoStrEnd = today + 'T13:00:00-00:00';
+
 		gapi.auth2
 			.getAuthInstance()
 			.signIn()
@@ -82,10 +91,10 @@ export default class Pin {
 					location: location,
 					description: description,
 					start: {
-						dateTime: "2020-06-28T09:00:00-07:00",
+						dateTime: isoStrStart,
 					},
 					end: {
-						dateTime: "2020-06-28T17:00:00-07:00",
+						dateTime: isoStrEnd,
 					},
 				};
 

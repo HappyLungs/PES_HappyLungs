@@ -53,7 +53,8 @@
 		"react-native-web": "0.17.1",
 		"react-router": "^6.2.2",
 		"rn-checkbox-list": "^1.1.0",
-		"use-places-autocomplete": "^2.0.0"
+		"use-places-autocomplete": "^2.0.0",
+		"yarn": "^1.22.18"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
