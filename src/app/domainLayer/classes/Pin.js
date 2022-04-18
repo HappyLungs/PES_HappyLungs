@@ -32,7 +32,7 @@ export default class Pin {
 
 	edit_pin(name, location, description, media, rating, status) {
 		//consultar pin a la base de dades i enviar i guardar info nova amb la funció d'editar
-		//NOT SURE HOW TO OBTAIN THE IDgit
+		//NOT SURE HOW TO OBTAIN THE ID
 		let _id = "623cf0b5f98986305e8af47f";
 		let put = {};
 		/*put = await pCtrl.putRequest("/pin?_id=" + _id, {
@@ -55,6 +55,11 @@ export default class Pin {
 
 	get charts() {
 		return this.show_charts;
+	}
+
+	getLocationPins(location) {
+		//returns pins around the location
+		//speaks with DB
 	}
 
 	show_recomended_IDs() {}
