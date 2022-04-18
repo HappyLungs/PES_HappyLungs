@@ -1,6 +1,6 @@
 // load model
 const responseObj = {};
-const mongodb = require("mongodb");
+require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 
 const measureStation = require("./../datalayers/measureStation.datalayer");
@@ -33,7 +33,7 @@ exports.find = async (request, response) => {
     .catch((err) => {
         response.send(err);
     });
-    return;
+
     
     /*if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
         const where = {};
@@ -66,7 +66,7 @@ exports.find = async (request, response) => {
     return; */
 };
 
-exports.create = async (request, response, next) => {
+exports.create = async (request, response) => {
     let params = {};
     if (request.body.params) {
         params = request.body.params;
@@ -97,7 +97,7 @@ exports.create = async (request, response, next) => {
         responseObj.data    = {};
         response.send(responseObj);
     });
-    return;
+
 };
 
 exports.insertMultiple = async (request, response) => {
@@ -131,7 +131,7 @@ exports.insertMultiple = async (request, response) => {
         responseObj.data    = {};
         response.send(responseObj);
     });
-    return;
+
 }
 
 function createAggregateArray (match, date) {

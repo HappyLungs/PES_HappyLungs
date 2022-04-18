@@ -51,7 +51,7 @@ class LevelCalculator {
     }
 
     calculateLevelHour (pollutants) {
-        if (pollutants.size == 0) return null;
+        if (pollutants.size === 0) return null;
         let maxLevel = 0
         for(const [pollutant, quantity] of pollutants) {
             

@@ -11,10 +11,12 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+	Ionicons,
+	MaterialIcons,
+	MaterialCommunityIcons,
+	AntDesign,
+} from "@expo/vector-icons";
 
 import { LinearGradient } from "expo-linear-gradient";
 import MapView, {
@@ -37,11 +39,11 @@ import { formatRelative } from "date-fns";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-
-
-async function callGeocodeAPI(latitude, longitude){
-	const location = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`);
-	if(!location.ok) return '';
+async function callGeocodeAPI(latitude, longitude) {
+	const location = await fetch(
+		`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true&key=AIzaSyDdWVzzuo-fZWsgpyc8t2TykdvvtfBfR9c`
+	);
+	if (!location.ok) return "";
 	const result = await location.json();
 	return result.results[0].formatted_address;
 }
@@ -55,7 +57,6 @@ function MapScreen({ navigation, route }) {
 	/**
 	 * Function to set a default location
 	 */
-
 
 	let presentationCtrl = new PresentationCtrl();
 
@@ -98,7 +99,7 @@ function MapScreen({ navigation, route }) {
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
-		title: 'inexistente',
+		title: "inexistente",
 	});
 	const [selected, setSelected] = useState(null);
 
@@ -149,11 +150,11 @@ function MapScreen({ navigation, route }) {
     Params passats des de PinOwnerScreen al clicar a SeeOnMap
 	*/
 	/*
-	const { lat, lng } = route.params;
-	if (lat && lng) {
+	const { latitude, longitude } = route.params;
+	if (latitude && longitude) {
 		const tmpLocation = {
-		latitude: lat,
-		longitude: lng,
+		latitude: latitude,
+		longitude: longitude,
 		latitudeDelta: 0.01,
 		longitudeDelta: 0.01,
 		}
@@ -167,6 +168,7 @@ function MapScreen({ navigation, route }) {
 			coords: {
 				latitude: actualMarker.latitude,
 				longitude: actualMarker.longitude,
+				title: actualMarker.title,
 			},
 		});
 		//falta condicionar això perq només passi quan realment es crea un pin
@@ -184,7 +186,7 @@ function MapScreen({ navigation, route }) {
 	const onModal = async (event) => {
 		event.persist();
 		const latitude = event.nativeEvent.coordinate.latitude;
-		const longitude = event.nativeEvent.coordinate.longitude
+		const longitude = event.nativeEvent.coordinate.longitude;
 		const title = await callGeocodeAPI(latitude, longitude);
 		setActualMarker({
 			latitude,
@@ -244,7 +246,7 @@ function MapScreen({ navigation, route }) {
 						>
 							Selected location
 						</Text>
-						<Text style={styles.greenHighlight}> {actualMarker.title}</Text>
+						<Text style={styles.highlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
 								style={{
@@ -268,13 +270,16 @@ function MapScreen({ navigation, route }) {
 								onPress={async () => {
 									let data = await presentationCtrl.getDataStatistics(
 										"24hours",
-										lat,
-										lng
+										actualMarker.latitude,
+										actualMarker.longitude
 									);
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
 										data: data,
-										coords: { latitude: lat, longitude: lng },
+										coords: {
+											latitude: actualMarker.latitude,
+											longitude: actualMarker.latitude,
+										},
 									});
 								}}
 							>
@@ -410,6 +415,110 @@ function MapScreen({ navigation, route }) {
 					onPress={() => setUrban(!urbanSelected)}
 					text="Urban"
 				/>
+			</View>
+		);
+	}
+
+	const fakeProfileData = {
+		username: "Ricard",
+		points: 200,
+	};
+
+	const [profile, setProfile] = useState(fakeProfileData);
+
+	function renderHeader(profile) {
+		return (
+			<View
+				style={[
+					{
+						height: 150,
+						flexDirection: "row",
+						paddingHorizontal: 20,
+						alignItems: "center",
+						backgroundColor: COLORS.white,
+						borderBottomLeftRadius: 20,
+						borderBottomRightRadius: 20,
+					},
+					styles.shadow,
+				]}
+			>
+				<View
+					style={{
+						flexDirection: "column",
+					}}
+				>
+					<View
+						style={{
+							flexDirection: "row",
+							marginTop: 25,
+							marginBottom: 10,
+						}}
+					>
+						<Text
+							style={[
+								{
+									fontSize: 20,
+									fontWeight: "bold",
+									color: COLORS.secondary,
+								},
+							]}
+						>
+							{profile.username},
+							<Text
+								style={[
+									{
+										fontSize: 18,
+										fontWeight: "normal",
+										color: COLORS.secondary,
+									},
+								]}
+							>
+								{" "}
+								Welcome Back!
+							</Text>
+						</Text>
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+						}}
+					>
+						<View
+							style={[
+								{
+									backgroundColor: COLORS.lightGrey,
+									width: "80%",
+									height: 50,
+									borderRadius: 12,
+									flexDirection: "row",
+								},
+								styles.shadow,
+							]}
+						>
+							<MaterialIcons
+								name="search"
+								style={{ alignSelf: "center", marginStart: 10 }}
+								color={COLORS.secondary}
+								size={35}
+							/>
+							<TextInput
+								multiline={false}
+								maxLength={30}
+								style={styles.body}
+								placeholder={"Search a location"}
+							/>
+						</View>
+						<View style={[styles.container, styles.shadow]}>
+							<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+								<MaterialCommunityIcons
+									name="filter-menu"
+									color={COLORS.secondary}
+									size={35}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
 			</View>
 		);
 	}
@@ -566,7 +675,12 @@ function MapScreen({ navigation, route }) {
 
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-			<View style={{ ...StyleSheet.absoluteFillObject }}>
+			<View
+				style={{
+					marginTop: 100,
+					...StyleSheet.absoluteFillObject,
+				}}
+			>
 				<MapView
 					ref={mapRef}
 					provider={PROVIDER_GOOGLE}
@@ -597,64 +711,33 @@ function MapScreen({ navigation, route }) {
 					<Heatmap points={heatpoints} radius={50} />
 				</MapView>
 			</View>
+			{renderHeader(profile)}
+
 			<View
-				style={{
-					flexDirection: "row",
-					alignSelf: "flex-start",
-					margin: 10,
-				}}
+				style={[
+					styles.container,
+					styles.shadow,
+					{ marginTop: 480, marginRight: 10, marginStart: 320 },
+				]}
 			>
-				<View
-					style={[
-						{
-							backgroundColor: COLORS.white,
-							width: "80%",
-							height: 50,
-							borderRadius: 12,
-							flexDirection: "row",
-						},
-						styles.shadow,
-					]}
+				<TouchableOpacity
+					onPress={() => {
+						Location.installWebGeolocationPolyfill();
+						navigator.geolocation.getCurrentPosition((position) => {
+							panTo({
+								lat: position.coords.latitude,
+								lng: position.coords.longitude,
+							});
+						});
+					}}
 				>
-					<MaterialIcons
-						name="search"
-						style={{ alignSelf: "center", marginStart: 10 }}
+					<MaterialCommunityIcons
+						name="compass"
 						color={COLORS.secondary}
 						size={35}
 					/>
-					<TextInput
-						multiline={false}
-						maxLength={30}
-						style={styles.body}
-						defaultValue={"Search a location"}
-					/>
-				</View>
-				<View style={[styles.containerFilter, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
-						<MaterialCommunityIcons
-							name="filter-menu"
-							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={35}
-						/>
-					</TouchableOpacity>
-				</View>
+				</TouchableOpacity>
 			</View>
-
-			<TouchableOpacity
-				style={styles.compass}
-				onPress={() => {
-					Location.installWebGeolocationPolyfill();
-					navigator.geolocation.getCurrentPosition((position) => {
-						panTo({
-							lat: position.coords.latitude,
-							lng: position.coords.longitude,
-						});
-					});
-				}}
-			>
-				<MaterialCommunityIcons name="compass" color={COLORS.white} size={35} />
-			</TouchableOpacity>
 			{renderModalPin()}
 			{renderModalFilter()}
 		</SafeAreaView>
@@ -664,23 +747,21 @@ function MapScreen({ navigation, route }) {
  * Function to define all the styles needed in this screen
  */
 const styles = StyleSheet.create({
-	containerFilter: {
+	container: {
 		backgroundColor: COLORS.white,
 		width: 50,
 		height: 50,
 		marginStart: 20,
 		borderRadius: 12,
 		justifyContent: "center",
+		alignItems: "center",
 	},
 	body: {
-		textAlignVertical: "center",
-		alignSelf: "center",
-		justifyContent: "center",
-		fontSize: 17,
+		fontSize: 15,
 		marginStart: 10,
 		color: COLORS.darkGrey,
 	},
-	greenHighlight: {
+	highlight: {
 		marginTop: 5,
 		fontSize: 13,
 		color: COLORS.green1,
@@ -732,19 +813,6 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 5,
 		width: 100,
 		height: 50,
-		borderBottomColor: COLORS.darkGrey,
-		backgroundColor: COLORS.secondary,
-	},
-	compass: {
-		marginTop: 480,
-		marginRight: 10,
-		marginStart: 320,
-		justifyContent: "center",
-		borderRadius: 5,
-		borderBottomWidth: 5,
-		width: 50,
-		height: 50,
-		alignItems: "center",
 		borderBottomColor: COLORS.darkGrey,
 		backgroundColor: COLORS.secondary,
 	},

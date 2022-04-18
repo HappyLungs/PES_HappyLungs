@@ -17,22 +17,24 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
-import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
+
 const PresentationCtrl = require("./PresentationCtrl.js");
 
-function CreatePinScreen({ navigation, route }) {
+function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
-	const { coords } = route.params;
-	const [date, setDate] = useState(new Date());
-	const [status, setStatus] = useState(false);
-	const [rating, setRating] = useState(3);
-	const [media, setMedia] = useState([]);
-	const [image1, setImage1] = useState(null);
-	const [image2, setImage2] = useState(null);
+	const { pin } = route.params;
+	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
+	const [date, setDate] = useState(pin.date);
+	const [status, setStatus] = useState(pin.status === "Public");
+	const [rating, setRating] = useState(pin.rating);
+	const [media, setMedia] = useState(Array.from(pin.media));
+	const [image1, setImage1] = useState(media[0]);
+	const [image2, setImage2] = useState(media[1]);
 	const [inputs, setInputs] = useState({
-		title: "",
-		description: "",
+		title: pin.name,
+		description: pin.description,
 	});
 	const [errors, setErrors] = useState({});
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -52,16 +54,17 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			presentationCtrl.createPin(
+			let editedPin = presentationCtrl.editPin(
 				inputs.title,
-				coords,
+				pin.location,
 				inputs.description,
 				tmpMedia,
 				rating,
-				transformDate(date),
-				status === true ? "Public" : "False"
+				date,
+				status === true ? "Public" : "Private"
 			);
-			navigation.navigate("MapScreen");
+			navigation.popToTop();
+			navigation.navigate("OwnerPin", { pin: editedPin });
 		}
 	};
 
@@ -74,20 +77,24 @@ function CreatePinScreen({ navigation, route }) {
 	};
 
 	const pickImage = async () => {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			aspect: [4, 3],
-			quality: 1,
-		});
-		if (!result.cancelled) {
-			const tmpMedia = [...media];
-			if (tmpMedia.length >= 2) {
-				Alert.alert("You can only attach 2 pictures!");
-			} else {
-				tmpMedia.push(result.uri);
-				setMedia([...media, result.uri]);
-				if (!image1) setImage1(result.uri);
-				else if (!image2) setImage2(result.uri);
+		if (media.length >= 2) {
+			Alert.alert("You can only attach 2 pictures!");
+		} else {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				aspect: [4, 3],
+				quality: 1,
+			});
+			if (!result.cancelled) {
+				const tmpMedia = [...media];
+				if (tmpMedia.length >= 2) {
+					Alert.alert("You can only attach 2 pictures!");
+				} else {
+					tmpMedia.push(result.uri);
+					setMedia([...media, result.uri]);
+					if (!image1) setImage1(result.uri);
+					else if (!image2) setImage2(result.uri);
+				}
 			}
 		}
 	};
@@ -102,7 +109,7 @@ function CreatePinScreen({ navigation, route }) {
 
 	const handleConfirmDate = (date) => {
 		hideDatePicker();
-		setDate(date);
+		setDate(transformDate(date));
 	};
 
 	const transformDate = (date) => {
@@ -116,14 +123,13 @@ function CreatePinScreen({ navigation, route }) {
 	};
 
 	const standarizeDate = () => {
-		var tmp = transformDate(date);
 		var standarizedDate = "";
 		return standarizedDate.concat(
-			tmp.slice(3, 5),
+			date.slice(3, 5),
 			"/",
-			tmp.slice(0, 2),
+			date.slice(0, 2),
 			"/",
-			tmp.slice(6, 10)
+			date.slice(6, 10)
 		);
 	};
 
@@ -234,7 +240,6 @@ function CreatePinScreen({ navigation, route }) {
 					flexDirection: "row",
 					paddingHorizontal: 10,
 					paddingVertical: 5,
-					alignItems: "center",
 				}}
 			>
 				<TouchableOpacity onPress={showDatePicker}>
@@ -245,7 +250,6 @@ function CreatePinScreen({ navigation, route }) {
 						size={25}
 					/>
 					<DateTimePickerModal
-						//style={styles.datePickerStyle}
 						mode="date"
 						date={new Date(standarizeDate())}
 						onConfirm={handleConfirmDate}
@@ -262,7 +266,7 @@ function CreatePinScreen({ navigation, route }) {
 					}}
 				>
 					{" "}
-					{transformDate(date)}
+					{date}
 				</Text>
 			</View>
 		);
@@ -275,6 +279,7 @@ function CreatePinScreen({ navigation, route }) {
 					fillColor={COLORS.green1}
 					size={25}
 					unfillColor={COLORS.white}
+					isChecked={status}
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
@@ -292,30 +297,30 @@ function CreatePinScreen({ navigation, route }) {
 		<SafeAreaView
 			style={{
 				flex: 1,
-				backgroundColor: COLORS.white,
 				flexDirection: "column",
+				backgroundColor: COLORS.white,
 				paddingHorizontal: 20,
 			}}
 		>
 			<View style={{ marginVertical: 20 }}>
 				<Text style={[styles.subtitle, { marginTop: 0 }]}>Location</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{[coords.latitude, "   ", coords.longitude]}
+					{locationName}
 				</Text>
 				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
+					defaultValue={pin.name}
 					label="Title"
-					placeholder="Enter the pin title"
 					error={errors.title}
 				/>
 				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
+					defaultValue={pin.description}
 					label="Description"
-					placeholder="Enter the pin event description"
 					error={errors.description}
 				/>
 				<Text style={styles.subtitle}> Date</Text>
@@ -327,11 +332,14 @@ function CreatePinScreen({ navigation, route }) {
 					type={"custom"}
 					imageSize={20}
 					fractions={0}
-					startingValue={3}
+					startingValue={rating}
 					ratingBackgroundColor={COLORS.secondary}
 					ratingColor={COLORS.green1}
 					tintColor={COLORS.white}
-					style={{ padding: 10, alignSelf: "flex-start" }}
+					style={{
+						padding: 10,
+						alignSelf: "flex-start",
+					}}
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
 				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
@@ -349,7 +357,7 @@ function CreatePinScreen({ navigation, route }) {
 							styles.shadow,
 							{ backgroundColor: COLORS.red1 },
 						]}
-						onPress={() => navigation.navigate("MapScreen")}
+						onPress={() => navigation.popToTop()}
 					>
 						<Text style={styles.containerTxt}>Cancel</Text>
 					</TouchableOpacity>
@@ -361,7 +369,7 @@ function CreatePinScreen({ navigation, route }) {
 						]}
 						onPress={validate}
 					>
-						<Text style={styles.containerTxt}>Save pin</Text>
+						<Text style={styles.containerTxt}>Save changes</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -401,4 +409,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default CreatePinScreen;
+export default PinEditScreen;

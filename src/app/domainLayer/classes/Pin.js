@@ -4,31 +4,12 @@ export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(name, location, description, media, rating, date, status) {
 		this.name = name;
-		this.location = location;
-		//maybe afegir locationName apart de les coords
-		//o es pot treure el nom del lloc a traves de les coords? idk
-		//idk either :/
+		this.location = location; //location has {latitude, longitude, title}
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
 		this.date = date;
-		this.status = status;
-		console.log(
-			"name: " +
-				name +
-				" location: " +
-				location +
-				" description: " +
-				description +
-				" media: " +
-				media +
-				" rating: " +
-				rating +
-				" date: " +
-				date +
-				" status: " +
-				status
-		);
+		this.status = status; //"Public" || "Private"
 
 		//add pin to dataBase
 		/*let res = {};
@@ -76,11 +57,6 @@ export default class Pin {
 		return this.show_charts;
 	}
 
-	//returns true if public pin
-	get status() {
-		return this.status;
-	}
-
 	show_recomended_IDs() {}
 
 	show_charts() {}
@@ -97,6 +73,10 @@ export default class Pin {
 
 		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
 
+		let today = new Date().toISOString().slice(0, 10);
+		const isoStrStart = today + 'T12:00:00-00:00';
+		const isoStrEnd = today + 'T13:00:00-00:00';
+
 		gapi.auth2
 			.getAuthInstance()
 			.signIn()
@@ -106,10 +86,10 @@ export default class Pin {
 					location: location,
 					description: description,
 					start: {
-						dateTime: "2020-06-28T09:00:00-07:00",
+						dateTime: isoStrStart,
 					},
 					end: {
-						dateTime: "2020-06-28T17:00:00-07:00",
+						dateTime: isoStrEnd,
 					},
 				};
 

@@ -1,7 +1,7 @@
 const mongodb = require("mongodb");
 const axios = require("axios");
-const fs = require('fs');
-const path = require('path');
+require('fs');
+require('path');
 let dataPointMap = new Map();
 let pollutantDayMeasure = [];
 let measure = [];
@@ -97,7 +97,7 @@ async function insertData () {
 
 async function insert () {
     let insertions = [];
-    for (let [key, value] of dataPointMap) {
+    for (let [, value] of dataPointMap) {
         insertions.push(value);
     }
     await axios({

@@ -3,7 +3,14 @@ import { StyleSheet, View, Text, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import COLORS from "../../config/stylesheet/colors";
 
-const Input = ({ label, iconName, error, onFocus = () => {}, ...props }) => {
+const InputField = ({
+	label,
+	defaultValue,
+	iconName,
+	error,
+	onFocus = () => {},
+	...props
+}) => {
 	const [isFocused, setIsFocused] = useState(false);
 	return (
 		<View style={{ marginTop: 10 }}>
@@ -37,6 +44,8 @@ const Input = ({ label, iconName, error, onFocus = () => {}, ...props }) => {
 				/>
 				<TextInput
 					autoCorrect={false}
+					defaultValue={defaultValue}
+					maxLength={label === "Title" ? 11 : 100}
 					onFocus={() => {
 						onFocus();
 						setIsFocused(true);
@@ -76,4 +85,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Input;
+export default InputField;
