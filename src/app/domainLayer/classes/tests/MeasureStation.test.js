@@ -1,4 +1,4 @@
-import {MeasureStation} from "./MeasureStation";
+const MeasureStation = require("../MeasureStation");
 
 let measureStationTest = new MeasureStation("08019043");
 
