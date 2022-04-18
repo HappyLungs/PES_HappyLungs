@@ -73,6 +73,10 @@ export default class Pin {
 
 		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
 
+		let today = new Date().toISOString().slice(0, 10);
+		const isoStrStart = today + 'T12:00:00-00:00';
+		const isoStrEnd = today + 'T13:00:00-00:00';
+
 		gapi.auth2
 			.getAuthInstance()
 			.signIn()
@@ -82,10 +86,10 @@ export default class Pin {
 					location: location,
 					description: description,
 					start: {
-						dateTime: "2020-06-28T09:00:00-07:00",
+						dateTime: isoStrStart,
 					},
 					end: {
-						dateTime: "2020-06-28T17:00:00-07:00",
+						dateTime: isoStrEnd,
 					},
 				};
 
