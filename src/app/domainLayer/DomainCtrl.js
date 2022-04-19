@@ -1,5 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
 import Pin from "./classes/Pin";
+import User from "./classes/User";
 
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
@@ -171,6 +172,16 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
 	return await point.getPollutantsQuantYear(date);
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the created pin
+ */
 DomainCtrl.prototype.createPin = function (
 	name,
 	location,
@@ -183,6 +194,16 @@ DomainCtrl.prototype.createPin = function (
 	//store db
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the updated pin
+ */
 DomainCtrl.prototype.editPin = function (
 	name,
 	location,
@@ -194,6 +215,34 @@ DomainCtrl.prototype.editPin = function (
 	//edit not create
 	return new Pin(name, location, description, media, rating, status);
 	//store db
+};
+
+/**
+ *
+ * @param {*} username
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+DomainCtrl.prototype.updateUser = function (
+	username,
+	email,
+	points,
+	healthState,
+	profilePicture
+) {
+	//edit, not create
+	let updatedUser = new User(
+		username,
+		email,
+		points,
+		healthState,
+		profilePicture
+	);
+	return updatedUser;
+	//update to db
 };
 
 module.exports = DomainCtrl;
