@@ -3,7 +3,7 @@ const DomainCtrl = require('../DomainCtrl');
 let ctrld=new DomainCtrl();
 
 jest.setTimeout(100000);
-/*
+
 test('test get map data', async ()=> {
     const mapdata = await ctrld.getMapData();
     expect(mapdata[0]).toHaveProperty('longitude');
@@ -34,7 +34,7 @@ test('test get pollution level last month', async ()=>{
     expect(data).toHaveProperty('tags');
     expect(data.tags).toHaveLength(31);
     expect(data).toHaveProperty('title');
-});*/
+});
 test('test get pollution level last year', async ()=>{
     const data=await ctrld.getPollutionLevelLastYear(40.93944,0.83139044);
     expect(data).toHaveProperty('levels');
@@ -43,4 +43,10 @@ test('test get pollution level last year', async ()=>{
     expect(data.tags).toHaveLength(12);
     expect(data).toHaveProperty('title');
 });
-
+test('get quantity of pollutants in a day',
+    async () => {
+        const data = await ctrld.getPollutantsQuantLastDay(40.93944, 0.83139044);
+        expect(data[0]).toHaveProperty('name');
+        expect(data[0]).toHaveProperty('quantity');
+        expect(data).toHaveLength(3);
+});
