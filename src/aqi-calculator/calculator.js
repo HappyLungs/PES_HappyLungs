@@ -52,21 +52,20 @@ function calculatePollutantAQI (pollutant, quantity) {
     let aqiLo = range('aqi', bpLo)[0]
     let aqiHi = range('aqi', bpHi)[1]
 
-    let aqi = (((aqiHi-aqiLo)/(bpHi-bpLo))*(quantity-bpLo)+aqiLo)
+    /*
+        let result = {
+            bpLo: bpLo,
+            bpHi: bpHi,
+            aqiLo: aqiLo,
+            aqiHi: aqiHi,
+            aqi: aqi
+        }*/
 
-    let result = {
-        bpLo: bpLo,
-        bpHi: bpHi,
-        aqiLo: aqiLo,
-        aqiHi: aqiHi,
-        aqi: aqi
-    }
-
-    return aqi
+    return (((aqiHi - aqiLo) / (bpHi - bpLo)) * (quantity - bpLo) + aqiLo)
 }
 
 function calculateAQI (pollutants) {
-    if (pollutants.size == 0) return null;
+    if (pollutants.size === 0) return null;
 
     let subAQIs = []
     for(const [pollutant, quantity] of pollutants){

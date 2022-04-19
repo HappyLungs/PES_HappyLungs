@@ -44,10 +44,10 @@ exports.find = async (request, response) => {
         responseObj.data    = {};
         response.send(responseObj);
     }
-    return;
+
 };
 
-exports.create = async (request, response, next) => {
+exports.create = async (request, response) => {
     let params = {};
     if (request.body.params) {
         params = request.body.params;
@@ -78,7 +78,7 @@ exports.create = async (request, response, next) => {
         responseObj.data    = {};
         response.send(responseObj);
     });
-    return;
+
 };
 
 exports.insertMultiple = async (request, response) => {
@@ -112,5 +112,5 @@ exports.insertMultiple = async (request, response) => {
         responseObj.data    = {};
         response.send(responseObj);
     });
-    return;
+
 }

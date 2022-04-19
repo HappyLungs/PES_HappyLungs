@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Text, StyleSheet, View } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
 
-function GeneralChatScreen(props) {
+function GeneralChatScreen() {
 	return (
 		<View style={styles.background}>
 			<Text style={{ marginTop: 300 }}> General Chat Screen</Text>

@@ -7,7 +7,7 @@ global.Schema = global.mongoose.Schema;
 const path = require("path");
 
 const app = express();
-const dotenv = require("dotenv").config({
+require("dotenv").config({
     path: path.resolve(__dirname, "./.env"),
 }); 
 
@@ -30,19 +30,28 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // Default Route
 app.use("/v1/", function(req, res, next) {
-    const contentType = req.headers["content-type"];
+req.headers["content-type"];
     // console.log(contentType);
     next();
 });
 
 // V1 Routes
 const IndexRoutesV1 = require("./routes/index.route.js");
+const IndexRoutesArticles = require("./routes/articles.route.js");
+const IndexRoutesComments = require("./routes/comments.route");
+
 app.use("/v1/", IndexRoutesV1);
+
+app.use("/api/articles", IndexRoutesArticles);
+
+app.use("/api/comments", IndexRoutesComments);
 
 function listen() {
     if (app.get("env") === "test") return;
     app.listen(process.env.PORT);
     console.log("Express app started on port " + process.env.PORT);
 }
+
+
 
 connect();

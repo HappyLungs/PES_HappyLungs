@@ -1,3 +1,5 @@
+import BaseClass from "./BaseClass.js";
+
 export default class User {
 	constructor(username, email, points, healthState, profilePicture) {
 		this.username = username;

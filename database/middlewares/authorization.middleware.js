@@ -22,7 +22,7 @@ exports.validate = (request, response, next) => {
                                 data: {}
                             });
                         }
-                        if (user.status == 0) { //BLOCKED ACCOUNT
+                        if (user.status === 0) { //BLOCKED ACCOUNT
                             responseObj.status = errorCodes.UNAUTHORIZED;
                             responseObj.message = "Account blocked";
                             responseObj.data = {};
@@ -37,7 +37,7 @@ exports.validate = (request, response, next) => {
                         responseObj.message = "Something went wrong";
                         responseObj.data = {};
                         response.send(responseObj);
-                        return;
+
                     });
             } else {
                 responseObj.status = errorCodes.BAD_REQUEST;
@@ -52,7 +52,7 @@ exports.validate = (request, response, next) => {
                 responseObj.message = "Access token missing";
                 responseObj.data = {};
                 response.send(responseObj);
-                return;
+
             }
         });
     } else {

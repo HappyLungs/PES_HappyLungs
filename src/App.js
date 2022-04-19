@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Navigation from "./app/presentationLayer/navigation/Navigation";
 
 export default function App() {
