@@ -73,15 +73,15 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getDayLevel(date);
 
-	/*let finalTags = [];
-	let finalLevels = [];*/
+	let finalTags = [];
+	let finalLevels = [];
 	for (let i = 1; i < 24; i += 2) {
 		finalTags.push(data.tags[i]);
 		finalLevels.push(data.levels[i]);
 	}
 
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return data;
 };
@@ -109,15 +109,15 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getMonthLevel(date);
 
-	/*let finalTags = [];
-	let finalLevels = [];*/
+	let finalTags = [];
+	let finalLevels = [];
 	for (let i = 0; i <= 30; i += 2) {
 		finalTags.push(data.tags[i]);
 		finalLevels.push(data.levels[i]);
 	}
 
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return data;
 };
@@ -128,8 +128,8 @@ DomainCtrl.prototype.getPollutionLevelLastYear = async function (
 ) {
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return await point.getYearLevel(date);
 };

@@ -88,7 +88,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [pinsShown, setPins] = useState(true);
+	const [pinsShown, setPinsShown] = useState(true);
 
 	/**
 	 *
@@ -336,7 +336,7 @@ function MapScreen({ navigation, route }) {
 								marginStart: 15,
 								alignItems: "center",
 							}}
-							onPress={() => setPins(!pinsShown)}
+							onPress={() => setPinsShown(!pinsShown)}
 						>
 							<AntDesign
 								name={pinsShown ? "pushpino" : "pushpin"}
@@ -645,18 +645,19 @@ function MapScreen({ navigation, route }) {
 					onPress={onModal}
 					onLoad={onMapLoad}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={marker.time.toISOString()}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setSelected(marker);
-							}}
-						/>
-					))}
+					{pinsShown &&
+						markers.map((marker) => (
+							<Marker
+								key={marker.time.toISOString()}
+								coordinate={{
+									latitude: marker.latitude,
+									longitude: marker.longitude,
+								}}
+								onPress={() => {
+									setSelected(marker);
+								}}
+							/>
+						))}
 
 					<Heatmap points={heatpoints} radius={50} />
 				</MapView>
@@ -666,7 +667,7 @@ function MapScreen({ navigation, route }) {
 				style={{
 					alignSelf: "flex-end",
 					flexDirection: "column",
-					justifyContent:'space-between',
+					justifyContent: "space-between",
 					marginVertical: 25,
 					marginEnd: 15,
 					flex: 1,
@@ -681,9 +682,7 @@ function MapScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
-				<View
-					style={[styles.container, styles.shadow]}
-				>
+				<View style={[styles.container, styles.shadow]}>
 					<TouchableOpacity
 						onPress={() => {
 							Location.installWebGeolocationPolyfill();
