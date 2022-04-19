@@ -9,14 +9,12 @@ import {
 	Share,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
-import { UrlTile } from "react-native-maps";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
