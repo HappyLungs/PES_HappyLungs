@@ -4,7 +4,6 @@ function sendResponse (res, statusCode, message, data) {
     responseObj.message = message;
     responseObj.data = data;
     res.send(responseObj);
-    return;
-};
+}
 
 module.exports = sendResponse;

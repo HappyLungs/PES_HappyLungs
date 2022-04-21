@@ -55,14 +55,13 @@ exports.create = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
-    return;
 };
 
 function comparePassword(password, hash) {
     return bcrypt.compareSync(password, hash);
-};
+}
 
-exports.changePassword = async (request, response, next) => {
+exports.changePassword = async (request, response) => {
     let params = {};
     if (request.body.params) {
         params = request.body.params;
@@ -78,9 +77,9 @@ exports.changePassword = async (request, response, next) => {
             if (comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
                 userDatalayer.updateUser({_id: mongodb.ObjectId(params.id)}, {password: bcrypt.hashSync(params.newPassword, 10)})
-                .then((userData) => {
-                    if (userData !== null && typeof userData !== undefined) {
-                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+                .then((updatedData) => {
+                    if (updatedData !== null && typeof updatedData !== undefined) {
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
                     } else {
                         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                     }
@@ -95,5 +94,8 @@ exports.changePassword = async (request, response, next) => {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
         }
     })
-    return;
+}
+
+exports.delete = async (request, response) => {
+    
 }
