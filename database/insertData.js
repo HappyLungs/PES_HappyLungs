@@ -107,8 +107,8 @@ async function insert () {
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -122,8 +122,8 @@ async function insert () {
     data: { insertions }
     }, {
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "pes2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "pes2022"
         },
         
     })
@@ -142,8 +142,8 @@ async function insert () {
             params: { insertions }
             }, {
                 headers: {
-                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-                    authorization: "pes2022"
+                    "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    "authorization": "pes2022"
                 }
             })
             .then(response => {
@@ -166,8 +166,8 @@ async function insert () {
                 maxContentLength: Infinity,
                 maxBodyLength: Infinity,
                 headers: {
-                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-                    authorization: "PES2022"
+                    "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    "authorization": "PES2022"
                 }
               })
               .then(response => {
@@ -186,8 +186,8 @@ async function insert () {
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -202,8 +202,8 @@ async function insert () {
     data: { pollutantDayMeasure }
     }, {
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "pes2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "pes2022"
         },
         maxContentLength: Infinity,
         maxBodyLength: Infinity
@@ -223,8 +223,8 @@ async function insert () {
                 params: { insertions }
             }, {
                 headers: {
-                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-                    authorization: "pes2022"
+                    "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    "authorization": "pes2022"
                 }
             })
             .then(response => {
@@ -248,8 +248,8 @@ async function insert () {
                 maxContentLength: Infinity,
                 maxBodyLength: Infinity,
                 headers: {
-                    lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-                    authorization: "PES2022"
+                    "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+                    "authorization": "PES2022"
                 }
               })
               .then(response => {
@@ -268,8 +268,8 @@ async function insert () {
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -285,8 +285,8 @@ async function insert () {
     data: { measure }
     }, {
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "pes2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "pes2022"
         },
         maxContentLength: Infinity,
         maxBodyLength: Infinity

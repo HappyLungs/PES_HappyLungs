@@ -27,6 +27,13 @@ router.post(
     //authorizationMiddleware.validate,
     UserController.create
 );
+
+router.put(
+    "/changePassword",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.changePassword
+);
 /* /User */
 
 /*  MeasureStation  */
