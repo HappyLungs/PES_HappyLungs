@@ -66,6 +66,34 @@ function RootStack() {
 					gestureDirection: "horizontal",
 				}}
 			/>
+			<Stack.Screen
+				name="DefaultPin"
+				component={PinDefaultScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="OwnerPin"
+				component={PinOwnerScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="EditPinScreen"
+				component={PinEditScreen}
+				options={{
+					title: "Editing pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }

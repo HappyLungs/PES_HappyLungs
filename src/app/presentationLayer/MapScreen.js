@@ -7,10 +7,13 @@ import {
 	SafeAreaView,
 	TextInput,
 	TouchableOpacity,
-	Modal,
+	TouchableWithoutFeedback,
+	Pressable,
 } from "react-native";
+import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
+import PinPreview from "./components/PinPreview";
 import {
 	Ionicons,
 	MaterialIcons,
@@ -26,6 +29,8 @@ import MapView, {
 	InfoWindow,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import * as Animatable from "react-native-animatable";
+
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import usePlacesAutocomplete, {
@@ -93,6 +98,16 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
+	const [pinPreview, setPinPreview] = useState(false);
+
+	/**
+	 *
+	 */
+	const [pins, setPins] = useState([]);
+
+	/**
+	 *
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
 
 	const [markers, setMarkers] = useState([]);
@@ -137,6 +152,14 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
+		const fetchPins = async () => {
+			//get pins from db
+			//ought to fetch them before navigate
+			const data = await presentationCtrl.fetchPins();
+			setPins(data);
+		};
+
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -232,17 +255,13 @@ function MapScreen({ navigation, route }) {
 			<View
 				style={[
 					{
-						height: 70,
-						width: "100%",
+						height: 45,
 						paddingHorizontal: 20,
-						paddingTop: 25,
-						paddingBottom: 10,
-						alignItems: "center",
-						flexDirection: "row",
+						marginTop: 45,
 						backgroundColor: COLORS.white,
-						borderBottomLeftRadius: 20,
-						borderBottomRightRadius: 20,
-						justifyContent: "space-between",
+						borderRadius: 20,
+						alignItems: "center",
+						justifyContent: "center",
 					},
 					styles.shadow,
 				]}
@@ -419,6 +438,43 @@ function MapScreen({ navigation, route }) {
 							/>
 						</View>
 					</View>
+				</View>
+			</Modal>
+		);
+	}
+
+	function renderPinPreview() {
+		return (
+			<Modal
+				visible={pinPreview}
+				animationType="fade"
+				transparent={true}
+				onRequestClose={() => {
+					setPinPreview(false);
+				}}
+				onBackdropPress={() => {
+					setPinPreview(false);
+				}}
+				statusBarTranslucent={false}
+			>
+				<View
+					style={{
+						justifyContent: "center",
+						alignSelf: "center",
+					}}
+				>
+					<Pressable
+						onPress={() => {
+							navigation.navigate("OwnerPin", { pin: pins[2] });
+							setPinPreview(false);
+						}}
+					>
+						<Animatable.View animation="pulse" duration={1000}>
+							<View style={[styles.modalView, styles.shadow]}>
+								<PinPreview item={pins[2]}></PinPreview>
+							</View>
+						</Animatable.View>
+					</Pressable>
 				</View>
 			</Modal>
 		);
@@ -627,7 +683,6 @@ function MapScreen({ navigation, route }) {
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
 				style={{
-					marginTop: 55,
 					...StyleSheet.absoluteFillObject,
 				}}
 			>
@@ -644,6 +699,7 @@ function MapScreen({ navigation, route }) {
 					onRegionChangeComplete={(region) => setRegion(region)}
 					onPress={onModal}
 					onLoad={onMapLoad}
+					showsCompass={false}
 				>
 					{pinsShown &&
 						markers.map((marker) => (
@@ -654,6 +710,7 @@ function MapScreen({ navigation, route }) {
 									longitude: marker.longitude,
 								}}
 								onPress={() => {
+									setPinPreview(true);
 									setSelected(marker);
 								}}
 							/>
@@ -702,6 +759,8 @@ function MapScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</View>
+
+			{pinPreview && renderPinPreview()}
 			{renderModalPin()}
 			{renderModalFilter()}
 		</SafeAreaView>
@@ -735,6 +794,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		alignSelf: "center",
 		width: "80%",
+		backgroundColor: "red",
 	},
 	modalView: {
 		margin: 20,
@@ -742,6 +802,12 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		padding: 15,
 		alignItems: "center",
+	},
+	modalContainerStyle: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "flex-end",
 	},
 	textStyle: {
 		color: COLORS.white,
