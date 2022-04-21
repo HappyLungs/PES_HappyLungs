@@ -17,13 +17,13 @@ import MapScreen from "../MapScreen";
 import GeneralChatScreen from "../GeneralChatScreen";
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
+import ProfileEditScreen from "../ProfileEditScreen";
 import StatisticsScreen from "../StatisticsScreen";
 import CreatePinScreen from "../CreatePinScreen";
 import PinOwnerScreen from "../PinOwnerScreen";
 import PinEditScreen from "../PinEditScreen";
 import PinDefaultScreen from "../PinDefaultScreen";
 import COLORS from "../../config/stylesheet/colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
@@ -128,11 +128,6 @@ function PinStack() {
 	);
 }
 
-function navigate() {
-	const navigation = useNavigation();
-	navigation.navigate("MapScreen");
-}
-
 function ProfileStack() {
 	return (
 		<Stack.Navigator
@@ -156,6 +151,22 @@ function ProfileStack() {
 				options={{
 					title: "",
 					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name="ProfileEditScreen"
+				component={ProfileEditScreen}
+				options={{
+					title: "",
+					title: "Editing profile",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
 				}}
 			/>
 		</Stack.Navigator>

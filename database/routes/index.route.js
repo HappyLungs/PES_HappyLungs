@@ -11,6 +11,7 @@ const UserController = require("../controllers/user.controller");
 const MeasureStationController = require("../controllers/measureStation.controller");
 const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
+const MessageController = require("../controllers/messages.controller");
 
 /*  User */
 router.get(
@@ -86,4 +87,15 @@ router.put(
     PinController.validate("updatePin"),
     PinController.update
 );
-/*  /Pin */
+/*  /Message */
+
+router.post(
+    "/message",
+  //  licenseMiddleware.validate,
+
+    MessageController.create
+);
+router.get(
+    "/message",
+    MessageController.find
+);

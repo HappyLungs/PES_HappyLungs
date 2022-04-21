@@ -37,14 +37,10 @@ req.headers["content-type"];
 
 // V1 Routes
 const IndexRoutesV1 = require("./routes/index.route.js");
-const IndexRoutesArticles = require("./routes/articles.route.js");
-const IndexRoutesComments = require("./routes/comments.route");
 
 app.use("/v1/", IndexRoutesV1);
 
-app.use("/api/articles", IndexRoutesArticles);
 
-app.use("/api/comments", IndexRoutesComments);
 
 function listen() {
     if (app.get("env") === "test") return;

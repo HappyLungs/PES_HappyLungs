@@ -1,20 +1,17 @@
 import BaseClass from "./BaseClass.js";
 
-export default class User extends BaseClass {
-    
+export default class User {
+	constructor(username, email, points, healthState, profilePicture) {
+		this.username = username;
+		this.email = email;
+		this.points = points;
+		this.healthState = healthState;
+		this.profilePicture = profilePicture;
+	}
 
-    constructor (email) {
-        super();
-        this.email = email;
-    }
-    
-    //Getters
-    get UserMail () {
-        return this.email;
-    }
-
-    get userID() {
-        return this.id;
-    }
-
+	//Getters
+	get UserMail() {
+		return this.email;
+	}
 }
+export { User };

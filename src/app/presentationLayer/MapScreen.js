@@ -88,7 +88,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [pinsShown, setPins] = useState(true);
+	const [pinsShown, setPinsShown] = useState(true);
 
 	/**
 	 *
@@ -219,6 +219,210 @@ function MapScreen({ navigation, route }) {
 		};
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
+
+	const fakeProfileData = {
+		username: "Ricard",
+		points: 200,
+	};
+
+	const [profile, setProfile] = useState(fakeProfileData);
+
+	function renderHeader(profile) {
+		return (
+			<View
+				style={[
+					{
+						height: 70,
+						width: "100%",
+						paddingHorizontal: 20,
+						paddingTop: 25,
+						paddingBottom: 10,
+						alignItems: "center",
+						flexDirection: "row",
+						backgroundColor: COLORS.white,
+						borderBottomLeftRadius: 20,
+						borderBottomRightRadius: 20,
+						justifyContent: "space-between",
+					},
+					styles.shadow,
+				]}
+			>
+				<Text
+					style={[
+						{
+							fontSize: 20,
+							fontWeight: "bold",
+							color: COLORS.secondary,
+						},
+					]}
+				>
+					{profile.username},
+					<Text
+						style={[
+							{
+								fontSize: 18,
+								fontWeight: "normal",
+								color: COLORS.secondary,
+							},
+						]}
+					>
+						{" "}
+						Welcome Back!
+					</Text>
+				</Text>
+			</View>
+		);
+	}
+
+	/**
+	 *
+	 */
+	function renderModalFilter() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalFilterVisible}
+				onRequestClose={() => {
+					setModalFilterVisible(!modalFilterVisible);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<TouchableOpacity
+							style={{ alignSelf: "flex-end" }}
+							onPress={() => setModalFilterVisible(!modalFilterVisible)}
+						>
+							<Ionicons name="close" color={COLORS.secondary} size={25} />
+						</TouchableOpacity>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
+							]}
+						>
+							Filter
+						</Text>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", color: COLORS.green1 },
+							]}
+						>
+							Type of contamination
+						</Text>
+						{renderCheckList()}
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
+							]}
+						>
+							Show pins
+						</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.secondary,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: 10,
+								marginStart: 15,
+								alignItems: "center",
+							}}
+							onPress={() => setPinsShown(!pinsShown)}
+						>
+							<AntDesign
+								name={pinsShown ? "pushpino" : "pushpin"}
+								size={25}
+								color={COLORS.white}
+							/>
+						</TouchableOpacity>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
+							]}
+						>
+							Filter buildings by energy certificate
+						</Text>
+						<View style={{ flexDirection: "row", alignItems: "center" }}>
+							<TouchableOpacity
+								style={{
+									flexDirection: "row",
+									backgroundColor: COLORS.secondary,
+									borderRadius: 90,
+									padding: 7,
+									marginTop: 10,
+									marginEnd: 10,
+									marginStart: 15,
+									alignItems: "center",
+								}}
+								onPress={() => setByCertificate(!byCertificate)}
+							>
+								<Ionicons
+									name={byCertificate ? "home" : "home-outline"}
+									size={25}
+									color={COLORS.white}
+								/>
+							</TouchableOpacity>
+							<MultiSlider
+								sliderLength={100}
+								//onValuesChange={multiSliderValuesChange}
+								min={0}
+								max={7}
+								step={1}
+								snapped
+								showSteps
+								values={[0, 1]}
+								//enableLabel
+								//customLabel={CustomLabel}
+								stepLabelStyle={{
+									color: "blue",
+								}}
+								markerStyle={{
+									backgroundColor: COLORS.green1,
+									height: 10,
+									width: 10,
+									bottom: -3,
+								}}
+								stepLabel={{
+									backgroundColor: "red",
+									height: 20,
+									width: 20,
+									fontSize: 10,
+								}}
+								pressedMarkerStyle={{
+									height: 10,
+									width: 10,
+								}}
+								selectedStyle={{
+									backgroundColor: COLORS.green1,
+								}}
+								unselectedStyle={{
+									backgroundColor: COLORS.secondary,
+								}}
+								containerStyle={{
+									height: 40,
+									marginStart: 10,
+								}}
+								trackStyle={{
+									height: 5,
+									borderRadius: 2,
+								}}
+							/>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
 
 	/**
 	 *
@@ -419,265 +623,11 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
-	const fakeProfileData = {
-		username: "Ricard",
-		points: 200,
-	};
-
-	const [profile, setProfile] = useState(fakeProfileData);
-
-	function renderHeader(profile) {
-		return (
-			<View
-				style={[
-					{
-						height: 150,
-						flexDirection: "row",
-						paddingHorizontal: 20,
-						alignItems: "center",
-						backgroundColor: COLORS.white,
-						borderBottomLeftRadius: 20,
-						borderBottomRightRadius: 20,
-					},
-					styles.shadow,
-				]}
-			>
-				<View
-					style={{
-						flexDirection: "column",
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 25,
-							marginBottom: 10,
-						}}
-					>
-						<Text
-							style={[
-								{
-									fontSize: 20,
-									fontWeight: "bold",
-									color: COLORS.secondary,
-								},
-							]}
-						>
-							{profile.username},
-							<Text
-								style={[
-									{
-										fontSize: 18,
-										fontWeight: "normal",
-										color: COLORS.secondary,
-									},
-								]}
-							>
-								{" "}
-								Welcome Back!
-							</Text>
-						</Text>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-						}}
-					>
-						<View
-							style={[
-								{
-									backgroundColor: COLORS.lightGrey,
-									width: "80%",
-									height: 50,
-									borderRadius: 12,
-									flexDirection: "row",
-								},
-								styles.shadow,
-							]}
-						>
-							<MaterialIcons
-								name="search"
-								style={{ alignSelf: "center", marginStart: 10 }}
-								color={COLORS.secondary}
-								size={35}
-							/>
-							<TextInput
-								multiline={false}
-								maxLength={30}
-								style={styles.body}
-								placeholder={"Search a location"}
-							/>
-						</View>
-						<View style={[styles.container, styles.shadow]}>
-							<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
-								<MaterialCommunityIcons
-									name="filter-menu"
-									color={COLORS.secondary}
-									size={35}
-								/>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-			</View>
-		);
-	}
-
-	/**
-	 *
-	 */
-	function renderModalFilter() {
-		return (
-			<Modal
-				animationType="fade"
-				transparent={true}
-				visible={modalFilterVisible}
-				onRequestClose={() => {
-					setModalFilterVisible(!modalFilterVisible);
-				}}
-			>
-				<View style={styles.centeredView}>
-					<View
-						style={[
-							styles.modalView,
-							styles.shadow,
-							{ alignItems: "flex-start" },
-						]}
-					>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalFilterVisible(!modalFilterVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
-							]}
-						>
-							Filter
-						</Text>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1 },
-							]}
-						>
-							Type of contamination
-						</Text>
-						{renderCheckList()}
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
-							]}
-						>
-							Show pins
-						</Text>
-						<TouchableOpacity
-							style={{
-								flexDirection: "row",
-								backgroundColor: COLORS.secondary,
-								borderRadius: 90,
-								padding: 7,
-								marginTop: 10,
-								marginStart: 15,
-								alignItems: "center",
-							}}
-							onPress={() => setPins(!pinsShown)}
-						>
-							<AntDesign
-								name={pinsShown ? "pushpino" : "pushpin"}
-								size={25}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
-							]}
-						>
-							Filter buildings by energy certificate
-						</Text>
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<TouchableOpacity
-								style={{
-									flexDirection: "row",
-									backgroundColor: COLORS.secondary,
-									borderRadius: 90,
-									padding: 7,
-									marginTop: 10,
-									marginEnd: 10,
-									marginStart: 15,
-									alignItems: "center",
-								}}
-								onPress={() => setByCertificate(!byCertificate)}
-							>
-								<Ionicons
-									name={byCertificate ? "home" : "home-outline"}
-									size={25}
-									color={COLORS.white}
-								/>
-							</TouchableOpacity>
-							<MultiSlider
-								sliderLength={100}
-								//onValuesChange={multiSliderValuesChange}
-								min={0}
-								max={7}
-								step={1}
-								snapped
-								showSteps
-								values={[0, 1]}
-								//enableLabel
-								//customLabel={CustomLabel}
-								stepLabelStyle={{
-									color: "blue",
-								}}
-								markerStyle={{
-									backgroundColor: COLORS.green1,
-									height: 10,
-									width: 10,
-									bottom: -3,
-								}}
-								stepLabel={{
-									backgroundColor: "red",
-									height: 20,
-									width: 20,
-									fontSize: 10,
-								}}
-								pressedMarkerStyle={{
-									height: 10,
-									width: 10,
-								}}
-								selectedStyle={{
-									backgroundColor: COLORS.green1,
-								}}
-								unselectedStyle={{
-									backgroundColor: COLORS.secondary,
-								}}
-								containerStyle={{
-									height: 40,
-									marginStart: 10,
-								}}
-								trackStyle={{
-									height: 5,
-									borderRadius: 2,
-								}}
-							/>
-						</View>
-					</View>
-				</View>
-			</Modal>
-		);
-	}
-
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
 				style={{
-					marginTop: 100,
+					marginTop: 55,
 					...StyleSheet.absoluteFillObject,
 				}}
 			>
@@ -695,48 +645,62 @@ function MapScreen({ navigation, route }) {
 					onPress={onModal}
 					onLoad={onMapLoad}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={marker.time.toISOString()}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setSelected(marker);
-							}}
-						/>
-					))}
+					{pinsShown &&
+						markers.map((marker) => (
+							<Marker
+								key={marker.time.toISOString()}
+								coordinate={{
+									latitude: marker.latitude,
+									longitude: marker.longitude,
+								}}
+								onPress={() => {
+									setSelected(marker);
+								}}
+							/>
+						))}
 
 					<Heatmap points={heatpoints} radius={50} />
 				</MapView>
 			</View>
 			{renderHeader(profile)}
-
 			<View
-				style={[
-					styles.container,
-					styles.shadow,
-					{ marginTop: 480, marginRight: 10, marginStart: 320 },
-				]}
+				style={{
+					alignSelf: "flex-end",
+					flexDirection: "column",
+					justifyContent: "space-between",
+					marginVertical: 25,
+					marginEnd: 15,
+					flex: 1,
+				}}
 			>
-				<TouchableOpacity
-					onPress={() => {
-						Location.installWebGeolocationPolyfill();
-						navigator.geolocation.getCurrentPosition((position) => {
-							panTo({
-								lat: position.coords.latitude,
-								lng: position.coords.longitude,
+				<View style={[styles.container, styles.shadow]}>
+					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+						<MaterialCommunityIcons
+							name="filter-menu"
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
+				</View>
+				<View style={[styles.container, styles.shadow]}>
+					<TouchableOpacity
+						onPress={() => {
+							Location.installWebGeolocationPolyfill();
+							navigator.geolocation.getCurrentPosition((position) => {
+								panTo({
+									lat: position.coords.latitude,
+									lng: position.coords.longitude,
+								});
 							});
-						});
-					}}
-				>
-					<MaterialCommunityIcons
-						name="compass"
-						color={COLORS.secondary}
-						size={35}
-					/>
-				</TouchableOpacity>
+						}}
+					>
+						<MaterialCommunityIcons
+							name="compass"
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
+				</View>
 			</View>
 			{renderModalPin()}
 			{renderModalFilter()}
@@ -751,7 +715,6 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.white,
 		width: 50,
 		height: 50,
-		marginStart: 20,
 		borderRadius: 12,
 		justifyContent: "center",
 		alignItems: "center",

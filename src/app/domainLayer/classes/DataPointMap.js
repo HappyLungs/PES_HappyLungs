@@ -76,7 +76,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-       return await nearPoint.getQuantityOfEachPollutantDay(date);
+       return await nearPoint.getQuantityOfEachPollutantAtDay(date);
     }
    /**
      * Calculates the quantities of each pollutant on a week.
