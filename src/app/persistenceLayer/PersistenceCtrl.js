@@ -18,8 +18,8 @@ PersistenceCtrl.prototype.postRequest = async function (endpoint, params) {
         url: this.DB_URI + endpoint,
         data: params,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -39,8 +39,8 @@ PersistenceCtrl.prototype.getRequest = async function (endpoint, query) {
         url: this.DB_URI + endpoint,
         params: query,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -60,8 +60,8 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
         url: this.DB_URI + endpoint,
         data: params,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
       })
       .then(response => {
@@ -80,8 +80,8 @@ PersistenceCtrl.prototype.deleteRequest = async function (endpoint, query) {
         url: this.DB_URI + endpoint,
         params: query,
         headers: {
-            lfuzcudDtC36EFQW: "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            authorization: "PES2022"
+            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "authorization": "PES2022"
         }
         })
         .then(response => {

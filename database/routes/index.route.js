@@ -27,6 +27,21 @@ router.post(
     //authorizationMiddleware.validate,
     UserController.create
 );
+
+<<<<<<< Updated upstream
+router.put(
+    "/changePassword",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.changePassword
+=======
+router.post(
+    "/deleteUser",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.delete
+>>>>>>> Stashed changes
+);
 /* /User */
 
 /*  MeasureStation  */
