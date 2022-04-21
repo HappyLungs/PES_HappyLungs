@@ -1,4 +1,4 @@
-const mongodb = require("mongodb");
+/* const mongodb = require("mongodb");
 const axios = require("axios");
 require('fs');
 require('path');
@@ -154,7 +154,7 @@ async function insert () {
             });
             insertions = [];
         }
-    } */
+    } 
     insertions = [];
     for (let value of pollutantDayMeasure) {
         insertions.push(value);
@@ -162,7 +162,7 @@ async function insert () {
             await axios({
                 method: 'post',
                 url: "http://localhost:2000/v1/insertMultiplePollutantDayMeasure",
-                data: /* pollutantDayMeasure */insertions,
+                data: /* pollutantDayMeasure insertions,
                 maxContentLength: Infinity,
                 maxBodyLength: Infinity,
                 headers: {
@@ -182,7 +182,7 @@ async function insert () {
     await axios({
         method: 'post',
         url: "http://localhost:2000/v1/insertMultiplePollutantDayMeasure",
-        data: /* pollutantDayMeasure */insertions,
+        data: /* pollutantDayMeasure insertions,
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
         headers: {
@@ -235,7 +235,7 @@ async function insert () {
             });
             insertions = [];
         }
-    } */
+    }
 
     insertions = [];
     for (let value of measure) {
@@ -296,7 +296,8 @@ async function insert () {
     })
     .catch(error => {
         console.log(error);
-    }); */
+    });
 }
 
 insertData();
+ */
