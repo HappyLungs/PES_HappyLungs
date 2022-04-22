@@ -10,7 +10,6 @@ import {
 	ImageBackground,
 	Pressable,
 } from "react-native";
-import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 import PinPreview from "./components/PinPreview";
@@ -30,6 +29,7 @@ import MapView, {
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as Animatable from "react-native-animatable";
+import Modal from "react-native-modal";
 
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
@@ -265,7 +265,8 @@ function MapScreen({ navigation, route }) {
 						paddingTop: 40,
 						width: "100%",
 						backgroundColor: COLORS.white,
-						borderRadius: 20,
+						borderBottomEndRadius: 20,
+						borderBottomStartRadius: 20,
 						alignItems: "flex-start",
 						justifyContent: "center",
 						flexDirection: "row",
@@ -299,8 +300,9 @@ function MapScreen({ navigation, route }) {
 				</View>
 				<TouchableOpacity
 					onPress={() => {
-						navigation.navigate("ProfileScreen");
+						navigation.navigate("Profile");
 					}}
+					style={{ marginTop: 10 }}
 				>
 					<Image
 						source={profile.picture}
@@ -333,6 +335,7 @@ function MapScreen({ navigation, route }) {
 				onBackdropPress={() => {
 					setModalFilterVisible(false);
 				}}
+				style={{}}
 			>
 				<Animatable.View
 					style={{
@@ -498,13 +501,7 @@ function MapScreen({ navigation, route }) {
 							setPinPreview(false);
 						}}
 					>
-						<Animatable.View
-							animation="pulse"
-							duration={1000}
-							style={[styles.modalView, styles.shadow]}
-						>
-							<PinPreview item={pins[2]}></PinPreview>
-						</Animatable.View>
+						<PinPreview item={pins[2]}></PinPreview>
 					</Pressable>
 				</View>
 			</Modal>

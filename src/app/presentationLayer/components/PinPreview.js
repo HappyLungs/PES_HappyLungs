@@ -1,38 +1,65 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 import COLORS from "../../config/stylesheet/colors";
 import * as Animatable from "react-native-animatable";
+import { Ionicons } from "@expo/vector-icons";
 
 const PinPreview = ({ item }) => {
 	return (
-		<Animatable.View
-			style={{
-				alignItems: "center",
-				flexDirection: "row",
-				alignItems: "flex-start",
-			}}
-		>
+		<Animatable.View animation="pulse" duration={1000} style={styles.shadow}>
 			<View
 				style={{
-					marginEnd: 25,
-					flexDirection: "column",
+					flexDirection: "row",
+					backgroundColor: COLORS.white,
+					borderTopStartRadius: 10,
+					borderTopEndRadius: 10,
+					padding: 15,
 				}}
 			>
-				<Text style={styles.pinName}>{item.name}</Text>
-
-				<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
-				<Text style={styles.profile}>author</Text>
-			</View>
-			<View style={[styles.shadow]}>
-				<Image
-					source={{ uri: item.media[0] }}
+				<View
 					style={{
-						width: 65,
-						height: 65,
-						borderRadius: 10,
+						marginEnd: 15,
+						flexDirection: "column",
 					}}
-				/>
+				>
+					<Text style={styles.pinName}>{item.name}</Text>
+
+					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
+					<Text style={styles.profile}>author</Text>
+				</View>
+				<View style={styles.shadow}>
+					<Image
+						source={{ uri: item.media[0] }}
+						style={{
+							width: 75,
+							height: 75,
+							borderRadius: 10,
+						}}
+					/>
+				</View>
+			</View>
+			<View
+				style={{
+					height: 30,
+					flexDirection: "row",
+					backgroundColor: COLORS.secondary,
+					borderBottomEndRadius: 10,
+					borderBottomStartRadius: 10,
+				}}
+			>
+				<TouchableOpacity
+					style={{
+						flex: 1,
+						flexDirection: "row",
+						backgroundColor: COLORS.secondary,
+						justifyContent: "space-evenly",
+						borderRadius: 10,
+						alignItems: "center",
+					}}
+				>
+					<Text style={styles.containerTxt}>{1 ? "SAVE" : "REMOVE"}</Text>
+				</TouchableOpacity>
 			</View>
 		</Animatable.View>
 	);
@@ -55,7 +82,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	containerTxt: {
-		fontSize: 13,
+		fontSize: 15,
 		color: COLORS.white,
 		fontWeight: "bold",
 	},

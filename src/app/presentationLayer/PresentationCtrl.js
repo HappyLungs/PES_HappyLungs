@@ -215,7 +215,7 @@ PresentationCtrl.prototype.fetchPins = async function () {
 			"Private"
 		),
 		new Pin(
-			"CAMP NOU",
+			"CAMP NOUuuuuuuu",
 			{
 				latitude: 41.38941,
 				longitude: 2.113436,
