@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import {
 	Text,
 	StyleSheet,
@@ -7,42 +6,26 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Image,
-	ImageBackground,
 	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
 import PinPreview from "./components/PinPreview";
+const PresentationCtrl = require("./PresentationCtrl.js");
+
 import {
 	Ionicons,
 	MaterialIcons,
 	MaterialCommunityIcons,
 	AntDesign,
 } from "@expo/vector-icons";
-
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, {
-	Marker,
-	Heatmap,
-	PROVIDER_GOOGLE,
-	InfoWindow,
-} from "react-native-maps";
+import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as Animatable from "react-native-animatable";
 import Modal from "react-native-modal";
-
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-
-import usePlacesAutocomplete, {
-	getGeocode,
-	getLatLng,
-} from "use-places-autocomplete";
-
 import * as Location from "expo-location";
-
-import { formatRelative } from "date-fns";
-
-const PresentationCtrl = require("./PresentationCtrl.js");
 
 async function callGeocodeAPI(latitude, longitude) {
 	const location = await fetch(
@@ -68,12 +51,12 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [modalPinVisible, setModalPinVisible] = useState(false);
+	const [pinCreateVisible, setPinCreateVisible] = useState(false);
 
 	/**
 	 *
 	 */
-	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+	const [filterVisible, setFilterVisible] = useState(false);
 
 	/**
 	 *
@@ -203,7 +186,7 @@ function MapScreen({ navigation, route }) {
 				time: new Date(),
 			},
 		]);
-		setModalPinVisible(!modalPinVisible);
+		setPinCreateVisible(!pinCreateVisible);
 	});
 
 	const onModal = async (event) => {
@@ -216,7 +199,7 @@ function MapScreen({ navigation, route }) {
 			longitude,
 			title,
 		});
-		setModalPinVisible(true);
+		setPinCreateVisible(true);
 	};
 
 	/**
@@ -323,17 +306,17 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	function renderModalFilter() {
+	function renderFilter() {
 		return (
 			<Modal
 				animationType="fade"
 				transparent={true}
-				visible={modalFilterVisible}
+				visible={filterVisible}
 				onRequestClose={() => {
-					setModalFilterVisible(false);
+					setFilterVisible(false);
 				}}
 				onBackdropPress={() => {
-					setModalFilterVisible(false);
+					setFilterVisible(false);
 				}}
 				style={{}}
 			>
@@ -516,12 +499,12 @@ function MapScreen({ navigation, route }) {
 			<Modal
 				animationType="fade"
 				transparent={true}
-				visible={modalPinVisible}
+				visible={pinCreateVisible}
 				onRequestClose={() => {
-					setModalPinVisible(false);
+					setPinCreateVisible(false);
 				}}
 				onBackdropPress={() => {
-					setModalPinVisible(false);
+					setPinCreateVisible(false);
 				}}
 			>
 				<Animatable.View
@@ -566,7 +549,7 @@ function MapScreen({ navigation, route }) {
 										actualMarker.latitude,
 										actualMarker.longitude
 									);
-									setModalPinVisible(!modalPinVisible);
+									setPinCreateVisible(!pinCreateVisible);
 									navigation.navigate("Statistics", {
 										data: data,
 										coords: {
@@ -591,7 +574,7 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={() => setModalPinVisible(!modalPinVisible)}
+								onPress={() => setPinCreateVisible(!pinCreateVisible)}
 							>
 								<Ionicons
 									name="share-social-sharp"
@@ -764,7 +747,7 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+					<TouchableOpacity onPress={() => setFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
@@ -795,7 +778,7 @@ function MapScreen({ navigation, route }) {
 
 			{pinPreview && renderPinPreview()}
 			{renderPinCreate()}
-			{renderModalFilter()}
+			{renderFilter()}
 		</SafeAreaView>
 	);
 }

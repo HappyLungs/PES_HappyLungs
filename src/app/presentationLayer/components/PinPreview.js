@@ -3,9 +3,15 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 import COLORS from "../../config/stylesheet/colors";
 import * as Animatable from "react-native-animatable";
-import { Ionicons } from "@expo/vector-icons";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 const PinPreview = ({ item }) => {
+	let presentationCtrl = new PresentationCtrl();
+
+	const savePin = () => {
+		//presentationCtrl.savePin(item);
+	};
+
 	return (
 		<Animatable.View animation="pulse" duration={1000} style={styles.shadow}>
 			<View
@@ -57,6 +63,7 @@ const PinPreview = ({ item }) => {
 						borderRadius: 10,
 						alignItems: "center",
 					}}
+					onPress={() => savePin()}
 				>
 					<Text style={styles.containerTxt}>{1 ? "SAVE" : "REMOVE"}</Text>
 				</TouchableOpacity>
