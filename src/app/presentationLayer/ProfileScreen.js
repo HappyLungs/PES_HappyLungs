@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
 	Text,
 	StyleSheet,
@@ -20,7 +19,6 @@ function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
 	//const { user } = route.params;
-
 	const user = {
 		username: "Username",
 		email: "username@email.com",

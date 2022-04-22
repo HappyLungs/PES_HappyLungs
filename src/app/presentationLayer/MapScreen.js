@@ -1,43 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import {
 	Text,
 	StyleSheet,
 	View,
 	SafeAreaView,
-	TextInput,
 	TouchableOpacity,
-	Modal,
+	Image,
+	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import PinPreview from "./components/PinPreview";
+const PresentationCtrl = require("./PresentationCtrl.js");
+
 import {
 	Ionicons,
 	MaterialIcons,
 	MaterialCommunityIcons,
 	AntDesign,
 } from "@expo/vector-icons";
-
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, {
-	Marker,
-	Heatmap,
-	PROVIDER_GOOGLE,
-	InfoWindow,
-} from "react-native-maps";
+import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import * as Animatable from "react-native-animatable";
+import Modal from "react-native-modal";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-
-import usePlacesAutocomplete, {
-	getGeocode,
-	getLatLng,
-} from "use-places-autocomplete";
-
 import * as Location from "expo-location";
-
-import { formatRelative } from "date-fns";
-
-const PresentationCtrl = require("./PresentationCtrl.js");
 
 async function callGeocodeAPI(latitude, longitude) {
 	const location = await fetch(
@@ -63,12 +51,12 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [modalPinVisible, setModalPinVisible] = useState(false);
+	const [pinCreateVisible, setPinCreateVisible] = useState(false);
 
 	/**
 	 *
 	 */
-	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+	const [filterVisible, setFilterVisible] = useState(false);
 
 	/**
 	 *
@@ -89,6 +77,16 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	const [pinsShown, setPinsShown] = useState(true);
+
+	/**
+	 *
+	 */
+	const [pinPreview, setPinPreview] = useState(false);
+
+	/**
+	 *
+	 */
+	const [pins, setPins] = useState([]);
 
 	/**
 	 *
@@ -137,6 +135,14 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
+		const fetchPins = async () => {
+			//get pins from db
+			//ought to fetch them before navigate
+			const data = await presentationCtrl.fetchPins();
+			setPins(data);
+		};
+
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -180,7 +186,7 @@ function MapScreen({ navigation, route }) {
 				time: new Date(),
 			},
 		]);
-		setModalPinVisible(!modalPinVisible);
+		setPinCreateVisible(!pinCreateVisible);
 	});
 
 	const onModal = async (event) => {
@@ -193,7 +199,7 @@ function MapScreen({ navigation, route }) {
 			longitude,
 			title,
 		});
-		setModalPinVisible(true);
+		setPinCreateVisible(true);
 	};
 
 	/**
@@ -220,56 +226,79 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
-	const fakeProfileData = {
+	const user = {
 		username: "Ricard",
+		email: "username@email.com",
 		points: 200,
+		healthState: [true, false, true],
+		picture: {
+			uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+		},
 	};
 
-	const [profile, setProfile] = useState(fakeProfileData);
+	const [profile, setProfile] = useState(user);
 
 	function renderHeader(profile) {
 		return (
 			<View
 				style={[
 					{
-						height: 70,
-						width: "100%",
+						height: 100,
 						paddingHorizontal: 20,
-						paddingTop: 25,
-						paddingBottom: 10,
-						alignItems: "center",
-						flexDirection: "row",
+						paddingTop: 40,
+						width: "100%",
 						backgroundColor: COLORS.white,
-						borderBottomLeftRadius: 20,
-						borderBottomRightRadius: 20,
-						justifyContent: "space-between",
+						borderBottomEndRadius: 20,
+						borderBottomStartRadius: 20,
+						alignItems: "flex-start",
+						justifyContent: "center",
+						flexDirection: "row",
 					},
 					styles.shadow,
 				]}
 			>
-				<Text
-					style={[
-						{
-							fontSize: 20,
-							fontWeight: "bold",
-							color: COLORS.secondary,
-						},
-					]}
-				>
-					{profile.username},
+				<View style={{ flexDirection: "column", flex: 1 }}>
 					<Text
 						style={[
 							{
-								fontSize: 18,
+								fontSize: 20,
+								fontWeight: "bold",
+								color: COLORS.secondary,
+							},
+						]}
+					>
+						Hi {profile.username}!
+					</Text>
+					<Text
+						style={[
+							{
+								fontSize: 15,
 								fontWeight: "normal",
 								color: COLORS.secondary,
 							},
 						]}
 					>
-						{" "}
-						Welcome Back!
+						Welcome to HappyLungs
 					</Text>
-				</Text>
+				</View>
+				<TouchableOpacity
+					onPress={() => {
+						navigation.navigate("Profile");
+					}}
+					style={{ marginTop: 10 }}
+				>
+					<Image
+						source={profile.picture}
+						style={[
+							{
+								borderRadius: 20,
+								width: 40,
+								height: 40,
+								bottom: 3,
+							},
+						]}
+					/>
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -277,17 +306,29 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	function renderModalFilter() {
+	function renderFilter() {
 		return (
 			<Modal
 				animationType="fade"
 				transparent={true}
-				visible={modalFilterVisible}
+				visible={filterVisible}
 				onRequestClose={() => {
-					setModalFilterVisible(!modalFilterVisible);
+					setFilterVisible(false);
 				}}
+				onBackdropPress={() => {
+					setFilterVisible(false);
+				}}
+				style={{}}
 			>
-				<View style={styles.centeredView}>
+				<Animatable.View
+					style={{
+						alignItems: "center",
+						alignSelf: "center",
+						width: "65%",
+					}}
+					animation="pulse"
+					duration={500}
+				>
 					<View
 						style={[
 							styles.modalView,
@@ -295,16 +336,10 @@ function MapScreen({ navigation, route }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalFilterVisible(!modalFilterVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
+								{ fontWeight: "bold", alignSelf: "center" },
 							]}
 						>
 							Filter
@@ -312,7 +347,7 @@ function MapScreen({ navigation, route }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1 },
+								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
 							]}
 						>
 							Type of contamination
@@ -419,6 +454,38 @@ function MapScreen({ navigation, route }) {
 							/>
 						</View>
 					</View>
+				</Animatable.View>
+			</Modal>
+		);
+	}
+
+	function renderPinPreview() {
+		return (
+			<Modal
+				visible={pinPreview}
+				animationType="fade"
+				transparent={true}
+				onRequestClose={() => {
+					setPinPreview(false);
+				}}
+				onBackdropPress={() => {
+					setPinPreview(false);
+				}}
+			>
+				<View
+					style={{
+						justifyContent: "center",
+						alignSelf: "center",
+					}}
+				>
+					<Pressable
+						onPress={() => {
+							navigation.navigate("OwnerPin", { pin: pins[2] });
+							setPinPreview(false);
+						}}
+					>
+						<PinPreview item={pins[2]}></PinPreview>
+					</Pressable>
 				</View>
 			</Modal>
 		);
@@ -427,30 +494,35 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	function renderModalPin() {
+	function renderPinCreate() {
 		return (
 			<Modal
 				animationType="fade"
 				transparent={true}
-				visible={modalPinVisible}
+				visible={pinCreateVisible}
 				onRequestClose={() => {
-					setModalPinVisible(!modalPinVisible);
+					setPinCreateVisible(false);
+				}}
+				onBackdropPress={() => {
+					setPinCreateVisible(false);
 				}}
 			>
-				<View style={styles.centeredView}>
+				<Animatable.View
+					style={{
+						justifyContent: "center",
+						alignSelf: "center",
+						width: "65%",
+					}}
+					animation="pulse"
+					duration={500}
+				>
 					<View style={[styles.modalView, styles.shadow]}>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalPinVisible(!modalPinVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
-						<Text
-							style={[styles.modalText, { fontWeight: "bold", bottom: 15 }]}
-						>
+						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
 							Selected location
 						</Text>
-						<Text style={styles.highlight}> {actualMarker.title}</Text>
+						<Text style={[styles.highlight, { textAlign: "center" }]}>
+							{actualMarker.title}
+						</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
 								style={{
@@ -477,7 +549,7 @@ function MapScreen({ navigation, route }) {
 										actualMarker.latitude,
 										actualMarker.longitude
 									);
-									setModalPinVisible(!modalPinVisible);
+									setPinCreateVisible(!pinCreateVisible);
 									navigation.navigate("Statistics", {
 										data: data,
 										coords: {
@@ -502,7 +574,7 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={() => setModalPinVisible(!modalPinVisible)}
+								onPress={() => setPinCreateVisible(!pinCreateVisible)}
 							>
 								<Ionicons
 									name="share-social-sharp"
@@ -555,7 +627,7 @@ function MapScreen({ navigation, route }) {
 							</View>
 						</View>
 					</View>
-				</View>
+				</Animatable.View>
 			</Modal>
 		);
 	}
@@ -576,7 +648,7 @@ function MapScreen({ navigation, route }) {
 					textStyle={{
 						textDecorationLine: "none",
 						fontWeight: "bold",
-						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
+						color: !trafficSelected ? COLORS.darkGrey : COLORS.secondary,
 					}}
 					onPress={() => setTraffic(!trafficSelected)}
 					text="Traffic"
@@ -596,7 +668,7 @@ function MapScreen({ navigation, route }) {
 					textStyle={{
 						textDecorationLine: "none",
 						fontWeight: "bold",
-						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
+						color: !industrySelected ? COLORS.darkGrey : COLORS.secondary,
 					}}
 					onPress={() => setIndustry(!industrySelected)}
 					text="Industry"
@@ -614,7 +686,7 @@ function MapScreen({ navigation, route }) {
 					textStyle={{
 						textDecorationLine: "none",
 						fontWeight: "bold",
-						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
+						color: !urbanSelected ? COLORS.darkGrey : COLORS.secondary,
 					}}
 					onPress={() => setUrban(!urbanSelected)}
 					text="Urban"
@@ -627,7 +699,6 @@ function MapScreen({ navigation, route }) {
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
 				style={{
-					marginTop: 55,
 					...StyleSheet.absoluteFillObject,
 				}}
 			>
@@ -644,6 +715,7 @@ function MapScreen({ navigation, route }) {
 					onRegionChangeComplete={(region) => setRegion(region)}
 					onPress={onModal}
 					onLoad={onMapLoad}
+					showsCompass={false}
 				>
 					{pinsShown &&
 						markers.map((marker) => (
@@ -654,6 +726,7 @@ function MapScreen({ navigation, route }) {
 									longitude: marker.longitude,
 								}}
 								onPress={() => {
+									setPinPreview(true);
 									setSelected(marker);
 								}}
 							/>
@@ -674,7 +747,7 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+					<TouchableOpacity onPress={() => setFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
@@ -702,8 +775,10 @@ function MapScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</View>
-			{renderModalPin()}
-			{renderModalFilter()}
+
+			{pinPreview && renderPinPreview()}
+			{renderPinCreate()}
+			{renderFilter()}
 		</SafeAreaView>
 	);
 }
@@ -729,19 +804,16 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		color: COLORS.green1,
 	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		alignSelf: "center",
-		width: "80%",
-	},
 	modalView: {
-		margin: 20,
 		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 15,
-		alignItems: "center",
+	},
+	modalContainerStyle: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "flex-end",
 	},
 	textStyle: {
 		color: COLORS.white,
