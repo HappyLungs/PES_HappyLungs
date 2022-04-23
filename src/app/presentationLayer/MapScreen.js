@@ -23,15 +23,9 @@ import MapView, {
 	Marker,
 	Heatmap,
 	PROVIDER_GOOGLE,
-	InfoWindow,
 } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-
-import usePlacesAutocomplete, {
-	getGeocode,
-	getLatLng,
-} from "use-places-autocomplete";
 
 import * as Location from "expo-location";
 
