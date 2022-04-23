@@ -37,6 +37,7 @@ exports.find = async (request, response) => {
 
 exports.create = async (request, response) => {
     let params = {};
+    console.log(request.body.params)
     if (request.body.params) {
         params = request.body.params;
     } else {
