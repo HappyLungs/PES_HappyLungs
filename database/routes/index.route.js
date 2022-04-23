@@ -12,6 +12,7 @@ const MeasureStationController = require("../controllers/measureStation.controll
 const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
 const MessageController = require("../controllers/messages.controller");
+const ConversationController = require("../controllers/conversation.controller");
 
 /*  User */
 router.get(
@@ -26,6 +27,13 @@ router.post(
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
     UserController.create
+);
+
+router.put(
+    "/changePassword",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.changePassword
 );
 /* /User */
 
@@ -99,3 +107,18 @@ router.get(
     "/message",
     MessageController.find
 );
+
+
+/*  /Conversation */
+
+router.post(
+    "/conversation",
+  //  licenseMiddleware.validate,
+
+  ConversationController.create
+);
+router.get(
+    "/conversation",
+    ConversationController.find
+);
+

@@ -9,6 +9,7 @@ exports.createMessage = async (params) => {
             resolve(data) })
         .catch((error) => { reject(error) })
     })
+  
   };
   
   exports.updateMessage = async (where = {}, updateParams) => {

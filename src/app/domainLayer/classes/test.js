@@ -1,63 +1,25 @@
-const { default: Article } = require("./Article");
+const fetch = require("node-fetch");
 
 
 
 
-
-
-
-/*
-// Start function
-const start = async function() {
-    
-    //const d = new Date();
-    //const h = 12;
-    //let m = new MeasureStation("08019004");
-    //console.log("Crido la funció a test.js")
-    //const result = await m.getWeekLevel(d);;
-    //console.log(result);
-
-   let x = await dCtrl.getPollutionLevelLastYear(41.363094, 2.112971)
-   //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
-   console.log(x);
+async function getData(id) {
+    const res = await fetch("http://localhost:2000/v1/conversation?_id=" + id, {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'Content-type': 'application/json'
+        }
+    });
+    data = await res.json();
+    return data;
 }
 
-start();
+async function getDa(id){
+    let x = await getData(id);
+
+console.log(x);
+}
 
 
-
-
-/*
-const d = "2022-02-01T00:00:00.000";
-var day = new Date(d);
-console.log(day); // Apr 30 2000
-
-var nextDay = new Date(day);
-nextDay.setDate(day.getDate() + 1);
-console.log(nextDay); // May 01 2000  
-*/
-/*
-const today = new Date()
-
-console.log(today)
-const lastweek = new Date(today)
-lastweek.setDate(lastweek.getDate() - 7)
-console.log(lastweek)
-
-let year = lastweek.getFullYear();
-let month = (lastweek.getMonth()+1) < 10 ? "0"+(lastweek.getMonth()+1) : lastweek.getMonth()+1;
-let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
-
-const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
-console.log(apiDate)
-*/
-
-
-/*
-let m = new MeasureStation("08019004");
-
-let date="2022-03-03T00:00:00.000";
-let d = m.getWeekLevel(date)
-console.log(d)
-*/
-
+getDa("6263dbeb2a03a7d35d34e827");
