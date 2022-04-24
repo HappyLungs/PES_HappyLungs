@@ -274,4 +274,39 @@ PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
 
+PresentationCtrl.prototype.fetchConversations = async function () {
+	let fakeConvers = [
+		{
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+			lastMessage: "Hola com estas? Jo estic amb el xat",
+			lastMessageTime: "10:30",
+			unreadMessages: 3			
+
+		},
+		{
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+			lastMessage: "Hola com estas? ",
+			lastMessageTime: "22/04/22",
+			unreadMessages: 0			
+
+		},
+		{
+			id: "1",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+			lastMessage: "Hola com estas? Jo estic amb el xat, jo estic amb el xat, jo estic amb el xat, jo estic amb el xat",
+			lastMessageTime: "20/04/22",
+			unreadMessages: 5			
+
+		}
+	];
+
+	return fakeConvers;
+
+};
+
 module.exports = PresentationCtrl;

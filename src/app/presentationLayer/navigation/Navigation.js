@@ -256,7 +256,9 @@ function AppTabs() {
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
 					tabBarBadge: 2,
-					title: "Chat",
+
+					title: "General Chat",
+					headerShown: false
 				}}
 			/>
 			<Tab.Screen
