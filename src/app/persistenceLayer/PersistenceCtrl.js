@@ -8,7 +8,7 @@ let PersistenceCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.DB_URI = "http://15.237.124.151:2000/v1";
+        this.DB_URI = "http://localhost:2000/v1";
     };
 }());
 
@@ -20,19 +20,20 @@ PersistenceCtrl.prototype.postRequest = async function (endpoint, params) {
         url: this.DB_URI + endpoint,
         data: params,
         headers: {
-            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "x-api-key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             "authorization": "PES2022"
         }
       })
       .then(response => {
+          console.log("RESPONSE.DATA", response.data)
           res = response.data;
       })
       .catch(err => {
           res = err;
-      })
+      });
+    console.log(res)
     return res;
-}
-
+};
 
 PersistenceCtrl.prototype.getRequest = async function (endpoint, query) {
     let res = {};

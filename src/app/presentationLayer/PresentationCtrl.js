@@ -1,5 +1,6 @@
 const DomainCtrl = require("../domainLayer/DomainCtrl.js");
 import Pin from "../domainLayer/classes/Pin"; //elimnar fake
+import User from "../domainLayer/classes/User";
 
 let PresentationCtrl;
 (function () {
@@ -151,6 +152,31 @@ PresentationCtrl.prototype.editPin = function (
 		media,
 		rating,
 		status
+	);
+};
+
+/**
+ *
+ * @param {*} name
+ * @param {*} email
+ * @param {*} password
+ * @param {*} confirmPassword
+ * @param {*} birthdate
+ * @returns an acces_token for the user
+ */
+ PresentationCtrl.prototype.registerUser = function (
+	name,
+	email,
+	password,
+	confirmPassword,
+	birthdate
+) {
+	return this.domainCtrl.registerUser(
+		name,
+		email,
+		password,
+		confirmPassword,
+		birthdate
 	);
 };
 

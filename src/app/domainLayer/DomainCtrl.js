@@ -219,6 +219,34 @@ DomainCtrl.prototype.editPin = function (
 
 /**
  *
+ * @param {*} name
+ * @param {*} email
+ * @param {*} password
+ * @param {*} confirmPassword
+ * @param {*} birthdate
+ * @returns an acces_token for the user
+ */
+ DomainCtrl.prototype.registerUser = function (
+	name,
+	email,
+	password,
+	confirmPassword,
+	birthdate
+) {
+	//create
+	let myUser = new User(
+		name,
+		email,
+		password,
+		birthdate
+	);
+	myUser.register();	//register to db
+	return myUser;	
+};
+
+
+/**
+ *
  * @param {*} username
  * @param {*} email
  * @param {*} points

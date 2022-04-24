@@ -62,7 +62,6 @@ exports.register = async (request, response, next) => {
         return;
     }
     else {
-        console.log(params.birthdate)
         UserDataLayer.create(params)
         .then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
