@@ -1,3 +1,5 @@
+const axios = require('axios').default;
+
 let PersistenceCtrl;
 (function() {
     let instance;
@@ -73,25 +75,28 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
     return res;
 }
 
-PersistenceCtrl.prototype.deleteRequest = async function (endpoint, query) {
-    let res = {};
-    await axios({
-        method: 'delete',
-        url: this.DB_URI + endpoint,
-        params: query,
+PersistenceCtrl.prototype.getConversationbyID = async function (id) {
+    const res = await fetch("http://localhost:2000/v1/conversation?_id=" + id, {
+        method: 'GET',
         headers: {
-            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-            "authorization": "PES2022"
+          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'Content-type': 'application/json'
         }
-        })
-        .then(response => {
-            res = response.data;
-        })
-        .catch(err => {
-            res = err;
-        })
-    return res;
+    });
+    data = await res.json();
+    return data;
 }
 
+PersistenceCtrl.prototype.getAllConversations = async function (id) {
+    const res = await fetch("http://localhost:2000/v1/conversation", {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'Content-type': 'application/json'
+        }
+    });
+    data = await res.json();
+    return data;
+}
 
 module.exports = PersistenceCtrl;

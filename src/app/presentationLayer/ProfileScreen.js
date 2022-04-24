@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {
 	Text,
@@ -7,6 +7,8 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 	Share,
+	Modal,
+	SafeAreaView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,11 +18,13 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
 
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
+
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
 	//const { user } = route.params;
-
 	const user = {
 		username: "Username",
 		email: "username@email.com",
@@ -55,6 +59,86 @@ function ProfileScreen({ navigation, route }) {
 		//logOut user
 		//navigation.navigate("LogInScreen");
 	}
+
+	const [byCertificate, setByCertificate] = useState(false);
+
+	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);
+
+	function renderModalLogout() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalLogoutVisible}
+				onRequestClose={() => {
+					setModalLogoutVisible(!modalLogoutVisible);
+				}}
+			>
+			<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<TouchableOpacity
+							style={{ marginLeft: 160, marginTop: -10 }}
+							onPress={() => setModalLogoutVisible(false)}
+						>
+							<Ionicons name="close" color={COLORS.secondary} size={20} />
+						</TouchableOpacity>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							Do you want to Logout?
+						</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.darkGrey,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: 25,
+								marginStart: 25,
+								alignItems: "center",
+							}}
+							onPress={() => logOut()}
+						>
+							<Ionicons
+								name={byCertificate ? "checkmark" : "checkmark-outline"} 
+								size={25}
+								color={COLORS.green2}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.darkGrey,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: -42,
+								marginStart: 115,
+								alignItems: "center",
+							}}
+							onPress={() => setModalLogoutVisible(false)}
+						>
+							<Ionicons
+								name={byCertificate ? "close" : "close-outline"} 
+								size={25}
+								color={COLORS.red2}
+							/>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
+		);
+		
+	}
+		
 
 	function logOut() {
 		//logOut user
@@ -354,7 +438,7 @@ function ProfileScreen({ navigation, route }) {
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
-				onPress={() => logOut()}
+				onPress={() => setModalLogoutVisible()}
 				style={[
 					styles.containerOption,
 					{ marginHorizontal: 30, marginBottom: 20 },
@@ -363,6 +447,8 @@ function ProfileScreen({ navigation, route }) {
 				<Feather name="power" size={27} color={COLORS.red1} />
 				<Text style={styles.textOption}>Logout</Text>
 			</TouchableOpacity>
+		
+		{renderModalLogout()}
 		</View>
 	);
 }
@@ -393,6 +479,38 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginVertical: 15,
 	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		width: "80%",
+	},
+	modalView: {
+		margin: 25,
+		backgroundColor: COLORS.secondary,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
+	},
+	textStyle: {
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 15,
+		textAlign: "center",
+	},
+	subtitle: {
+		color: COLORS.secondary,
+		fontSize: 16,
+		fontWeight: "bold",
+		textAlign: "center",
+		padding: 5,
+	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	
 	textOption: {
 		color: COLORS.secondary,
 		fontWeight: "bold",
