@@ -22,3 +22,16 @@ exports.findUser = async (where = {}) => {
         })
     })
 }
+
+exports.deleteUser = async (where = {}) => {
+    return new Promise((resolve, reject) => {
+        UserModel
+        .deleteOne(where)
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+}

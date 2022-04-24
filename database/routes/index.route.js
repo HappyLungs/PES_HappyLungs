@@ -41,6 +41,13 @@ router.put(
     UserController.changePassword
 );
 
+router.post(
+    "/deleteUser",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.delete
+);
+
 /*  MeasureStation  */
 router.get(
     "/measureStation",

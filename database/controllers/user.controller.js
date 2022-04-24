@@ -163,5 +163,28 @@ exports.changePassword = async (request, response) => {
 }
 
 exports.delete = async (request, response) => {
-    
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    userDatalayer
+    .findUser({_id: mongodb.ObjectId(params.id)})
+    .then((userData) => {
+        if (userData !== undefined && userData !== null) {
+            userDatalayer
+            .deleteUser({_id: mongodb.ObjectId(params.id)})
+            .then((deletedData) => {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", deletedData);
+            })
+            .catch(error => {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+            });
+        }
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
 }
