@@ -5,11 +5,11 @@ import {
 	Text,
 	SafeAreaView,
 	TouchableOpacity,
-	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
 import ImageCarousel from "./components/ImageCarousel";
+import Modal from "react-native-modal";
 
 import { Rating } from "react-native-ratings";
 import { Ionicons, Feather } from "@expo/vector-icons";
@@ -20,7 +20,6 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
-	console.log(pin.date);
 
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
@@ -45,48 +44,59 @@ function PinOwnerScreen({ navigation, route }) {
 				transparent={true}
 				visible={deleteConfirmationVisible}
 				onRequestClose={() => {
-					setDeleteConfirmationVisible(!deleteConfirmationVisible);
+					setDeleteConfirmationVisible(false);
+				}}
+				onBackdropPress={() => {
+					setDeleteConfirmationVisible(false);
+				}}
+				style={{
+					marginBottom: 60,
+					justifyContent: "flex-end",
 				}}
 			>
-				<View style={styles.centeredView}>
-					<View style={[styles.modalView, styles.shadow]}>
-						<Text
-							style={[styles.modalText, { fontWeight: "bold", fontSize: 16 }]}
+				<View
+					style={[
+						styles.modalView,
+						styles.shadow,
+						{ borderBottomEndRadius: 10, borderBottomStartRadius: 10 },
+					]}
+				>
+					<Text
+						style={[styles.modalText, { fontWeight: "bold", fontSize: 16 }]}
+					>
+						Are you sure?
+					</Text>
+					<Text style={[styles.modalText, { fontSize: 15 }]}>
+						Do you really want to delete this pin? This cannot be undone.
+					</Text>
+					<View
+						style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+					>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn,
+								{ backgroundColor: COLORS.secondary },
+								styles.shadow,
+							]}
+							onPress={() =>
+								setDeleteConfirmationVisible(!deleteConfirmationVisible)
+							}
 						>
-							Are you sure?
-						</Text>
-						<Text style={[styles.modalText, { fontSize: 15 }]}>
-							Do you really want to delete this pin? This cannot be undone.
-						</Text>
-						<View
-							style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+							<Text style={styles.textStyle}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn,
+								{ backgroundColor: COLORS.red1, marginStart: 15 },
+								styles.shadow,
+							]}
+							onPress={() => {
+								setDeleteConfirmationVisible(!deleteConfirmationVisible);
+								handleDelete();
+							}}
 						>
-							<TouchableOpacity
-								style={[
-									styles.containerBtn,
-									{ backgroundColor: COLORS.secondary },
-									styles.shadow,
-								]}
-								onPress={() =>
-									setDeleteConfirmationVisible(!deleteConfirmationVisible)
-								}
-							>
-								<Text style={styles.textStyle}>Cancel</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={[
-									styles.containerBtn,
-									{ backgroundColor: COLORS.red1, marginStart: 15 },
-									styles.shadow,
-								]}
-								onPress={() => {
-									setDeleteConfirmationVisible(!deleteConfirmationVisible);
-									handleDelete();
-								}}
-							>
-								<Text style={styles.textStyle}>Delete</Text>
-							</TouchableOpacity>
-						</View>
+							<Text style={styles.textStyle}>Delete</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</Modal>
@@ -101,6 +111,7 @@ function PinOwnerScreen({ navigation, route }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
+			{renderDeleteConfirmation()}
 			<View
 				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
@@ -140,7 +151,6 @@ function PinOwnerScreen({ navigation, route }) {
 						<Text style={[styles.textStyle, { marginStart: 5 }]}> Edit</Text>
 					</TouchableOpacity>
 				</View>
-				{renderDeleteConfirmation()}
 				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
 				<View
 					style={{
@@ -262,12 +272,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
-	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "flex-end",
-		alignItems: "center",
-		marginTop: 22,
 	},
 	modalView: {
 		backgroundColor: COLORS.white,

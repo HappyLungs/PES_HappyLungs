@@ -1,5 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
 import Pin from "./classes/Pin";
+import User from "./classes/User";
 
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
@@ -72,15 +73,15 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getDayLevel(date);
 
-	/*let finalTags = [];
-	let finalLevels = [];*/
+	let finalTags = [];
+	let finalLevels = [];
 	for (let i = 1; i < 24; i += 2) {
 		finalTags.push(data.tags[i]);
 		finalLevels.push(data.levels[i]);
 	}
 
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return data;
 };
@@ -108,15 +109,15 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 	let point = new DataPointMap(latitude, length);
 	let data = await point.getMonthLevel(date);
 
-	/*let finalTags = [];
-	let finalLevels = [];*/
+	let finalTags = [];
+	let finalLevels = [];
 	for (let i = 0; i <= 30; i += 2) {
 		finalTags.push(data.tags[i]);
 		finalLevels.push(data.levels[i]);
 	}
 
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return data;
 };
@@ -127,8 +128,8 @@ DomainCtrl.prototype.getPollutionLevelLastYear = async function (
 ) {
 	let date = new Date();
 	let point = new DataPointMap(latitude, length);
-	//data.tags = finalTags;
-	//data.levels = finalLevels;
+	data.tags = finalTags;
+	data.levels = finalLevels;
 
 	return await point.getYearLevel(date);
 };
@@ -171,6 +172,16 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
 	return await point.getPollutantsQuantYear(date);
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the created pin
+ */
 DomainCtrl.prototype.createPin = function (
 	name,
 	location,
@@ -183,6 +194,16 @@ DomainCtrl.prototype.createPin = function (
 	//store db
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the updated pin
+ */
 DomainCtrl.prototype.editPin = function (
 	name,
 	location,
@@ -194,6 +215,34 @@ DomainCtrl.prototype.editPin = function (
 	//edit not create
 	return new Pin(name, location, description, media, rating, status);
 	//store db
+};
+
+/**
+ *
+ * @param {*} username
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+DomainCtrl.prototype.updateUser = function (
+	username,
+	email,
+	points,
+	healthState,
+	profilePicture
+) {
+	//edit, not create
+	let updatedUser = new User(
+		username,
+		email,
+		points,
+		healthState,
+		profilePicture
+	);
+	return updatedUser;
+	//update to db
 };
 
 module.exports = DomainCtrl;

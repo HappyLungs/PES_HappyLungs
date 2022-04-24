@@ -98,6 +98,16 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 	return data;
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the created pin
+ */
 PresentationCtrl.prototype.createPin = function (
 	name,
 	location,
@@ -116,6 +126,16 @@ PresentationCtrl.prototype.createPin = function (
 	);
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the updated pin
+ */
 PresentationCtrl.prototype.editPin = function (
 	name,
 	location,
@@ -131,6 +151,31 @@ PresentationCtrl.prototype.editPin = function (
 		media,
 		rating,
 		status
+	);
+};
+
+/**
+ *
+ * @param {*} username
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+PresentationCtrl.prototype.updateUser = function (
+	username,
+	email,
+	points,
+	healthState,
+	profilePicture
+) {
+	return this.domainCtrl.updateUser(
+		username,
+		email,
+		points,
+		healthState,
+		profilePicture
 	);
 };
 
@@ -262,6 +307,6 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 
 	return fakeConvers;
 
-}
+};
 
 module.exports = PresentationCtrl;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 import {
 	Text,
@@ -6,9 +6,11 @@ import {
 	View,
 	TouchableOpacity,
 	ImageBackground,
+	Share,
+	Modal,
+	SafeAreaView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -16,16 +18,132 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
 
-function ProfileScreen({ navigation }) {
-	const [state1, setState1] = useState(false);
-	const [state2, setState2] = useState(false);
-	const [state3, setState3] = useState(false);
-	const fakeUserData = {
-		username: "Username",
-		points: 200,
-	};
-	const [user, setUser] = useState(fakeUserData);
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
+function ProfileScreen({ navigation, route }) {
+	//should know userId, and then retrieve the user data (updated or not)
+
+	//const { user } = route.params;
+	const user = {
+		username: "Username",
+		email: "username@email.com",
+		points: 200,
+		healthState: [true, false, true],
+		picture: {
+			uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+		},
+	};
+
+	function settings() {
+		//navigation.navigate("SettingsScreen");
+		//maybe a popup
+	}
+
+	function calendar() {
+		//no se que ha de fer
+	}
+
+	function rewards() {}
+
+	async function share() {
+		try {
+			await Share.share({
+				title: "Happy Lungs",
+				message: "Breath Safely, Breath With Us",
+				url: "https://happylungsproject.org/", //url és ios only
+			});
+		} catch (err) {
+			console.log(err);
+		}
+		//logOut user
+		//navigation.navigate("LogInScreen");
+	}
+
+	const [byCertificate, setByCertificate] = useState(false);
+
+	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);
+
+	function renderModalLogout() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalLogoutVisible}
+				onRequestClose={() => {
+					setModalLogoutVisible(!modalLogoutVisible);
+				}}
+			>
+			<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<TouchableOpacity
+							style={{ marginLeft: 160, marginTop: -10 }}
+							onPress={() => setModalLogoutVisible(false)}
+						>
+							<Ionicons name="close" color={COLORS.secondary} size={20} />
+						</TouchableOpacity>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							Do you want to Logout?
+						</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.darkGrey,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: 25,
+								marginStart: 25,
+								alignItems: "center",
+							}}
+							onPress={() => logOut()}
+						>
+							<Ionicons
+								name={byCertificate ? "checkmark" : "checkmark-outline"} 
+								size={25}
+								color={COLORS.green2}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.darkGrey,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: -42,
+								marginStart: 115,
+								alignItems: "center",
+							}}
+							onPress={() => setModalLogoutVisible(false)}
+						>
+							<Ionicons
+								name={byCertificate ? "close" : "close-outline"} 
+								size={25}
+								color={COLORS.red2}
+							/>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
+		);
+		
+	}
+		
+
+	function logOut() {
+		//logOut user
+		//navigation.navigate("LogInScreen");
+	}
 	return (
 		<View
 			style={{
@@ -51,9 +169,7 @@ function ProfileScreen({ navigation }) {
 					}}
 				>
 					<ImageBackground
-						source={{
-							uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
-						}}
+						source={user.picture}
 						style={[
 							{
 								borderRadius: 20,
@@ -93,7 +209,12 @@ function ProfileScreen({ navigation }) {
 						justifyContent: "flex-start",
 					}}
 				>
-					<TouchableOpacity style={{ alignItems: "flex-end" }}>
+					<TouchableOpacity
+						style={{ alignItems: "flex-end" }}
+						onPress={() => {
+							navigation.navigate("ProfileEditScreen");
+						}}
+					>
 						<Feather name="edit-3" size={30} color={COLORS.secondary} />
 					</TouchableOpacity>
 					<View
@@ -216,33 +337,32 @@ function ProfileScreen({ navigation }) {
 						marginVertical: 15,
 					}}
 				>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							setState1(!state1);
-						}}
-					>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
+								styles.shadow,
+								{
+									backgroundColor: user.healthState[0]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
 						</View>
 						<Text style={styles.textState}>Cardiorespiratory problems</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state2 && state3) setState3(false);
-							setState2(!state2);
-						}}
-					>
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
+								styles.shadow,
+								{
+									backgroundColor: user.healthState[1]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<MaterialIcons
@@ -252,24 +372,23 @@ function ProfileScreen({ navigation }) {
 							/>
 						</View>
 						<Text style={styles.textState}>Pregnant</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{ alignItems: "center", width: 115 }}
-						onPress={() => {
-							if (!state3 && state2) setState2(false);
-							setState3(!state3);
-						}}
-					>
+					</View>
+					<View style={{ alignItems: "center", width: 115 }}>
 						<View
 							style={[
 								styles.containerState,
-								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
+								styles.shadow,
+								{
+									backgroundColor: user.healthState[2]
+										? COLORS.green1
+										: COLORS.secondary,
+								},
 							]}
 						>
 							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
 						</View>
 						<Text style={styles.textState}>Elderly</Text>
-					</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 			<View
@@ -289,24 +408,37 @@ function ProfileScreen({ navigation }) {
 					flexDirection: "column",
 				}}
 			>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => settings()}
+					style={styles.containerOption}
+				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Settings</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => calendar()}
+					style={styles.containerOption}
+				>
 					<Ionicons name="md-calendar" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Calendar</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => rewards()}
+					style={styles.containerOption}
+				>
 					<AntDesign name="Trophy" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Rewards</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.containerOption}>
+				<TouchableOpacity
+					onPress={() => share()}
+					style={styles.containerOption}
+				>
 					<Feather name="users" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>Tell Your Friend</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
+				onPress={() => setModalLogoutVisible()}
 				style={[
 					styles.containerOption,
 					{ marginHorizontal: 30, marginBottom: 20 },
@@ -315,6 +447,8 @@ function ProfileScreen({ navigation }) {
 				<Feather name="power" size={27} color={COLORS.red1} />
 				<Text style={styles.textOption}>Logout</Text>
 			</TouchableOpacity>
+		
+		{renderModalLogout()}
 		</View>
 	);
 }
@@ -345,6 +479,38 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginVertical: 15,
 	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		width: "80%",
+	},
+	modalView: {
+		margin: 25,
+		backgroundColor: COLORS.secondary,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
+	},
+	textStyle: {
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 15,
+		textAlign: "center",
+	},
+	subtitle: {
+		color: COLORS.secondary,
+		fontSize: 16,
+		fontWeight: "bold",
+		textAlign: "center",
+		padding: 5,
+	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	
 	textOption: {
 		color: COLORS.secondary,
 		fontWeight: "bold",
@@ -365,6 +531,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 14,
 		textAlign: "center",
+		marginTop: 5,
 	},
 });
 
