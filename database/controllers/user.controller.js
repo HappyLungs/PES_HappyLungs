@@ -71,13 +71,13 @@ exports.changePassword = async (request, response) => {
         return;
     }
     //Find the user given the id in the params
-    userDatalayer.findUser({_id: mongodb.ObjectId(params.id)})
+    userDatalayer.findUser({email: params.email})
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
             if (comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
-                userDatalayer.updateUser({_id: mongodb.ObjectId(params.id)}, {password: bcrypt.hashSync(params.newPassword, 10)})
+                userDatalayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
                         sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
