@@ -13,43 +13,7 @@ export default class User {
         this.points = 0;
         this.language = LanguageEnum.english;
         this.healthStatus = HealthStatusEnum.None;
-    }
-
-    constructor (name, email, password, phone, birthday, location, language, healthStatus) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.birthday = birthday;
-        this.location = location;
-        this.points = 0;
-        this.language = language;
-        this.healthStatus = healthStatus;
-    }
-  
-    constructor(username, email, points, healthState, profilePicture) {
-      this.username = username;
-      this.email = email;
-      this.points = points;
-      this.healthState = healthState;
-      this.profilePicture = profilePicture;
-    }
-    
-    //Getters
-    getName () {
-        return this.name;
-    }
-
-    getEmail () {
-        return this.email;
-    }
-
-    getLocation() {
-        return this.location;
-    }
-
-    getHealthStatus () {
-        return this.healthStatus;
+        this.profilePicture = null;
     }
 }
 
