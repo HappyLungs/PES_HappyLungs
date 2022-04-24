@@ -1,35 +1,30 @@
-const asyncErrorWrapper = require("express-async-handler");
+const responseObj = {};
+const mongodb = require("mongodb");
+const errorCodes = require("../helpers/errorCodes.js");
 const User = require('./../models/user.model');
 const loginHelper = require("../helpers/loginHelpers");
 const UserDataLayer = require("./../datalayers/user.datalayer");
+const sendResponse = require("../helpers/sendResponse.helper.js");
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
-// generateJWTFromUser = function () {
-//     const {JWT_SECRET_KEY, JWT_EXPIRE} = process.env;
-//     const payload = {
-//         id: this._id,
-//         email: this.email
-//     };
-//     const token = jwt.sign(payload, JWT_SECRET_KEY,{
-//         expiresIn:JWT_EXPIRE
-//     });
-//     return token;
-// };
-
-exports.find = async (request, response, next) => {
-    let params = {};
-    if (request.body.params) {
-        params = request.body.params;
+exports.find = async (request, response) => {
+    let email;
+    if (request.query.email) {
+        email = request.query.email;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "There is no email", {});
         return;
     }
-
-
-
-
+    const where = {};
+    where.email = email;
+    UserDataLayer.findUser(where)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+        else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found", {});
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
 
 };
 
@@ -44,6 +39,20 @@ exports.register = async (request, response, next) => {
         response.send(responseObj);
         return;
     }
+    let error = false;
+    await UserDataLayer.findUser({"email":params.email})
+    .then((userData) => {
+        if (userData != null && userData != undefined && userData != {}) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "The email is already registered", {});
+            error = true;
+        }
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        error = true;
+    });
+    if (error) return;
+
     const {password, confirmPassword} = params;
     if (password !== confirmPassword) {
         responseObj.status  = errorCodes.UNAUTHORIZED;
@@ -55,12 +64,12 @@ exports.register = async (request, response, next) => {
     else {
         UserDataLayer.create(params)
         .then((userData) => {
-            console.log(userData);
+            console.log("Created! This is the userData: ", userData);
+            console.log (error);
             if (userData !== null && typeof userData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
                 responseObj.message = "Success";
                 responseObj.data    = userData;
-                responseObj.acces_token = generateJWTFromUser();    //Falta afegir la info del token
             } else {
                 responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
                 responseObj.message = "Can't create user";
@@ -80,8 +89,8 @@ exports.register = async (request, response, next) => {
 
 exports.login = async (request, response, next) => {
     let params = {};
-    if (request.body.params) {
-        params = request.body.params;
+    if (request.query) {
+        params = request.query;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
         responseObj.message = "Required parameters missing";
@@ -99,49 +108,23 @@ exports.login = async (request, response, next) => {
         return;
     }
 
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
-        const where = {};
-        where._id = mongodb.ObjectId(id);
-        UserDataLayer.findUser(where)
-        .then((userData) => {
-            if (userData !== null && typeof userData !== undefined) {
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Success";
-                responseObj.data    = userData;
-            } else {
-                responseObj.status  = errorCodes.DATA_NOT_FOUND;
-                responseObj.message = "No record found";
+    const where = {};
+    where.email = email;
+    UserDataLayer.findUser(where)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+            if (!loginHelper.comparePassword(password, userData.password)) {
+                responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+                responseObj.message = "Invalid password";
                 responseObj.data    = {};
+                response.send(responseObj);
+                return;
             }
-            response.send(responseObj);
-        })
-        .catch(error => {
-            responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
-            responseObj.data    = {};
-            response.send(responseObj);
-        });
-    } else {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = "Invalid id";
-        responseObj.data    = {};
-        response.send(responseObj);
-    }
-
-    if (!loginHelper.comparePassword(password,user.password)) {
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = "Invalid password";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
-    }
-    const token= generateJwtFromUser();
-    return response.status(200)
-        .json({
-            access_token:token,
-            data:{
-                email: user.email,
-                id: user._id
-            }
-        })
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
+        }
+        else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
 };

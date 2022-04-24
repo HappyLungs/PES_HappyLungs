@@ -7,14 +7,7 @@ const UsersSchema = new global.Schema({
     password: {
         type:String,
         required: [true,"Please provide a password"],
-        minlength: [6,"Please provide a password with min 6 characters"],
-        select: false
-    },
-    confirmPassword: {
-        type:String,
-        required: [true,"Please provide a password"],
-        minlength: [6,"Please provide a password with min 6 characters"],
-        select: false
+        minlength: [6,"Please provide a password with min 6 characters"]
     },
     email: {
         type: String,
@@ -62,5 +55,5 @@ UsersSchema.pre("save", function (next) {
     });
 });
 
-  const Users = global.mongoose.model("User", UsersSchema);
-  module.exports = Users;
+  const UserModel = global.mongoose.model("User", UsersSchema);
+  module.exports = UserModel;

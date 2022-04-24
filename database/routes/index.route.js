@@ -19,7 +19,7 @@ router.post(
     UserController.register
 );
 
-router.post(
+router.get(
     "/login",
     licenseMiddleware.validate,
     UserController.login
@@ -28,17 +28,8 @@ router.post(
 router.get(
     "/user",
     licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
     UserController.find
 );
-
-router.post(
-    "/newUser",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    //UserController.create
-);
-/* /User */
 
 /*  MeasureStation  */
 router.get(
