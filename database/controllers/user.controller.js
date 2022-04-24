@@ -33,7 +33,7 @@ exports.find = async (request, response) => {
 
 exports.register = async (request, response, next) => {
     let params = {};
-    if (request.body.params) {
+    if (request.body.params.name && request.body.params.email && request.body.params.password && request.body.params.confirmPassword && request.body.params.birthdate) {
         params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
@@ -62,10 +62,9 @@ exports.register = async (request, response, next) => {
         return;
     }
     else {
+        console.log(params.birthdate)
         UserDataLayer.create(params)
         .then((userData) => {
-            console.log("Created! This is the userData: ", userData);
-            console.log (error);
             if (userData !== null && typeof userData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
                 responseObj.message = "Success";
