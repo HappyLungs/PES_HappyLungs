@@ -188,6 +188,7 @@ function AppTabs() {
 					),
 					tabBarBadge: 2,
 					title: "General Chat",
+					headerShown: false
 				}}
 			/>
 			<Tab.Screen
