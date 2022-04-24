@@ -1,4 +1,6 @@
 const conversationDataLayer = require("./../datalayers/conversation.datalayer.js");
+const userDatalayer = require("./../datalayers/user.datalayer.js")
+const messageDataLayer = require("./../datalayers/message.datalayer.js") 
 const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
@@ -72,6 +74,44 @@ exports.create = async (request, response) => {
         response.send(responseObj);
         return;
     }
+
+    
+         /* Check if users of the body exists */
+
+    request.body.params.users.forEach(async user => {
+        const where = {};
+    where._id = mongodb.ObjectId(user);
+    let result = await userDatalayer.findUser(where).then();
+    if(result != null) console.log("Usuario encontrado");
+    else {
+        console.log("Usuario no encontrado");
+        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+        responseObj.message = `User ${user} doesn't exist`;
+        responseObj.data    = {};
+        response.send(responseObj);
+        return;    
+    }
+    });
+
+       /* Check if messages of the body exists */
+
+    request.body.params.messages.forEach(async message => {
+        const where = {};
+    where._id = mongodb.ObjectId(message);
+    let result = await messageDataLayer.findMessage(where).then();
+    if(result != null) console.log("Mensaje encontrado");
+    else {
+        console.log("Mensaje no encontrado");
+        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+        responseObj.message = `Message ${message} doesn't exist`;
+        responseObj.data    = {};
+        response.send(responseObj);
+        return;    
+    }
+    });
+    
+          /* Create the conversation */
+
     conversationDataLayer.createConversation(params)
     .then((conversationData) => {
         console.log(conversationData);

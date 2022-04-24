@@ -75,7 +75,7 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
     return res;
 }
 
-PersistenceCtrl.prototype.getDatatest = async function (id) {
+PersistenceCtrl.prototype.getConversationbyID = async function (id) {
     const res = await fetch("http://localhost:2000/v1/conversation?_id=" + id, {
         method: 'GET',
         headers: {
@@ -87,6 +87,16 @@ PersistenceCtrl.prototype.getDatatest = async function (id) {
     return data;
 }
 
-
+PersistenceCtrl.prototype.getAllConversations = async function (id) {
+    const res = await fetch("http://localhost:2000/v1/conversation", {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'Content-type': 'application/json'
+        }
+    });
+    data = await res.json();
+    return data;
+}
 
 module.exports = PersistenceCtrl;
