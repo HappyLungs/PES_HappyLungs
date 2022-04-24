@@ -1,5 +1,4 @@
 const bcrypt=require("bcryptjs");
-const jwt=require("jsonwebtoken");
 
 // create users schema
 const UsersSchema = new global.Schema({

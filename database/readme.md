@@ -26,7 +26,6 @@ The definition of the model.
 - dotenv
 - mongoose
 - express-validator
-- jsonwebtoken
 
 ## Node modules
 
@@ -34,4 +33,3 @@ The definition of the model.
 - dotenv
 - mongoose
 - express-validator
-- jsonwebtoken

@@ -1,5 +1,4 @@
 const responseObj = {};
-const jwt = require("jsonwebtoken");
 const errorCodes = require("../helpers/errorCodes");
 const userDatalayer = require("./../datalayers/user.datalayer");
 
