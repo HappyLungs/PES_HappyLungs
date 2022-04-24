@@ -20,8 +20,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints();
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getHourLevel(date, hour);
-        return x;    
+            return await nearPoint.getHourLevel(date, hour);
     }
     
    /**
@@ -33,8 +32,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getDayLevel(date);
-        return x;     
+       return await nearPoint.getDayLevel(date);
     }
     
    /**
@@ -46,8 +44,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getWeekLevel(date);
-        return x;  
+       return await nearPoint.getWeekLevel(date);
     }
  /**
      * Calculates the pollution level at every day of a month
@@ -58,16 +55,14 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getMonthLevel(date);
-        return x;
+     return await nearPoint.getMonthLevel(date);
     }
 
     async getYearLevel (date) {
         let puntos_cercanos = await this.nearerPoints(date);
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        let x = await punto_cercano.getYearLevel(date);
-        return x;
+        return await punto_cercano.getYearLevel(date);
     }
     
     //PIE CHART GETTERS
@@ -81,8 +76,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getQuantityOfEachPollutantDay(date);
-        return x;     
+       return await nearPoint.getQuantityOfEachPollutantAtDay(date);
     }
    /**
      * Calculates the quantities of each pollutant on a week.
@@ -93,8 +87,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getQuantityOfEachPollutantWeek(date);
-        return x;     
+       return await nearPoint.getQuantityOfEachPollutantWeek(date);
     }
  /**
      * Calculates the quantities of each pollutant on a month.
@@ -105,8 +98,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getQuantityOfEachPollutantMonth(date);
-        return x;     
+     return await nearPoint.getQuantityOfEachPollutantMonth(date);
     }
          /**
      * Calculates the quantities of each pollutant on a Year.
@@ -117,33 +109,33 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-        let x = await nearPoint.getQuantityOfEachPollutantYear(date);
-        return x;     
+             return await nearPoint.getQuantityOfEachPollutantYear(date);
     }
 
     //Getters
   /**
-     * Get the nearest Measure Stations ordered.
-     * @param {Date} 
-     * @returns {[distance1, Point1], [distance2, Point2]} Starting from a point (this) selected by the user, the function will return all the points sorted ascending by
-     distance in an Array of Arrays data structure.
-     */
+   * Get the nearest Measure Stations ordered.
+   * @returns {[distance1, Point1], [distance2, Point2]} Starting from a point (this) selected by the user, the function will return all the points sorted ascending by
+   distance in an Array of Arrays data structure.
+   * @param date
+   */
    async nearerPoints(date) {
+        //let mas_prox = 6371000;
         let points = [];
+        //let point1 = new MeasureStation("08015001", "Franciaa", "urbana" , 41.443584, 2.23889, null );
+        //let distancia = point1.distance(this.latitude,this.longitud);
         let distanciaTotal = 0;
         let all_points = await dadesObertes.getMeasuresDate(date);
         all_points.forEach(c_point => {
             let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
             let d = m_s.distance(this.latitude,this.longitud);
-
             distanciaTotal += d;
             points.push([d,c_point]);
         });
-        
-        var ordenados = points.sort(function(a, b) {
+
+      return points.sort(function (a, b) {
             return a[0] - b[0];
         });
-        return ordenados;
     }
 
 }

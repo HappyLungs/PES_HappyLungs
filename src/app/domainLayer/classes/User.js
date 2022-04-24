@@ -1,4 +1,3 @@
-
 const LanguageEnum = Object.freeze({"english":1, "catalan":2, "spanish":3});
 const HealthStatusEnum = Object.freeze({"None":1, "RespiratoryDisease":2, "Pregnant":3, "OldPeople":4})
 export default class User {
@@ -26,6 +25,14 @@ export default class User {
         this.points = 0;
         this.language = language;
         this.healthStatus = healthStatus;
+    }
+  
+    constructor(username, email, points, healthState, profilePicture) {
+      this.username = username;
+      this.email = email;
+      this.points = points;
+      this.healthState = healthState;
+      this.profilePicture = profilePicture;
     }
     
     //Getters

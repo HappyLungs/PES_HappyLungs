@@ -47,10 +47,10 @@ exports.find = async (request, response) => {
         responseObj.data    = {};
         response.send(responseObj);
     }
-    return;
+
 };
 
-exports.create = async (request, response, next) => {
+exports.create = async (request, response) => {
     let params = {};
     if (request.body.title) {
         params = request.body;
@@ -81,10 +81,10 @@ exports.create = async (request, response, next) => {
         responseObj.data    = {};
         response.send(responseObj);
     });
-    return;
+
 };
 
-exports.update = async(request, response, next) => {
+exports.update = async(request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         return response.status(errorCodes.REQUIRED_PARAMETER_MISSING).json({
@@ -111,14 +111,14 @@ exports.update = async(request, response, next) => {
                 responseObj.message = "Pin updated successfully";
                 responseObj.data    = result;
                 response.send(responseObj);
-                return;
+
             })
             .catch((error) => {
                 responseObj.status  = errorCodes.SYNTAX_ERROR;
                 responseObj.message = error;
                 responseObj.data    = {};
                 response.send(responseObj);
-                return;
+
             })
         } else {
             responseObj.status  = errorCodes.DATA_NOT_FOUND;
@@ -135,7 +135,7 @@ exports.update = async(request, response, next) => {
     })
 };
 
-exports.delete = (request, response, next) => {
+exports.delete = (request, response) => {
     let params = {};
     if (request.params._id) {
         params = request.params;
@@ -153,14 +153,14 @@ exports.delete = (request, response, next) => {
         responseObj.message = "Pin deleted successfully";
         responseObj.data    = result;
         response.send(responseObj);
-        return;
+
     })
     .catch((error) => {
         responseObj.status  = errorCodes.SYNTAX_ERROR;
         responseObj.message = error;
         responseObj.data    = {};
         response.send(responseObj);
-        return;
+
     })
 };
 
@@ -181,7 +181,7 @@ exports.validate = (method) => {
                                 _id: mongodb.ObjectId(value)
                             };
                             return userDatalayer.findUser(where).then((data) => {
-                                if (data.length == 0) return Promise.reject("User not found");
+                                if (data.length === 0) return Promise.reject("User not found");
                             });
                         } else {
                             return Promise.reject("Invalid object ID");
@@ -205,7 +205,7 @@ exports.validate = (method) => {
                                 email: value
                             };
                             return userDatalayer.findUser(where).then((data) => {
-                                if (data.length == 0) {
+                                if (data.length === 0) {
                                     return Promise.reject("User not found");
                                 }
                             })

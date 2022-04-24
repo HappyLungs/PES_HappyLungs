@@ -1,6 +1,9 @@
 const responseObj = {};
 const mongodb = require("mongodb");
+
+//Helpers
 const errorCodes = require("../helpers/errorCodes.js");
+
 const User = require('./../models/user.model');
 const loginHelper = require("../helpers/loginHelpers");
 const UserDataLayer = require("./../datalayers/user.datalayer");
@@ -33,10 +36,7 @@ exports.register = async (request, response, next) => {
     if (request.body.params) {
         params = request.body.params;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
     let error = false;
@@ -78,10 +78,7 @@ exports.register = async (request, response, next) => {
             response.send(responseObj);
         })
         .catch(error => {
-            responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
-            responseObj.data    = {};
-            response.send(responseObj);
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
         });
         return;
     }
@@ -92,10 +89,7 @@ exports.login = async (request, response, next) => {
     if (request.query) {
         params = request.query;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
     const {email, password} = params;
@@ -128,3 +122,46 @@ exports.login = async (request, response, next) => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
 };
+
+function comparePassword(password, hash) {
+    return bcrypt.compareSync(password, hash);
+}
+
+exports.changePassword = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    userDatalayer.findUser({email: params.email})
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+            //Check if the password is correct
+            if (comparePassword(params.oldPassword, userData.password)) {
+                //If the password is correct, update the password, hashed with bcrypt
+                userDatalayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
+                .then((updatedData) => {
+                    if (updatedData !== null && typeof updatedData !== undefined) {
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+                    } else {
+                        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                });
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.UNAUTHORIZED, "Old password is incorrect", {});
+            }
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+        }
+    })
+}
+
+exports.delete = async (request, response) => {
+    
+}

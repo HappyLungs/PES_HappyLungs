@@ -24,7 +24,7 @@ app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
    
 
    if(isNaN(parseInt(req.params.longitude)))  {
-       res.status(400).send('Parametro de longitud no introducidO correctamente');
+       res.status(400).send('Parametro de longitud no introducido correctamente');
        return;
    }
    if(isNaN(parseInt(req.params.latitude)))  {
@@ -53,7 +53,7 @@ app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
     else res.send(valor_contaminación)
 })
 
-app.post('/api/courses', (req,res) => {
+app.post('/api/article', (req,res) => {
     
     const schema = {
         name: Joi.string().min(3).required()
