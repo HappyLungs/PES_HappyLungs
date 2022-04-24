@@ -3,15 +3,13 @@ const HealthStatusEnum = Object.freeze({"None":1, "RespiratoryDisease":2, "Pregn
 export default class User {
     
     //Constructors
-    constructor (name, email, password) {
+    constructor (name, email, password, birthdate) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.phone = null;
-        this.birthday = null;
-        this.location = null;
+        this.birthdate = birthdate;
         this.points = 0;
-        this.language = LanguageEnum.english;
+        this.language = LanguageEnum.catalan;
         this.healthStatus = HealthStatusEnum.None;
         this.profilePicture = null;
     }
