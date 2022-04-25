@@ -8,7 +8,7 @@ let PersistenceCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.DB_URI = "http://localhost:2000/v1";
+        this.DB_URI = "http://172.31.22.57:7000/v1";
     };
 }());
 
@@ -77,7 +77,7 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
 }
 
 PersistenceCtrl.prototype.getConversationbyID = async function (id) {
-    const res = await fetch("http://localhost:2000/v1/conversation?_id=" + id, {
+    const res = await fetch("http://172.31.22.57:7000/v1/conversation?_id=" + id, {
         method: 'GET',
         headers: {
           'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
@@ -89,7 +89,7 @@ PersistenceCtrl.prototype.getConversationbyID = async function (id) {
 }
 
 PersistenceCtrl.prototype.getAllConversations = async function (id) {
-    const res = await fetch("http://localhost:2000/v1/conversation", {
+    const res = await fetch("http://172.31.22.57:7000/v1/conversation", {
         method: 'GET',
         headers: {
           'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
