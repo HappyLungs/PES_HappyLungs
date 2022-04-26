@@ -295,7 +295,7 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 
 		},
 		{
-			id: "1",
+			id: "3",
 			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
 			lastMessage: "Hola com estas? Jo estic amb el xat, jo estic amb el xat, jo estic amb el xat, jo estic amb el xat",
@@ -306,7 +306,43 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 	];
 
 	return fakeConvers;
+};
 
+PresentationCtrl.prototype.fetchNewConversations = async function () {
+	let fakeNewConvers = [
+		{
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+		},
+		{
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		{
+			id: "3",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+		},
+		{
+			id: "4",
+			name: "Júlia Herrera 2",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+		},
+		{
+			id: "5",
+			name: "Iván Jimeno 2",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		{
+			id: "6",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+		}
+	];
+
+	return fakeNewConvers;
 };
 
 module.exports = PresentationCtrl;
