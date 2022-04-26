@@ -270,8 +270,6 @@ function AppTabs() {
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
-					tabBarBadge: 2,
-
 					title: "General Chat",
 					headerShown: false,
 				}}
