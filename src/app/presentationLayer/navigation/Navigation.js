@@ -15,7 +15,7 @@ import "react-native-gesture-handler";
 //screens
 import MapScreen from "../MapScreen";
 import GeneralChatScreen from "../GeneralChatScreen";
-import NewChatScreen from "../NewChatScreen"
+import NewChatScreen from "../NewChatScreen";
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
 import ProfileEditScreen from "../ProfileEditScreen";
@@ -186,7 +186,6 @@ function ProfileStack() {
 				name="ProfileEditScreen"
 				component={ProfileEditScreen}
 				options={{
-					title: "",
 					title: "Editing profile",
 					headerTintColor: COLORS.white,
 					headerStyle: {
@@ -231,8 +230,15 @@ function ChatStack() {
 				name="NewChat"
 				component={NewChatScreen}
 				options={{
-					title: "",
-					headerShown: false,
+					title: "New chat",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
 				}}
 			/>
 		</Stack.Navigator>
@@ -267,7 +273,7 @@ function AppTabs() {
 					tabBarBadge: 2,
 
 					title: "General Chat",
-					headerShown: false
+					headerShown: false,
 				}}
 			/>
 			<Tab.Screen
