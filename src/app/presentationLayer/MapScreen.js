@@ -5,13 +5,17 @@ import {
 	StyleSheet,
 	View,
 	SafeAreaView,
-	TextInput,
 	TouchableOpacity,
 	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import localeStore from "../config/localizedStrings";
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
+import { ca, en, es } from "../config/localizedStrings";
+i18n.fallbacks = true;
+i18n.translations = { ca, en, es };
+i18n.locale = Localization.locale;
 import {
 	Ionicons,
 	MaterialIcons,
@@ -261,7 +265,7 @@ function MapScreen({ navigation, route }) {
 						]}
 					>
 						{" "}
-						Welcome Back!
+						{i18n.t("welcome")}
 					</Text>
 				</Text>
 			</View>
