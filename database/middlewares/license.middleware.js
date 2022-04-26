@@ -3,7 +3,6 @@ const errorCodes = require("../helpers/errorCodes");
 
 exports.validate = (request, response, next) => {
     const licenseKey = request.headers['x-api-key'];
-    console.log(request.headers);
     if (licenseKey === "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm") {
         //Continue with the request
         next();

@@ -15,6 +15,7 @@ import "react-native-gesture-handler";
 //screens
 import MapScreen from "../MapScreen";
 import GeneralChatScreen from "../GeneralChatScreen";
+import NewChatScreen from "../NewChatScreen"
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
 import ProfileEditScreen from "../ProfileEditScreen";
@@ -226,6 +227,14 @@ function ChatStack() {
 					headerShown: false,
 				}}
 			/>
+			<Stack.Screen
+				name="NewChat"
+				component={NewChatScreen}
+				options={{
+					title: "",
+					headerShown: false,
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }
@@ -256,7 +265,9 @@ function AppTabs() {
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
 					tabBarBadge: 2,
-					title: "Chat",
+
+					title: "General Chat",
+					headerShown: false
 				}}
 			/>
 			<Tab.Screen
