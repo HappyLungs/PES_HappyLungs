@@ -159,6 +159,7 @@ function GeneralChatScreen({ navigation }) {
 								]}
 								onPress={() => {
 									AnimationRefFilter1.current?.pulse(1000);
+									navigation.navigate("NewChat");
 								}}
 							>
 								<Animatable.View
@@ -173,9 +174,6 @@ function GeneralChatScreen({ navigation }) {
 									}}
 									animation="pulse"
 									duration={1000}
-									onPress={() => {
-										navigation.navigate("NewChat");
-									}}
 								>
 									<Text
 										style={[
