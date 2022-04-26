@@ -82,7 +82,7 @@ exports.register = async (request, response, next) => {
     }
 };
 
-exports.login = async (request, response, next) => {
+exports.login = async (request, response) => {
     let params = {};
     if (request.query) {
         params = request.query;

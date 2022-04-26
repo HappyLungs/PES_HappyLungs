@@ -224,9 +224,9 @@ DomainCtrl.prototype.editPin = function (
  * @param {*} password
  * @param {*} confirmPassword
  * @param {*} birthdate
- * @returns an acces_token for the user
+ * @returns message if error
  */
- DomainCtrl.prototype.registerUser = function (
+ DomainCtrl.prototype.registerUser = async function (
 	name,
 	email,
 	password,
@@ -240,10 +240,26 @@ DomainCtrl.prototype.editPin = function (
 		password,
 		birthdate
 	);
-	myUser.register();	//register to db
-	return myUser;	
+	return await myUser.register(confirmPassword);	//register to db
 };
 
+/**
+ *
+ * @param {*} email
+ * @param {*} password
+ * @returns an acces_token for the user
+ */
+ DomainCtrl.prototype.loginUser = async function (
+	email,
+	password
+) {
+	//create
+	let myUser = new User(
+		email,
+		password
+	);
+	return await myUser.login();	//login to db
+};
 
 /**
  *

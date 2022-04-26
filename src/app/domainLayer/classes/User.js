@@ -17,18 +17,25 @@ export default class User {
         this.profilePicture = null;
     }
 
-    async register () {
-        //myUser = new User(name, email, password, birthdate);
+    async register (confirmPassword) {
         let res = await persistCtrl.postRequest("/register", {
             "name": this.name,
             "email": this.email,
             "password": this.password,
-            "confirmPassword": this.confirmPassword,
+            "confirmPassword": confirmPassword,
             "birthdate": this.birthdate
         });
-        console.log("Resposta en User.js", res);
-
+        return res;
     }
+
+    async login () {
+        let res = await persistCtrl.postRequest("/login", {
+            "email": this.email,
+            "password": this.password
+        });
+        return res;
+    }
+
 }
 
 module.exports = User;

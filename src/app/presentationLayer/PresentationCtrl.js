@@ -1,6 +1,5 @@
 const DomainCtrl = require("../domainLayer/DomainCtrl.js");
 import Pin from "../domainLayer/classes/Pin"; //elimnar fake
-import User from "../domainLayer/classes/User";
 
 let PresentationCtrl;
 (function () {
@@ -162,22 +161,46 @@ PresentationCtrl.prototype.editPin = function (
  * @param {*} password
  * @param {*} confirmPassword
  * @param {*} birthdate
- * @returns an acces_token for the user
+ * @returns message if error
  */
- PresentationCtrl.prototype.registerUser = function (
+ PresentationCtrl.prototype.registerUser = async function (
 	name,
 	email,
 	password,
 	confirmPassword,
 	birthdate
 ) {
-	return this.domainCtrl.registerUser(
-		name,
-		email,
-		password,
-		confirmPassword,
-		birthdate
-	);
+	if (name && email && password && confirmPassword && birthdate) {
+		return await this.domainCtrl.registerUser(
+			name,
+			email,
+			password,
+			confirmPassword,
+			birthdate
+		);
+	} else {
+		return {"data": {}, "message": "Required parameters missing", "status": 422};
+	}
+};
+
+/**
+ *
+ * @param {*} email
+ * @param {*} password
+ * @returns an acces_token for the user
+ */
+ PresentationCtrl.prototype.loginUser = async function (
+	email,
+	password
+) {
+	if (email && password) {
+		return await this.domainCtrl.loginUser(
+			email,
+			password
+		);
+	} else {
+		return {"data": {}, "message": "Required parameters missing", "status": 422};
+	}
 };
 
 /**
