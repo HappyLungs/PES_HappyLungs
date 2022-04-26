@@ -78,22 +78,9 @@ function GeneralChatScreen({ navigation }) {
 						flex: 1,
 						flexDirection: "column",
 						alignItems: "center",
-						marginBottom: 15
+						marginBottom: 15,
 					}}
 				>
-					<Text
-						style={[
-							{
-								fontSize: 20,
-								fontWeight: "bold",
-								color: COLORS.secondary,
-								marginTop: 35,
-								marginBottom: 10,
-							},
-						]}
-					>
-						New Chat
-					</Text>
 					<View
 						style={{
 							flexDirection: "row",
@@ -127,7 +114,6 @@ function GeneralChatScreen({ navigation }) {
 									filterBySearch(text);
 								}}
 							/>
-							
 						</View>
 						<View
 							style={[
@@ -136,11 +122,9 @@ function GeneralChatScreen({ navigation }) {
 									flexDirection: "row",
 									alignItems: "center",
 									alignSelf: "flex-end",
-									
 								},
 							]}
-						>
-						</View>
+						></View>
 					</View>
 				</View>
 			</View>
@@ -157,7 +141,10 @@ function GeneralChatScreen({ navigation }) {
 		>
 			{renderHeader()}
 			<View style={[{ flex: 1, marginTop: 10 }]}>
-				<NewChatList chatsList={filteredData} navigation={navigation}></NewChatList>
+				<NewChatList
+					chatsList={filteredData}
+					navigation={navigation}
+				></NewChatList>
 			</View>
 		</SafeAreaView>
 	);
