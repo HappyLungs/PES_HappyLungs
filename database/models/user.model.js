@@ -17,11 +17,9 @@ const UsersSchema = new global.Schema({
             "Please provide a valid email"
         ]
     },
-    phone: String,
     birthdate: {
         type: Date,
     },
-    location: String,
     points: {
         type: Number,
         default: 0
@@ -35,7 +33,8 @@ const UsersSchema = new global.Schema({
         type: String,
         enum: ["Pregnant", "Old People", "Respiratory disease", "None"],
         default: "None"
-    }
+    },
+    profilePicture: String
 }, {
     timestamps: true
 });

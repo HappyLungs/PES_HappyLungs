@@ -82,33 +82,6 @@ const ChatList = ({ chatsList, navigation }) => {
 		</Animatable.View>
 	);
 
-	const ListEmptyComponent = () => {
-		const anim = {
-			0: { translateY: 0 },
-			0.5: { translateY: 50 },
-			1: { translateY: 0 },
-		};
-		return (
-			<Animatable.View
-				style={{
-					height: Dimensions.get("window").height,
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				<Animatable.Text
-					animation={anim}
-					easing="ease-in-out"
-					duration={3000}
-					style={{ fontSize: 24 }}
-					iterationCount="infinite"
-				>
-					Empty List!
-				</Animatable.Text>
-			</Animatable.View>
-		);
-	};
-
 	return (
 		<FlatList
 			stickyHeaderHiddenOnScroll={true}
@@ -118,7 +91,6 @@ const ChatList = ({ chatsList, navigation }) => {
 			keyExtractor={(item) => `${item.name}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
-			ListEmptyComponent={ListEmptyComponent}
 			ItemSeparatorComponent={() => {
 				return (
 					<View

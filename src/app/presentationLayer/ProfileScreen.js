@@ -7,8 +7,6 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 	Share,
-	Modal,
-	SafeAreaView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,8 +16,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
 
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import Modal from "react-native-modal";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
@@ -73,6 +70,9 @@ function ProfileScreen({ navigation, route }) {
 				onRequestClose={() => {
 					setModalLogoutVisible(!modalLogoutVisible);
 				}}
+				onBackdropPress={() => {
+					setModalLogoutVisible(!modalLogoutVisible);
+				}}
 			>
 			<View style={styles.centeredView}>
 					<View
@@ -82,12 +82,6 @@ function ProfileScreen({ navigation, route }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
-						<TouchableOpacity
-							style={{ marginLeft: 160, marginTop: -10 }}
-							onPress={() => setModalLogoutVisible(false)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={20} />
-						</TouchableOpacity>
 						<Text
 							style={[
 								styles.modalText,
@@ -96,48 +90,43 @@ function ProfileScreen({ navigation, route }) {
 						>
 							Do you want to Logout?
 						</Text>
+					<View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-around",
+							alignSelf: "center",
+							marginTop: 30,
+							marginHorizontal: 5,
+							width: 220,
+						}}
+					>
 						<TouchableOpacity
-							style={{
-								flexDirection: "row",
-								backgroundColor: COLORS.darkGrey,
-								borderRadius: 90,
-								padding: 7,
-								marginTop: 25,
-								marginStart: 25,
-								alignItems: "center",
-							}}
-							onPress={() => logOut()}
-						>
-							<Ionicons
-								name={byCertificate ? "checkmark" : "checkmark-outline"} 
-								size={25}
-								color={COLORS.green2}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								flexDirection: "row",
-								backgroundColor: COLORS.darkGrey,
-								borderRadius: 90,
-								padding: 7,
-								marginTop: -42,
-								marginStart: 115,
-								alignItems: "center",
-							}}
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.red1 },
+							]}
 							onPress={() => setModalLogoutVisible(false)}
 						>
-							<Ionicons
-								name={byCertificate ? "close" : "close-outline"} 
-								size={25}
-								color={COLORS.red2}
-							/>
+							<Text style={styles.containerTxt}>No</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.green1 },
+							]}
+							//onPress={validate}
+						>
+							<Text style={styles.containerTxt}>Yes</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
-			</Modal>
-		);
-		
-	}
+			</View>
+		</View>
+	</Modal>
+	);}
 		
 
 	function logOut() {
@@ -488,7 +477,7 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 25,
-		backgroundColor: COLORS.secondary,
+		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 20,
 		alignItems: "center",
@@ -532,6 +521,17 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		textAlign: "center",
 		marginTop: 5,
+	},
+	containerBtn2: {
+		width: 85,
+		padding: 10,
+		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 });
 
