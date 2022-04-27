@@ -57,12 +57,11 @@ const ca = {
 	allowOption1: "Aquest pin serà visible a la resta d'usuaris.",
 	allowOption2: "Aquest pin només el podràs consultar tú.",
 	saveChanges: "Guardar canvis",
-
-	signoutBtn: "desconectar",
-	signOutAlertTitle: "Cancelar",
-	signOutAlertMess: "¿Estás segura de que quieres cerrar sesión?",
-	confirm: "Okey",
-	resetBtn: "Restablecer la contraseña",
+	confirmationTitle: "Estàs segur?",
+	confirmationText:
+		"De veritat vols eliminar aquest pin? Aquesta acció és irreversible",
+	chat: "Xats",
+	newChat: "Nou xat",
 };
 
 const en = {
@@ -124,12 +123,11 @@ const en = {
 	allowOption1: "This pin will be visible to other people.",
 	allowOption2: "This ìn will only be visible to you.",
 	saveChanges: "Save changes",
-
-	signoutBtn: "Sign out",
-	signOutAlertTitle: "Cancel",
-	signOutAlertMess: "Are you sure you want to sign out?",
-	confirm: "Okay",
-	resetBtn: "Reset password",
+	confirmationTitle: "Are you sure?",
+	confirmationText:
+		"Do you really want to delete this pin? This cannot be undone.",
+	chat: "Chats",
+	newChat: "New chat",
 };
 
 const es = {
@@ -192,12 +190,11 @@ const es = {
 	allowOption2: "Este pin solo lo podrás ver tú.",
 	saveChanges: "Guardar cambios",
 	seeOnMap: "Ver en el mapa",
-
-	signoutBtn: "desconectar",
-	signOutAlertTitle: "Cancelar",
-	signOutAlertMess: "¿Estás segura de que quieres cerrar sesión?",
-	confirm: "Okey",
-	resetBtn: "Restablecer la contraseña",
+	confirmationTitle: "¿Estás seguro?",
+	confirmationText:
+		"¿De verdad quieres eliminar este pin? Esta acción es irreversible.",
+	chat: "Chats",
+	newChat: "Nuevo chat",
 };
 
 export { ca, en, es };
