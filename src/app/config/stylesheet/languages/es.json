@@ -1,0 +1,75 @@
+{
+	"mapScreen": {
+		"welcome": "Bienvenido de nuevo!",
+		"filter": "Filtrar",
+		"typeOfContamination": "Tipo de contaminación",
+		"typeOfContamination1": "Tráfico",
+		"typeOfContamination2": "Industria",
+		"typeOfContamination3": "Urbano",
+		"showPins": "Mostrar pins",
+		"filterByCertificate": "Filtrar edificios según certificado energético",
+		"selectedLocation": "Ubicación selecionada",
+		"createPin": "Crear Pin",
+		"seeStatistics": "Ver Estadísticas",
+		"share": "Compartir",
+		"recomended1": "Recomendado",
+		"recomended2": "No recomendado"
+	},
+	"profileScreen": {
+		"createdPins": "Pins creados",
+		"sharedPins": "Pins compartidos",
+		"points": "puntos",
+		"healthState": "Estado de Salud",
+		"healthState1": "Problemas respiratorios",
+		"healthState2": "Embarazo",
+		"healthState3": "Edad avanzada",
+		"settings": "Configuración",
+		"calendar": "Calendario",
+		"ranking": "Ranking",
+		"shareOption": "Avisa a tus amigos",
+		"logOut": "Cerrar sessión"
+	},
+	"profileEditScreen": {
+		"editingProfile": "Editar perfil",
+		"username": "Nombre de usuario",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"actualPassword": "Contraseña actual",
+		"newPassword": "Nueva Contraseña",
+		"confirmNewPassword": "Confirmar nueva contraseña",
+		"upload": "Subir",
+		"cancel": "Cancelar",
+		"update": "Actualizar"
+	},
+	"pinsScreen": {
+		"myPins": "Mis Pins",
+		"search": "Buscar",
+		"mostRecent": "Más reciente",
+		"bestRated": "Mejor valorado",
+		"created": "Creado",
+		"saved": "Guardado",
+		"edit": "Editar",
+		"delete": "Eiminar",
+		"public": "Público",
+		"private": "Privado"
+	},
+	"pinEditScreen": {
+		"editingPin": "Editar pin",
+		"location": "Ubicación",
+		"title": "Título",
+		"description": "Descripción",
+		"date": "Fecha",
+		"pictures": "Imagénes",
+		"rate": "Valoración",
+		"allowOption": "¿Permitir a otros usuarios ver este pin?",
+		"allowOption1": "Este pin será visible al resto de usuarios.",
+		"allowOption2": "Este pin solo lo podrás ver tú.",
+		"saveChanges": "Guardar cambios",
+		"confirmationTitle": "Estás seguro?",
+		"confirmationText": "¿De verdad quieres eliminar este pin? Esta acción es irreversible."
+	},
+	"chatScreen": {
+		"chat": "Chats",
+		"newChat": "Nuevo chat"
+	}
+}
