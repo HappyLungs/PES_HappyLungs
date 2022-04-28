@@ -59,7 +59,7 @@ function CreatePinScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				transformDate(date),
-				status === true ? "Public" : "False"
+				(status === true) ? "Public" : "False"
 			);
 			navigation.navigate("MapScreen");
 		}

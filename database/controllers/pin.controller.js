@@ -51,6 +51,7 @@ exports.find = async (request, response) => {
 };
 
 exports.create = async (request, response) => {
+    console.log("Request: ", request.body);
     let params = {};
     if (request.body.title) {
         params = request.body;

@@ -1,3 +1,5 @@
+import { axios } from 'axios';
+
 let PersistenceCtrl;
 (function() {
     let instance;
@@ -6,7 +8,7 @@ let PersistenceCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.DB_URI = "http://15.237.124.151:2000/v1";
+        this.DB_URI = "http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/v1";
     };
 }());
 

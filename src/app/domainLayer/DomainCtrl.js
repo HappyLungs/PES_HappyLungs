@@ -1,6 +1,7 @@
 const DataPointMap = require("./classes/DataPointMap.js");
 import Pin from "./classes/Pin";
 import User from "./classes/User";
+import PersistenceCtrl from "../persistenceLayer/PersistenceCtrl";
 
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
@@ -182,7 +183,7 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
  * @param {*} status
  * @returns the created pin
  */
-DomainCtrl.prototype.createPin = function (
+DomainCtrl.prototype.createPin = async function (
 	name,
 	location,
 	description,
@@ -190,8 +191,20 @@ DomainCtrl.prototype.createPin = function (
 	rating,
 	status
 ) {
-	return new Pin(name, location, description, media, rating, status);
+	let pin =  new Pin(name, location, description, media, rating, status);
 	//store db
+	let pinAttributes = {
+		"name": pin.name,
+		"location": pin.location,
+		"description": pin.description,
+		"media": pin.media,
+		"rating": pin.rating,
+		"status": (pin.status !== undefined) ? pin.status : "public",
+	}
+	let persistenceCtrl = new PersistenceCtrl();
+	let response = await persistenceCtrl.postRequest("/newPin", pinAttributes);
+	console.log("Response: " + response);
+	return pin;
 };
 
 /**
