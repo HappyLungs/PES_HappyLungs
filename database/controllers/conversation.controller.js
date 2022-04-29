@@ -11,6 +11,7 @@ exports.find = async (request, response) => {
 
         id = request.query._id;
     } else {
+
         conversationDataLayer.findConversations()
         .then((conversationData) => {
             if (conversationData !== null && typeof conversationData !== undefined) {
@@ -31,34 +32,41 @@ exports.find = async (request, response) => {
             response.send(responseObj);
         });
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
-        const where = {};
-        where._id = mongodb.ObjectId(id);
-        conversationDataLayer.findConversation(where)
-        .then((conversationData) => {
-            if (conversationData !== null && typeof conversationData !== undefined) {
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Success";
-                responseObj.data    = conversationData;
-            } else {
-                responseObj.status  = errorCodes.DATA_NOT_FOUND;
-                responseObj.message = "No record found";
+    if(typeof id !== "undefined"){
+
+
+        if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+            const where = {};
+            where._id = mongodb.ObjectId(id);
+            conversationDataLayer.findConversation(where)
+            .then((conversationData) => {
+                if (conversationData !== null && typeof conversationData !== undefined) {
+                    responseObj.status  = errorCodes.SUCCESS;
+                    responseObj.message = "Success";
+                    responseObj.data    = conversationData;
+                } else {
+                    responseObj.status  = errorCodes.DATA_NOT_FOUND;
+                    responseObj.message = "No record found";
+                    responseObj.data    = {};
+                }
+                response.send(responseObj);
+            })
+            .catch(error => {
+                responseObj.status  = errorCodes.SYNTAX_ERROR;
+                responseObj.message = error;
                 responseObj.data    = {};
-            }
-            response.send(responseObj);
-        })
-        .catch(error => {
+                response.send(responseObj);
+            });
+        } else {
             responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
+            responseObj.message = "Invalid id";
             responseObj.data    = {};
             response.send(responseObj);
-        });
-    } else {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = "Invalid id";
-        responseObj.data    = {};
-        response.send(responseObj);
+        }
+
+
     }
+    
 
 };
 
@@ -78,15 +86,15 @@ exports.create = async (request, response) => {
     
          /* Check if users of the body exists */
 
-    request.body.params.users.forEach(async user => {
+    request.body.params.users.forEach(async email => {
         const where = {};
-    where._id = mongodb.ObjectId(user);
+    where.email = email;
     let result = await userDatalayer.findUser(where).then();
     if(result != null) console.log("Usuario encontrado");
     else {
         console.log("Usuario no encontrado");
         responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = `User ${user} doesn't exist`;
+        responseObj.message = `User ${email} doesn't exist`;
         responseObj.data    = {};
         response.send(responseObj);
         return;    

@@ -1,4 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
+const fetch = require('node-fetch')
+
 import Pin from "./classes/Pin";
 import User from "./classes/User";
 
@@ -259,6 +261,93 @@ DomainCtrl.prototype.editPin = function (
 		password
 	);
 	return await myUser.login();	//login to db
+};
+
+
+//Devolver todas las conversaciones
+DomainCtrl.prototype.fetchConversations = async function () {
+	//create
+	DB_URL = "http://localhost:7000/v1/conversation"
+ var conver = [];
+	var users = {}
+	let conversations = await fetch(DB_URL)
+	.then(response => response.json())
+	
+
+	if(conversations.status === 200) {
+		for(var conversation in conversations.data){
+	
+			const logged = 	await this.findUser(conversations.data[conversation].users[0]);
+			const conversant = await this.findUser(conversations.data[conversation].users[1])
+
+			 users = {
+				logged: {
+					id: logged.data._id,
+					name: logged.data.name,
+					profileImage: "null"
+				},
+				conversant: {
+					id: conversant.data._id,
+					name: conversant.data.name,
+					profileImage: "null"
+				}
+			};
+			
+			const messages = conversation.messages
+			const message = await this.findMessage("625ed69da994cd36f441fbe8");
+			conver.push({
+				id: message.data._id,
+				user: message.data.user,
+				text: message.data.text,
+				date: message.data.updatedAt
+			})
+		
+		
+		}
+
+	
+		
+		
+
+	}
+	return ({users: await users, messages: conver})
+};
+
+//Devolver todas las conversaciones
+DomainCtrl.prototype.findUser = async function (email) {
+	//create
+	DB_URL = "http://localhost:7000/v1/user?email=" + email
+
+	
+	let user = await fetch(DB_URL, {
+		headers: {
+			'Accept': 'application/json',
+					  'Content-Type': ' application/json',
+					  'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm'
+				  },
+	})
+	.then(response => response.json())
+	.then(data => data)
+
+	return user;
+	console.log(user);
+};
+
+DomainCtrl.prototype.findMessage = async function (id) {
+	//create
+	DB_URL = "http://localhost:7000/v1/message?_id=" + id
+
+	let message = await fetch(DB_URL, {
+		headers: {
+			'Accept': 'application/json',
+					  'Content-Type': ' application/json',
+					  'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm'
+				  },
+	})
+	.then(response => response.json())
+	.then(data => data)
+	return message;
+	console.log(user);
 };
 
 /**
