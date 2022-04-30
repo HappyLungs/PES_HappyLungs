@@ -19,6 +19,7 @@ import NewChatScreen from "../NewChatScreen";
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
 import ProfileEditScreen from "../ProfileEditScreen";
+import SettingsScreen from "../SettingsScreen";
 import StatisticsScreen from "../StatisticsScreen";
 import CreatePinScreen from "../CreatePinScreen";
 import PinOwnerScreen from "../PinOwnerScreen";
@@ -187,6 +188,21 @@ function ProfileStack() {
 				component={ProfileEditScreen}
 				options={{
 					title: "Editing profile",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
+			<Stack.Screen
+				name="SettingsScreen"
+				component={SettingsScreen}
+				options={{
+					title: "Settings",
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
