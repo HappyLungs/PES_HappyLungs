@@ -87,7 +87,7 @@ exports.create = async (request, response) => {
          /* Check if users of the body exists */
 
     request.body.params.users.forEach(async email => {
-        const where = {};
+    const where = {};
     where.email = email;
     let result = await userDatalayer.findUser(where).then();
     if(result != null) console.log("Usuario encontrado");
@@ -100,7 +100,6 @@ exports.create = async (request, response) => {
         return;    
     }
     });
-
        /* Check if messages of the body exists */
 
     request.body.params.messages.forEach(async message => {
@@ -119,7 +118,6 @@ exports.create = async (request, response) => {
     });
     
           /* Create the conversation */
-
     conversationDataLayer.createConversation(params)
     .then((conversationData) => {
         console.log(conversationData);
