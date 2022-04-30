@@ -5,12 +5,17 @@ import {
 	StyleSheet,
 	View,
 	SafeAreaView,
-	TextInput,
 	TouchableOpacity,
 	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
+import { ca, en, es } from "../config/localizedStrings";
+i18n.fallbacks = true;
+i18n.translations = { ca, en, es };
+i18n.locale = Localization.locale;
 import {
 	Ionicons,
 	MaterialIcons,
@@ -28,14 +33,7 @@ import MapView, {
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
-import usePlacesAutocomplete, {
-	getGeocode,
-	getLatLng,
-} from "use-places-autocomplete";
-
 import * as Location from "expo-location";
-
-import { formatRelative } from "date-fns";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -88,7 +86,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [pinsShown, setPinsShown] = useState(true);
+	const [pinsShown, setPins] = useState(true);
 
 	/**
 	 *
@@ -267,7 +265,7 @@ function MapScreen({ navigation, route }) {
 						]}
 					>
 						{" "}
-						Welcome Back!
+						{i18n.t("welcome")}
 					</Text>
 				</Text>
 			</View>
@@ -336,7 +334,7 @@ function MapScreen({ navigation, route }) {
 								marginStart: 15,
 								alignItems: "center",
 							}}
-							onPress={() => setPinsShown(!pinsShown)}
+							onPress={() => setPins(!pinsShown)}
 						>
 							<AntDesign
 								name={pinsShown ? "pushpino" : "pushpin"}
@@ -645,19 +643,18 @@ function MapScreen({ navigation, route }) {
 					onPress={onModal}
 					onLoad={onMapLoad}
 				>
-					{pinsShown &&
-						markers.map((marker) => (
-							<Marker
-								key={marker.time.toISOString()}
-								coordinate={{
-									latitude: marker.latitude,
-									longitude: marker.longitude,
-								}}
-								onPress={() => {
-									setSelected(marker);
-								}}
-							/>
-						))}
+					{markers.map((marker) => (
+						<Marker
+							key={marker.time.toISOString()}
+							coordinate={{
+								latitude: marker.latitude,
+								longitude: marker.longitude,
+							}}
+							onPress={() => {
+								setSelected(marker);
+							}}
+						/>
+					))}
 
 					<Heatmap points={heatpoints} radius={50} />
 				</MapView>

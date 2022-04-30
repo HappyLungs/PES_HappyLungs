@@ -7,25 +7,31 @@ const licenseMiddleware = require("../middlewares/license.middleware");
 const authorizationMiddleware = require("../middlewares/authorization.middleware");
 
 //Controllers
+//const UserController = require("../controllers/user.controller");
 const UserController = require("../controllers/user.controller");
 const MeasureStationController = require("../controllers/measureStation.controller");
 const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
 const MessageController = require("../controllers/messages.controller");
+const ConversationController = require("../controllers/conversation.controller");
 
 /*  User */
+router.post(
+    "/register",
+    licenseMiddleware.validate,
+    UserController.register
+);
+
+router.get(
+    "/login",
+    licenseMiddleware.validate,
+    UserController.login
+);
+
 router.get(
     "/user",
     licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
     UserController.find
-);
-
-router.post(
-    "/newUser",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    UserController.create
 );
 
 router.put(
@@ -41,7 +47,6 @@ router.post(
     //authorizationMiddleware.validate,
     UserController.delete
 );
-/* /User */
 
 /*  MeasureStation  */
 router.get(
@@ -101,6 +106,7 @@ router.put(
     PinController.validate("updatePin"),
     PinController.update
 );
+
 /*  /Message */
 
 router.post(
@@ -112,4 +118,18 @@ router.post(
 router.get(
     "/message",
     MessageController.find
+);
+
+
+/*  /Conversation */
+
+router.post(
+    "/conversation",
+  //  licenseMiddleware.validate,
+
+  ConversationController.create
+);
+router.get(
+    "/conversation",
+    ConversationController.find
 );

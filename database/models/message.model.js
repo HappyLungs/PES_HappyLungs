@@ -2,7 +2,22 @@
 // create message schema
 const MessageSchema = new global.Schema({
     text: String,
-    user: Schema.ObjectId,
+    user:  {
+        type: Schema.ObjectId,
+        required: true
+    },
+    conversation: {
+        type: Schema.ObjectId,
+        required: true
+    },
+    image: {
+        String,
+        default: null
+    },
+    readed: {
+        type: Boolean,
+        defalt: false
+    },
 }, {
     timestamps: true
 });

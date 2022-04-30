@@ -12,11 +12,11 @@ La api conté els sgüents components:
 
 - Index:
 
-  Fitxer on principalment es configura express per escoltar al port 2000 i configurar les rutes d'accés.
+  Fitxer on principalment es configura express per escoltar al port 7000 i configurar les rutes d'accés.
 
 - .env:
 
-  Defineix el port on es troba **mongodb** al servidor per tal de dur a terme crides, defineix el port (2000), el tipus de web (http) i per últim una clau d'accés per aportar seguretat al sistema.
+  Defineix el port on es troba **mongodb** al servidor per tal de dur a terme crides, defineix el port (7000), el tipus de web (http) i per últim una clau d'accés per aportar seguretat al sistema.
 
 - Routes:
 

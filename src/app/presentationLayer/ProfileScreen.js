@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {
 	Text,
@@ -16,11 +16,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import COLORS from "../config/stylesheet/colors";
 
+import Modal from "react-native-modal";
+
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
 	//const { user } = route.params;
-
 	const user = {
 		username: "Username",
 		email: "username@email.com",
@@ -55,6 +56,78 @@ function ProfileScreen({ navigation, route }) {
 		//logOut user
 		//navigation.navigate("LogInScreen");
 	}
+
+	const [byCertificate, setByCertificate] = useState(false);
+
+	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);
+
+	function renderModalLogout() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalLogoutVisible}
+				onRequestClose={() => {
+					setModalLogoutVisible(!modalLogoutVisible);
+				}}
+				onBackdropPress={() => {
+					setModalLogoutVisible(!modalLogoutVisible);
+				}}
+			>
+			<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							Do you want to Logout?
+						</Text>
+					<View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-around",
+							alignSelf: "center",
+							marginTop: 30,
+							marginHorizontal: 5,
+							width: 220,
+						}}
+					>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.red1 },
+							]}
+							onPress={() => setModalLogoutVisible(false)}
+						>
+							<Text style={styles.containerTxt}>No</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.green1 },
+							]}
+							//onPress={validate}
+						>
+							<Text style={styles.containerTxt}>Yes</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</View>
+		</View>
+	</Modal>
+	);}
+		
 
 	function logOut() {
 		//logOut user
@@ -354,7 +427,7 @@ function ProfileScreen({ navigation, route }) {
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
-				onPress={() => logOut()}
+				onPress={() => setModalLogoutVisible()}
 				style={[
 					styles.containerOption,
 					{ marginHorizontal: 30, marginBottom: 20 },
@@ -363,6 +436,8 @@ function ProfileScreen({ navigation, route }) {
 				<Feather name="power" size={27} color={COLORS.red1} />
 				<Text style={styles.textOption}>Logout</Text>
 			</TouchableOpacity>
+		
+		{renderModalLogout()}
 		</View>
 	);
 }
@@ -393,6 +468,38 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginVertical: 15,
 	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		width: "80%",
+	},
+	modalView: {
+		margin: 25,
+		backgroundColor: COLORS.white,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
+	},
+	textStyle: {
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 15,
+		textAlign: "center",
+	},
+	subtitle: {
+		color: COLORS.secondary,
+		fontSize: 16,
+		fontWeight: "bold",
+		textAlign: "center",
+		padding: 5,
+	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	
 	textOption: {
 		color: COLORS.secondary,
 		fontWeight: "bold",
@@ -414,6 +521,17 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		textAlign: "center",
 		marginTop: 5,
+	},
+	containerBtn2: {
+		width: 85,
+		padding: 10,
+		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 });
 
