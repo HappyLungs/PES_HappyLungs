@@ -286,19 +286,96 @@ DomainCtrl.prototype.fetchConversation = async function (id = null) {
       },
     };
 
-    const messages = conversation.messages;
-    const message = await this.findMessage("625ed69da994cd36f441fbe8");
-    conver.push({
-      id: message.data._id,
-      user: message.data.user,
-      text: message.data.text,
-      date: message.data.updatedAt,
-    });
+    const messages = conversation.data.messages;
+    for(mes in messages){
+      const message = await this.findMessage(messages[mes]);
+      conver.push({
+        id: message.data._id,
+        user: message.data.user,
+        text: message.data.text,
+        date: message.data.updatedAt,
+      });
+    }
+   
   }
   return { users:  users, messages: conver };
 };
 
-//Devolver todas las conversaciones
+/*
+ To update:
+
+  1. We dont have the function for logged user, so atm the first user in the array is the logged and the second the conversant
+  2. Need the messages boolean to know if the messages are unread or not. 
+  3. Dont have the Images ATM
+
+*/
+
+
+DomainCtrl.prototype.fetchConversations = async function () {
+  //create
+  DB_URL = "http://localhost:7000/v1/conversation";
+  var conver = [];
+  var users = {};
+  let conversations = await fetch(DB_URL).then((response) => response.json());
+
+  
+  for(var conversation in conversations.data){
+   const current_conver = conversations.data[conversation];
+    const logged = 	await this.findUser(current_conver.users[0]);
+    const conversant = await this.findUser(current_conver.users[1])
+    let index_lastMessage = 0;
+    if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
+    const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
+    conver.push({
+      id: current_conver._id,
+      name: conversant.data.name,
+      profileImage: "null",
+      lastMessage: lastMessage.data.text,
+      lastMessageTime: lastMessage.data.updatedAt,
+      unreadMessages: 3
+    })
+    
+  }
+  return conver;
+};
+
+
+DomainCtrl.prototype.fetchNewConversations = async function () {
+  //create
+ const all_users = await this.findUsers();
+
+ const fetchedNewConversations = [];
+ all_users.data.forEach(user => {
+   fetchedNewConversations.push({
+    id: user._id,
+    name: user.name,
+    profileImage: "null"
+  })
+ });
+
+  
+  return fetchedNewConversations;
+};
+
+
+DomainCtrl.prototype.findUsers = async function () {
+  //create
+  DB_URL = "http://localhost:7000/v1/user";
+
+  let users = await fetch(DB_URL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": " application/json",
+      "X-Api-Key":
+        "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => data);
+
+  return users;
+};
+
 DomainCtrl.prototype.findUser = async function (email) {
   //create
   DB_URL = "http://localhost:7000/v1/user?email=" + email;
