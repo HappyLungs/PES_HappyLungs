@@ -3,21 +3,24 @@ const PinSchema = new global.Schema({
     title: String,
     description: String,
     latitude: Number,
-    length: Number,
+    longitude: Number,
     date: {
         type: Date,
         default: null
     },
-    rate: {
+    rating: {
         type: Number,
         enum: [0,1,2,3,4,5]
     },
-    public: Boolean,
+    status: {
+        type: String,
+        enum: ["Public","Private"]
+    },
     creatorEmail: {
         type: String,
         ref: "user"
     },
-    images: {
+    media: {
         type: [],
         default: []
     }

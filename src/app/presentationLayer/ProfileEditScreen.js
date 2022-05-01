@@ -16,6 +16,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
 
+import { Ionicons } from "@expo/vector-icons";
+
+import Modal from "react-native-modal";
+
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 function ProfileEditScreen({ navigation }) {
@@ -25,6 +29,7 @@ function ProfileEditScreen({ navigation }) {
 	const fakeUserData = {
 		username: "Username",
 		email: "username@email.com",
+		password: "**********",
 		points: 200,
 		healthState: [true, false, true],
 		picture:
@@ -39,6 +44,7 @@ function ProfileEditScreen({ navigation }) {
 	const [inputs, setInputs] = useState({
 		username: user.username,
 		email: user.email,
+		password: user.password,
 	});
 	const [errors, setErrors] = useState({});
 
@@ -72,10 +78,15 @@ function ProfileEditScreen({ navigation }) {
 			handleError("Please add a valid email", "email");
 			isValid = false;
 		}
+		if (!inputs.password) {
+			handleError("Please add a valid password", "password");
+			isValid = false;
+		}
 		if (isValid) {
 			let updatedUser = presentationCtrl.updateUser(
 				inputs.username,
 				inputs.email,
+				inputs.password,
 				user.points,
 				[state1, state2, state3],
 				profilePicture
@@ -85,6 +96,102 @@ function ProfileEditScreen({ navigation }) {
 			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
 		}
 	};
+
+	const [byCertificate, setByCertificate] = useState(false);
+	
+	const [modalChangePassword, setModalChangePassword] = useState(false);
+
+	function renderModalChangePassword() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalChangePassword}
+				onRequestClose={() => { 
+					setModalChangePassword(false)
+				}}
+				onBackdropPress={() => {
+					setModalChangePassword(false)
+				}}
+			>
+			<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<View
+							style={{
+								width: 200,
+								height: 200,
+								alignSelf: "center",
+								borderRadius: 5,
+								padding: 5,
+							}}
+						>
+							<InputField
+								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onFocus={() => handleError(null, "password")}
+								iconName="lock"
+								defaultValue={user.password}
+								label="Actual Password"
+								error={errors.password}
+							/>
+							<InputField
+								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onFocus={() => handleError(null, "password")}
+								iconName="lock"
+								defaultValue={user.password}
+								label="New Password"
+								error={errors.password}
+							/>
+							<InputField
+								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onFocus={() => handleError(null, "password")}
+								iconName="lock"
+								defaultValue={user.password}
+								label="Confirm New Password"
+								error={errors.password}
+							/>
+						</View>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "space-around",
+								alignSelf: "center",
+								marginTop: 100,
+								marginHorizontal: 5,
+								width: 240,
+							}}
+						>
+							<TouchableOpacity
+								style={[
+									styles.containerBtn2,
+									styles.shadow,
+									{ backgroundColor: COLORS.red1 },
+								]}
+								onPress={() => setModalChangePassword(false)}
+							>
+								<Text style={styles.containerTxt}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={[
+									styles.containerBtn2,
+									styles.shadow,
+									{ backgroundColor: COLORS.green1 },
+								]}
+								//onPress={validate}
+							>
+								<Text style={styles.containerTxt}>Accept</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		)
+	}
 
 	return (
 		<View
@@ -129,6 +236,14 @@ function ProfileEditScreen({ navigation }) {
 						label="Email"
 						error={errors.email}
 					/>
+					<InputField
+						onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+						onFocus={() => handleError(null, "password")}
+						iconName="lock"
+						defaultValue={user.password}
+						label="Password"
+						error={errors.password}
+					/>
 				</View>
 				<View
 					style={{
@@ -158,7 +273,27 @@ function ProfileEditScreen({ navigation }) {
 							Upload
 						</Text>
 					</TouchableOpacity>
+					<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								backgroundColor: COLORS.green1,
+								borderRadius: 90,
+								padding: 7,
+								marginTop: 64,
+								marginStart: -75,
+								alignItems: "center",
+							}}
+							onPress={() => setModalChangePassword(true)}
+						>
+							<MaterialIcons
+								name={"edit"}
+								size={30}
+								color={COLORS.white}
+							/>
+						</TouchableOpacity>
+
 				</View>
+				{renderModalChangePassword()}
 			</View>
 			<View
 				style={{
@@ -320,11 +455,32 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 5,
 	},
+	containerBtn2: {
+		width: 85,
+		padding: 10,
+		borderRadius: 5,
+	},
 	containerTxt: {
 		textAlign: "center",
 		fontWeight: "bold",
 		fontSize: 15,
 		color: COLORS.white,
+	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		width: "80%",
+	},
+	modalView: {
+		margin: 25,
+		height: 400,
+		width: 240,
+		backgroundColor: COLORS.white,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
 	},
 });
 
