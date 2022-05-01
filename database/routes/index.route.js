@@ -14,7 +14,7 @@ const PollutantDayMeasureController = require("../controllers/pollutantDayMeasur
 const PinController = require("../controllers/pin.controller");
 const MessageController = require("../controllers/messages.controller");
 const ConversationController = require("../controllers/conversation.controller");
-
+const ContaminationController = require("../controllers/contamination.controller")
 /*  User */
 router.post(
     "/register",
@@ -133,3 +133,9 @@ router.get(
     "/conversation",
     ConversationController.find
 );
+
+router.get(
+    "/contamination/:longitude/:latitude/:date", 
+    
+    ContaminationController.find
+)
