@@ -8,7 +8,7 @@ const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
 
-const PersistenceCtrl = require("./persistenceCtrl");
+const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
 
