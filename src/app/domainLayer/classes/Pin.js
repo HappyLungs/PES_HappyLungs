@@ -2,9 +2,10 @@
 //pCtrl = new persistenceCtrl();
 export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
-	constructor(name, location, description, media, rating, date, status) {
-		this.name = name;
-		this.location = location; //location has {latitude, longitude, title}
+	constructor(title, latitude, longitude, description, media, rating, date, status) {
+		this.title = title;
+		this.latitude = latitude; //location has {latitude, longitude, title}
+		this.longitude = longitude;
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
