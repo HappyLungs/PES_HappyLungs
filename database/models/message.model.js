@@ -21,6 +21,6 @@ const MessageSchema = new global.Schema({
 }, {
     timestamps: true
 });
-  
+
   const Messages = global.mongoose.model("Message", MessageSchema);
   module.exports = Messages;
