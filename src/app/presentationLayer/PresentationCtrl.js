@@ -361,7 +361,14 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function () {
-	let fakeNewConvers = [
+	let conversation = await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+	if (conversation != null) {
+		return conversation;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* let fakeNewConvers = [
 		{
 			id: "1",
 			name: "Júlia Herrera",
@@ -394,7 +401,7 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 		}
 	];
 
-	return fakeNewConvers;
+	return fakeNewConvers; */
 };
 
 PresentationCtrl.prototype.fetchConversation = async function (id) {

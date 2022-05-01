@@ -7,11 +7,8 @@ const errorCodes = require("../helpers/errorCodes.js")
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
-        console.log("Hola que tal como estamos");
-
         id = request.query._id;
     } else {
-
         conversationDataLayer.findConversations()
         .then((conversationData) => {
             if (conversationData !== null && typeof conversationData !== undefined) {
@@ -33,8 +30,6 @@ exports.find = async (request, response) => {
         });
     }
     if(typeof id !== "undefined"){
-
-
         if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
             const where = {};
             where._id = mongodb.ObjectId(id);
@@ -73,7 +68,6 @@ exports.find = async (request, response) => {
 exports.create = async (request, response) => {
     let params = {};
     if (request.body.params) {
-
         params = request.body.params;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
@@ -82,39 +76,36 @@ exports.create = async (request, response) => {
         response.send(responseObj);
         return;
     }
-
-    
          /* Check if users of the body exists */
-
     request.body.params.users.forEach(async email => {
-    const where = {};
-    where.email = email;
-    let result = await userDatalayer.findUser(where).then();
-    if(result != null) console.log("Usuario encontrado");
-    else {
-        console.log("Usuario no encontrado");
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = `User ${email} doesn't exist`;
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;    
-    }
+        const where = {};
+        where.email = email;
+        let result = await userDatalayer.findUser(where).then();
+        if(result != null) console.log("Usuario encontrado");
+        else {
+            console.log("Usuario no encontrado");
+            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+            responseObj.message = `User ${email} doesn't exist`;
+            responseObj.data    = {};
+            response.send(responseObj);
+            return;    
+        }
     });
        /* Check if messages of the body exists */
 
     request.body.params.messages.forEach(async message => {
         const where = {};
-    where._id = mongodb.ObjectId(message);
-    let result = await messageDataLayer.findMessage(where).then();
-    if(result != null) console.log("Mensaje encontrado");
-    else {
-        console.log("Mensaje no encontrado");
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = `Message ${message} doesn't exist`;
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;    
-    }
+        where._id = mongodb.ObjectId(message);
+        let result = await messageDataLayer.findMessage(where).then();
+        if(result != null) console.log("Mensaje encontrado");
+        else {
+            console.log("Mensaje no encontrado");
+            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+            responseObj.message = `Message ${message} doesn't exist`;
+            responseObj.data    = {};
+            response.send(responseObj);
+            return;    
+        }
     });
     
           /* Create the conversation */

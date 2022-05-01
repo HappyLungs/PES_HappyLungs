@@ -363,42 +363,25 @@ DomainCtrl.prototype.fetchConversations = async function () {
   return conver;
 };
 
-
-DomainCtrl.prototype.fetchNewConversations = async function () {
-  //create
- const all_users = await this.findUsers();
-
- const fetchedNewConversations = [];
- all_users.data.forEach(user => {
-   fetchedNewConversations.push({
-    id: user._id,
-    name: user.name,
-    profileImage: "null"
-  })
- });
-
-  
-  return fetchedNewConversations;
+DomainCtrl.prototype.fetchNewConversations = async function (email) {
+  //get all users with no conversation with logged user
+  const all_users = await persistenceCtrl.getRequest("/users", {email: "example@gmail.com"/*TODO Pass the google id from the logged user */});
+  if (all_users.status == 200) {
+    const fetchedNewConversations = [];
+    all_users.data.forEach(user => {
+      fetchedNewConversations.push({
+        id: user._id,
+        name: user.name,
+        profileImage: (profilePicture != undefined && profilePicture != "") ? profilePicture : "null"
+      })
+    });
+    return fetchedNewConversations;
+  } else {
+    //TODO handle error. Return an error and reload the view with the error
+    return null;
+  }
 };
 
-
-DomainCtrl.prototype.findUsers = async function () {
-  //create
-  DB_URL = "http://localhost:7000/v1/user";
-
-  let users = await fetch(DB_URL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": " application/json",
-      "X-Api-Key":
-        "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => data);
-
-  return users;
-};
 
 DomainCtrl.prototype.findUser = async function (email) {
   //create

@@ -34,6 +34,12 @@ router.get(
     UserController.find
 );
 
+router.get(
+    "/users",
+    licenseMiddleware.validate,
+    UserController.users
+);
+
 router.put(
     "/changePassword",
     licenseMiddleware.validate,
