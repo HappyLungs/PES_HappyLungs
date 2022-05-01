@@ -16,13 +16,16 @@ import COLORS from "../../config/stylesheet/colors";
 
 const ChatList = ({ chatsList, navigation }) => {	
 
+
 	const renderItem = ({ item, index }) => (
 
 		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
 			<View
 				style={[
-					styles.shadow,
+					
 					{
+						borderBottomColor:COLORS.light,
+						borderBottomWidth:1,
 						backgroundColor: COLORS.white,
 					},
 				]}
@@ -37,7 +40,7 @@ const ChatList = ({ chatsList, navigation }) => {
                                 padding: 10
 							}}
 							onPress={() => {
-								//navigation.navigate("OwnerPin", { pin: item });
+								navigation.navigate("ChatConversation");
 							}}
 						>
 							<Image
@@ -180,16 +183,6 @@ const ChatList = ({ chatsList, navigation }) => {
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
 			ListEmptyComponent={ListEmptyComponent}
-			ItemSeparatorComponent={() => {
-				return (
-					<View
-						style={{
-							width: "100%",
-							marginTop: 0,
-						}}
-					></View>
-				);
-			}}
 		></FlatList>
 	);
 };

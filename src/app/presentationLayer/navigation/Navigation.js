@@ -15,7 +15,8 @@ import "react-native-gesture-handler";
 //screens
 import MapScreen from "../MapScreen";
 import GeneralChatScreen from "../GeneralChatScreen";
-import NewChatScreen from "../NewChatScreen"
+import ChatConversation from "../ChatConversation";
+import NewChatScreen from "../NewChatScreen";
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
 import ProfileEditScreen from "../ProfileEditScreen";
@@ -222,6 +223,14 @@ function ChatStack() {
 			<Stack.Screen
 				name="ChatScreen"
 				component={GeneralChatScreen}
+				options={{
+					title: "",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name="ChatConversation"
+				component={ChatConversation}
 				options={{
 					title: "",
 					headerShown: false,
