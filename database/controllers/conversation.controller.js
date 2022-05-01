@@ -4,12 +4,31 @@ const messageDataLayer = require("./../datalayers/message.datalayer.js")
 const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
         id = request.query._id;
     } else {
-        conversationDataLayer.findConversations()
+        // get all conversations from a given user
+        if (!request.query.hasOwnProperty("email")) {
+            sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+            return;
+        }
+        let aggregateArr = [
+            {
+              '$match': {
+                users: request.query.email
+              }
+            }, {
+              '$sort': {
+                'createdAt': -1
+              }
+            }
+          ];
+          //Get the most recent conversation        TODO: get the conversation with the most recent message
+        conversationDataLayer.aggregateConversation(aggregateArr)
         .then((conversationData) => {
             if (conversationData !== null && typeof conversationData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
@@ -58,11 +77,7 @@ exports.find = async (request, response) => {
             responseObj.data    = {};
             response.send(responseObj);
         }
-
-
     }
-    
-
 };
 
 exports.create = async (request, response) => {

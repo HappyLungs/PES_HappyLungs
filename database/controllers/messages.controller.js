@@ -6,6 +6,8 @@ const userDatalayer =  require("./../datalayers/user.datalayer.js");
 const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
@@ -143,3 +145,92 @@ else {
     });
 
 };
+
+exports.lastMessage = async (request, response) => {
+    let params = {};
+    if (request.query.params) {
+        params = request.query.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (mongodb.ObjectId.isValid(mongodb.ObjectId(params.conversation))) {
+        let aggregateArr = [
+            {
+              '$match': {
+                'conversation': params.conversation
+              }
+            }, {
+              '$sort': {
+                'createdAt': -1
+              }
+            }, {
+              '$limit': 1
+            }
+          ];
+        messageDataLayer.aggregateMessage(aggregateArr)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
+        return;
+    }
+}
+
+exports.unreadedMessages = async (request, response) => {
+    let params = {};
+    if (request.query.params) {
+        params = request.query.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (mongodb.ObjectId.isValid(mongodb.ObjectId(params.conversation))) {
+        const criteria = {};
+        criteria['$and'] = [];
+        criteria['$and'].push({
+            conversation: {
+                $eq: params.conversation
+            }
+        });
+        criteria['$and'].push({
+            user: {
+                $eq: params.email
+            }
+        });
+        criteria['$and'].push({
+            readed: {
+                $eq: false
+            }
+        });
+        let aggregateArr = [
+            {
+              '$match': criteria
+            }, {
+              '$count': 'total'
+            }
+          ];
+        messageDataLayer.aggregateMessage(aggregateArr)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
+        return;
+    }
+}

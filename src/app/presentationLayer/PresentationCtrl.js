@@ -327,6 +327,13 @@ PresentationCtrl.prototype.getMapData = async function () {
 };
 
 PresentationCtrl.prototype.fetchConversations = async function () {
+	let conversations = await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+	if (conversations != null) {
+		return conversations;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}/* 
 	let fakeConvers = [
 		{
 			id: "1",
@@ -356,8 +363,7 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 
 		}
 	];
-
-	return fakeConvers;
+	return fakeConvers; */
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function () {

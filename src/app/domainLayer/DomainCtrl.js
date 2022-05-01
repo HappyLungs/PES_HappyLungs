@@ -336,31 +336,47 @@ DomainCtrl.prototype.fetchConversation = async function (id = null) {
 
 
 DomainCtrl.prototype.fetchConversations = async function () {
-  //create
-  DB_URL = "http://localhost:7000/v1/conversation";
-  var conver = [];
-  var users = {};
-  let conversations = await fetch(DB_URL).then((response) => response.json());
-
-  
-  for(var conversation in conversations.data){
-   const current_conver = conversations.data[conversation];
-    const logged = 	await this.findUser(current_conver.users[0]);
-    const conversant = await this.findUser(current_conver.users[1])
-    let index_lastMessage = 0;
-    if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
-    const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
-    conver.push({
-      id: current_conver._id,
-      name: conversant.data.name,
-      profileImage: "null",
-      lastMessage: lastMessage.data.text,
-      lastMessageTime: lastMessage.data.updatedAt,
-      unreadMessages: 3
+  let conver = [];
+  let conversations = await persistenceCtrl.getRequest("/conversation", {email: "example@gmail.com"/** TODO: Pass the logged user email */});
+  if (conversations.status === 200) {
+    conversations.data.map(current_conver => {
+        // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
+        const conversant = await persistenceCtrl.getRequest("/user", {email: current_conver.users[1]});
+        if (conversant.status === 200) {
+          let index_lastMessage = 0;
+          if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
+          //const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
+          const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
+          if (lastMessage.status === 200) {
+            if (isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
+            const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "example@gmail.com" /** TODO Pass the logged user email instead */});
+            if (unreadMessages.status === 200) {
+              conver.push({
+                id: current_conver._id,
+                name: conversant.data.name,
+                profileImage: (conversant.data.profilePicture) ? conversant.data.profileImage : "null",
+                lastMessage: lastMessage.data.text,
+                lastMessageTime: lastMessage.data.createdAt,
+                unreadMessages: unreadMessages.data.total
+              })
+            } else {
+              //TODO handle error searching for the unread messages
+              return null;
+            }
+          } else {
+            //TODO handle error searching for the last message
+            return null;
+          }
+        } else {
+          //TODO handle error searching for the specified user
+          return null;
+        }
     })
-    
+    return conver;
+  } else {
+    //TODO handle error
+    return null;
   }
-  return conver;
 };
 
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
