@@ -107,21 +107,24 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @param {*} rating
  * @param {*} status
  * @returns the created pin
+ * 
  */
 PresentationCtrl.prototype.createPin = function (
-	name,
+	title,
 	location,
 	description,
 	media,
 	rating,
+	pinData,
 	status
 ) {
 	return this.domainCtrl.createPin(
-		name,
+		title,
 		location,
 		description,
 		media,
 		rating,
+		pinData,
 		status
 	);
 };
