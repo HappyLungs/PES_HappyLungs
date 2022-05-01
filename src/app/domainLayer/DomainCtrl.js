@@ -3,6 +3,7 @@ const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
 import User from "./classes/User";
+import PersistenceCtrl from "../persistenceLayer/PersistenceCtrl";
 
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
