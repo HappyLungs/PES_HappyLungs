@@ -287,42 +287,44 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 
 */
 DomainCtrl.prototype.fetchConversation = async function (id = null) {
-  //create
-  DB_URL = "http://localhost:7000/v1/conversation?_id=" + id;
-  var conver = [];
-  var users = {};
-  let conversation = await fetch(DB_URL).then((response) => response.json());
-
-  if (conversation.status === 200) {
-    const logged = await this.findUser(conversation.data.users[0]);
-    const conversant = await this.findUser(conversation.data.users[1]);
-
-    users = {
-      logged: {
-        id: logged.data._id,
-        name: logged.data.name,
-        profileImage: "null",
-      },
-      conversant: {
-        id: conversant.data._id,
-        name: conversant.data.name,
-        profileImage: "null",
-      },
-    };
-
-    const messages = conversation.data.messages;
-    for(mes in messages){
-      const message = await this.findMessage(messages[mes]);
-      conver.push({
-        id: message.data._id,
-        user: message.data.user,
-        text: message.data.text,
-        date: message.data.updatedAt,
-      });
+  let conversation = await persistenceCtrl.getRequest("/conversation", {id: id});
+  if (conversation.status == 200) {
+    var users = {};
+    const logged = await persistenceCtrl.getRequest("/user", {email: "example@gmail.com" /** TODO replace with the logged user email */});
+    if (logged.status == 200) {
+      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] == logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
+      if (conversant.status == 200) {
+        users = {
+          logged: {
+            id: logged.data._id,
+            name: logged.data.name,
+            profileImage: (logged.data.profilePicture) ? logged.data.profilePicture : "null",
+          },
+          conversant: {
+            id: conversant.data._id,
+            name: conversant.data.name,
+            profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "null",
+          },
+        };
+        const message = await persistenceCtrl.getRequest("/message", {conversation: conversation.data._id});
+        if (message.status == 200) {
+          return { users:  users, messages: message.data };
+        } else {
+          //TODO handle error
+          return null;
+        }
+      } else {
+        //TODO: handle error
+        return null;
+      }
+    } else {
+      //TODO: handle error
+      return null;
     }
-   
+  } else {
+    //TODO: handle error. Return an error and reload the view with the error
+    return null;
   }
-  return { users:  users, messages: conver };
 };
 
 /*
@@ -354,7 +356,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
               conver.push({
                 id: current_conver._id,
                 name: conversant.data.name,
-                profileImage: (conversant.data.profilePicture) ? conversant.data.profileImage : "null",
+                profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "null",
                 lastMessage: lastMessage.data.text,
                 lastMessageTime: lastMessage.data.createdAt,
                 unreadMessages: unreadMessages.data.total
@@ -388,7 +390,7 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
       fetchedNewConversations.push({
         id: user._id,
         name: user.name,
-        profileImage: (profilePicture != undefined && profilePicture != "") ? profilePicture : "null"
+        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "null"
       })
     });
     return fetchedNewConversations;

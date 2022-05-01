@@ -411,6 +411,15 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 };
 
 PresentationCtrl.prototype.fetchConversation = async function (id) {
+	let conversation = await this.domainCtrl.fetchConversation(id);
+	if (conversation != null) {
+		let {users, messages} = conversation;
+		return {users: users, messages: messages};
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* 
 	let users = {
 		logged: {
 			id: "2",
@@ -449,7 +458,7 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 		}
 	];
 	
-	return {users: users, messages: fakeConver};
+	return {users: users, messages: fakeConver}; */
 };
 
 module.exports = PresentationCtrl;

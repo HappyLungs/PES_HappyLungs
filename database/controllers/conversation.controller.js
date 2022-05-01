@@ -49,7 +49,7 @@ exports.find = async (request, response) => {
         });
     }
     if(typeof id !== "undefined"){
-        if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+        if (mongodb.ObjectId.isValid(id)) {
             const where = {};
             where._id = mongodb.ObjectId(id);
             conversationDataLayer.findConversation(where)

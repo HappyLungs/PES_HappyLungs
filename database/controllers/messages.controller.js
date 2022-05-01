@@ -11,16 +11,43 @@ const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
-
         id = request.query._id;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
+        if (request.query.hasOwnProperty("conversation")) {
+            if (mongodb.ObjectId.isValid(request.query.conversation)) {
+                let aggregateArr = [
+                    {
+                        '$match': {
+                            conversation: mongodb.ObjectId(request.query.conversation)
+                        }
+                    }, {
+                        '$sort': {
+                            'createdAt': -1
+                        }
+                    }
+                ];
+                messageDataLayer.aggregateMessage(aggregateArr)
+                .then((messageData) => {
+                    if (messageData !== null && typeof messageData !== undefined) {
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                    } else {
+                        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                    return;
+                });
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid conversation id", {});
+                return;
+            }
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+            return;
+        }
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+    if (mongodb.ObjectId.isValid(id)) {
         const where = {};
         where._id = mongodb.ObjectId(id);
         messageDataLayer.findMessage(where)
@@ -154,7 +181,7 @@ exports.lastMessage = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(params.conversation))) {
+    if (mongodb.ObjectId.isValid(params.conversation)) {
         let aggregateArr = [
             {
               '$match': {
@@ -193,7 +220,7 @@ exports.unreadedMessages = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(params.conversation))) {
+    if (mongodb.ObjectId.isValid(params.conversation)) {
         const criteria = {};
         criteria['$and'] = [];
         criteria['$and'].push({
