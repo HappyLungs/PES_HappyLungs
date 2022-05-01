@@ -51,10 +51,9 @@ exports.find = async (request, response) => {
 };
 
 exports.create = async (request, response) => {
-    console.log("request: ", request);
     let params = {};
-    if (request.body.title) {
-        params = request.body;
+    if (request.body.params.title) {
+        params = request.body.params;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
         responseObj.message = "Required parameters missing";
