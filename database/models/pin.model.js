@@ -14,7 +14,7 @@ const PinSchema = new global.Schema({
     },
     status: {
         type: String,
-        enum: "Public,Private"
+        enum: ["Public","Private"]
     },
     creatorEmail: {
         type: String,
