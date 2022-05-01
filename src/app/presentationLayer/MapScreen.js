@@ -6,16 +6,11 @@ import {
 	View,
 	SafeAreaView,
 	TouchableOpacity,
-	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import * as Localization from "expo-localization";
-import i18n from "i18n-js";
-import { ca, en, es } from "../config/localizedStrings";
-i18n.fallbacks = true;
-i18n.translations = { ca, en, es };
-i18n.locale = Localization.locale;
+import i18n from "../config/translation";
+
 import {
 	Ionicons,
 	MaterialIcons,
@@ -23,13 +18,10 @@ import {
 	AntDesign,
 } from "@expo/vector-icons";
 
+import Modal from "react-native-modal";
+
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, {
-	Marker,
-	Heatmap,
-	PROVIDER_GOOGLE,
-	InfoWindow,
-} from "react-native-maps";
+import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
@@ -282,7 +274,10 @@ function MapScreen({ navigation, route }) {
 				transparent={true}
 				visible={modalFilterVisible}
 				onRequestClose={() => {
-					setModalFilterVisible(!modalFilterVisible);
+					setModalFilterVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalFilterVisible(false);
 				}}
 			>
 				<View style={styles.centeredView}>
@@ -293,19 +288,13 @@ function MapScreen({ navigation, route }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalFilterVisible(!modalFilterVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
+								{ fontWeight: "bold", alignSelf: "center" },
 							]}
 						>
-							Filter
+							{i18n.t("filter")}
 						</Text>
 						<Text
 							style={[
@@ -313,7 +302,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1 },
 							]}
 						>
-							Type of contamination
+							{i18n.t("typeOfContamination")}
 						</Text>
 						{renderCheckList()}
 						<Text
@@ -322,7 +311,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
 							]}
 						>
-							Show pins
+							{i18n.t("showPins")}
 						</Text>
 						<TouchableOpacity
 							style={{
@@ -348,7 +337,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
 							]}
 						>
-							Filter buildings by energy certificate
+							{i18n.t("filterByCertificate")}
 						</Text>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<TouchableOpacity
@@ -362,7 +351,9 @@ function MapScreen({ navigation, route }) {
 									marginStart: 15,
 									alignItems: "center",
 								}}
-								onPress={() => setByCertificate(!byCertificate)}
+								onPress={() => {
+									setByCertificate(!byCertificate);
+								}}
 							>
 								<Ionicons
 									name={byCertificate ? "home" : "home-outline"}
@@ -432,21 +423,16 @@ function MapScreen({ navigation, route }) {
 				transparent={true}
 				visible={modalPinVisible}
 				onRequestClose={() => {
-					setModalPinVisible(!modalPinVisible);
+					setModalPinVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalPinVisible(false);
 				}}
 			>
 				<View style={styles.centeredView}>
 					<View style={[styles.modalView, styles.shadow]}>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalPinVisible(!modalPinVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
-						<Text
-							style={[styles.modalText, { fontWeight: "bold", bottom: 15 }]}
-						>
-							Selected location
+						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
+							{i18n.t("selectedLocation")}
 						</Text>
 						<Text style={styles.highlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
@@ -460,7 +446,7 @@ function MapScreen({ navigation, route }) {
 							>
 								<AntDesign name="pushpino" size={35} color={COLORS.secondary} />
 								<Text style={[styles.subtitle, { marginStart: 5 }]}>
-									CREATE PIN
+									{i18n.t("createPin")}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -491,7 +477,7 @@ function MapScreen({ navigation, route }) {
 									size={35}
 								/>
 								<Text style={[styles.subtitle, { marginStart: 5 }]}>
-									SEE STATISTICS
+									{i18n.t("seeStatistics")}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
@@ -517,7 +503,7 @@ function MapScreen({ navigation, route }) {
 									color: COLORS.secondary,
 								}}
 							>
-								Recommended
+								{i18n.t("recommended1")}
 							</Text>
 							<View
 								style={{
@@ -577,7 +563,7 @@ function MapScreen({ navigation, route }) {
 						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
 					}}
 					onPress={() => setTraffic(!trafficSelected)}
-					text="Traffic"
+					text={i18n.t("typeOfContamination1")}
 				/>
 				<BouncyCheckbox
 					style={{ marginTop: 10 }}
@@ -597,7 +583,7 @@ function MapScreen({ navigation, route }) {
 						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
 					}}
 					onPress={() => setIndustry(!industrySelected)}
-					text="Industry"
+					text={i18n.t("typeOfContamination2")}
 				/>
 				<BouncyCheckbox
 					style={{ marginTop: 10 }}
@@ -615,7 +601,7 @@ function MapScreen({ navigation, route }) {
 						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
 					}}
 					onPress={() => setUrban(!urbanSelected)}
-					text="Urban"
+					text={i18n.t("typeOfContamination3")}
 				/>
 			</View>
 		);

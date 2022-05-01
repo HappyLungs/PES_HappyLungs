@@ -67,7 +67,7 @@ exports.create = async (request, response) => {
 
 const user = request.body.params.user
 const where = {};
-where._id = mongodb.ObjectId(user);
+where.email = request.body.params.email;
 let result = await userDatalayer.findUser(where).then();
 if (result != null) console.log("Usuario encontrado");
 else {
@@ -123,7 +123,6 @@ else {
     where3._id = mongodb.ObjectId(request.body.params.conversation);
     conversationDataLayer.updateConversation_byMessageCreation(where3, message_id)
     .then((messageData) => {
-        console.log(messageData);
         if (messageData !== null && typeof messageData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
@@ -133,7 +132,6 @@ else {
             responseObj.message = "No record found";
             responseObj.data    = {};
         }
-        response.send(responseObj);
 
     
     })

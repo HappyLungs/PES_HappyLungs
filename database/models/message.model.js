@@ -3,7 +3,7 @@
 const MessageSchema = new global.Schema({
     text: String,
     user:  {
-        type: Schema.ObjectId,
+        type: String,
         required: true
     },
     conversation: {

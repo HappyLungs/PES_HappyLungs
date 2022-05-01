@@ -12,14 +12,25 @@ const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
 exports.find = async (request, response) => {
     let email;
+    const where = {};
+
     if (request.query.email) {
         email = request.query.email;
+        where.email = email;
+
     } else {
-        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "There is no email", {});
-        return;
+        UserDataLayer.findUsers(where)
+        .then((userData) => {
+            if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+            else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found", {});
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    
     }
-    const where = {};
-    where.email = email;
+    if(typeof email !== "undefined"){
+
     UserDataLayer.findUser(where)
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
@@ -28,7 +39,7 @@ exports.find = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
-
+    }
 };
 
 exports.register = async (request, response, next) => {

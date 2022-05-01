@@ -22,7 +22,18 @@ exports.findUser = async (where = {}) => {
         })
     })
 }
-
+exports.findUsers = async () => {
+    return new Promise((resolve, reject) => {
+        UserModel
+        .find({})
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+}
 exports.deleteUser = async (where = {}) => {
     return new Promise((resolve, reject) => {
         UserModel

@@ -42,7 +42,7 @@ PersistenceCtrl.prototype.getRequest = async function (endpoint, query) {
         url: this.DB_URI + endpoint,
         params: query,
         headers: {
-            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "x-api-key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             "authorization": "PES2022"
         }
       })
@@ -63,7 +63,7 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
         url: this.DB_URI + endpoint,
         data: params,
         headers: {
-            "X-Api-Key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+            "x-api-key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             "authorization": "PES2022"
         }
       })
@@ -76,11 +76,12 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
     return res;
 }
 
+/*TODO USE GET REQUEST instead of this*/
 PersistenceCtrl.prototype.getConversationbyID = async function (id) {
     const res = await fetch("http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/v1/conversation?_id=" + id, {
         method: 'GET',
         headers: {
-          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'x-api-key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
           'Content-type': 'application/json'
         }
     });
@@ -88,11 +89,12 @@ PersistenceCtrl.prototype.getConversationbyID = async function (id) {
     return data;
 }
 
+/*TODO USE GET REQUEST instead of this*/
 PersistenceCtrl.prototype.getAllConversations = async function (id) {
     const res = await fetch("http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/v1/conversation", {
         method: 'GET',
         headers: {
-          'X-Api-Key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
+          'x-api-key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
           'Content-type': 'application/json'
         }
     });
