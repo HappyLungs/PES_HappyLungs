@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 import COLORS from "../../config/stylesheet/colors";
 
@@ -18,16 +19,6 @@ import COLORS from "../../config/stylesheet/colors";
 const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) => {	
 
 	let lastDate = "";
-
-	const printDate = (item) => {
-		return (
-			<text> {item.date} </text>
-		);
-	}
-
-	const renderItem2 = ({ item, index }) => (
-		<view><text>Hello</text></view>
-	);
 
 	const renderItem = ({ item, index }) => {
 		let newDate = false;
@@ -68,7 +59,23 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 					]}
 				>
 					
-					<View style={{ flexDirection: "column" }}>
+					<View style={{ flexDirection: "row" }}>
+						{item.user===loggedUser.id ? 
+						<View
+							style={{
+								paddingLeft: 10,
+								justifyContent: "center",
+								alignItems: "center"
+							}}
+						>
+							<TouchableOpacity>
+								<MaterialIcons
+									name="report-problem"
+									color={COLORS.red1}
+									size={25}
+								/>
+							</TouchableOpacity>
+						</View> : <View></View>}
 						<View 
 							style={{
 								flexDirection: "row",
@@ -76,7 +83,7 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 								paddingTop: 6,
 								paddingRight: 7,
 								paddingBottom: 8,
-								paddingLeft: 9,
+								paddingLeft: item.user===loggedUser.id ? 2 : 9,
 							}}
 						>
 							<View>

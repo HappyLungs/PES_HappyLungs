@@ -8,6 +8,8 @@ import {
 	Image,
 	Dimensions,
 } from "react-native";
+import { EvilIcons } from '@expo/vector-icons'; 
+
 
 import * as Animatable from "react-native-animatable";
 
@@ -22,7 +24,6 @@ const ChatList = ({ chatsList, navigation }) => {
 		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
 			<View
 				style={[
-					
 					{
 						borderBottomColor:COLORS.light,
 						borderBottomWidth:1,
@@ -32,114 +33,151 @@ const ChatList = ({ chatsList, navigation }) => {
 			>
 				<View style={{ flexDirection: "column" }}>
 					<View style={{ flexDirection: "row" }}>
-						<TouchableOpacity
+						<View 
 							style={{
-								flexDirection: "row",
-								flex: 1,
-								alignItems: "center",
-                                padding: 10
-							}}
-							onPress={() => {
-								navigation.navigate("ChatConversation");
+								width:"85%",
+								padding: 10,
 							}}
 						>
-							<Image
-								source={{ uri: item.profileImage }}
+							<TouchableOpacity
 								style={{
-									width: 70,
-									height: 70,
-									borderRadius: 100
-								}}
-							/>
-							<View
-								style={{
+									flexDirection: "row",
 									flex: 1,
-									marginHorizontal: 10,
-									alignSelf: "center",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									navigation.navigate("ChatConversation");
 								}}
 							>
+								<Image
+									source={{ uri: item.profileImage }}
+									style={{
+										width: 70,
+										height: 70,
+										borderRadius: 100
+									}}
+								/>
 								<View
 									style={{
+										flex: 1,
+										marginTop: 10,
+										marginBottom:10,
+										marginLeft:5,
+										alignSelf: "center",
 										flexDirection: "row",
-										justifyContent: "space-between",
-										alignItems: "flex-start",
-                                        paddingStart: 5,
-										width: 280
+										width: "auto",
 									}}
 								>
 									<View
 										style={{
-											alignSelf: "flex-start",
-											padding: 2,
-											width:215,
 										}}
 									>
-										<Text numberOfLines={1} style={[styles.chatName, {textAlign:"left"}]}>{item.name}</Text>
-									</View>
-									<View
-										style={{
-											alignSelf: "flex-end",
-											padding: 2,
-											width: 55
-										}}
-									>
-										<Text
-											style={[
-												styles.chatName,
-												{
-													color: COLORS.darkGrey,
-													fontSize: 12,
-													fontWeight: "bold",
-													textAlign: "right"
-												},
-											]}
+										<View
+											style={{
+												flexDirection: "row",
+												justifyContent: "space-between",
+												alignItems: "flex-start",
+												paddingStart: 5,
+											}}
 										>
-											{ item.lastMessageTime }
-										</Text>
-									</View>
-								</View>
-								<View
-									style={{
-										flexDirection: "row",
-                                        justifyContent: "flex-start",
-                                        alignItems: "center",
-									}}
-								>
+											<View
+												style={{
+													alignSelf: "flex-start",
+													padding: 2,
+													width:"75%"
+												}}
+											>
+												<Text numberOfLines={1} style={[styles.chatName, {textAlign:"left"}]}>{item.name}</Text>
+											</View>
+											<View
+												style={{
+													alignSelf: "flex-end",
+													padding: 2,
+												}}
+											>
+												<Text
+													style={[
+														styles.chatName,
+														{
+															color: COLORS.darkGrey,
+															fontSize: 12,
+															fontWeight: "bold",
+															textAlign: "right"
+														},
+													]}
+												>
+													{ item.lastMessageTime }
+												</Text>
+											</View>
+										</View>
+										<View
+											style={{
+												flexDirection: "row",
+												justifyContent: "flex-start",
+												alignItems: "center",
+											}}
+										>
+											
+											<View
+												style={{
+													width:"90%",
+												}}
+											>
+												<Text numberOfLines={2} style={styles.chatLastMessage}>{item.lastMessage}</Text>
+											</View>
+											
+											<View
+												style={{
+													backgroundColor: item.unreadMessages>0 ? COLORS.green1 : COLORS.white,
+													width:20,
+													height: 20,
+													paddingBottom:1,
+													justifyContent: "center",
+													borderRadius: 100
+												}}
+											>
+												<Text
+													style={[
+														styles.chatName,
+														{
+															color: COLORS.white,
+															fontSize: 12,
+															fontWeight: "bold",
+														},
+													]}
+												>
+													{ item.unreadMessages>0 ? item.unreadMessages : "" }
+												</Text>
+											</View>
+										</View>  
+									</View>  
 									
-                                    <View
-										style={{
-											width:260,
-										}}
-									>
-										<Text numberOfLines={2} style={styles.chatLastMessage}>{item.lastMessage}</Text>
-									</View>
-									 
-                                    <View
-										style={{
-											backgroundColor: item.unreadMessages>0 ? COLORS.green1 : COLORS.white,
-                                            width:20,
-                                            height: 20,
-                                            paddingBottom:1,
-                                            justifyContent: "center",
-                                            borderRadius: 100
-										}}
-									>
-										<Text
-											style={[
-												styles.chatName,
-												{
-													color: COLORS.white,
-													fontSize: 12,
-													fontWeight: "bold",
-												},
-											]}
-										>
-											{ item.unreadMessages>0 ? item.unreadMessages : "" }
-										</Text>
-									</View>
-                                </View>    
-							</View>
-						</TouchableOpacity>
+									
+								</View>
+							</TouchableOpacity>
+						</View>
+						<View
+							style={{
+								justifyContent:"center",
+								alignItems: "center",
+								borderLeftColor:COLORS.lightGrey,
+								borderLeftWidth:1,
+								width:"15%",
+							}}
+						>
+							<TouchableOpacity
+								onPress={() => {
+									/*navigation.navigate("ChatConversation");*/
+								}}
+							>
+								<EvilIcons
+									name="trash"
+									style={styles.sendIcon}
+									color={COLORS.red1}
+									size={35}
+								/>
+							</TouchableOpacity>
+						</View>
 					</View>
 				</View>
 			</View>
