@@ -437,7 +437,7 @@ function ProfileScreen({ navigation, route }) {
 			</TouchableOpacity>
 		
 		{renderModalLogout()}
-		</View>
+	</View>
 	);
 }
 

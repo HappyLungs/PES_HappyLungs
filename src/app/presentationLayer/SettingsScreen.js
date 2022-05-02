@@ -23,6 +23,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import Modal from "react-native-modal";
 
+import { Feather } from "@expo/vector-icons";
+
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
@@ -101,6 +103,83 @@ function SettingsScreen({ navigation }) {
 			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
 		}
 	};
+
+	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] = useState(false);
+
+	function renderModalDeleteAccount() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalDeleteAccountVisible}
+				onRequestClose={() => {
+					setModalDeleteAccountVisible(!modalDeleteAccountVisible);
+				}}
+				onBackdropPress={() => {
+					setModalDeleteAccountVisible(!modalDeleteAccountVisible);
+				}}
+			>
+			<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							Are you sure you want to delete the account?
+						</Text>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -10 },
+							]}
+						>
+							This action will be irreversible
+						</Text>
+					<View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-around",
+							alignSelf: "center",
+							marginTop: 30,
+							marginHorizontal: 0,
+							width: 200,
+						}}
+					>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.red1 },
+							]}
+							onPress={() => setModalDeleteAccountVisible(false)}
+						>
+							<Text style={styles.containerTxt}>No</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn2,
+								styles.shadow,
+								{ backgroundColor: COLORS.green1 },
+							]}
+							//onPress={validate}
+						>
+							<Text style={styles.containerTxt}>Yes</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</View>
+		</View>
+	</Modal>
+	);}
 
 	return (
 		<View
@@ -267,6 +346,27 @@ function SettingsScreen({ navigation }) {
 				</View>
 			</View>
 		</View>
+		<View 
+			style={{
+				flexDirection: "column",
+				flex: 1,
+				alignItems: "flex-end",
+				justifyContent: "flex-end",
+				backgroundColor: COLORS.white,
+			}}
+		>
+			<TouchableOpacity
+					onPress={() => setModalDeleteAccountVisible()}
+					style={[
+						styles.containerOption,
+						{ marginHorizontal: 30, marginBottom: 20 },
+					]}
+				>
+					<Feather name="power" size={27} color={COLORS.red1} />
+					<Text style={styles.textOption}>Delete Account</Text>
+				</TouchableOpacity>
+		</View>
+		{renderModalDeleteAccount()}
     </View>
 	);
 }
@@ -344,12 +444,22 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 25,
-		height: 400,
+		height: 200,
 		width: 240,
 		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 20,
 		alignItems: "center",
+	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	textOption: {
+		color: COLORS.secondary,
+		fontWeight: "bold",
+		fontSize: 15,
+		marginHorizontal: 10,
 	},
 });
 
