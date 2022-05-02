@@ -107,21 +107,24 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @param {*} rating
  * @param {*} status
  * @returns the created pin
+ * 
  */
 PresentationCtrl.prototype.createPin = function (
-	name,
+	title,
 	location,
 	description,
 	media,
 	rating,
+	pinData,
 	status
 ) {
 	return this.domainCtrl.createPin(
-		name,
+		title,
 		location,
 		description,
 		media,
 		rating,
+		pinData,
 		status
 	);
 };
@@ -394,5 +397,49 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 	return fakeNewConvers;
 };
 
+<<<<<<< HEAD
+=======
+PresentationCtrl.prototype.fetchConversation = async function (id) {
+	let users = {
+		logged: {
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		conversant: {
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg"
+		}
+	};
+	//new Date(year, month, day, hours, minutes, seconds, milliseconds)
+	let fakeConver = [
+		{
+			id: "1",
+			user: "1",
+			date: "26 april 2022",
+			hour: "15:30",
+			text: "Hola!"
+
+		},
+		{
+			id: "2",
+			user: "1",
+			date: "26 april 2022",
+			hour: "15:40",
+			text: "Què tal?"
+		},
+		{
+			id: "3",
+			user: "2",
+			date: "27 april 2022",
+			hour: "15:30",
+			text: "Molt bé i tu?"
+		}
+	];
+	
+	return {users: users, messages: fakeConver};
+};
+>>>>>>> d9057de63282857cc7999728e094a321aff524ea
 
 module.exports = PresentationCtrl;

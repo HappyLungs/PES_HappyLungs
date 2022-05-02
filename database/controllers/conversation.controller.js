@@ -140,3 +140,17 @@ exports.create = async (request, response) => {
     });
 
 };
+
+function aggregateArray(match, group, sort) {
+    return [
+        {
+            $match: match
+        },
+        {
+            $group: group
+        },
+        {
+            $sort: sort
+        }
+    ];
+}
