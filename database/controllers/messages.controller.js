@@ -175,8 +175,8 @@ else {
 
 exports.lastMessage = async (request, response) => {
     let params = {};
-    if (request.query.params) {
-        params = request.query.params;
+    if (request.query.conversation) {
+        params = request.query;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
@@ -185,7 +185,7 @@ exports.lastMessage = async (request, response) => {
         let aggregateArr = [
             {
               '$match': {
-                'conversation': params.conversation
+                'conversation': mongodb.ObjectId(params.conversation)
               }
             }, {
               '$sort': {
@@ -214,8 +214,8 @@ exports.lastMessage = async (request, response) => {
 
 exports.unreadedMessages = async (request, response) => {
     let params = {};
-    if (request.query.params) {
-        params = request.query.params;
+    if (request.query.conversation) {
+        params = request.query;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
@@ -225,12 +225,12 @@ exports.unreadedMessages = async (request, response) => {
         criteria['$and'] = [];
         criteria['$and'].push({
             conversation: {
-                $eq: params.conversation
+                $eq: mongodb.ObjectId(params.conversation)
             }
         });
         criteria['$and'].push({
             user: {
-                $eq: params.email
+                $ne: params.email
             }
         });
         criteria['$and'].push({

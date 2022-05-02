@@ -343,10 +343,11 @@ DomainCtrl.prototype.fetchConversations = async function () {
   if (conversations.status === 200) {
     conversations.data.map(current_conver => {
         // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
-        const conversant = await persistenceCtrl.getRequest("/user", {email: current_conver.users[1]});
+        
+        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "example@gmail.com" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
         if (conversant.status === 200) {
-          let index_lastMessage = 0;
-          if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
+          //let index_lastMessage = 0;
+          //if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
           //const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
           const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
           if (lastMessage.status === 200) {

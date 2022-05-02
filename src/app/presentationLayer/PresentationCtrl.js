@@ -410,8 +410,6 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 	return fakeNewConvers; */
 };
 
-<<<<<<< HEAD
-=======
 PresentationCtrl.prototype.fetchConversation = async function (id) {
 	let conversation = await this.domainCtrl.fetchConversation(id);
 	if (conversation != null) {
@@ -462,6 +460,5 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	
 	return {users: users, messages: fakeConver}; */
 };
->>>>>>> d9057de63282857cc7999728e094a321aff524ea
 
 module.exports = PresentationCtrl;

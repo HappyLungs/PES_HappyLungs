@@ -11,26 +11,24 @@ const sendResponse = require("../helpers/sendResponse.helper.js");
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
 exports.find = async (request, response) => {
-    exports.find = async (request, response) => {
-        let email;
-        if (request.query.email) {
-            email = request.query.email;
-        } else {
-            sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "There is no email", {});
-            return;
-        }
-        const where = {};
-        where.email = email;
-        UserDataLayer.findUser(where)
-        .then((userData) => {
-            if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
-            else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found", {});
-        })
-        .catch(error => {
-            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-        });
-    
-    };
+    let email;
+    if (request.query.email) {
+        email = request.query.email;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "There is no email", {});
+        return;
+    }
+    const where = {};
+    where.email = email;
+    UserDataLayer.findUser(where)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+        else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found", {});
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+
 };
 
 exports.users = async (request, response) => {
