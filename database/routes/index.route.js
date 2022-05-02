@@ -34,6 +34,12 @@ router.get(
     UserController.find
 );
 
+router.get(
+    "/users",
+    licenseMiddleware.validate,
+    UserController.users
+);
+
 router.put(
     "/changePassword",
     licenseMiddleware.validate,
@@ -107,35 +113,55 @@ router.put(
     PinController.update
 );
 
-/*  /Message */
+/*  Message */
 
 router.post(
     "/message",
-  //  licenseMiddleware.validate,
-
+    licenseMiddleware.validate,
     MessageController.create
 );
 router.get(
     "/message",
+    licenseMiddleware.validate,
     MessageController.find
 );
 
+router.get(
+    "/lastMessage",
+    licenseMiddleware.validate,
+    MessageController.lastMessage
+);
 
-/*  /Conversation */
+router.get(
+    "/unreadedMessages",
+    licenseMiddleware.validate,
+    MessageController.unreadedMessages
+);
+
+/*  /Message */
+
+
+/*  Conversation */
 
 router.post(
     "/conversation",
-  //  licenseMiddleware.validate,
-
-  ConversationController.create
+    licenseMiddleware.validate,
+    ConversationController.create
 );
 router.get(
     "/conversation",
+    licenseMiddleware.validate,
     ConversationController.find
 );
+
+/*  /Conversation */
+
+/** Contamination */
 
 router.get(
     "/contamination/:longitude/:latitude/:date", 
     
     ContaminationController.find
-)
+);
+
+/** /Contamination */

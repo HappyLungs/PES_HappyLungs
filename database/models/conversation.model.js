@@ -1,6 +1,5 @@
 // create message schema
 const ConverSchema = new global.Schema({
-    messages: [{type: mongoose.Types.ObjectId}],
     users: [{
         type: String,
         required: [true, "Please provide an email"],

@@ -3,34 +3,24 @@ const mongodb = require("mongodb");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
-
-const User = require('./../models/user.model');
 const loginHelper = require("../helpers/loginHelpers");
-const UserDataLayer = require("./../datalayers/user.datalayer");
-const sendResponse = require("../helpers/sendResponse.helper.js");
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
+//Datalayers
+const UserDataLayer = require("./../datalayers/user.datalayer");
+const ConversationDatalayer = require("./../datalayers/conversation.datalayer");
+
 
 exports.find = async (request, response) => {
     let email;
-    const where = {};
-
     if (request.query.email) {
         email = request.query.email;
-        where.email = email;
-
     } else {
-        UserDataLayer.findUsers(where)
-        .then((userData) => {
-            if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
-            else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found", {});
-        })
-        .catch(error => {
-            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-        });
-    
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "There is no email", {});
+        return;
     }
-    if(typeof email !== "undefined"){
-
+    const where = {};
+    where.email = email;
     UserDataLayer.findUser(where)
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
@@ -39,6 +29,69 @@ exports.find = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
+
+};
+
+exports.users = async (request, response) => {
+    let params = request.query;
+    let where = {};
+    if (!params.hasOwnProperty("email")) {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    } else {
+        // find all users in the database that have at least one conversation with the user with the given email
+        let aggregateArr = [
+            {
+              '$match': {
+                'users': params.email
+              }
+            }, {
+              '$unwind': {
+                'path': '$users', 
+                'preserveNullAndEmptyArrays': true
+              }
+            }, {
+              '$match': {
+                'users': {
+                  '$ne': params.email
+                }
+              }
+            }, {
+              '$group': {
+                '_id': 'users', 
+                'users': {
+                  '$push': '$users'
+                }
+              }
+            }, {
+              '$project': {
+                'users': 1, 
+                '_id': 0
+              }
+            }
+          ];
+        let users = [];
+        await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
+            if (userData !== null && typeof userData !== undefined) {
+                users = userData[0].users;
+            }
+        });
+        users.push(params.email);   //Add the user himself to the list
+        where.email = {
+            $nin: users
+        };
+        //Find all users that doesent have any conversation with the user with the given email
+        UserDataLayer.findUsers(where)
+        .then((userData) => {
+            if (userData !== null && typeof userData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.NO_DATA_FOUND, "No data found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
     }
 };
 

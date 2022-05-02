@@ -22,10 +22,11 @@ exports.findUser = async (where = {}) => {
         })
     })
 }
-exports.findUsers = async () => {
+
+exports.findUsers = async (where = {}) => {
     return new Promise((resolve, reject) => {
         UserModel
-        .find({})
+        .find(where)
         .then((data) => {
             resolve(data)
         })
@@ -45,4 +46,17 @@ exports.deleteUser = async (where = {}) => {
             reject(error)
         })
     })
+}
+
+exports.aggregateUser = async (aggregateArr) => {
+    return new Promise((resolve, reject) => {
+        UserModel
+        .aggregate(aggregateArr)
+        .then((data) => {
+            resolve(data);
+        })
+        .catch((error) => {
+            reject(error);
+        });
+    });
 }

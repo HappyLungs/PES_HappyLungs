@@ -48,4 +48,17 @@ exports.createMessage = async (params) => {
               reject(error)
           })
       })
-  }
+  };
+
+  exports.aggregateMessage = async (aggregateArr) => {
+    return new Promise((resolve, reject) => {
+      MessageModel
+        .aggregate(aggregateArr)
+        .then((data) => {
+            resolve(data);
+        })
+        .catch((error) => {
+            reject(error);
+        });
+    });
+};

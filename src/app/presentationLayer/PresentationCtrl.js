@@ -327,6 +327,13 @@ PresentationCtrl.prototype.getMapData = async function () {
 };
 
 PresentationCtrl.prototype.fetchConversations = async function () {
+	let conversations = await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+	if (conversations != null) {
+		return conversations;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}/* 
 	let fakeConvers = [
 		{
 			id: "1",
@@ -356,12 +363,18 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 
 		}
 	];
-
-	return fakeConvers;
+	return fakeConvers; */
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function () {
-	let fakeNewConvers = [
+	let conversation = await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+	if (conversation != null) {
+		return conversation;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* let fakeNewConvers = [
 		{
 			id: "1",
 			name: "Júlia Herrera",
@@ -394,12 +407,19 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 		}
 	];
 
-	return fakeNewConvers;
+	return fakeNewConvers; */
 };
 
-<<<<<<< HEAD
-=======
 PresentationCtrl.prototype.fetchConversation = async function (id) {
+	let conversation = await this.domainCtrl.fetchConversation(id);
+	if (conversation != null) {
+		let {users, messages} = conversation;
+		return {users: users, messages: messages};
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* 
 	let users = {
 		logged: {
 			id: "2",
@@ -438,8 +458,7 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 		}
 	];
 	
-	return {users: users, messages: fakeConver};
+	return {users: users, messages: fakeConver}; */
 };
->>>>>>> d9057de63282857cc7999728e094a321aff524ea
 
 module.exports = PresentationCtrl;
