@@ -284,13 +284,12 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
   1. We dont have the function for logged user, so atm the first user in the array is the logged and the second the conversant
   2. We need to check if the id is and mongoDB id. If the id doesnt exists we return empty object.
   3. Dont have the Images ATM
-
 */
 DomainCtrl.prototype.fetchConversation = async function (id) {
   let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
   if (conversation.status == 200) {
     var users = {};
-    const logged = await persistenceCtrl.getRequest("/user", {email: "example@gmail.com" /** TODO replace with the logged user email */});
+    const logged = await persistenceCtrl.getRequest("/user", {email: "ivan.jimeno@estudiantat.upc.edu" /** TODO replace with the logged user email */});
     if (logged.status == 200) {
       const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] == logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
       if (conversant.status == 200) {
@@ -339,12 +338,11 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
 
 DomainCtrl.prototype.fetchConversations = async function () {
   let conver = [];
-  let conversations = await persistenceCtrl.getRequest("/conversation", {email: "example@gmail.com"/** TODO: Pass the logged user email */});
+  let conversations = await persistenceCtrl.getRequest("/conversation", {email: "ivan.jimeno@estudiantat.upc.edu"/** TODO: Pass the logged user email */});
   if (conversations.status === 200) {
-    conversations.data.map(current_conver => {
+    conversations.data.map(async current_conver =>  {
         // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
-        
-        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "example@gmail.com" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
+        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
         if (conversant.status === 200) {
           //let index_lastMessage = 0;
           //if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
@@ -352,7 +350,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
           const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
           if (lastMessage.status === 200) {
             if (isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
-            const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "example@gmail.com" /** TODO Pass the logged user email instead */});
+            const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "ivan.jimeno@estudiantat.upc.edu" /** TODO Pass the logged user email instead */});
             if (unreadMessages.status === 200) {
               conver.push({
                 id: current_conver._id,
@@ -384,7 +382,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
 
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
   //get all users with no conversation with logged user
-  const all_users = await persistenceCtrl.getRequest("/users", {email: "example@gmail.com"/*TODO Pass the google id from the logged user */});
+  const all_users = await persistenceCtrl.getRequest("/users", {email: "ivan.jimeno@estudiantat.upc.edu"/*TODO Pass the google id from the logged user */});
   if (all_users.status == 200) {
     const fetchedNewConversations = [];
     all_users.data.forEach(user => {
