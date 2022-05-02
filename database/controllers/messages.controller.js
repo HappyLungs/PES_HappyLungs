@@ -36,7 +36,6 @@ exports.find = async (request, response) => {
                 })
                 .catch(error => {
                     sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-                    return;
                 });
                 return;
             } else {
@@ -209,7 +208,6 @@ exports.lastMessage = async (request, response) => {
         });
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
-        return;
     }
 }
 
@@ -259,6 +257,5 @@ exports.unreadedMessages = async (request, response) => {
         });
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
-        return;
     }
 }
