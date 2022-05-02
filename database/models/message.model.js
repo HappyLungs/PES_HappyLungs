@@ -11,12 +11,12 @@ const MessageSchema = new global.Schema({
         required: true
     },
     image: {
-        String,
+        type: String,
         default: null
     },
     readed: {
         type: Boolean,
-        defalt: false
+        default: false
     },
 }, {
     timestamps: true
