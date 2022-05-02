@@ -286,8 +286,8 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
   3. Dont have the Images ATM
 
 */
-DomainCtrl.prototype.fetchConversation = async function (id = null) {
-  let conversation = await persistenceCtrl.getRequest("/conversation", {id: id});
+DomainCtrl.prototype.fetchConversation = async function (id) {
+  let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
   if (conversation.status == 200) {
     var users = {};
     const logged = await persistenceCtrl.getRequest("/user", {email: "example@gmail.com" /** TODO replace with the logged user email */});
@@ -400,7 +400,6 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
     return null;
   }
 };
-
 
 DomainCtrl.prototype.findUser = async function (email) {
   //create

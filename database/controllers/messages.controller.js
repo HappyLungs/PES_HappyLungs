@@ -38,6 +38,7 @@ exports.find = async (request, response) => {
                     sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
                     return;
                 });
+                return;
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid conversation id", {});
                 return;

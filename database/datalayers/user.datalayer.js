@@ -23,10 +23,10 @@ exports.findUser = async (where = {}) => {
     })
 }
 
-exports.findUsers = async () => {
+exports.findUsers = async (where = {}) => {
     return new Promise((resolve, reject) => {
         UserModel
-        .find({})
+        .find(where)
         .then((data) => {
             resolve(data)
         })
