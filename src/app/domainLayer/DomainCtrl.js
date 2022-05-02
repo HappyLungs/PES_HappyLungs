@@ -349,7 +349,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
           //const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
           const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
           if (lastMessage.status === 200) {
-            if (isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
+            if (lastMessage.data.isArray()) lastMessage.data = lastMessage.data[0];
             const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "ivan.jimeno@estudiantat.upc.edu" /** TODO Pass the logged user email instead */});
             if (unreadMessages.status === 200) {
               conver.push({
