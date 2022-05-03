@@ -5,5 +5,6 @@ class ChartPollutants extends Chart{
         super(title);
         this.pollutants;
         this.quantities;
+
     }
 }
