@@ -1,8 +1,7 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-const fetch = require("node-fetch");
 
-import Pin from "./classes/Pin";
-import User from "./classes/User";
+const Pin = require("./classes/Pin");
+const User = require("./classes/User");
 
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
@@ -286,16 +285,20 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
   3. Dont have the Images ATM
 */
 DomainCtrl.prototype.fetchConversation = async function (id) {
+  console.log("1");
   let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
   if (conversation.status == 200) {
+    console.log("2");
     var users = {};
     const logged = await persistenceCtrl.getRequest("/user", {email: "ivan.jimeno@estudiantat.upc.edu" /** TODO replace with the logged user email */});
     if (logged.status == 200) {
+      console.log("3");
       const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] == logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
       if (conversant.status == 200) {
+        console.log("4");
         users = {
           logged: {
-            id: logged.data._id,
+            email: logged.data.email,
             name: logged.data.name,
             profileImage: (logged.data.profilePicture) ? logged.data.profilePicture : "null",
           },
@@ -305,9 +308,17 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
             profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "null",
           },
         };
-        const message = await persistenceCtrl.getRequest("/message", {conversation: conversation.data._id});
-        if (message.status == 200) {
-          return { users:  users, messages: message.data };
+        let dbMessages = await persistenceCtrl.getRequest("/message", {conversation: conversation.data._id});
+        dbMessages.data.forEach(message => {
+          let date = new Date(message.createdAt);
+          message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
+          message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+        })
+        if (dbMessages.status == 200) {
+          console.log("5");
+          console.log("Users: ", users);
+          console.log("messages", dbMessages.data);
+          return { users:  users, messages: dbMessages.data };
         } else {
           //TODO handle error
           return null;
@@ -335,12 +346,11 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
 
 */
 
-
 DomainCtrl.prototype.fetchConversations = async function () {
   let conver = [];
   let conversations = await persistenceCtrl.getRequest("/conversation", {email: "ivan.jimeno@estudiantat.upc.edu"/** TODO: Pass the logged user email */});
   if (conversations.status === 200) {
-    conversations.data.map(async current_conver =>  {
+    for (const current_conver of conversations.data) {
         // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
         const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
         if (conversant.status === 200) {
@@ -351,15 +361,17 @@ DomainCtrl.prototype.fetchConversations = async function () {
           if (lastMessage.status === 200) {
             if (Array.isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
             const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "ivan.jimeno@estudiantat.upc.edu" /** TODO Pass the logged user email instead */});
+            let date = new Date(lastMessage.data.createdAt)
             if (unreadMessages.status === 200) {
               conver.push({
                 id: current_conver._id,
                 name: conversant.data.name,
-                profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "null",
+                profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
                 lastMessage: lastMessage.data.text,
-                lastMessageTime: lastMessage.data.createdAt,
-                unreadMessages: unreadMessages.data.total
+                lastMessageTime: [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/'),
+                unreadMessages: unreadMessages.data.length
               })
+              return conver;
             } else {
               //TODO handle error searching for the unread messages
               return null;
@@ -372,8 +384,8 @@ DomainCtrl.prototype.fetchConversations = async function () {
           //TODO handle error searching for the specified user
           return null;
         }
-    })
-    return conver;
+    }
+    
   } else {
     //TODO handle error
     return null;
@@ -389,7 +401,7 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
       fetchedNewConversations.push({
         id: user._id,
         name: user.name,
-        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "null"
+        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
       })
     });
     return fetchedNewConversations;
@@ -401,6 +413,7 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
 
 DomainCtrl.prototype.findUser = async function (email) {
   //create
+  /*
   DB_URL = "http://localhost:7000/v1/user?email=" + email;
 
   let user = await fetch(DB_URL, {
@@ -416,10 +429,12 @@ DomainCtrl.prototype.findUser = async function (email) {
 
   return user;
   console.log(user);
+  */
 };
 
 DomainCtrl.prototype.findMessage = async function (id) {
   //create
+  /*
   DB_URL = "http://localhost:7000/v1/message?_id=" + id;
 
   let message = await fetch(DB_URL, {
@@ -434,6 +449,7 @@ DomainCtrl.prototype.findMessage = async function (id) {
     .then((data) => data);
   return message;
   console.log(user);
+  */
 };
 
 /**

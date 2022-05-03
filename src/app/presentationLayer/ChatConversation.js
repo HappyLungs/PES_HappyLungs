@@ -18,7 +18,7 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 
-function ChatScreen({ navigation }) {
+function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const [messages, setMessages] = useState([]);
@@ -33,7 +33,8 @@ function ChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
-		const data = await presentationCtrl.fetchConversation("2");
+		const id = route.params.id;
+		const data = await presentationCtrl.fetchConversation(id);
         
 		setLoggedUser(data.users.logged);
 		setConversantUsers(data.users.conversant);

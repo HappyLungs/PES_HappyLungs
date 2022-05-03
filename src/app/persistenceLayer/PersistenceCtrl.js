@@ -55,7 +55,6 @@ PersistenceCtrl.prototype.getRequest = async function (endpoint, query) {
     return res;
 }
 
-
 PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
     let res = {};
     await axios({
