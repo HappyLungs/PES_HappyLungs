@@ -189,7 +189,7 @@ exports.validate = (method) => {
                     })
                 ];
             }
-            break;
+
         case "updatePin":
             {
                 return [
@@ -215,6 +215,6 @@ exports.validate = (method) => {
                     })
                 ];
             }
-            break;
+
     }
 };
