@@ -99,7 +99,7 @@ const styles = {
   },
 
   button:{
-      backgroundColor: '#136AC7',
+      backgroundColor: COLORS.green1,
       borderRadius: 5,
       padding: 10
   },

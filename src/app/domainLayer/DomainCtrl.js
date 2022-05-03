@@ -255,8 +255,10 @@ DomainCtrl.prototype.editPin = function (
 ) {
 	//create
 	let myUser = new User(
+		null,
 		email,
-		password
+		password,
+		null
 	);
 	return await myUser.login();	//login to db
 };

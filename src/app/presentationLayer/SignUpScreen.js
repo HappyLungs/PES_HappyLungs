@@ -424,9 +424,9 @@ function SignUpScreen({ navigation, route }) {
                         unfillColor={COLORS.white}
                     />
                     <Text style={styles.color_textPrivate}>
-                        I've read and accept the
+                        I've read and accept the{" "}
                     </Text>
-                    <Text style={[{color: '#0000EE', fontWeight: 'bold', textDecorationLine: 'underline'}]} onPress={() => navigation.navigate('TermsAndConditionsScreen')}>{" "}Terms and conditions</Text>
+                    <Text style={[{color: '#0000EE', fontWeight: 'bold', textDecorationLine: 'underline'}]} onPress={() => navigation.navigate('TermsAndConditionsScreen')}>Terms and conditions</Text>
                 </View>
                 <View style={styles.button}>
                     <TouchableOpacity

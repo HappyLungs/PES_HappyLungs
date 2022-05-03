@@ -117,7 +117,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.shadow,
 								{ backgroundColor: COLORS.green1 },
 							]}
-							//onPress={validate}
+							onPress={logOut}
 						>
 							<Text style={styles.containerTxt}>Yes</Text>
 						</TouchableOpacity>
@@ -131,7 +131,7 @@ function ProfileScreen({ navigation, route }) {
 
 	function logOut() {
 		//logOut user
-		//navigation.navigate("LogInScreen");
+		navigation.navigate("SignInScreen");
 	}
 	return (
 		<View

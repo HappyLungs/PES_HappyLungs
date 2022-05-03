@@ -24,6 +24,9 @@ import CreatePinScreen from "../CreatePinScreen";
 import PinOwnerScreen from "../PinOwnerScreen";
 import PinEditScreen from "../PinEditScreen";
 import PinDefaultScreen from "../PinDefaultScreen";
+import SignInScreen from "../SignInScreen";
+import SignUpScreen from "../SignUpScreen";
+import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
 
 const Tab = createBottomTabNavigator();
@@ -33,7 +36,7 @@ const Stack = createStackNavigator();
 function RootStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="MapScreen"
+			initialRouteName="SignInScreen"
 			screenOptions={{
 				tabBarActiveTintColor: COLORS.green1,
 				tabBarInactiveTintColor: COLORS.secondary,
@@ -44,9 +47,12 @@ function RootStack() {
 					fontWeight: "bold",
 					fontSize: 27,
 				},
-				headerShown: true,
+				headerShown: false,
 			}}
 		>
+			<Stack.Screen name="SignInScreen" component={SignInScreen} />
+			<Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+			<Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} />
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}
