@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import {
 	Text,
@@ -16,6 +16,12 @@ import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
+
+import { UserContext } from "./navigation/UserContext";
+
+import { Ionicons } from "@expo/vector-icons";
+
+import Modal from "react-native-modal";
 import i18n from "../config/translation";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
@@ -23,6 +29,8 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	//should pass userId, and then retrieve the updated data
+
+	const { user, setUser } = useContext(UserContext);
 
 	const fakeUserData = {
 		username: "Username",
@@ -33,14 +41,14 @@ function ProfileEditScreen({ navigation }) {
 		picture:
 			"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
 	};
-	const [user, setUser] = useState(fakeUserData);
+	const [fakeUser, setFakeUser] = useState(fakeUserData);
 	const [profilePicture, setProfilePicture] = useState(fakeUserData.picture);
-	const [state1, setState1] = useState(user.healthState[0]);
-	const [state2, setState2] = useState(user.healthState[1]);
-	const [state3, setState3] = useState(user.healthState[2]);
+	const [state1, setState1] = useState(fakeUser.healthState[0]);
+	const [state2, setState2] = useState(fakeUser.healthState[1]);
+	const [state3, setState3] = useState(fakeUser.healthState[2]);
 
 	const [inputs, setInputs] = useState({
-		username: user.username,
+		username: user.name,
 		email: user.email,
 		password: user.password,
 	});
@@ -228,7 +236,7 @@ function ProfileEditScreen({ navigation }) {
 						}
 						onFocus={() => handleError(null, "username")}
 						iconName="person"
-						defaultValue={user.username}
+						defaultValue={user.name}
 						label={i18n.t("username")}
 						error={errors.username}
 					/>

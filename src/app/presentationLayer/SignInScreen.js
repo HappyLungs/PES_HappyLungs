@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from 'react';
+
 import {
 	View,
 	Text,
@@ -15,6 +16,7 @@ import Feather from "react-native-vector-icons/Feather";
 import COLORS from "../config/stylesheet/colors";
 
 import Axios from "axios";
+import { UserContext } from './navigation/UserContext';
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -71,15 +73,19 @@ function SignInScreen({ navigation, route }) {
 		});
 	};
 
-	const loginUser = async () => {
-		const { email, password } = data;
-		let response = await presentationCtrl.loginUser(email, password);
-		if (response.status == 200) {
-			navigation.navigate("MapScreen");
-		} else {
-			errorMsgChange(response.message);
-		}
-	};
+    const loginUser = async () => {
+        const { email, password } = data;
+        let response = await presentationCtrl.loginUser(
+            email,
+            password
+        );
+        if (response.status == 200) {
+            setUser(response.data);
+            navigation.navigate("AppTabs", { screen: "Map"});
+        } else {
+            errorMsgChange(response.message);
+        }
+    };
 
 	const renderMessage = () => {
 		if (data.errorMsg != "") {
@@ -88,42 +94,41 @@ function SignInScreen({ navigation, route }) {
 		return;
 	};
 
-	return (
-		<View style={styles.container}>
-			<StatusBar backgroundColor="#007f5a" barStyle="light-content" />
-			<View style={styles.header}>
-				<Text style={styles.text_header}>Welcome!</Text>
-			</View>
-			<Animatable.View animation="zoomInUp" style={styles.footer}>
-				<View>{renderMessage()}</View>
-				<View style={styles.action}>
-					<Text
-						style={[
-							styles.text_footer,
-							{
-								color: COLORS.primary,
-							},
-						]}
-					>
-						Email
-					</Text>
-					<View style={styles.style1}>
-						<View style={{ flexDirection: "row" }}>
-							<FontAwesome name="user-o" color={COLORS.primary} size={20} />
-							<TextInput
-								placeholder={"Your Email"}
-								placeholderTextColor="#666666"
-								style={[
-									styles.textInput,
-									{
-										color: COLORS.primary,
-									},
-								]}
-								autoCapitalize="none"
-								onChangeText={(val) => emailChange(val)}
-							/>
-						</View>
+    const { user, setUser } = useContext(UserContext);
 
+    return (
+        <View style={styles.container}>
+            <StatusBar backgroundColor='#007f5a' barStyle="light-content"/>
+            <View style={styles.header}>
+                <Text style={styles.text_header}>Welcome!</Text>
+            </View>
+            <Animatable.View
+                animation="zoomInUp"
+                style={styles.footer}>
+                <View>
+                    { renderMessage() }
+                </View>
+                <View style={styles.action}>
+                    <Text style={[styles.text_footer, {
+                        color: COLORS.primary
+                    }]}>Email</Text>
+                    <View style={styles.style1}>
+                        <View style={{flexDirection:"row"}}>
+                            <FontAwesome
+                                name="user-o"
+                                color={COLORS.primary}
+                                size={20}
+                            />
+                            <TextInput
+                                placeholder={"Your Email"}
+                                placeholderTextColor="#666666"
+                                style={[styles.textInput, {
+                                    color: COLORS.primary
+                                }]}
+                                autoCapitalize="none"
+                                onChangeText={(val)=>emailChange(val)}
+                            />
+                        </View>
 						{data.checkTextInputChange ? (
 							<Animatable.View animation="bounceIn">
 								<Feather name="check-circle" color="green" size={20} />

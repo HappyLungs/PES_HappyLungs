@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 
 import {
 	Text,
@@ -16,13 +16,17 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
+
+import Modal from "react-native-modal";
+import { UserContext } from "./navigation/UserContext";
 import i18n from "../config/translation";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
-	//const { user } = route.params;
-	const user = {
+	const { user, setUser } = useContext(UserContext);
+	
+	const userFake = {
 		username: "Username",
 		email: "username@email.com",
 		points: 200,
@@ -129,7 +133,7 @@ function ProfileScreen({ navigation, route }) {
 	}
 
 	function logOut() {
-		//logOut user
+		setUser(null);
 		navigation.navigate("SignInScreen");
 	}
 	return (
@@ -157,7 +161,7 @@ function ProfileScreen({ navigation, route }) {
 					}}
 				>
 					<ImageBackground
-						source={user.picture}
+						source={userFake.picture}
 						style={[
 							{
 								borderRadius: 20,
@@ -186,7 +190,7 @@ function ProfileScreen({ navigation, route }) {
 							]}
 						>
 							<Text style={{ color: COLORS.secondary, fontWeight: "bold" }}>
-								{user.username}
+								{user.name}
 							</Text>
 						</View>
 					</ImageBackground>
@@ -337,7 +341,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: user.healthState[0]
+									backgroundColor: userFake.healthState[0]
 										? COLORS.green1
 										: COLORS.secondary,
 								},
@@ -353,7 +357,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: user.healthState[1]
+									backgroundColor: userFake.healthState[1]
 										? COLORS.green1
 										: COLORS.secondary,
 								},
@@ -373,7 +377,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: user.healthState[2]
+									backgroundColor: userFake.healthState[2]
 										? COLORS.green1
 										: COLORS.secondary,
 								},
