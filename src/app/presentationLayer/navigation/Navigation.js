@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
@@ -30,6 +30,7 @@ import SignInScreen from "../SignInScreen";
 import SignUpScreen from "../SignUpScreen";
 import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
+import { UserContext } from "./UserContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,54 +56,7 @@ function RootStack() {
 			<Stack.Screen name="SignInScreen" component={SignInScreen} />
 			<Stack.Screen name="SignUpScreen" component={SignUpScreen} />
 			<Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} />
-			<Stack.Screen
-				name="MapScreen"
-				component={MapScreen}
-				options={{
-					title: "Happy Lungs",
-					headerShown: false,
-				}}
-				initialParams={{ tmpLat: false, tmpLng: false }}
-			/>
-			<Stack.Screen name="Statistics" component={StatisticsScreen} />
-			<Stack.Screen
-				name="CreatePin"
-				component={CreatePinScreen}
-				options={{
-					title: "Create pin",
-					gestureEnabled: true,
-					gestureDirection: "horizontal",
-					...TransitionPresets.SlideFromRightIOS,
-				}}
-			/>
-			<Stack.Screen
-				name="DefaultPin"
-				component={PinDefaultScreen}
-				options={{
-					title: "",
-					...TransitionPresets.SlideFromRightIOS,
-				}}
-			/>
-			<Stack.Screen
-				name="OwnerPin"
-				component={PinOwnerScreen}
-				options={{
-					title: "",
-					...TransitionPresets.SlideFromRightIOS,
-				}}
-			/>
-			<Stack.Screen
-				name="EditPinScreen"
-				component={PinEditScreen}
-				options={{
-					title: "Editing pin",
-					headerTintColor: COLORS.white,
-					headerStyle: {
-						backgroundColor: COLORS.green1,
-					},
-					...TransitionPresets.SlideFromRightIOS,
-				}}
-			/>
+			<Stack.Screen name="AppTabs" component={AppTabs} />
 		</Stack.Navigator>
 	);
 }
@@ -276,6 +230,75 @@ function ChatStack() {
 	);
 }
 
+function MapStack() {
+	return (
+		<Stack.Navigator
+			initialRouteName="MapScreen"
+			screenOptions={{
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
+				tabBarShowLabel: false,
+				headerTintColor: COLORS.secondary,
+				headerTitleAlign: "center",
+				headerTitleStyle: {
+					fontWeight: "bold",
+					fontSize: 27,
+				},
+				headerShown: false,
+			}}
+		>
+			<Stack.Screen
+				name="MapScreen"
+				component={MapScreen}
+				options={{
+					title: "Happy Lungs",
+					headerShown: false,
+				}}
+				initialParams={{ tmpLat: false, tmpLng: false }}
+			/>
+			<Stack.Screen name="Statistics" component={StatisticsScreen} />
+			<Stack.Screen
+				name="CreatePin"
+				component={CreatePinScreen}
+				options={{
+					title: "Create pin",
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="DefaultPin"
+				component={PinDefaultScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="OwnerPin"
+				component={PinOwnerScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="EditPinScreen"
+				component={PinEditScreen}
+				options={{
+					title: "Editing pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+		</Stack.Navigator>
+	);
+}
+
 function AppTabs() {
 	return (
 		<Tab.Navigator
@@ -318,7 +341,7 @@ function AppTabs() {
 			/>
 			<Tab.Screen
 				name="Map"
-				component={RootStack}
+				component={MapStack}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Feather name="map" size={size} color={color} />
@@ -344,9 +367,15 @@ function AppTabs() {
 }
 
 export default function Navigation() {
+	const [user, setUser] = useState(null);
+
+	const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+
 	return (
 		<NavigationContainer>
-			<AppTabs />
+			<UserContext.Provider value={value}>
+				<RootStack />
+			</UserContext.Provider>
 		</NavigationContainer>
 	);
 }

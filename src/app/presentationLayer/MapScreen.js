@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 
 import {
 	Text,
@@ -10,6 +10,7 @@ import {
 
 import COLORS from "../config/stylesheet/colors";
 import i18n from "../config/translation";
+import { UserContext } from "./navigation/UserContext";
 
 import {
 	Ionicons,
@@ -210,10 +211,11 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
+	const { user } = useContext(UserContext);
 	const fakeProfileData = {
-		username: "Ricard",
-		points: 200,
-	};
+		username: user.name,
+		points: 200
+	}
 
 	const [profile, setProfile] = useState(fakeProfileData);
 

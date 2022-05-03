@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useContext, useState} from 'react';
 import {
     View,
     Text,
@@ -15,6 +15,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import COLORS from "../config/stylesheet/colors";
 
 import Axios from "axios";
+import { UserContext } from './navigation/UserContext';
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -79,7 +80,8 @@ function SignInScreen({ navigation, route }) {
             password
         );
         if (response.status == 200) {
-            navigation.navigate("MapScreen");
+            setUser(response.data);
+            navigation.navigate("AppTabs", { screen: "Map"});
         } else {
             errorMsgChange(response.message);
         }
@@ -91,6 +93,8 @@ function SignInScreen({ navigation, route }) {
         }
         return;
     };
+
+    const { user, setUser } = useContext(UserContext);
 
     return (
         <View style={styles.container}>
