@@ -2,10 +2,21 @@
 //pCtrl = new persistenceCtrl();
 export default class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
-	constructor(title, latitude, longitude, description, media, rating, date, status) {
+	constructor(
+		title,
+		latitude,
+		longitude,
+		locationTitle,
+		description,
+		media,
+		rating,
+		date,
+		status
+	) {
 		this.title = title;
 		this.latitude = latitude; //location has {latitude, longitude, title}
 		this.longitude = longitude;
+		this.locationTitle = locationTitle;
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
@@ -80,8 +91,8 @@ export default class Pin {
 		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
 
 		let today = new Date().toISOString().slice(0, 10);
-		const isoStrStart = today + 'T12:00:00-00:00';
-		const isoStrEnd = today + 'T13:00:00-00:00';
+		const isoStrStart = today + "T12:00:00-00:00";
+		const isoStrEnd = today + "T13:00:00-00:00";
 
 		gapi.auth2
 			.getAuthInstance()

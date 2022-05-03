@@ -54,7 +54,7 @@ function PinDefaultScreen({ navigation, route }) {
 				}}
 			>
 				<View style={{ flexDirection: "row", height: 35 }}>
-					<Text style={[styles.title, { width: "85%" }]}>{pin.name}</Text>
+					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
 						onPress={
@@ -88,7 +88,7 @@ function PinDefaultScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 					<Text style={[styles.body, { marginStart: 10 }]}>
-						{pin.location.title}
+						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity

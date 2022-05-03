@@ -6,9 +6,11 @@ import {
 	View,
 	SafeAreaView,
 	TouchableOpacity,
+	Pressable,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import PinPreview from "./components/PinPreview";
 import i18n from "../config/translation";
 
 import {
@@ -78,7 +80,17 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	const [pinsShown, setPins] = useState(true);
+	const [pinsShown, setPinsShown] = useState(true);
+
+	/**
+	 *
+	 */
+	const [pinPreview, setPinPreview] = useState(false);
+
+	/**
+	 *
+	 */
+	const [pins, setPins] = useState([]);
 
 	/**
 	 *
@@ -127,6 +139,15 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
+		const fetchPins = async () => {
+			//get pins from db
+			//ought to fetch them before navigate
+			const data = await presentationCtrl.fetchPins();
+			setPins(data);
+			console.log(data);
+		};
+
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -267,7 +288,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	function renderModalFilter() {
+	function renderFilter() {
 		return (
 			<Modal
 				animationType="fade"
@@ -323,7 +344,7 @@ function MapScreen({ navigation, route }) {
 								marginStart: 15,
 								alignItems: "center",
 							}}
-							onPress={() => setPins(!pinsShown)}
+							onPress={() => setPinsShown(!pinsShown)}
 						>
 							<AntDesign
 								name={pinsShown ? "pushpino" : "pushpin"}
@@ -413,10 +434,43 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
+	function renderPinPreview() {
+		return (
+			<Modal
+				visible={pinPreview}
+				animationType="fade"
+				transparent={true}
+				onRequestClose={() => {
+					setPinPreview(false);
+				}}
+				onBackdropPress={() => {
+					setPinPreview(false);
+				}}
+			>
+				<View
+					style={{
+						justifyContent: "center",
+						alignSelf: "center",
+					}}
+				>
+					<Pressable
+						onPress={() => {
+							console.log(pins[2]);
+							navigation.navigate("OwnerPin", { pin: pins[2] });
+							setPinPreview(false);
+						}}
+					>
+						<PinPreview item={pins[2]}></PinPreview>
+					</Pressable>
+				</View>
+			</Modal>
+		);
+	}
+
 	/**
 	 *
 	 */
-	function renderModalPin() {
+	function renderPinCreate() {
 		return (
 			<Modal
 				animationType="fade"
@@ -637,6 +691,7 @@ function MapScreen({ navigation, route }) {
 								longitude: marker.longitude,
 							}}
 							onPress={() => {
+								setPinPreview(true);
 								setSelected(marker);
 							}}
 						/>
@@ -685,8 +740,9 @@ function MapScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</View>
-			{renderModalPin()}
-			{renderModalFilter()}
+			{pinPreview && renderPinPreview()}
+			{renderPinCreate()}
+			{renderFilter()}
 		</SafeAreaView>
 	);
 }

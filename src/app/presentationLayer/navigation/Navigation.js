@@ -38,7 +38,7 @@ const Stack = createStackNavigator();
 function RootStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="SignInScreen"
+			initialRouteName="MapScreen"
 			screenOptions={{
 				tabBarActiveTintColor: COLORS.green1,
 				tabBarInactiveTintColor: COLORS.secondary,
@@ -54,7 +54,10 @@ function RootStack() {
 		>
 			<Stack.Screen name="SignInScreen" component={SignInScreen} />
 			<Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-			<Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} />
+			<Stack.Screen
+				name="TermsAndConditionsScreen"
+				component={TermsAndConditionsScreen}
+			/>
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}

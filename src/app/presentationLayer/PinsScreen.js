@@ -58,8 +58,8 @@ function PinsScreen({ navigation }) {
 			setAuxiliarFilterData(filteredData);
 			setFilteredData(
 				masterData.filter((item) => {
-					const itemData = item.name
-						? item.name.toUpperCase()
+					const itemData = item.title
+						? item.title.toUpperCase()
 						: "".toUpperCase();
 					const textData = text.toUpperCase();
 					return itemData.indexOf(textData) > -1;

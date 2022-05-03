@@ -8,34 +8,29 @@ import {
 	Image,
 	Dimensions,
 } from "react-native";
-import { EvilIcons } from '@expo/vector-icons'; 
-
+import { EvilIcons } from "@expo/vector-icons";
 
 import * as Animatable from "react-native-animatable";
 
 import COLORS from "../../config/stylesheet/colors";
 
-
-const ChatList = ({ chatsList, navigation }) => {	
-
-
+const ChatList = ({ chatsList, navigation }) => {
 	const renderItem = ({ item, index }) => (
-
 		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
 			<View
 				style={[
 					{
-						borderBottomColor:COLORS.light,
-						borderBottomWidth:1,
+						borderBottomColor: COLORS.light,
+						borderBottomWidth: 1,
 						backgroundColor: COLORS.white,
 					},
 				]}
 			>
 				<View style={{ flexDirection: "column" }}>
 					<View style={{ flexDirection: "row" }}>
-						<View 
+						<View
 							style={{
-								width:"85%",
+								width: "85%",
 								padding: 10,
 							}}
 						>
@@ -54,24 +49,21 @@ const ChatList = ({ chatsList, navigation }) => {
 									style={{
 										width: 70,
 										height: 70,
-										borderRadius: 100
+										borderRadius: 100,
 									}}
 								/>
 								<View
 									style={{
 										flex: 1,
 										marginTop: 10,
-										marginBottom:10,
-										marginLeft:5,
+										marginBottom: 10,
+										marginLeft: 5,
 										alignSelf: "center",
 										flexDirection: "row",
 										width: "auto",
 									}}
 								>
-									<View
-										style={{
-										}}
-									>
+									<View style={{}}>
 										<View
 											style={{
 												flexDirection: "row",
@@ -84,10 +76,15 @@ const ChatList = ({ chatsList, navigation }) => {
 												style={{
 													alignSelf: "flex-start",
 													padding: 2,
-													width:"75%"
+													width: "75%",
 												}}
 											>
-												<Text numberOfLines={1} style={[styles.chatName, {textAlign:"left"}]}>{item.name}</Text>
+												<Text
+													numberOfLines={1}
+													style={[styles.chatName, { textAlign: "left" }]}
+												>
+													{item.name}
+												</Text>
 											</View>
 											<View
 												style={{
@@ -102,11 +99,11 @@ const ChatList = ({ chatsList, navigation }) => {
 															color: COLORS.darkGrey,
 															fontSize: 12,
 															fontWeight: "bold",
-															textAlign: "right"
+															textAlign: "right",
 														},
 													]}
 												>
-													{ item.lastMessageTime }
+													{item.lastMessageTime}
 												</Text>
 											</View>
 										</View>
@@ -117,23 +114,27 @@ const ChatList = ({ chatsList, navigation }) => {
 												alignItems: "center",
 											}}
 										>
-											
 											<View
 												style={{
-													width:"90%",
+													width: "90%",
 												}}
 											>
-												<Text numberOfLines={2} style={styles.chatLastMessage}>{item.lastMessage}</Text>
+												<Text numberOfLines={2} style={styles.chatLastMessage}>
+													{item.lastMessage}
+												</Text>
 											</View>
-											
+
 											<View
 												style={{
-													backgroundColor: item.unreadMessages>0 ? COLORS.green1 : COLORS.white,
-													width:20,
+													backgroundColor:
+														item.unreadMessages > 0
+															? COLORS.green1
+															: COLORS.white,
+													width: 20,
 													height: 20,
-													paddingBottom:1,
+													paddingBottom: 1,
 													justifyContent: "center",
-													borderRadius: 100
+													borderRadius: 100,
 												}}
 											>
 												<Text
@@ -146,23 +147,21 @@ const ChatList = ({ chatsList, navigation }) => {
 														},
 													]}
 												>
-													{ item.unreadMessages>0 ? item.unreadMessages : "" }
+													{item.unreadMessages > 0 ? item.unreadMessages : ""}
 												</Text>
 											</View>
-										</View>  
-									</View>  
-									
-									
+										</View>
+									</View>
 								</View>
 							</TouchableOpacity>
 						</View>
 						<View
 							style={{
-								justifyContent:"center",
+								justifyContent: "center",
 								alignItems: "center",
-								borderLeftColor:COLORS.lightGrey,
-								borderLeftWidth:1,
-								width:"15%",
+								borderLeftColor: COLORS.lightGrey,
+								borderLeftWidth: 1,
+								width: "15%",
 							}}
 						>
 							<TouchableOpacity
@@ -187,7 +186,7 @@ const ChatList = ({ chatsList, navigation }) => {
 	return (
 		<FlatList
 			stickyHeaderHiddenOnScroll={true}
-			contentContainerStyle={{ }}
+			contentContainerStyle={{}}
 			scrollEnabled={true}
 			data={chatsList}
 			keyExtractor={(item) => `${item.name}`}
@@ -205,11 +204,10 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 	},
 	chatName: {
-        textAlign: 'center',
+		textAlign: "center",
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.secondary,
-		
 	},
 	chatLastMessage: {
 		fontSize: 13,

@@ -33,7 +33,7 @@ function PinEditScreen({ navigation, route }) {
 	const [image1, setImage1] = useState(media[0]);
 	const [image2, setImage2] = useState(media[1]);
 	const [inputs, setInputs] = useState({
-		title: pin.name,
+		title: pin.title,
 		description: pin.description,
 	});
 	const [errors, setErrors] = useState({});
@@ -311,7 +311,7 @@ function PinEditScreen({ navigation, route }) {
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
-					defaultValue={pin.name}
+					defaultValue={pin.title}
 					label="Title"
 					error={errors.title}
 				/>

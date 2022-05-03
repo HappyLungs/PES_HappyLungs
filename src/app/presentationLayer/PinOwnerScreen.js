@@ -20,6 +20,7 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
+	console.log(pin);
 
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
@@ -125,7 +126,7 @@ function PinOwnerScreen({ navigation, route }) {
 				}}
 			>
 				<View style={{ flexDirection: "row", height: 35 }}>
-					<Text style={[styles.title, { width: "65%" }]}>{pin.name}</Text>
+					<Text style={[styles.title, { width: "65%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
 						onPress={() => setDeleteConfirmationVisible(true)}
@@ -166,7 +167,7 @@ function PinOwnerScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 					<Text style={[styles.body, { marginStart: 10 }]}>
-						{pin.location.title}
+						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity
