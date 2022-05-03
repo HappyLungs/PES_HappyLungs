@@ -173,6 +173,7 @@ PresentationCtrl.prototype.editPin = function (
 	confirmPassword,
 	birthdate
 ) {
+	if (password.size() < 6) return {"data": {}, "message": "Your password is too short, use at least 6 characters.", "status": 502};
 	if (name && email && password && confirmPassword && birthdate) {
 		return await this.domainCtrl.registerUser(
 			name,
