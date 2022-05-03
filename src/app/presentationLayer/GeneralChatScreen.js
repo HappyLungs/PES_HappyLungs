@@ -97,7 +97,7 @@ function GeneralChatScreen({ navigation }) {
 								fontSize: 20,
 								fontWeight: "bold",
 								color: COLORS.secondary,
-								marginTop: 35,
+								marginTop: 50,
 								marginBottom: 10,
 							},
 						]}
@@ -193,7 +193,7 @@ function GeneralChatScreen({ navigation }) {
 	}
 
 	return (
-		<SafeAreaView
+		<View
 			style={{
 				flex: 1,
 				backgroundColor: COLORS.light,
@@ -204,7 +204,7 @@ function GeneralChatScreen({ navigation }) {
 			<View style={[{ flex: 1, marginTop: 10 }]}>
 				<ChatList chatsList={filteredData} navigation={navigation}></ChatList>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }
 

@@ -6,19 +6,48 @@ const userDatalayer =  require("./../datalayers/user.datalayer.js");
 const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
-
         id = request.query._id;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
+        if (request.query.hasOwnProperty("conversation")) {
+            if (mongodb.ObjectId.isValid(request.query.conversation)) {
+                let aggregateArr = [
+                    {
+                        '$match': {
+                            conversation: mongodb.ObjectId(request.query.conversation)
+                        }
+                    }, {
+                        '$sort': {
+                            'createdAt': -1
+                        }
+                    }
+                ];
+                messageDataLayer.aggregateMessage(aggregateArr)
+                .then((messageData) => {
+                    if (messageData !== null && typeof messageData !== undefined) {
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                    } else {
+                        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                });
+                return;
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid conversation id", {});
+                return;
+            }
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+            return;
+        }
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
+    if (mongodb.ObjectId.isValid(id)) {
         const where = {};
         where._id = mongodb.ObjectId(id);
         messageDataLayer.findMessage(where)
@@ -67,7 +96,7 @@ exports.create = async (request, response) => {
 
 const user = request.body.params.user
 const where = {};
-where._id = mongodb.ObjectId(user);
+where.email = request.body.params.email;
 let result = await userDatalayer.findUser(where).then();
 if (result != null) console.log("Usuario encontrado");
 else {
@@ -123,7 +152,6 @@ else {
     where3._id = mongodb.ObjectId(request.body.params.conversation);
     conversationDataLayer.updateConversation_byMessageCreation(where3, message_id)
     .then((messageData) => {
-        console.log(messageData);
         if (messageData !== null && typeof messageData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
@@ -133,7 +161,6 @@ else {
             responseObj.message = "No record found";
             responseObj.data    = {};
         }
-        response.send(responseObj);
 
     
     })
@@ -145,3 +172,90 @@ else {
     });
 
 };
+
+exports.lastMessage = async (request, response) => {
+    let params = {};
+    if (request.query.conversation) {
+        params = request.query;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (mongodb.ObjectId.isValid(params.conversation)) {
+        let aggregateArr = [
+            {
+              '$match': {
+                'conversation': mongodb.ObjectId(params.conversation)
+              }
+            }, {
+              '$sort': {
+                'createdAt': -1
+              }
+            }, {
+              '$limit': 1
+            }
+          ];
+        messageDataLayer.aggregateMessage(aggregateArr)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
+    }
+}
+
+exports.unreadedMessages = async (request, response) => {
+    let params = {};
+    if (request.query.conversation) {
+        params = request.query;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (mongodb.ObjectId.isValid(params.conversation)) {
+        const criteria = {};
+        criteria['$and'] = [];
+        criteria['$and'].push({
+            conversation: {
+                $eq: mongodb.ObjectId(params.conversation)
+            }
+        });
+        criteria['$and'].push({
+            user: {
+                $ne: params.email
+            }
+        });
+        criteria['$and'].push({
+            readed: {
+                $eq: false
+            }
+        });
+        let aggregateArr = [
+            {
+              '$match': criteria
+            }, {
+              '$count': 'total'
+            }
+          ];
+        messageDataLayer.aggregateMessage(aggregateArr)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
+    }
+}

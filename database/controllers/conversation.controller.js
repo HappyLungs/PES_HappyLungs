@@ -4,14 +4,31 @@ const messageDataLayer = require("./../datalayers/message.datalayer.js")
 const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
 exports.find = async (request, response) => {
     let id;
     if (request.query._id) {
-        console.log("Hola que tal como estamos");
-
         id = request.query._id;
     } else {
-        conversationDataLayer.findConversations()
+        // get all conversations from a given user
+        if (!request.query.hasOwnProperty("email")) {
+            sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+            return;
+        }
+        let aggregateArr = [
+            {
+              '$match': {
+                users: request.query.email
+              }
+            }, {
+              '$sort': {
+                'createdAt': -1
+              }
+            }
+          ];
+          //Get the most recent conversation        TODO: get the conversation with the most recent message
+        conversationDataLayer.aggregateConversation(aggregateArr)
         .then((conversationData) => {
             if (conversationData !== null && typeof conversationData !== undefined) {
                 responseObj.status  = errorCodes.SUCCESS;
@@ -31,41 +48,41 @@ exports.find = async (request, response) => {
             response.send(responseObj);
         });
     }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
-        const where = {};
-        where._id = mongodb.ObjectId(id);
-        conversationDataLayer.findConversation(where)
-        .then((conversationData) => {
-            if (conversationData !== null && typeof conversationData !== undefined) {
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Success";
-                responseObj.data    = conversationData;
-            } else {
-                responseObj.status  = errorCodes.DATA_NOT_FOUND;
-                responseObj.message = "No record found";
+    if(typeof id !== "undefined"){
+        if (mongodb.ObjectId.isValid(id)) {
+            const where = {};
+            where._id = mongodb.ObjectId(id);
+            conversationDataLayer.findConversation(where)
+            .then((conversationData) => {
+                if (conversationData !== null && typeof conversationData !== undefined) {
+                    responseObj.status  = errorCodes.SUCCESS;
+                    responseObj.message = "Success";
+                    responseObj.data    = conversationData;
+                } else {
+                    responseObj.status  = errorCodes.DATA_NOT_FOUND;
+                    responseObj.message = "No record found";
+                    responseObj.data    = {};
+                }
+                response.send(responseObj);
+            })
+            .catch(error => {
+                responseObj.status  = errorCodes.SYNTAX_ERROR;
+                responseObj.message = error;
                 responseObj.data    = {};
-            }
-            response.send(responseObj);
-        })
-        .catch(error => {
+                response.send(responseObj);
+            });
+        } else {
             responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
+            responseObj.message = "Invalid id";
             responseObj.data    = {};
             response.send(responseObj);
-        });
-    } else {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = "Invalid id";
-        responseObj.data    = {};
-        response.send(responseObj);
+        }
     }
-
 };
 
 exports.create = async (request, response) => {
     let params = {};
     if (request.body.params) {
-
         params = request.body.params;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
@@ -74,44 +91,39 @@ exports.create = async (request, response) => {
         response.send(responseObj);
         return;
     }
-
-    
          /* Check if users of the body exists */
-
-    request.body.params.users.forEach(async user => {
+    request.body.params.users.forEach(async email => {
         const where = {};
-    where._id = mongodb.ObjectId(user);
-    let result = await userDatalayer.findUser(where).then();
-    if(result != null) console.log("Usuario encontrado");
-    else {
-        console.log("Usuario no encontrado");
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = `User ${user} doesn't exist`;
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;    
-    }
+        where.email = email;
+        let result = await userDatalayer.findUser(where).then();
+        if(result != null) console.log("Usuario encontrado");
+        else {
+            console.log("Usuario no encontrado");
+            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+            responseObj.message = `User ${email} doesn't exist`;
+            responseObj.data    = {};
+            response.send(responseObj);
+            return;    
+        }
     });
-
        /* Check if messages of the body exists */
 
     request.body.params.messages.forEach(async message => {
         const where = {};
-    where._id = mongodb.ObjectId(message);
-    let result = await messageDataLayer.findMessage(where).then();
-    if(result != null) console.log("Mensaje encontrado");
-    else {
-        console.log("Mensaje no encontrado");
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = `Message ${message} doesn't exist`;
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;    
-    }
+        where._id = mongodb.ObjectId(message);
+        let result = await messageDataLayer.findMessage(where).then();
+        if(result != null) console.log("Mensaje encontrado");
+        else {
+            console.log("Mensaje no encontrado");
+            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
+            responseObj.message = `Message ${message} doesn't exist`;
+            responseObj.data    = {};
+            response.send(responseObj);
+            return;    
+        }
     });
     
           /* Create the conversation */
-
     conversationDataLayer.createConversation(params)
     .then((conversationData) => {
         console.log(conversationData);
@@ -134,3 +146,17 @@ exports.create = async (request, response) => {
     });
 
 };
+
+function aggregateArray(match, group, sort) {
+    return [
+        {
+            $match: match
+        },
+        {
+            $group: group
+        },
+        {
+            $sort: sort
+        }
+    ];
+}

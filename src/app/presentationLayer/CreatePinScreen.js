@@ -52,14 +52,15 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
+			let pinData = transformDate(date);
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
 				inputs.description,
 				tmpMedia,
 				rating,
-				transformDate(date),
-				status === true ? "Public" : "False"
+				pinData,
+				(status) ? "Public" : "Private"
 			);
 			navigation.navigate("MapScreen");
 		}

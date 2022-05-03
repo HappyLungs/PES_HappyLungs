@@ -8,7 +8,13 @@ const User = require('./../models/user.model');
 const loginHelpers = require("../helpers/loginHelpers");
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const sendResponse = require("../helpers/sendResponse.helper.js");
+
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
+//Datalayers
+const UserDataLayer = require("./../datalayers/user.datalayer");
+const ConversationDatalayer = require("./../datalayers/conversation.datalayer");
+
 
 exports.find = async (request, response) => {
     let email;
@@ -29,6 +35,69 @@ exports.find = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
 
+};
+
+exports.users = async (request, response) => {
+    let params = request.query;
+    let where = {};
+    if (!params.hasOwnProperty("email")) {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    } else {
+        // find all users in the database that have at least one conversation with the user with the given email
+        let aggregateArr = [
+            {
+              '$match': {
+                'users': params.email
+              }
+            }, {
+              '$unwind': {
+                'path': '$users', 
+                'preserveNullAndEmptyArrays': true
+              }
+            }, {
+              '$match': {
+                'users': {
+                  '$ne': params.email
+                }
+              }
+            }, {
+              '$group': {
+                '_id': 'users', 
+                'users': {
+                  '$push': '$users'
+                }
+              }
+            }, {
+              '$project': {
+                'users': 1, 
+                '_id': 0
+              }
+            }
+          ];
+        let users = [];
+        await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
+            if (userData !== null && typeof userData !== undefined) {
+                users = userData[0].users;
+            }
+        });
+        users.push(params.email);   //Add the user himself to the list
+        where.email = {
+            $nin: users
+        };
+        //Find all users that doesent have any conversation with the user with the given email
+        UserDataLayer.findUsers(where)
+        .then((userData) => {
+            if (userData !== null && typeof userData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", userData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.NO_DATA_FOUND, "No data found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    }
 };
 
 exports.register = async (request, response, next) => {

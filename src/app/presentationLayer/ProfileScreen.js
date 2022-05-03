@@ -33,8 +33,7 @@ function ProfileScreen({ navigation, route }) {
 	};
 
 	function settings() {
-		//navigation.navigate("SettingsScreen");
-		//maybe a popup
+		navigation.navigate("SettingsScreen");
 	}
 
 	function calendar() {
@@ -438,7 +437,7 @@ function ProfileScreen({ navigation, route }) {
 			</TouchableOpacity>
 		
 		{renderModalLogout()}
-		</View>
+	</View>
 	);
 }
 
