@@ -213,7 +213,7 @@ DomainCtrl.prototype.createPin = async function (
     media: pin.media,
   }
   let response = await persistenceCtrl.postRequest("/newPin", params);
-  if (response.status == 200) {
+  if (response.status === 200) {
     return response.data;   // Returns the object inserted in the DB
   } else {
     //TODO: handle error. Return an error and reload the view with the error
@@ -295,12 +295,12 @@ DomainCtrl.prototype.loginUser = async function (
 */
 DomainCtrl.prototype.fetchConversation = async function (id) {
   let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
-  if (conversation.status == 200) {
+  if (conversation.status === 200) {
     var users = {};
     const logged = await persistenceCtrl.getRequest("/user", {email: "ivan.jimeno@estudiantat.upc.edu" /** TODO replace with the logged user email */});
-    if (logged.status == 200) {
-      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] == logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
-      if (conversant.status == 200) {
+    if (logged.status === 200) {
+      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] === logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
+      if (conversant.status === 200) {
         users = {
           logged: {
             id: logged.data._id,
@@ -314,7 +314,7 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
           },
         };
         const message = await persistenceCtrl.getRequest("/message", {conversation: conversation.data._id});
-        if (message.status == 200) {
+        if (message.status === 200) {
           return { users:  users, messages: message.data };
         } else {
           //TODO handle error
@@ -348,7 +348,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
   if (conversations.status === 200) {
     conversations.data.map(async current_conver =>  {
       // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
-      const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
+      const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] === "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
       if (conversant.status === 200) {
         //let index_lastMessage = 0;
         //if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
@@ -389,13 +389,13 @@ DomainCtrl.prototype.fetchConversations = async function () {
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
   //get all users with no conversation with logged user
   const all_users = await persistenceCtrl.getRequest("/users", {email: "ivan.jimeno@estudiantat.upc.edu"/*TODO Pass the google id from the logged user */});
-  if (all_users.status == 200) {
+  if (all_users.status === 200) {
     const fetchedNewConversations = [];
     all_users.data.forEach(user => {
       fetchedNewConversations.push({
         id: user._id,
         name: user.name,
-        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "null"
+        profileImage: (user.profilePicture !== undefined && user.profilePicture !== "") ? user.profilePicture : "null"
       })
     });
     return fetchedNewConversations;
@@ -407,7 +407,7 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
 
 DomainCtrl.prototype.findUser = async function (email) {
   //create
-  DB_URL = "http://localhost:7000/v1/user?email=" + email;
+  let DB_URL = "http://localhost:7000/v1/user?email=" + email;
 
   let user = await fetch(DB_URL, {
     headers: {
@@ -426,9 +426,9 @@ DomainCtrl.prototype.findUser = async function (email) {
 
 DomainCtrl.prototype.findMessage = async function (id) {
   //create
-  DB_URL = "http://localhost:7000/v1/message?_id=" + id;
+  let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
 
-  let message = await fetch(DB_URL, {
+  return await fetch(DB_URL, {
     headers: {
       Accept: "application/json",
       "Content-Type": " application/json",
@@ -438,7 +438,6 @@ DomainCtrl.prototype.findMessage = async function (id) {
   })
       .then((response) => response.json())
       .then((data) => data);
-  return message;
   console.log(user);
 };
 
@@ -459,14 +458,13 @@ DomainCtrl.prototype.updateUser = function (
     profilePicture
 ) {
   //edit, not create
-  let updatedUser = new User(
+  return new User(
       username,
       email,
       points,
       healthState,
       profilePicture
   );
-  return updatedUser;
   //update to db
 };
 
