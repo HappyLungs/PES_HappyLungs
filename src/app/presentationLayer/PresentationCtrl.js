@@ -174,13 +174,17 @@ PresentationCtrl.prototype.registerUser = async function (
 	birthdate
 ) {
 	if (name && email && password && confirmPassword && birthdate) {
-		return await this.domainCtrl.registerUser(
-			name,
-			email,
-			password,
-			confirmPassword,
-			birthdate
-		);
+		if (password.length > 5) {
+			return await this.domainCtrl.registerUser(
+				name,
+				email,
+				password,
+				confirmPassword,
+				birthdate
+			);
+		} else {
+			return {"data": {}, "message": "Your password is too short, use at least 6 characters.", "status": 502};
+		}
 	} else {
 		return { data: {}, message: "Required parameters missing", status: 422 };
 	}

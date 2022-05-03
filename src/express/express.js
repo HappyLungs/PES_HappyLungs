@@ -1,9 +1,9 @@
 const express = require('express')
 const Joi = require('joi');
-const date = require('joi/lib/types/date');
+//const date = require('joi/lib/types/date');
 const DataPointMap = require('../app/domainLayer/classes/DataPointMap');
 const app = express();
-
+const sanitizeHtml = require("sanitize-html");
 
 app.use(express.json());
 
@@ -38,19 +38,19 @@ app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
 
    
    if(isNaN(fecha)) {
-    res.status(400).send(`El parametro: ${req.params.date} no es válido para el atributo fecha`);
+    res.status(400).send(sanitizeHtml(`El parametro: ${req.params.date} no es válido para el atributo fecha`));
     return;  
    } 
 
 
 
     const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
-    const valor_contaminación = await punto.getDayLevel(fecha)
-    console.log(valor_contaminación)
+    const valor_contaminacion = await punto.getDayLevel(fecha)
+    console.log(valor_contaminacion)
 
     
-    if(!valor_contaminación) res.status(404).send('No existe el ID') // 404 Error
-    else res.send(valor_contaminación)
+    if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
+    else res.send(valor_contaminacion)
 })
 
 app.post('/api/article', (req,res) => {
@@ -73,7 +73,7 @@ app.post('/api/article', (req,res) => {
         name: req.body.name,
     };
     courses.push(course);
-    res.send(JSON.parse(course));
+    res.send(sanitizeHtml(JSON.parse(course)));
 })
 
 /*

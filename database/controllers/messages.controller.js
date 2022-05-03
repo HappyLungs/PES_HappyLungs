@@ -1,6 +1,7 @@
 const messageDataLayer = require("./../datalayers/message.datalayer.js");
 const conversationDataLayer = require("./../datalayers/conversation.datalayer.js");
 const userDatalayer =  require("./../datalayers/user.datalayer.js");
+const sanitizeHtml = require('sanitize-html');
 
 
 const responseObj = {};
@@ -61,19 +62,19 @@ exports.find = async (request, response) => {
                 responseObj.message = "No record found";
                 responseObj.data    = {};
             }
-            response.send(responseObj);
+            response.send(sanitizeHtml(responseObj));
         })
         .catch(error => {
             responseObj.status  = errorCodes.SYNTAX_ERROR;
             responseObj.message = error;
             responseObj.data    = {};
-            response.send(responseObj);
+            response.send(sanitizeHtml(responseObj));
         });
     } else {
         responseObj.status  = errorCodes.SYNTAX_ERROR;
         responseObj.message = "Invalid id";
         responseObj.data    = {};
-        response.send(responseObj);
+        response.send(sanitizeHtml(responseObj));
     }
 
 };
@@ -89,7 +90,7 @@ exports.create = async (request, response) => {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
         responseObj.message = "Required parameters missing";
         responseObj.data    = {};
-        response.send(responseObj);
+        response.send(sanitizeHtml(responseObj));
         return;
     }
 /* Check if user of the body  */
@@ -104,7 +105,7 @@ else {
   responseObj.status = errorCodes.RESOURCE_NOT_FOUND;
   responseObj.message = `User ${user} doesn't exist`;
   responseObj.data = {};
-  response.send(responseObj);
+  response.send(sanitizeHtml(responseObj));
   return;
 }
 
@@ -121,7 +122,7 @@ else {
   responseObj.status = errorCodes.RESOURCE_NOT_FOUND;
   responseObj.message = `Conversation ${conver} doesn't exist`;
   responseObj.data = {};
-  response.send(responseObj);
+  response.send(sanitizeHtml(responseObj));
   return;
 }
 
@@ -138,7 +139,7 @@ else {
             responseObj.message = "No record found";
             responseObj.data    = {};
         }
-        response.send(responseObj);
+        response.send(sanitizeHtml(responseObj));
 
     
     })
@@ -146,7 +147,7 @@ else {
         responseObj.status  = errorCodes.SYNTAX_ERROR;
         responseObj.message = error;
         responseObj.data    = {};
-        response.send(responseObj);
+        response.send(sanitizeHtml(responseObj));
     });
     const where3 = {};
     where3._id = mongodb.ObjectId(request.body.params.conversation);
@@ -168,7 +169,7 @@ else {
         responseObj.status  = errorCodes.SYNTAX_ERROR;
         responseObj.message = error;
         responseObj.data    = {};
-        response.send(responseObj);
+        response.send(sanitizeHtml(responseObj));
     });
 
 };
