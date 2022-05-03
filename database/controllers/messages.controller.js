@@ -54,124 +54,59 @@ exports.find = async (request, response) => {
         messageDataLayer.findMessage(where)
         .then((messageData) => {
             if (messageData !== null && typeof messageData !== undefined) {
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Success";
-                responseObj.data    = messageData;
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
             } else {
-                responseObj.status  = errorCodes.DATA_NOT_FOUND;
-                responseObj.message = "No record found";
-                responseObj.data    = {};
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
             }
-            response.send(sanitizeHtml(responseObj));
         })
         .catch(error => {
-            responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
-            responseObj.data    = {};
-            response.send(sanitizeHtml(responseObj));
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
         });
     } else {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = "Invalid id";
-        responseObj.data    = {};
-        response.send(sanitizeHtml(responseObj));
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
     }
 
 };
 
 exports.create = async (request, response) => {
     let params = {};
-    var message_id;
-
     if (request.body.params) {
-
         params = request.body.params;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(sanitizeHtml(responseObj));
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-/* Check if user of the body  */
 
-const user = request.body.params.user
-const where = {};
-where.email = request.body.params.email;
-let result = await userDatalayer.findUser(where).then();
-if (result != null) console.log("Usuario encontrado");
-else {
-  console.log("Usuario no encontrado");
-  responseObj.status = errorCodes.RESOURCE_NOT_FOUND;
-  responseObj.message = `User ${user} doesn't exist`;
-  responseObj.data = {};
-  response.send(sanitizeHtml(responseObj));
-  return;
-}
-
-
-/* Check if Conversation exists of the body  */
-
-const conver = request.body.params.conversation
-const where2 = {};
-where2._id = mongodb.ObjectId(conver);
-let result_conver = await conversationDataLayer.findConversation(where2).then();
-if (result_conver != null) console.log("Conversacion encontrada");
-else {
-  console.log("Conversación no encontrada");
-  responseObj.status = errorCodes.RESOURCE_NOT_FOUND;
-  responseObj.message = `Conversation ${conver} doesn't exist`;
-  responseObj.data = {};
-  response.send(sanitizeHtml(responseObj));
-  return;
-}
-
-
-    await messageDataLayer.createMessage(params)
-    .then((messageData) => {
-        if (messageData !== null && typeof messageData !== undefined) {
-            responseObj.status  = errorCodes.SUCCESS;
-            responseObj.message = "Success";
-            responseObj.data    = messageData;
-            message_id = responseObj.data._id;
-        } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
+    let where = {};
+    where.email = params.user;
+    let result = await userDatalayer.findUser(where).then();
+    if (result == null || result == undefined || result.length == 0) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
+        return;
+    }
+    /* Check if Conversation exists of the body  */
+    if (mongodb.ObjectId.isValid(params.conversation)) {
+        where = {};
+        where._id = mongodb.ObjectId(params.conversation);
+        let result_conver = await conversationDataLayer.findConversation(where).then();
+        if (result_conver == null || result_conver == undefined || result_conver.length == 0) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Conversation not found", {});
+            return;
         }
-        response.send(sanitizeHtml(responseObj));
-
-    
-    })
-    .catch(error => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(sanitizeHtml(responseObj));
-    });
-    const where3 = {};
-    where3._id = mongodb.ObjectId(request.body.params.conversation);
-    conversationDataLayer.updateConversation_byMessageCreation(where3, message_id)
-    .then((messageData) => {
-        if (messageData !== null && typeof messageData !== undefined) {
-            responseObj.status  = errorCodes.SUCCESS;
-            responseObj.message = "Success";
-            responseObj.data    = messageData;
-        } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
-        }
-
-    
-    })
-    .catch(error => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(sanitizeHtml(responseObj));
-    });
-
+        await messageDataLayer.createMessage(params)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Cannot create the message", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid conversation id", {});
+    }
 };
 
 exports.lastMessage = async (request, response) => {
