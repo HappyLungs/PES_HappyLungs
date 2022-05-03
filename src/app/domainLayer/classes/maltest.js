@@ -1,4 +1,5 @@
-const { default: Article } = require("./Article");
+const DomainCtrl = require("../DomainCtrl.js");
+
 
 
 
@@ -20,44 +21,12 @@ const start = async function() {
    let x = await dCtrl.getPollutionLevelLastYear(41.363094, 2.112971)
    //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
    console.log(x);
+
+async function test() {
+  test = new DomainCtrl();
+  const x = await test.fetchNewConversations();
+ console.log(x);
+
 }
 
-start();
-
-
-
-
-/*
-const d = "2022-02-01T00:00:00.000";
-var day = new Date(d);
-console.log(day); // Apr 30 2000
-
-var nextDay = new Date(day);
-nextDay.setDate(day.getDate() + 1);
-console.log(nextDay); // May 01 2000  
-*/
-/*
-const today = new Date()
-
-console.log(today)
-const lastweek = new Date(today)
-lastweek.setDate(lastweek.getDate() - 7)
-console.log(lastweek)
-
-let year = lastweek.getFullYear();
-let month = (lastweek.getMonth()+1) < 10 ? "0"+(lastweek.getMonth()+1) : lastweek.getMonth()+1;
-let day = lastweek.getDate() < 10 ? "0"+lastweek.getDate() : lastweek.getDate();
-
-const apiDate = year+"-"+month+"-"+day+"T00:00:00.000";
-console.log(apiDate)
-*/
-
-
-/*
-let m = new MeasureStation("08019004");
-
-let date="2022-03-03T00:00:00.000";
-let d = m.getWeekLevel(date)
-console.log(d)
-*/
-
+test();*/

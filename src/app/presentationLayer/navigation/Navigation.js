@@ -15,15 +15,21 @@ import "react-native-gesture-handler";
 //screens
 import MapScreen from "../MapScreen";
 import GeneralChatScreen from "../GeneralChatScreen";
+import ChatConversation from "../ChatConversation";
+import NewChatScreen from "../NewChatScreen";
 import PinsScreen from "../PinsScreen";
 import ProfileScreen from "../ProfileScreen";
+import ProfileEditScreen from "../ProfileEditScreen";
+import SettingsScreen from "../SettingsScreen";
 import StatisticsScreen from "../StatisticsScreen";
 import CreatePinScreen from "../CreatePinScreen";
 import PinOwnerScreen from "../PinOwnerScreen";
 import PinEditScreen from "../PinEditScreen";
 import PinDefaultScreen from "../PinDefaultScreen";
+import SignInScreen from "../SignInScreen";
+import SignUpScreen from "../SignUpScreen";
+import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +38,7 @@ const Stack = createStackNavigator();
 function RootStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="MapScreen"
+			initialRouteName="SignInScreen"
 			screenOptions={{
 				tabBarActiveTintColor: COLORS.green1,
 				tabBarInactiveTintColor: COLORS.secondary,
@@ -43,9 +49,12 @@ function RootStack() {
 					fontWeight: "bold",
 					fontSize: 27,
 				},
-				headerShown: true,
+				headerShown: false,
 			}}
 		>
+			<Stack.Screen name="SignInScreen" component={SignInScreen} />
+			<Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+			<Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} />
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}
@@ -61,9 +70,37 @@ function RootStack() {
 				component={CreatePinScreen}
 				options={{
 					title: "Create pin",
-					...TransitionPresets.SlideFromRightIOS,
 					gestureEnabled: true,
 					gestureDirection: "horizontal",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="DefaultPin"
+				component={PinDefaultScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="OwnerPin"
+				component={PinOwnerScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="EditPinScreen"
+				component={PinEditScreen}
+				options={{
+					title: "Editing pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
 		</Stack.Navigator>
@@ -128,11 +165,6 @@ function PinStack() {
 	);
 }
 
-function navigate() {
-	const navigation = useNavigation();
-	navigation.navigate("MapScreen");
-}
-
 function ProfileStack() {
 	return (
 		<Stack.Navigator
@@ -158,6 +190,88 @@ function ProfileStack() {
 					headerShown: false,
 				}}
 			/>
+			<Stack.Screen
+				name="ProfileEditScreen"
+				component={ProfileEditScreen}
+				options={{
+					title: "Editing profile",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
+			<Stack.Screen
+				name="SettingsScreen"
+				component={SettingsScreen}
+				options={{
+					title: "Settings",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
+		</Stack.Navigator>
+	);
+}
+
+function ChatStack() {
+	return (
+		<Stack.Navigator
+			initialRouteName="ChatScreen"
+			screenOptions={{
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
+				tabBarShowLabel: false,
+				headerTintColor: COLORS.secondary,
+				headerTitleAlign: "center",
+				headerTitleStyle: {
+					fontWeight: "bold",
+					fontSize: 27,
+				},
+				headerShown: true,
+			}}
+		>
+			<Stack.Screen
+				name="ChatScreen"
+				component={GeneralChatScreen}
+				options={{
+					title: "",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name="ChatConversation"
+				component={ChatConversation}
+				options={{
+					title: "",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name="NewChat"
+				component={NewChatScreen}
+				options={{
+					title: "New chat",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }
@@ -166,6 +280,7 @@ function AppTabs() {
 	return (
 		<Tab.Navigator
 			initialRouteName="Map"
+			backBehavior="initialRoute"
 			screenOptions={{
 				tabBarActiveTintColor: COLORS.green1,
 				tabBarInactiveTintColor: COLORS.secondary,
@@ -180,14 +295,14 @@ function AppTabs() {
 			}}
 		>
 			<Tab.Screen
-				name="GeneralChat"
-				component={GeneralChatScreen}
+				name="Chat"
+				component={ChatStack}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
-					tabBarBadge: 2,
 					title: "General Chat",
+					headerShown: false,
 				}}
 			/>
 			<Tab.Screen

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
-import ChatList from "./components/ChatList";
+import NewChatList from "./components/NewChatList";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -23,17 +23,7 @@ function GeneralChatScreen({ navigation }) {
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
-	const [auxiliarFilterData2, setAuxiliarFilterData2] = useState([]);
 	const [search, setSearch] = useState("");
-	const [dateFilter, setDateFilter] = useState(true);
-	const [ratingFilter, setRatingFilter] = useState(false);
-	const [createdFilter, setCreatedFilter] = useState(false);
-	const [savedFilter, setSavedFilter] = useState(false);
-
-	const AnimationRefFilter1 = useRef(null);
-	const AnimationRefFilter2 = useRef(null);
-	const AnimationRefFilter3 = useRef(null);
-	const AnimationRefFilter4 = useRef(null);
 
 	useEffect(() => {
 		fetchChats();
@@ -43,7 +33,7 @@ function GeneralChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
-		const data = await presentationCtrl.fetchConversations();
+		const data = await presentationCtrl.fetchNewConversations();
 
 		setMasterData(data);
 		setFilteredData(data);
@@ -88,22 +78,9 @@ function GeneralChatScreen({ navigation }) {
 						flex: 1,
 						flexDirection: "column",
 						alignItems: "center",
-						marginBottom: 15
+						marginBottom: 15,
 					}}
 				>
-					<Text
-						style={[
-							{
-								fontSize: 20,
-								fontWeight: "bold",
-								color: COLORS.secondary,
-								marginTop: 50,
-								marginBottom: 10,
-							},
-						]}
-					>
-						Chats
-					</Text>
 					<View
 						style={{
 							flexDirection: "row",
@@ -137,7 +114,6 @@ function GeneralChatScreen({ navigation }) {
 									filterBySearch(text);
 								}}
 							/>
-							
 						</View>
 						<View
 							style={[
@@ -146,46 +122,9 @@ function GeneralChatScreen({ navigation }) {
 									flexDirection: "row",
 									alignItems: "center",
 									alignSelf: "flex-end",
-									
 								},
 							]}
-						>
-							<TouchableOpacity
-								style={[
-									{
-										marginHorizontal: 7,
-									},
-									styles.shadowSelected,
-								]}
-								onPress={() => {
-									AnimationRefFilter1.current?.pulse(1000);
-									navigation.navigate("NewChat");
-								}}
-							>
-								<Animatable.View
-									ref={AnimationRefFilter1}
-									style={{
-										backgroundColor: COLORS.green1,
-										borderRadius: 12,
-										height: 40,
-										justifyContent: "center",
-										alignItems: "center",
-										paddingHorizontal: 15,
-									}}
-									animation="pulse"
-									duration={1000}
-								>
-									<Text
-										style={[
-											styles.containerTxt,
-											{ color: COLORS.white },
-										]}
-									>
-										New chat
-									</Text>
-								</Animatable.View>
-							</TouchableOpacity>
-						</View>
+						></View>
 					</View>
 				</View>
 			</View>
@@ -193,7 +132,7 @@ function GeneralChatScreen({ navigation }) {
 	}
 
 	return (
-		<View
+		<SafeAreaView
 			style={{
 				flex: 1,
 				backgroundColor: COLORS.light,
@@ -202,9 +141,12 @@ function GeneralChatScreen({ navigation }) {
 		>
 			{renderHeader()}
 			<View style={[{ flex: 1, marginTop: 10 }]}>
-				<ChatList chatsList={filteredData} navigation={navigation}></ChatList>
+				<NewChatList
+					chatsList={filteredData}
+					navigation={navigation}
+				></NewChatList>
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 }
 

@@ -7,26 +7,52 @@ const licenseMiddleware = require("../middlewares/license.middleware");
 const authorizationMiddleware = require("../middlewares/authorization.middleware");
 
 //Controllers
+//const UserController = require("../controllers/user.controller");
 const UserController = require("../controllers/user.controller");
 const MeasureStationController = require("../controllers/measureStation.controller");
 const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
-
+const MessageController = require("../controllers/messages.controller");
+const ConversationController = require("../controllers/conversation.controller");
+const ContaminationController = require("../controllers/contamination.controller")
 /*  User */
+router.post(
+    "/register",
+    licenseMiddleware.validate,
+    UserController.register
+);
+
+router.get(
+    "/login",
+    licenseMiddleware.validate,
+    UserController.login
+);
+
 router.get(
     "/user",
     licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
     UserController.find
 );
 
-router.post(
-    "/newUser",
+router.get(
+    "/users",
+    licenseMiddleware.validate,
+    UserController.users
+);
+
+router.put(
+    "/changePassword",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
-    UserController.create
+    UserController.changePassword
 );
-/* /User */
+
+router.post(
+    "/deleteUser",
+    licenseMiddleware.validate,
+    //authorizationMiddleware.validate,
+    UserController.delete
+);
 
 /*  MeasureStation  */
 router.get(
@@ -86,4 +112,56 @@ router.put(
     PinController.validate("updatePin"),
     PinController.update
 );
-/*  /Pin */
+
+/*  Message */
+
+router.post(
+    "/message",
+    licenseMiddleware.validate,
+    MessageController.create
+);
+router.get(
+    "/message",
+    licenseMiddleware.validate,
+    MessageController.find
+);
+
+router.get(
+    "/lastMessage",
+    licenseMiddleware.validate,
+    MessageController.lastMessage
+);
+
+router.get(
+    "/unreadedMessages",
+    licenseMiddleware.validate,
+    MessageController.unreadedMessages
+);
+
+/*  /Message */
+
+
+/*  Conversation */
+
+router.post(
+    "/conversation",
+    licenseMiddleware.validate,
+    ConversationController.create
+);
+router.get(
+    "/conversation",
+    licenseMiddleware.validate,
+    ConversationController.find
+);
+
+/*  /Conversation */
+
+/** Contamination */
+
+router.get(
+    "/contamination/:longitude/:latitude/:date", 
+    
+    ContaminationController.find
+);
+
+/** /Contamination */

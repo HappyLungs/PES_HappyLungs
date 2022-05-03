@@ -2,11 +2,11 @@
 
 ## Index.js
 
-It makes the connection with mongoose, and defines the port on which the requests will be listened (:2000).
+It makes the connection with mongoose, and defines the port on which the requests will be listened (:7000).
 
 ## .env
 
-Definition of the url where mongoDB is located, and the port of express (:2000, used in the index.js file)
+Definition of the url where mongoDB is located, and the port of express (:7000, used in the index.js file)
 
 ## Controller
 
@@ -26,7 +26,6 @@ The definition of the model.
 - dotenv
 - mongoose
 - express-validator
-- jsonwebtoken
 
 ## Node modules
 
@@ -34,4 +33,3 @@ The definition of the model.
 - dotenv
 - mongoose
 - express-validator
-- jsonwebtoken

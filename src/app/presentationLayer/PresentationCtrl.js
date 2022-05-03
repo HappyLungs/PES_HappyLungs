@@ -98,24 +98,47 @@ PresentationCtrl.prototype.getDataStatistics = async function (
 	return data;
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the created pin
+ * 
+ */
 PresentationCtrl.prototype.createPin = function (
-	name,
+	title,
 	location,
 	description,
 	media,
 	rating,
+	pinData,
 	status
 ) {
 	return this.domainCtrl.createPin(
-		name,
+		title,
 		location,
 		description,
 		media,
 		rating,
+		pinData,
 		status
 	);
 };
 
+/**
+ *
+ * @param {*} name
+ * @param {*} location
+ * @param {*} description
+ * @param {*} media
+ * @param {*} rating
+ * @param {*} status
+ * @returns the updated pin
+ */
 PresentationCtrl.prototype.editPin = function (
 	name,
 	location,
@@ -131,6 +154,80 @@ PresentationCtrl.prototype.editPin = function (
 		media,
 		rating,
 		status
+	);
+};
+
+/**
+ *
+ * @param {*} name
+ * @param {*} email
+ * @param {*} password
+ * @param {*} confirmPassword
+ * @param {*} birthdate
+ * @returns message if error
+ */
+ PresentationCtrl.prototype.registerUser = async function (
+	name,
+	email,
+	password,
+	confirmPassword,
+	birthdate
+) {
+	if (name && email && password && confirmPassword && birthdate) {
+		return await this.domainCtrl.registerUser(
+			name,
+			email,
+			password,
+			confirmPassword,
+			birthdate
+		);
+	} else {
+		return {"data": {}, "message": "Required parameters missing", "status": 422};
+	}
+};
+
+/**
+ *
+ * @param {*} email
+ * @param {*} password
+ * @returns an acces_token for the user
+ */
+ PresentationCtrl.prototype.loginUser = async function (
+	email,
+	password
+) {
+	if (email && password) {
+		return await this.domainCtrl.loginUser(
+			email,
+			password
+		);
+	} else {
+		return {"data": {}, "message": "Required parameters missing", "status": 422};
+	}
+};
+
+/**
+ *
+ * @param {*} username
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+PresentationCtrl.prototype.updateUser = function (
+	username,
+	email,
+	points,
+	healthState,
+	profilePicture
+) {
+	return this.domainCtrl.updateUser(
+		username,
+		email,
+		points,
+		healthState,
+		profilePicture
 	);
 };
 
@@ -227,6 +324,141 @@ PresentationCtrl.prototype.fetchPins = async function () {
 
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
+};
+
+PresentationCtrl.prototype.fetchConversations = async function () {
+	let conversations = await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+	if (conversations != null) {
+		return conversations;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}/* 
+	let fakeConvers = [
+		{
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+			lastMessage: "Hola com estas? Jo estic amb el xat",
+			lastMessageTime: "10:30",
+			unreadMessages: 3			
+
+		},
+		{
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+			lastMessage: "Hola com estas? ",
+			lastMessageTime: "22/04/22",
+			unreadMessages: 0			
+
+		},
+		{
+			id: "3",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+			lastMessage: "Hola com estas? Jo estic amb el xat, jo estic amb el xat, jo estic amb el xat, jo estic amb el xat",
+			lastMessageTime: "20/04/22",
+			unreadMessages: 5			
+
+		}
+	];
+	return fakeConvers; */
+};
+
+PresentationCtrl.prototype.fetchNewConversations = async function () {
+	let conversation = await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+	if (conversation != null) {
+		return conversation;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* let fakeNewConvers = [
+		{
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+		},
+		{
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		{
+			id: "3",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+		},
+		{
+			id: "4",
+			name: "Júlia Herrera 2",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
+		},
+		{
+			id: "5",
+			name: "Iván Jimeno 2",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		{
+			id: "6",
+			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2",
+			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
+		}
+	];
+
+	return fakeNewConvers; */
+};
+
+PresentationCtrl.prototype.fetchConversation = async function (id) {
+	let conversation = await this.domainCtrl.fetchConversation(id);
+	if (conversation != null) {
+		let {users, messages} = conversation;
+		return {users: users, messages: messages};
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+	/* 
+	let users = {
+		logged: {
+			id: "2",
+			name: "Iván Jimeno",
+			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
+		},
+		conversant: {
+			id: "1",
+			name: "Júlia Herrera",
+			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg"
+		}
+	};
+	//new Date(year, month, day, hours, minutes, seconds, milliseconds)
+	let fakeConver = [
+		{
+			id: "1",
+			user: "1",
+			date: "26 april 2022",
+			hour: "15:30",
+			text: "Hola!"
+
+		},
+		{
+			id: "2",
+			user: "1",
+			date: "26 april 2022",
+			hour: "15:40",
+			text: "Què tal?"
+		},
+		{
+			id: "3",
+			user: "2",
+			date: "27 april 2022",
+			hour: "15:30",
+			text: "Molt bé i tu?"
+		}
+	];
+	
+	return {users: users, messages: fakeConver}; */
 };
 
 module.exports = PresentationCtrl;

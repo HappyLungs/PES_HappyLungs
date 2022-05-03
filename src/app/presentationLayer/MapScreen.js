@@ -5,12 +5,12 @@ import {
 	StyleSheet,
 	View,
 	SafeAreaView,
-	TextInput,
 	TouchableOpacity,
-	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import i18n from "../config/translation";
+
 import {
 	Ionicons,
 	MaterialIcons,
@@ -18,24 +18,14 @@ import {
 	AntDesign,
 } from "@expo/vector-icons";
 
+import Modal from "react-native-modal";
+
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, {
-	Marker,
-	Heatmap,
-	PROVIDER_GOOGLE,
-	InfoWindow,
-} from "react-native-maps";
+import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
-import usePlacesAutocomplete, {
-	getGeocode,
-	getLatLng,
-} from "use-places-autocomplete";
-
 import * as Location from "expo-location";
-
-import { formatRelative } from "date-fns";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -220,205 +210,6 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
-	/**
-	 *
-	 */
-	function renderModalPin() {
-		return (
-			<Modal
-				animationType="fade"
-				transparent={true}
-				visible={modalPinVisible}
-				onRequestClose={() => {
-					setModalPinVisible(!modalPinVisible);
-				}}
-			>
-				<View style={styles.centeredView}>
-					<View style={[styles.modalView, styles.shadow]}>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalPinVisible(!modalPinVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
-						<Text
-							style={[styles.modalText, { fontWeight: "bold", bottom: 15 }]}
-						>
-							Selected location
-						</Text>
-						<Text style={styles.highlight}> {actualMarker.title}</Text>
-						<View style={{ flexDirection: "column", marginTop: 10 }}>
-							<TouchableOpacity
-								style={{
-									flexDirection: "row",
-									margin: 5,
-									alignItems: "center",
-								}}
-								onPress={onMapPress}
-							>
-								<AntDesign name="pushpino" size={35} color={COLORS.secondary} />
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>
-									CREATE PIN
-								</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={{
-									flexDirection: "row",
-									margin: 5,
-									alignItems: "center",
-								}}
-								onPress={async () => {
-									let data = await presentationCtrl.getDataStatistics(
-										"24hours",
-										actualMarker.latitude,
-										actualMarker.longitude
-									);
-									setModalPinVisible(!modalPinVisible);
-									navigation.navigate("Statistics", {
-										data: data,
-										coords: {
-											latitude: actualMarker.latitude,
-											longitude: actualMarker.latitude,
-										},
-									});
-								}}
-							>
-								<MaterialIcons
-									name="scatter-plot"
-									color={COLORS.secondary}
-									size={35}
-								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>
-									SEE STATISTICS
-								</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={{
-									flexDirection: "row",
-									margin: 5,
-									alignItems: "center",
-								}}
-								onPress={() => setModalPinVisible(!modalPinVisible)}
-							>
-								<Ionicons
-									name="share-social-sharp"
-									style={{ alignSelf: "center" }}
-									color={COLORS.secondary}
-									size={35}
-								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
-							</TouchableOpacity>
-							<Text
-								style={{
-									fontSize: 13,
-									fontWeight: "bold",
-									color: COLORS.secondary,
-								}}
-							>
-								Recommended
-							</Text>
-							<View
-								style={{
-									marginTop: 10,
-									flexDirection: "row",
-									alignItems: "center",
-								}}
-							>
-								<LinearGradient
-									flex={1}
-									colors={[
-										"green",
-										"yellow",
-										"orange",
-										"red",
-										"purple",
-										"brown",
-									]}
-									start={{ x: 0, y: 0.5 }}
-									end={{ x: 1, y: 1 }}
-									style={{ borderRadius: 5 }}
-								>
-									<View
-										style={{
-											backgroundColor: COLORS.secondary,
-											alignSelf: "center",
-											height: 20,
-											width: 5,
-											right: 45,
-										}}
-									/>
-								</LinearGradient>
-							</View>
-						</View>
-					</View>
-				</View>
-			</Modal>
-		);
-	}
-
-	function renderCheckList() {
-		return (
-			<View style={{ flexDirection: "column", marginStart: 20 }}>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setTraffic(!trafficSelected)}
-					text="Traffic"
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !industrySelected
-							? COLORS.lightGrey
-							: COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setIndustry(!industrySelected)}
-					text="Industry"
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setUrban(!urbanSelected)}
-					text="Urban"
-				/>
-			</View>
-		);
-	}
-
 	const fakeProfileData = {
 		username: "Ricard",
 		points: 200,
@@ -431,94 +222,44 @@ function MapScreen({ navigation, route }) {
 			<View
 				style={[
 					{
-						height: 150,
-						flexDirection: "row",
+						height: 70,
+						width: "100%",
 						paddingHorizontal: 20,
+						paddingTop: 25,
+						paddingBottom: 10,
 						alignItems: "center",
+						flexDirection: "row",
 						backgroundColor: COLORS.white,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
+						justifyContent: "space-between",
 					},
 					styles.shadow,
 				]}
 			>
-				<View
-					style={{
-						flexDirection: "column",
-					}}
+				<Text
+					style={[
+						{
+							fontSize: 20,
+							fontWeight: "bold",
+							color: COLORS.secondary,
+						},
+					]}
 				>
-					<View
-						style={{
-							flexDirection: "row",
-							marginTop: 25,
-							marginBottom: 10,
-						}}
+					{profile.username},
+					<Text
+						style={[
+							{
+								fontSize: 18,
+								fontWeight: "normal",
+								color: COLORS.secondary,
+							},
+						]}
 					>
-						<Text
-							style={[
-								{
-									fontSize: 20,
-									fontWeight: "bold",
-									color: COLORS.secondary,
-								},
-							]}
-						>
-							{profile.username},
-							<Text
-								style={[
-									{
-										fontSize: 18,
-										fontWeight: "normal",
-										color: COLORS.secondary,
-									},
-								]}
-							>
-								{" "}
-								Welcome Back!
-							</Text>
-						</Text>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-						}}
-					>
-						<View
-							style={[
-								{
-									backgroundColor: COLORS.lightGrey,
-									width: "80%",
-									height: 50,
-									borderRadius: 12,
-									flexDirection: "row",
-								},
-								styles.shadow,
-							]}
-						>
-							<MaterialIcons
-								name="search"
-								style={{ alignSelf: "center", marginStart: 10 }}
-								color={COLORS.secondary}
-								size={35}
-							/>
-							<TextInput
-								multiline={false}
-								maxLength={30}
-								style={styles.body}
-								placeholder={"Search a location"}
-							/>
-						</View>
-						<View style={[styles.container, styles.shadow]}>
-							<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
-								<MaterialCommunityIcons
-									name="filter-menu"
-									color={COLORS.secondary}
-									size={35}
-								/>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
+						{" "}
+						{i18n.t("welcome")}
+					</Text>
+				</Text>
 			</View>
 		);
 	}
@@ -533,7 +274,10 @@ function MapScreen({ navigation, route }) {
 				transparent={true}
 				visible={modalFilterVisible}
 				onRequestClose={() => {
-					setModalFilterVisible(!modalFilterVisible);
+					setModalFilterVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalFilterVisible(false);
 				}}
 			>
 				<View style={styles.centeredView}>
@@ -544,19 +288,13 @@ function MapScreen({ navigation, route }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
-						<TouchableOpacity
-							style={{ alignSelf: "flex-end" }}
-							onPress={() => setModalFilterVisible(!modalFilterVisible)}
-						>
-							<Ionicons name="close" color={COLORS.secondary} size={25} />
-						</TouchableOpacity>
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: 15 },
+								{ fontWeight: "bold", alignSelf: "center" },
 							]}
 						>
-							Filter
+							{i18n.t("filter")}
 						</Text>
 						<Text
 							style={[
@@ -564,7 +302,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1 },
 							]}
 						>
-							Type of contamination
+							{i18n.t("typeOfContamination")}
 						</Text>
 						{renderCheckList()}
 						<Text
@@ -573,7 +311,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
 							]}
 						>
-							Show pins
+							{i18n.t("showPins")}
 						</Text>
 						<TouchableOpacity
 							style={{
@@ -599,7 +337,7 @@ function MapScreen({ navigation, route }) {
 								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
 							]}
 						>
-							Filter buildings by energy certificate
+							{i18n.t("filterByCertificate")}
 						</Text>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<TouchableOpacity
@@ -613,7 +351,9 @@ function MapScreen({ navigation, route }) {
 									marginStart: 15,
 									alignItems: "center",
 								}}
-								onPress={() => setByCertificate(!byCertificate)}
+								onPress={() => {
+									setByCertificate(!byCertificate);
+								}}
 							>
 								<Ionicons
 									name={byCertificate ? "home" : "home-outline"}
@@ -673,11 +413,205 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
+	/**
+	 *
+	 */
+	function renderModalPin() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalPinVisible}
+				onRequestClose={() => {
+					setModalPinVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalPinVisible(false);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View style={[styles.modalView, styles.shadow]}>
+						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
+							{i18n.t("selectedLocation")}
+						</Text>
+						<Text style={styles.highlight}> {actualMarker.title}</Text>
+						<View style={{ flexDirection: "column", marginTop: 10 }}>
+							<TouchableOpacity
+								style={{
+									flexDirection: "row",
+									margin: 5,
+									alignItems: "center",
+								}}
+								onPress={onMapPress}
+							>
+								<AntDesign name="pushpino" size={35} color={COLORS.secondary} />
+								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+									{i18n.t("createPin")}
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={{
+									flexDirection: "row",
+									margin: 5,
+									alignItems: "center",
+								}}
+								onPress={async () => {
+									let data = await presentationCtrl.getDataStatistics(
+										"24hours",
+										actualMarker.latitude,
+										actualMarker.longitude
+									);
+									setModalPinVisible(!modalPinVisible);
+									navigation.navigate("Statistics", {
+										data: data,
+										coords: {
+											latitude: actualMarker.latitude,
+											longitude: actualMarker.latitude,
+										},
+									});
+								}}
+							>
+								<MaterialIcons
+									name="scatter-plot"
+									color={COLORS.secondary}
+									size={35}
+								/>
+								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+									{i18n.t("seeStatistics")}
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={{
+									flexDirection: "row",
+									margin: 5,
+									alignItems: "center",
+								}}
+								onPress={() => setModalPinVisible(!modalPinVisible)}
+							>
+								<Ionicons
+									name="share-social-sharp"
+									style={{ alignSelf: "center" }}
+									color={COLORS.secondary}
+									size={35}
+								/>
+								<Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
+							</TouchableOpacity>
+							<Text
+								style={{
+									fontSize: 13,
+									fontWeight: "bold",
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("recommended1")}
+							</Text>
+							<View
+								style={{
+									marginTop: 10,
+									flexDirection: "row",
+									alignItems: "center",
+								}}
+							>
+								<LinearGradient
+									flex={1}
+									colors={[
+										"green",
+										"yellow",
+										"orange",
+										"red",
+										"purple",
+										"brown",
+									]}
+									start={{ x: 0, y: 0.5 }}
+									end={{ x: 1, y: 1 }}
+									style={{ borderRadius: 5 }}
+								>
+									<View
+										style={{
+											backgroundColor: COLORS.secondary,
+											alignSelf: "center",
+											height: 20,
+											width: 5,
+											right: 45,
+										}}
+									/>
+								</LinearGradient>
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
+
+	function renderCheckList() {
+		return (
+			<View style={{ flexDirection: "column", marginStart: 20 }}>
+				<BouncyCheckbox
+					style={{ marginTop: 10 }}
+					fillColor={COLORS.secondary}
+					size={20}
+					unfillColor={COLORS.white}
+					iconStyle={{
+						borderColor: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
+						borderRadius: 7,
+						borderWidth: 1.5,
+					}}
+					textStyle={{
+						textDecorationLine: "none",
+						fontWeight: "bold",
+						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
+					}}
+					onPress={() => setTraffic(!trafficSelected)}
+					text={i18n.t("typeOfContamination1")}
+				/>
+				<BouncyCheckbox
+					style={{ marginTop: 10 }}
+					fillColor={COLORS.secondary}
+					size={20}
+					unfillColor={COLORS.white}
+					iconStyle={{
+						borderColor: !industrySelected
+							? COLORS.lightGrey
+							: COLORS.secondary,
+						borderRadius: 7,
+						borderWidth: 1.5,
+					}}
+					textStyle={{
+						textDecorationLine: "none",
+						fontWeight: "bold",
+						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
+					}}
+					onPress={() => setIndustry(!industrySelected)}
+					text={i18n.t("typeOfContamination2")}
+				/>
+				<BouncyCheckbox
+					style={{ marginTop: 10 }}
+					fillColor={COLORS.secondary}
+					size={20}
+					unfillColor={COLORS.white}
+					iconStyle={{
+						borderColor: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
+						borderRadius: 7,
+						borderWidth: 1.5,
+					}}
+					textStyle={{
+						textDecorationLine: "none",
+						fontWeight: "bold",
+						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
+					}}
+					onPress={() => setUrban(!urbanSelected)}
+					text={i18n.t("typeOfContamination3")}
+				/>
+			</View>
+		);
+	}
+
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
 				style={{
-					marginTop: 100,
+					marginTop: 55,
 					...StyleSheet.absoluteFillObject,
 				}}
 			>
@@ -712,31 +646,44 @@ function MapScreen({ navigation, route }) {
 				</MapView>
 			</View>
 			{renderHeader(profile)}
-
 			<View
-				style={[
-					styles.container,
-					styles.shadow,
-					{ marginTop: 480, marginRight: 10, marginStart: 320 },
-				]}
+				style={{
+					alignSelf: "flex-end",
+					flexDirection: "column",
+					justifyContent: "space-between",
+					marginVertical: 25,
+					marginEnd: 15,
+					flex: 1,
+				}}
 			>
-				<TouchableOpacity
-					onPress={() => {
-						Location.installWebGeolocationPolyfill();
-						navigator.geolocation.getCurrentPosition((position) => {
-							panTo({
-								lat: position.coords.latitude,
-								lng: position.coords.longitude,
+				<View style={[styles.container, styles.shadow]}>
+					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+						<MaterialCommunityIcons
+							name="filter-menu"
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
+				</View>
+				<View style={[styles.container, styles.shadow]}>
+					<TouchableOpacity
+						onPress={() => {
+							Location.installWebGeolocationPolyfill();
+							navigator.geolocation.getCurrentPosition((position) => {
+								panTo({
+									lat: position.coords.latitude,
+									lng: position.coords.longitude,
+								});
 							});
-						});
-					}}
-				>
-					<MaterialCommunityIcons
-						name="compass"
-						color={COLORS.secondary}
-						size={35}
-					/>
-				</TouchableOpacity>
+						}}
+					>
+						<MaterialCommunityIcons
+							name="compass"
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
+				</View>
 			</View>
 			{renderModalPin()}
 			{renderModalFilter()}
@@ -751,7 +698,6 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.white,
 		width: 50,
 		height: 50,
-		marginStart: 20,
 		borderRadius: 12,
 		justifyContent: "center",
 		alignItems: "center",
