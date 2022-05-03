@@ -29,7 +29,7 @@ const PinPreview = ({ item }) => {
 						flexDirection: "column",
 					}}
 				>
-					<Text style={styles.pinName}>{item.name}</Text>
+					<Text style={styles.pinName}>{item.title}</Text>
 
 					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
 					<Text style={styles.profile}>author</Text>

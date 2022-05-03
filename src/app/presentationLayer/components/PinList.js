@@ -11,9 +11,10 @@ import {
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../../config/stylesheet/colors";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import i18n from "../../config/translation";
 
 const PinList = ({ pinList, navigation }) => {
 	const isMyPin = [true, false, true, false, true, true];
@@ -74,7 +75,7 @@ const PinList = ({ pinList, navigation }) => {
 										alignItems: "center",
 									}}
 								>
-									<Text style={styles.itemName}>{item.name}</Text>
+									<Text style={styles.itemName}>{item.title}</Text>
 									<View
 										style={{
 											backgroundColor: isMyPin[index]
@@ -111,7 +112,7 @@ const PinList = ({ pinList, navigation }) => {
 										numberOfLines={1}
 										style={[styles.itemCode, { flex: 1, flexWrap: "wrap" }]}
 									>
-										{item.location.title}
+										{item.locationTitle}
 									</Text>
 								</View>
 								<View style={{ flexDirection: "row", marginVertical: 2 }}>
@@ -147,7 +148,7 @@ const PinList = ({ pinList, navigation }) => {
 								}}
 							>
 								<Feather name="edit" size={15} color={COLORS.white} />
-								<Text style={styles.containerTxt}>Edit</Text>
+								<Text style={styles.containerTxt}>{i18n.t("edit")}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={{
@@ -161,7 +162,7 @@ const PinList = ({ pinList, navigation }) => {
 								onPress={() => console.log("delete")}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
-								<Text style={styles.containerTxt}>Delete</Text>
+								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>
 							</TouchableOpacity>
 						</View>
 					)}
@@ -176,7 +177,7 @@ const PinList = ({ pinList, navigation }) => {
 			contentContainerStyle={{ padding: 10 }}
 			scrollEnabled={true}
 			data={pinList}
-			keyExtractor={(item) => `${item.name}`}
+			keyExtractor={(item) => `${item.title}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => {

@@ -13,11 +13,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 
 import Modal from "react-native-modal";
 import { UserContext } from "./navigation/UserContext";
+import i18n from "../config/translation";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
@@ -75,7 +77,7 @@ function ProfileScreen({ navigation, route }) {
 					setModalLogoutVisible(!modalLogoutVisible);
 				}}
 			>
-			<View style={styles.centeredView}>
+				<View style={styles.centeredView}>
 					<View
 						style={[
 							styles.modalView,
@@ -91,44 +93,44 @@ function ProfileScreen({ navigation, route }) {
 						>
 							Do you want to Logout?
 						</Text>
-					<View>
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-around",
-							alignSelf: "center",
-							marginTop: 30,
-							marginHorizontal: 5,
-							width: 220,
-						}}
-					>
-						<TouchableOpacity
-							style={[
-								styles.containerBtn2,
-								styles.shadow,
-								{ backgroundColor: COLORS.red1 },
-							]}
-							onPress={() => setModalLogoutVisible(false)}
-						>
-							<Text style={styles.containerTxt}>No</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={[
-								styles.containerBtn2,
-								styles.shadow,
-								{ backgroundColor: COLORS.green1 },
-							]}
-							onPress={logOut}
-						>
-							<Text style={styles.containerTxt}>Yes</Text>
-						</TouchableOpacity>
+						<View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-around",
+									alignSelf: "center",
+									marginTop: 30,
+									marginHorizontal: 5,
+									width: 220,
+								}}
+							>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.red1 },
+									]}
+									onPress={() => setModalLogoutVisible(false)}
+								>
+									<Text style={styles.containerTxt}>No</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.green1 },
+									]}
+									onPress={logOut}
+								>
+									<Text style={styles.containerTxt}>Yes</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
 					</View>
 				</View>
-			</View>
-		</View>
-	</Modal>
-	);}
-		
+			</Modal>
+		);
+	}
 
 	function logOut() {
 		setUser(null);
@@ -228,7 +230,9 @@ function ProfileScreen({ navigation, route }) {
 							>
 								12
 							</Text>
-							<Text style={{ color: COLORS.darkGrey }}>Pins Created</Text>
+							<Text style={{ color: COLORS.darkGrey }}>
+								{i18n.t("createdPins")}
+							</Text>
 						</View>
 						<View
 							style={{
@@ -252,7 +256,9 @@ function ProfileScreen({ navigation, route }) {
 							>
 								7
 							</Text>
-							<Text style={{ color: COLORS.darkGrey }}>Pins Shared</Text>
+							<Text style={{ color: COLORS.darkGrey }}>
+								{i18n.t("sharedPins")}
+							</Text>
 						</View>
 					</View>
 					<TouchableOpacity
@@ -296,7 +302,7 @@ function ProfileScreen({ navigation, route }) {
 								{user.points}
 							</Text>
 							<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
-								points
+								{i18n.t("points")}
 							</Text>
 						</View>
 					</TouchableOpacity>
@@ -320,7 +326,9 @@ function ProfileScreen({ navigation, route }) {
 					flexDirection: "column",
 				}}
 			>
-				<Text style={[styles.textOption, { fontSize: 17 }]}>Health State</Text>
+				<Text style={[styles.textOption, { fontSize: 17 }]}>
+					{i18n.t("healthState")}
+				</Text>
 				<View
 					style={{
 						flexDirection: "row",
@@ -341,7 +349,7 @@ function ProfileScreen({ navigation, route }) {
 						>
 							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
 						</View>
-						<Text style={styles.textState}>Cardiorespiratory problems</Text>
+						<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<View
@@ -361,7 +369,7 @@ function ProfileScreen({ navigation, route }) {
 								color={COLORS.white}
 							/>
 						</View>
-						<Text style={styles.textState}>Pregnant</Text>
+						<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<View
@@ -377,7 +385,7 @@ function ProfileScreen({ navigation, route }) {
 						>
 							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
 						</View>
-						<Text style={styles.textState}>Elderly</Text>
+						<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
 					</View>
 				</View>
 			</View>
@@ -403,28 +411,28 @@ function ProfileScreen({ navigation, route }) {
 					style={styles.containerOption}
 				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>Settings</Text>
+					<Text style={styles.textOption}>{i18n.t("settings")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => calendar()}
 					style={styles.containerOption}
 				>
 					<Ionicons name="md-calendar" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>Calendar</Text>
+					<Text style={styles.textOption}>{i18n.t("calendar")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => rewards()}
 					style={styles.containerOption}
 				>
 					<AntDesign name="Trophy" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>Rewards</Text>
+					<Text style={styles.textOption}>{i18n.t("ranking")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => share()}
 					style={styles.containerOption}
 				>
 					<Feather name="users" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>Tell Your Friend</Text>
+					<Text style={styles.textOption}>{i18n.t("shareOption")}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
@@ -435,11 +443,11 @@ function ProfileScreen({ navigation, route }) {
 				]}
 			>
 				<Feather name="power" size={27} color={COLORS.red1} />
-				<Text style={styles.textOption}>Logout</Text>
+				<Text style={styles.textOption}>{i18n.t("logOut")}</Text>
 			</TouchableOpacity>
-		
-		{renderModalLogout()}
-	</View>
+
+			{renderModalLogout()}
+		</View>
 	);
 }
 
@@ -500,7 +508,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 16,
 	},
-	
+
 	textOption: {
 		color: COLORS.secondary,
 		fontWeight: "bold",

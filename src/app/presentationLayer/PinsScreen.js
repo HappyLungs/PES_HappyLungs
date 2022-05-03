@@ -13,6 +13,7 @@ import {
 import COLORS from "../config/stylesheet/colors";
 import PinList from "./components/PinList";
 const PresentationCtrl = require("./PresentationCtrl.js");
+import i18n from "../config/translation";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
@@ -58,8 +59,8 @@ function PinsScreen({ navigation }) {
 			setAuxiliarFilterData(filteredData);
 			setFilteredData(
 				masterData.filter((item) => {
-					const itemData = item.name
-						? item.name.toUpperCase()
+					const itemData = item.title
+						? item.title.toUpperCase()
 						: "".toUpperCase();
 					const textData = text.toUpperCase();
 					return itemData.indexOf(textData) > -1;
@@ -232,7 +233,7 @@ function PinsScreen({ navigation }) {
 							},
 						]}
 					>
-						My Pins
+						{i18n.t("myPins")}
 					</Text>
 					<View
 						style={{
@@ -262,7 +263,7 @@ function PinsScreen({ navigation }) {
 								width={175}
 								value={search}
 								style={[styles.body, { marginStart: 10 }]}
-								placeholder={"Search"}
+								placeholder={i18n.t("search")}
 								onChangeText={(text) => {
 									setDateFilter(false);
 									setRatingFilter(false);
@@ -323,7 +324,7 @@ function PinsScreen({ navigation }) {
 										{ color: dateFilter ? COLORS.white : COLORS.secondary },
 									]}
 								>
-									Most Recent
+									{i18n.t("mostRecent")}
 								</Text>
 							</Animatable.View>
 						</TouchableOpacity>
@@ -363,7 +364,7 @@ function PinsScreen({ navigation }) {
 										{ color: ratingFilter ? COLORS.white : COLORS.secondary },
 									]}
 								>
-									Best Rated
+									{i18n.t("bestRated")}
 								</Text>
 							</Animatable.View>
 						</TouchableOpacity>
@@ -402,7 +403,7 @@ function PinsScreen({ navigation }) {
 										{ color: createdFilter ? COLORS.white : COLORS.secondary },
 									]}
 								>
-									Created
+									{i18n.t("created")}
 								</Text>
 							</Animatable.View>
 						</TouchableOpacity>
@@ -442,7 +443,7 @@ function PinsScreen({ navigation }) {
 										{ color: savedFilter ? COLORS.white : COLORS.secondary },
 									]}
 								>
-									Saved
+									{i18n.t("saved")}
 								</Text>
 							</Animatable.View>
 						</TouchableOpacity>

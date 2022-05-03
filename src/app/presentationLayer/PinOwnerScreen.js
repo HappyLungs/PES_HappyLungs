@@ -8,9 +8,10 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import i18n from "../config/translation";
+
 import ImageCarousel from "./components/ImageCarousel";
 import Modal from "react-native-modal";
-
 import { Rating } from "react-native-ratings";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
@@ -64,10 +65,10 @@ function PinOwnerScreen({ navigation, route }) {
 					<Text
 						style={[styles.modalText, { fontWeight: "bold", fontSize: 16 }]}
 					>
-						Are you sure?
+						{i18n.t("confirmationTitle")}
 					</Text>
 					<Text style={[styles.modalText, { fontSize: 15 }]}>
-						Do you really want to delete this pin? This cannot be undone.
+						{i18n.t("confirmationText")}
 					</Text>
 					<View
 						style={{ flexDirection: "row", justifyContent: "space-evenly" }}
@@ -82,7 +83,7 @@ function PinOwnerScreen({ navigation, route }) {
 								setDeleteConfirmationVisible(!deleteConfirmationVisible)
 							}
 						>
-							<Text style={styles.textStyle}>Cancel</Text>
+							<Text style={styles.textStyle}>{i18n.t("cancel")}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={[
@@ -95,7 +96,7 @@ function PinOwnerScreen({ navigation, route }) {
 								handleDelete();
 							}}
 						>
-							<Text style={styles.textStyle}>Delete</Text>
+							<Text style={styles.textStyle}>{i18n.t("delete")}</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -125,7 +126,7 @@ function PinOwnerScreen({ navigation, route }) {
 				}}
 			>
 				<View style={{ flexDirection: "row", height: 35 }}>
-					<Text style={[styles.title, { width: "65%" }]}>{pin.name}</Text>
+					<Text style={[styles.title, { width: "65%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
 						onPress={() => setDeleteConfirmationVisible(true)}
@@ -148,7 +149,9 @@ function PinOwnerScreen({ navigation, route }) {
 						onPress={handleEdit}
 					>
 						<Feather name="edit" size={24} color={COLORS.white} />
-						<Text style={[styles.textStyle, { marginStart: 5 }]}> Edit</Text>
+						<Text style={[styles.textStyle, { marginStart: 5 }]}>
+							{i18n.t("edit")}
+						</Text>
 					</TouchableOpacity>
 				</View>
 				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
@@ -166,14 +169,14 @@ function PinOwnerScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 					<Text style={[styles.body, { marginStart: 10 }]}>
-						{pin.location.title}
+						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.highlight}>See on map</Text>
+					<Text style={styles.highlight}> {i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -238,7 +241,7 @@ function PinOwnerScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.highlight}>See Statistics</Text>
+						<Text style={styles.highlight}>{i18n.t("seeStatistics")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
 		elevation: 2,
 	},
 	containerBtn: {
-		width: 90,
+		width: 95,
 		padding: 10,
 		borderRadius: 5,
 	},
