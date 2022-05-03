@@ -1,6 +1,7 @@
 const messageDataLayer = require("./../datalayers/message.datalayer.js");
 const conversationDataLayer = require("./../datalayers/conversation.datalayer.js");
 const userDatalayer =  require("./../datalayers/user.datalayer.js");
+const sanitizeHtml = require('sanitize-html');
 
 
 const responseObj = {};
@@ -61,7 +62,7 @@ exports.find = async (request, response) => {
                 responseObj.message = "No record found";
                 responseObj.data    = {};
             }
-            response.send(responseObj);
+            response.send(sanitizeHtml(responseObj));
         })
         .catch(error => {
             responseObj.status  = errorCodes.SYNTAX_ERROR;
