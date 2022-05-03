@@ -5,7 +5,7 @@ const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 
 const User = require('./../models/user.model');
-const loginHelper = require("../helpers/loginHelpers");
+const loginHelpers = require("../helpers/loginHelpers");
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const sendResponse = require("../helpers/sendResponse.helper.js");
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
@@ -92,20 +92,12 @@ exports.login = async (request, response) => {
     }
     const {email, password} = params;
 
-    if (!loginHelper.validateUserInput(email, password)) {
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = "Please check your inputs";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
-    }
-
     const where = {};
     where.email = email;
     UserDataLayer.findUser(where)
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
-            if (!loginHelper.comparePassword(password, userData.password)) {
+            if (!loginHelpers.comparePassword(password, userData.password)) {
                 responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
                 responseObj.message = "Invalid password";
                 responseObj.data    = {};

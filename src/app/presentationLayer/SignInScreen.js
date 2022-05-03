@@ -94,7 +94,7 @@ function SignInScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content"/>
+            <StatusBar backgroundColor='#007f5a' barStyle="light-content"/>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Welcome!</Text>
             </View>
@@ -187,32 +187,32 @@ function SignInScreen({ navigation, route }) {
 
                 </View>
                 <TouchableOpacity>
-                    <Text style={{color: '#009387', marginTop:15}}>Forgot password?</Text>
+                    <Text style={{color: COLORS.green1, marginTop:15}}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
                     <TouchableOpacity
                         onPress={() => loginUser()}
                         style={[styles.signIn, {
-                            borderColor: '#009387',
+                            borderColor: COLORS.green1,
                             borderWidth: 1,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign, {
-                            color: '#009387'
+                            color: COLORS.green1
                         }]}>Sign In</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignUpScreen')}
                         style={[styles.signIn, {
-                            borderColor: '#009387',
+                            borderColor: COLORS.green1,
                             borderWidth: 1,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign, {
-                            color: '#009387'
+                            color: COLORS.green1
                         }]}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: COLORS.green1
     },
     header: {
         flex: 1,

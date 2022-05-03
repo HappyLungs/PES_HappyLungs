@@ -203,7 +203,7 @@ function SignUpScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content"/>
+            <StatusBar backgroundColor='#007f5a' barStyle="light-content"/>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>
@@ -432,26 +432,26 @@ function SignUpScreen({ navigation, route }) {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignInScreen')}
                         style={[styles.signIn, {
-                            borderColor: '#009387',
+                            borderColor: COLORS.green1,
                             borderWidth: 1,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign, {
-                            color: '#009387'
+                            color: COLORS.green1
                         }]}>Sign In</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => {registerUser()}}
                         style={[styles.signIn, {
-                            borderColor: '#009387',
+                            borderColor: COLORS.green1,
                             borderWidth: 1,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign, {
-                            color: '#009387'
+                            color: COLORS.green1
                         }]}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: COLORS.green1
     },
     header: {
         flex: 1,
