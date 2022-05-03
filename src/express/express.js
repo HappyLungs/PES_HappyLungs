@@ -3,8 +3,7 @@ const Joi = require('joi');
 //const date = require('joi/lib/types/date');
 const DataPointMap = require('../app/domainLayer/classes/DataPointMap');
 const app = express();
-const sanitizeHtml = require("sanitize-html")
-
+const sanitizeHtml = require("sanitize-html");
 
 app.use(express.json());
 
@@ -74,7 +73,7 @@ app.post('/api/article', (req,res) => {
         name: req.body.name,
     };
     courses.push(course);
-    res.send(JSON.parse(course));
+    res.send(sanitizeHtml(JSON.parse(course)));
 })
 
 /*
