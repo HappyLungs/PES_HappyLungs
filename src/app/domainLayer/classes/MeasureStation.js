@@ -209,7 +209,7 @@ class MeasureStation {
      */ 
      async getMonthLevel(date) {
         let lastmonth = new Date(date)
-        lastmonth.setDate(lastmonth.getDate() - 30)
+        lastmonth.setDate(lastmonth.getDate() - 29)
         let measures = await dadesObertes.getMeasuresMultipleDays(this.eoiCode, lastmonth, date);
         let dailyLevel = this.calcMultipleDaysLevel(measures);
 
