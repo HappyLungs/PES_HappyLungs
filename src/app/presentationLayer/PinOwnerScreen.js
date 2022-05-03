@@ -278,7 +278,6 @@ const styles = StyleSheet.create({
 		borderColor: COLORS.secondary,
 		borderTopWidth: 2,
 		padding: 15,
-		backgroundColor: COLORS.white,
 	},
 	button: {
 		elevation: 2,
