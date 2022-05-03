@@ -29,7 +29,7 @@ export default class User {
     }
 
     async login () {
-        let res = await persistCtrl.postRequest("/login", {
+        let res = await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
         });

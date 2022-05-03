@@ -270,10 +270,19 @@ DomainCtrl.prototype.registerUser = async function (
  * @param {*} password
  * @returns an acces_token for the user
  */
-DomainCtrl.prototype.loginUser = async function (email, password) {
-  //create
-  let myUser = new User(email, password);
-  return await myUser.login(); //login to db
+
+ DomainCtrl.prototype.loginUser = async function (
+	email,
+	password
+) {
+	//create
+	let myUser = new User(
+		null,
+		email,
+		password,
+		null
+	);
+	return await myUser.login();	//login to db
 };
 
 //Return the conversation with the id parameter.
