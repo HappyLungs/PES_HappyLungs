@@ -21,7 +21,6 @@ import { UserContext } from "./navigation/UserContext";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import Modal from "react-native-modal";
 import i18n from "../config/translation";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
