@@ -455,12 +455,6 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 16,
 	},
-	textOption: {
-		color: COLORS.secondary,
-		fontWeight: "bold",
-		fontSize: 15,
-		marginHorizontal: 10,
-	},
 });
 
 export default SettingsScreen;
