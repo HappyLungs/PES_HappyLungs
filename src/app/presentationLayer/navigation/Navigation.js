@@ -38,7 +38,7 @@ const Stack = createStackNavigator();
 function RootStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="MapScreen"
+			initialRouteName="SignInScreen"
 			screenOptions={{
 				tabBarActiveTintColor: COLORS.green1,
 				tabBarInactiveTintColor: COLORS.secondary,
