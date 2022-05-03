@@ -12,6 +12,7 @@ import {
 
 import COLORS from "../config/stylesheet/colors";
 import NewChatList from "./components/NewChatList";
+import i18n from "../config/translation";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -109,7 +110,7 @@ function GeneralChatScreen({ navigation }) {
 								width={175}
 								value={search}
 								style={[styles.body, { marginStart: 10 }]}
-								placeholder={"Search"}
+								placeholder={i18n.t("search")}
 								onChangeText={(text) => {
 									filterBySearch(text);
 								}}

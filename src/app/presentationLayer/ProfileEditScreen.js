@@ -12,13 +12,11 @@ import * as ImagePicker from "expo-image-picker";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
-
-import { Ionicons } from "@expo/vector-icons";
-
-import Modal from "react-native-modal";
+import i18n from "../config/translation";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -98,7 +96,7 @@ function ProfileEditScreen({ navigation }) {
 	};
 
 	const [byCertificate, setByCertificate] = useState(false);
-	
+
 	const [modalChangePassword, setModalChangePassword] = useState(false);
 
 	function renderModalChangePassword() {
@@ -107,14 +105,14 @@ function ProfileEditScreen({ navigation }) {
 				animationType="fade"
 				transparent={true}
 				visible={modalChangePassword}
-				onRequestClose={() => { 
-					setModalChangePassword(false)
+				onRequestClose={() => {
+					setModalChangePassword(false);
 				}}
 				onBackdropPress={() => {
-					setModalChangePassword(false)
+					setModalChangePassword(false);
 				}}
 			>
-			<View style={styles.centeredView}>
+				<View style={styles.centeredView}>
 					<View
 						style={[
 							styles.modalView,
@@ -132,27 +130,33 @@ function ProfileEditScreen({ navigation }) {
 							}}
 						>
 							<InputField
-								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onChangeText={(newPassword) =>
+									handleOnChange(newPassword, "password")
+								}
 								onFocus={() => handleError(null, "password")}
 								iconName="lock"
 								defaultValue={user.password}
-								label="Actual Password"
+								label={i18n.t("actualPassword")}
 								error={errors.password}
 							/>
 							<InputField
-								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onChangeText={(newPassword) =>
+									handleOnChange(newPassword, "password")
+								}
 								onFocus={() => handleError(null, "password")}
 								iconName="lock"
 								defaultValue={user.password}
-								label="New Password"
+								label={i18n.t("newPassword")}
 								error={errors.password}
 							/>
 							<InputField
-								onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+								onChangeText={(newPassword) =>
+									handleOnChange(newPassword, "password")
+								}
 								onFocus={() => handleError(null, "password")}
 								iconName="lock"
 								defaultValue={user.password}
-								label="Confirm New Password"
+								label={i18n.t("confirmNewPassword")}
 								error={errors.password}
 							/>
 						</View>
@@ -174,7 +178,7 @@ function ProfileEditScreen({ navigation }) {
 								]}
 								onPress={() => setModalChangePassword(false)}
 							>
-								<Text style={styles.containerTxt}>Cancel</Text>
+								<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={[
@@ -184,13 +188,13 @@ function ProfileEditScreen({ navigation }) {
 								]}
 								//onPress={validate}
 							>
-								<Text style={styles.containerTxt}>Accept</Text>
+								<Text style={styles.containerTxt}>{i18n.t("accept")}</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
 			</Modal>
-		)
+		);
 	}
 
 	return (
@@ -225,7 +229,7 @@ function ProfileEditScreen({ navigation }) {
 						onFocus={() => handleError(null, "username")}
 						iconName="person"
 						defaultValue={user.username}
-						label="Username"
+						label={i18n.t("username")}
 						error={errors.username}
 					/>
 					<InputField
@@ -233,15 +237,17 @@ function ProfileEditScreen({ navigation }) {
 						onFocus={() => handleError(null, "email")}
 						iconName="email"
 						defaultValue={user.email}
-						label="Email"
+						label={i18n.t("email")}
 						error={errors.email}
 					/>
 					<InputField
-						onChangeText={(newPassword) => handleOnChange(newPassword, "password")}
+						onChangeText={(newPassword) =>
+							handleOnChange(newPassword, "password")
+						}
 						onFocus={() => handleError(null, "password")}
 						iconName="lock"
 						defaultValue={user.password}
-						label="Password"
+						label={i18n.t("password")}
 						error={errors.password}
 					/>
 				</View>
@@ -270,28 +276,23 @@ function ProfileEditScreen({ navigation }) {
 					/>
 					<TouchableOpacity onPress={pickImage}>
 						<Text style={[styles.textState, { color: COLORS.green1 }]}>
-							Upload
+							{i18n.t("upload")}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-							style={{
-								flexDirection: "row",
-								backgroundColor: COLORS.green1,
-								borderRadius: 90,
-								padding: 7,
-								marginTop: 64,
-								marginStart: -75,
-								alignItems: "center",
-							}}
-							onPress={() => setModalChangePassword(true)}
-						>
-							<MaterialIcons
-								name={"edit"}
-								size={30}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
-
+						style={{
+							flexDirection: "row",
+							backgroundColor: COLORS.green1,
+							borderRadius: 90,
+							padding: 7,
+							marginTop: 64,
+							marginStart: -75,
+							alignItems: "center",
+						}}
+						onPress={() => setModalChangePassword(true)}
+					>
+						<MaterialIcons name={"edit"} size={30} color={COLORS.white} />
+					</TouchableOpacity>
 				</View>
 				{renderModalChangePassword()}
 			</View>
@@ -310,7 +311,9 @@ function ProfileEditScreen({ navigation }) {
 					alignSelf: "center",
 				}}
 			>
-				<Text style={[styles.textOption, { fontSize: 17 }]}>Health State</Text>
+				<Text style={[styles.textOption, { fontSize: 17 }]}>
+					{i18n.t("healthState")}
+				</Text>
 				<View
 					style={{
 						flexDirection: "row",
@@ -330,7 +333,7 @@ function ProfileEditScreen({ navigation }) {
 						>
 							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
 						</TouchableOpacity>
-						<Text style={styles.textState}>Cardiorespiratory problems</Text>
+						<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<TouchableOpacity
@@ -350,7 +353,7 @@ function ProfileEditScreen({ navigation }) {
 								color={COLORS.white}
 							/>
 						</TouchableOpacity>
-						<Text style={styles.textState}>Pregnant</Text>
+						<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<TouchableOpacity
@@ -366,7 +369,7 @@ function ProfileEditScreen({ navigation }) {
 						>
 							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
 						</TouchableOpacity>
-						<Text style={styles.textState}>Elderly</Text>
+						<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
 					</View>
 				</View>
 				<View
@@ -384,7 +387,7 @@ function ProfileEditScreen({ navigation }) {
 						]}
 						onPress={() => navigation.popToTop()}
 					>
-						<Text style={styles.containerTxt}>Cancel</Text>
+						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
@@ -394,7 +397,7 @@ function ProfileEditScreen({ navigation }) {
 						]}
 						onPress={validate}
 					>
-						<Text style={styles.containerTxt}>Update</Text>
+						<Text style={styles.containerTxt}>{i18n.t("update")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -456,7 +459,7 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 	containerBtn2: {
-		width: 85,
+		width: 95,
 		padding: 10,
 		borderRadius: 5,
 	},

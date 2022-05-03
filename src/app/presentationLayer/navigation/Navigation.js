@@ -109,6 +109,74 @@ function RootStack() {
 		</Stack.Navigator>
 	);
 }
+function MapStack() {
+	return (
+		<Stack.Navigator
+			initialRouteName="MapScreen"
+			screenOptions={{
+				tabBarActiveTintColor: COLORS.green1,
+				tabBarInactiveTintColor: COLORS.secondary,
+				tabBarShowLabel: false,
+				headerTintColor: COLORS.secondary,
+				headerTitleAlign: "center",
+				headerTitleStyle: {
+					fontWeight: "bold",
+					fontSize: 27,
+				},
+				headerShown: false,
+			}}
+		>
+			<Stack.Screen
+				name="MapScreen"
+				component={MapScreen}
+				options={{
+					title: "Happy Lungs",
+					headerShown: false,
+				}}
+				initialParams={{ tmpLat: false, tmpLng: false }}
+			/>
+			<Stack.Screen name="Statistics" component={StatisticsScreen} />
+			<Stack.Screen
+				name="CreatePin"
+				component={CreatePinScreen}
+				options={{
+					title: "Create pin",
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="DefaultPin"
+				component={PinDefaultScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="OwnerPin"
+				component={PinOwnerScreen}
+				options={{
+					title: "",
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="EditPinScreen"
+				component={PinEditScreen}
+				options={{
+					title: "Editing pin",
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+		</Stack.Navigator>
+	);
+}
 
 function PinStack() {
 	return (

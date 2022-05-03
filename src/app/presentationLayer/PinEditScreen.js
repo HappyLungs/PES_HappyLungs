@@ -12,6 +12,7 @@ import {
 
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
+import i18n from "../config/translation";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -283,11 +284,7 @@ function PinEditScreen({ navigation, route }) {
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
-					text={
-						status
-							? "This pin will be visible to other people."
-							: "This pin will only be visible to you."
-					}
+					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
 		);
@@ -303,7 +300,9 @@ function PinEditScreen({ navigation, route }) {
 			}}
 		>
 			<View style={{ marginVertical: 20 }}>
-				<Text style={[styles.subtitle, { marginTop: 0 }]}>Location</Text>
+				<Text style={[styles.subtitle, { marginTop: 0 }]}>
+					{i18n.t("location")}
+				</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{locationName}
 				</Text>
@@ -312,7 +311,7 @@ function PinEditScreen({ navigation, route }) {
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
 					defaultValue={pin.title}
-					label="Title"
+					label={i18n.t("title")}
 					error={errors.title}
 				/>
 				<InputField
@@ -320,14 +319,14 @@ function PinEditScreen({ navigation, route }) {
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
 					defaultValue={pin.description}
-					label="Description"
+					label={i18n.t("description")}
 					error={errors.description}
 				/>
-				<Text style={styles.subtitle}> Date</Text>
+				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
 				{renderDateSelector()}
-				<Text style={styles.subtitle}> Pictures</Text>
+				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
 				{renderImageSelector()}
-				<Text style={styles.subtitle}> Rate</Text>
+				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -342,7 +341,7 @@ function PinEditScreen({ navigation, route }) {
 					}}
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
-				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
+				<Text style={styles.subtitle}> {i18n.t("allowOption")}</Text>
 				{renderPinStatusSelector()}
 				<View
 					style={{
@@ -359,7 +358,7 @@ function PinEditScreen({ navigation, route }) {
 						]}
 						onPress={() => navigation.popToTop()}
 					>
-						<Text style={styles.containerTxt}>Cancel</Text>
+						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
@@ -369,7 +368,7 @@ function PinEditScreen({ navigation, route }) {
 						]}
 						onPress={validate}
 					>
-						<Text style={styles.containerTxt}>Save changes</Text>
+						<Text style={styles.containerTxt}>{i18n.t("saveChanges")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -387,7 +386,7 @@ const styles = StyleSheet.create({
 		color: COLORS.secondary,
 	},
 	containerBtn: {
-		width: 120,
+		width: 125,
 		padding: 10,
 		borderRadius: 5,
 	},
