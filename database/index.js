@@ -31,6 +31,8 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // Default Route
 app.use("/v1/", function(req, res, next) {
 req.headers["content-type"];
+res.header("Access-Control-Allow-Origin", "*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     // console.log(contentType);
     next();
 });
