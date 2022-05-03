@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 
-const comparePassword = (password, hashedPassword) => {
+comparePassword = (password, hashedPassword) => {
     return bcrypt.compareSync(password, hashedPassword);
 };
 
-module.exports = loginHelpers;
+module.exports = {comparePassword};
