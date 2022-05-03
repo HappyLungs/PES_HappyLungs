@@ -4,10 +4,7 @@ const mongodb = require("mongodb");
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
 
-const User = require('./../models/user.model');
 const loginHelpers = require("../helpers/loginHelpers");
-const UserDataLayer = require("./../datalayers/user.datalayer");
-const sendResponse = require("../helpers/sendResponse.helper.js");
 
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
