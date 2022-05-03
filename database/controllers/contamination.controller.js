@@ -1,6 +1,5 @@
 const DataPointMap = require("../../src/app/domainLayer/classes/DataPointMap");
-import sanitizeHtml from "sanitize-html";
-
+const sanitizeHtml = require("sanitize-html");
 
 exports.find = async (req, res) => {
     if(isNaN(parseInt(req.params.longitude)))  {
