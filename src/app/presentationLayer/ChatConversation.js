@@ -6,6 +6,7 @@ import {
 	Text,
 	Image,
 	TextInput,
+	Keyboard,
 	KeyboardAvoidingView,
 	Button,
 	TouchableOpacity,
@@ -24,6 +25,7 @@ function ChatScreen({ route, navigation }) {
 	const [messages, setMessages] = useState([]);
 	const [loggedUser, setLoggedUser] = useState([]);
 	const [conversant, setConversantUsers] = useState([]);
+	const [message, setMessage] = useState("");
 
 	useEffect(() => {
 		fetchChats();
@@ -41,6 +43,12 @@ function ChatScreen({ route, navigation }) {
 		setMessages(data.messages);
 	};
 
+	const sendMessage = async () => {
+		alert(message);
+		setMessage('');
+		Keyboard.dismiss();
+
+	}
 
 	function renderHeader() {
 		return (
@@ -115,17 +123,22 @@ function ChatScreen({ route, navigation }) {
 					}}
 				>
 					<TextInput
-						//value={value}
-						//onChangeText={setValue}
-						//onSubmitEditing={() => alert(value)}
+						onChangeText={setMessage}
 						style={styles.messageInput}
+						onSubmitEditing={sendMessage}
+						value={message}
 					/>
-					<MaterialIcons
-						name="send"
-						style={styles.sendIcon}
-						color={COLORS.secondary}
-						size={35}
-					/>
+					<TouchableOpacity
+						onPress={sendMessage}
+						style={{justifyContent:"center"}}
+					>
+						<MaterialIcons
+							name="send"
+							style={styles.sendIcon}
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
 				</View>
   			</KeyboardAvoidingView>
 				
