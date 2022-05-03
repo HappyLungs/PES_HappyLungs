@@ -409,7 +409,7 @@ DomainCtrl.prototype.findUser = async function (email) {
   //create
   let DB_URL = "http://localhost:7000/v1/user?email=" + email;
 
-  let user = await fetch(DB_URL, {
+  return await fetch(DB_URL, {
     headers: {
       Accept: "application/json",
       "Content-Type": " application/json",
@@ -419,12 +419,10 @@ DomainCtrl.prototype.findUser = async function (email) {
   })
       .then((response) => response.json())
       .then((data) => data);
-
-  return user;
-  console.log(user);
+  //console.log(user);
 };
 
-DomainCtrl.prototype.findMessage = async function (id) {
+/*DomainCtrl.prototype.findMessage = async function (id) {
   //create
   let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
 
@@ -438,11 +436,10 @@ DomainCtrl.prototype.findMessage = async function (id) {
   })
       .then((response) => response.json())
       .then((data) => data);
-  console.log(user);
-};
+  //console.log(user);
+};*/
 
 /**
- *
  * @param {*} username
  * @param {*} email
  * @param {*} points
