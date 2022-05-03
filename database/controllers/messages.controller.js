@@ -23,7 +23,7 @@ exports.find = async (request, response) => {
                         }
                     }, {
                         '$sort': {
-                            'createdAt': -1
+                            'createdAt': 1
                         }
                     }
                 ];
