@@ -154,6 +154,12 @@ router.get(
     ConversationController.find
 );
 
+router.post(
+    "/deleteConversation",
+    licenseMiddleware.validate,
+    ConversationController.delete
+);
+
 /*  /Conversation */
 
 /** Contamination */
