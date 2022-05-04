@@ -71,7 +71,7 @@ function GeneralChatScreen({ navigation }) {
 		setSearch(text);
 	};
 
-	function renderChatList (chatsList) {
+	function renderChatList () {
 		const renderItem = ({ item, index }) => (
 			<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
 				<View
@@ -246,7 +246,7 @@ function GeneralChatScreen({ navigation }) {
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{}}
 				scrollEnabled={true}
-				data={chatsList}
+				data={filteredData}
 				keyExtractor={(item) => `${item.name}`}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
@@ -430,9 +430,14 @@ function GeneralChatScreen({ navigation }) {
 										alignItems:"center",
 										margin: 10
 									}]}
-									onPress={() => {
+									onPress={async () => {
+										let ok = await presentationCtrl.deleteConversation(chatDeleted.id);
+										if (ok) {
+											let dataRemoved = filteredData.filter(item => item.id !== chatDeleted.id);
+											setFilteredData(dataRemoved);
+										}
 										setModalDeleteVisible(false);
-										await presentationCtrl.deleteConversation(chatDeleted.id);
+										//else popup d'error
 									}}
 								>
 									<Text style={{color:COLORS.primary,fontWeight:"bold"}}>Yes</Text>
@@ -455,7 +460,7 @@ function GeneralChatScreen({ navigation }) {
 		>
 				{renderHeader()}
 				<View style={[{ flex: 1, marginTop: 10 }]}>
-					{renderChatList(filteredData)}
+					{renderChatList()}
 				</View>
 				{renderDeletePopupDeclare()}
 		</View>

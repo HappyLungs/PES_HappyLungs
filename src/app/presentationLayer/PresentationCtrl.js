@@ -451,10 +451,11 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 PresentationCtrl.prototype.deleteConversation = async function (id) {
 	let result = await this.domainCtrl.deleteConversation(id);
 	if (result != null) {
+		console.log("conversa borrada")
 		return true;
 	} else {
 		//TODO ERROR: Show error message && reload page
-		return null;
+		return false;
 	}
 }
 
