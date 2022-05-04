@@ -7,47 +7,53 @@ const { check, validationResult } = require("express-validator");
 const pinDatalayer = require("./../datalayers/pin.datalayer");
 const userDatalayer = require("../datalayers/user.datalayer");
 
-exports.find = async (request, response) => {
-    console.log(request);
-    let id;
-    if (request.query._id) {
-        id = request.query._id;
-    } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
-    }
-    if (mongodb.ObjectId.isValid(mongodb.ObjectId(id))) {
-        const where = {};
-        where._id = mongodb.ObjectId(id);
-        pinDatalayer.findPin(where)
-        .then((pinData) => {
-            if (pinData !== null && typeof pinData !== undefined) {
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Success";
-                responseObj.data    = pinData;
-            } else {
-                responseObj.status  = errorCodes.DATA_NOT_FOUND;
-                responseObj.message = "No record found";
-                responseObj.data    = {};
-            }
-            response.send(responseObj);
-        })
-        .catch(error => {
-            responseObj.status  = errorCodes.SYNTAX_ERROR;
-            responseObj.message = error;
-            responseObj.data    = {};
-            response.send(responseObj);
-        });
-    } else {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = "Invalid id";
-        responseObj.data    = {};
-        response.send(responseObj);
-    }
+const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
+exports.list = async (request, response) => {
+    let params = {};
+    if (request.query.hasOwnProperty("user")) {
+        //Get user pins (ordered by date)
+        params = request.query;
+        //check if user exists
+        let result = await userDatalayer.findUser({email: params.user}).then();
+        if (result === null || typeof result === "undefined" || result.length === 0) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
+        } else {
+            pinDatalayer.listPins({creatorEmail: params.user})
+            .then((pinData) => {
+                if (pinData !== null && typeof pinData !== "undefined") {
+                    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", pinData);
+                } else {
+                    sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                }
+            })
+            .catch((error) => {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+            });
+        }
+    } else {
+        //Get 50 pins from all users (ordered by score)
+        pinDatalayer.aggregatePins([
+            {
+              '$sort': {
+                rating: -1,
+                date: -1
+              }
+            }, {
+              '$limit': 50
+            }
+          ])
+        .then((pinData) => {
+            if (pinData !== null && typeof pinData !== "undefined") {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", pinData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch((error) => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    }
 };
 
 exports.create = async (request, response) => {
@@ -85,60 +91,43 @@ exports.create = async (request, response) => {
 };
 
 exports.update = async(request, response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        return response.status(errorCodes.REQUIRED_PARAMETER_MISSING).json({
-            status: errorCodes.REQUIRED_PARAMETER_MISSING,
-            message: "Required parameters missing",
-            data: errors.array()
+    let params = {};
+    if (request.body.Pin) {
+        params = request.body.Pin;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (params.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params._id)) {
+        pinDatalayer
+        .findPin({_id: mongodb.ObjectId(params._id)})
+        .then((pinData) => {
+            if (pinData !== null && typeof pinData !== "undefined") {
+                //update params
+                pinDatalayer
+                .updatePin({_id: mongodb.ObjectId(params._id)}, params)
+                .then((result) => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                })
+                .catch((error) => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                })
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
         })
+        .catch((error) => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        })
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.BAD_REQUEST, "Invalid id", {});
     }
-    const body = request.body;
-    let params = null;
-    if (request.params._id) {
-        params = request.params;
-    }
-    pinDatalayer
-    .findPin(params)
-    .then((pinData) => {
-        if (pinData !== null && typeof pinData !== "undefined") {
-            //update params
-            pinDatalayer
-            .updatePin(params, body)
-            .then((result) => {
-                console.log("result: ", result);
-                responseObj.status  = errorCodes.SUCCESS;
-                responseObj.message = "Pin updated successfully";
-                responseObj.data    = result;
-                response.send(responseObj);
-
-            })
-            .catch((error) => {
-                responseObj.status  = errorCodes.SYNTAX_ERROR;
-                responseObj.message = error;
-                responseObj.data    = {};
-                response.send(responseObj);
-
-            })
-        } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
-            response.send(responseObj);
-        }
-    })
-    .catch((error) => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(responseObj);
-    })
 };
 
 exports.delete = (request, response) => {
     let params = {};
-    if (request.params._id) {
-        params = request.params;
+    if (request.body.params._id) {
+        params = request.body.params;
     } else {
         responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
         responseObj.message = "Required parameters missing";
