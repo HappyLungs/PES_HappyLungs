@@ -25,5 +25,5 @@ async function findArticle (where = {}) {
             reject(error)
         })
     })
-};
+}
 export {createArticle, findArticle}
