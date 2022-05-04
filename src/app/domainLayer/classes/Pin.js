@@ -1,6 +1,6 @@
 //const persistenceCtrl = require("./persistenceLayer/PersistanceCtrl");
 //pCtrl = new persistenceCtrl();
-export default class Pin {
+class Pin {
 	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(
 		title,
@@ -140,5 +140,5 @@ export default class Pin {
 	getActualDate() {}
 }
 
-export { Pin };
+module.exports =  Pin;
 //ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
