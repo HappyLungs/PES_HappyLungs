@@ -102,9 +102,9 @@ router.post(
     PinController.create
 );
 router.get(
-    "/pin",
+    "/pins",
     licenseMiddleware.validate,
-    PinController.find
+    PinController.list
 );
 router.put(
     "/pin",
@@ -112,6 +112,12 @@ router.put(
     PinController.validate("updatePin"),
     PinController.update
 );
+router.post(
+    "/deletePin",
+    licenseMiddleware.validate,
+    PinController.delete
+);
+/*  /Pin */
 
 /*  Message */
 
