@@ -6,4 +6,4 @@ let dCtrl = new DomainCtrl();
 
 
 let data = await pCtrl.getPollutionLastDay();
-console.log(data)
+console.log(data);

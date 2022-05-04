@@ -8,7 +8,7 @@ let DadesObertes;
         instance = this;
 
         // initialize any properties of the singleton
-        api_uri = 'https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json'
+        let api_uri = 'https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json'
     };
 }());
 

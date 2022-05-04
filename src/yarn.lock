@@ -7615,11 +7615,14 @@
     "object-assign" "^4.0.1"
     "thenify-all" "^1.0.0"
 
+<<<<<<< HEAD
+=======
 "nan@^2.12.1":
   "integrity" "sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ=="
   "resolved" "https://registry.npmjs.org/nan/-/nan-2.15.0.tgz"
   "version" "2.15.0"
 
+>>>>>>> 0de3c7f6a7256676a1cb2143bc45df2092924bd0
 "nanoid@^3.1.23", "nanoid@^3.3.3":
   "integrity" "sha512-p1sjXuopFs0xg+fPASzQ28agW1oHD7xDsd9Xkf3T15H3c/cifrFHVwrh74PdoklAPi+i7MdRsE47vm2r6JoB+w=="
   "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.3.3.tgz"
@@ -10060,7 +10063,11 @@
     "minimist" "^1.1.1"
     "walker" "~1.0.5"
 
+<<<<<<< HEAD
+"sanitize-html@^2.7.0":
+=======
 "sanitize-html@^2.5.1", "sanitize-html@^2.7.0":
+>>>>>>> 0de3c7f6a7256676a1cb2143bc45df2092924bd0
   "integrity" "sha512-jfQelabOn5voO7FAfnQF7v+jsA6z9zC/O4ec0z3E35XPEtHYJT/OdUziVWlKW4irCr2kXaQAyXTXDHWAibg1tA=="
   "resolved" "https://registry.npmjs.org/sanitize-html/-/sanitize-html-2.7.0.tgz"
   "version" "2.7.0"

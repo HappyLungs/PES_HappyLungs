@@ -35,6 +35,33 @@ exports.findPin = async (where = {}) => {
     })
 };
 
+exports.listPins = async (where = {}) => {
+    return new Promise((resolve, reject) => {
+        PinModel
+        .find(where)
+        .sort({ date: -1 })
+        .then((data) => {
+            resolve(data)
+        }
+        ).catch((error) => {
+            reject(error)
+        })
+    })
+};
+
+exports.aggregatePins = async (aggregateArr) => {
+    return new Promise((resolve, reject) => {
+        PinModel
+        .aggregate(aggregateArr)
+        .then((data) => {
+            resolve(data)
+        }
+        ).catch((error) => {
+            reject(error)
+        })
+    })
+};
+
 exports.deletePin = async (where = {}) => {
     return new Promise((resolve, reject) => {
         PinModel

@@ -3,6 +3,7 @@
 var React = require('/home/julia/UNI/3r/PES_HappyLungs/src/node_modules/react');
 var { Component } = React;
 var ReactNative = require('/home/julia/UNI/3r/PES_HappyLungs/src/node_modules/react-native');
+
 var { AppRegistry } = ReactNative;
 AppRegistry.registerRunnable('main', function(appParameters) {
     AppRegistry.runApplication('happyLungs', appParameters);

@@ -1,6 +1,6 @@
 const DomainCtrl = require("./DomainCtrl");
 
-var dc = new DomainCtrl();
+const dc = new DomainCtrl();
 
 main = async function () {
 
