@@ -22,6 +22,35 @@ exports.find = async (request, response) => {
                 users: request.query.email
               }
             }, {
+              '$project': {
+                'users': 1, 
+                'deleted': 1, 
+                'index': {
+                  '$indexOfArray': [
+                    '$users', 'example1@gmail.com'
+                  ]
+                }
+              }
+            }, {
+              '$project': {
+                'users': 1, 
+                'deleted': 1, 
+                'deletedByUser': {
+                  '$arrayElemAt': [
+                    '$deleted', '$index'
+                  ]
+                }
+              }
+            }, {
+              '$match': {
+                'deletedByUser': false
+              }
+            }, {
+              '$project': {
+                'users': 1, 
+                'deleted': 1
+              }
+            }, {
               '$sort': {
                 'createdAt': -1
               }
