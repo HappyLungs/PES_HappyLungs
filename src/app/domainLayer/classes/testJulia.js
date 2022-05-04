@@ -1,6 +1,6 @@
 const MeasureStation = require("./MeasureStation");
-const DomainCtrl = require("../DomainCtrl")
-const dCtrl = new DomainCtrl();
+//const DomainCtrl = require("../DomainCtrl")
+//const dCtrl = new DomainCtrl();
 
 
 
@@ -18,7 +18,7 @@ const start = async function() {
    //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
 
    const ms = new MeasureStation("08102005");
-   let x = await ms.getYearLevel(new Date());
+   let x = ms.getYearLevel(new Date());
 
    console.log(x);
 }

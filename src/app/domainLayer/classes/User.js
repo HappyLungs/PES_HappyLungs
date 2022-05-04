@@ -18,22 +18,20 @@ class User {
     }
 
     async register (confirmPassword) {
-        let res = await persistCtrl.postRequest("/register", {
+        return await persistCtrl.postRequest("/register", {
             "name": this.name,
             "email": this.email,
             "password": this.password,
             "confirmPassword": confirmPassword,
             "birthdate": this.birthdate
         });
-        return res;
     }
 
     async login () {
-        let res = await persistCtrl.getRequest("/login", {
+        return await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
         });
-        return res;
     }
 
 }

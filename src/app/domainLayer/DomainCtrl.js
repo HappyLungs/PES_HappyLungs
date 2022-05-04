@@ -219,6 +219,7 @@ DomainCtrl.prototype.createPin = async function (
   }
 };
 
+
 /**
  *
  * @param {*} name
@@ -319,7 +320,7 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
           message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
           message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         })
-        if (dbMessages.status == 200) {
+        if (dbMessages.status === 200) {
           return { users:  users, messages: dbMessages.data };
         } else {
           //TODO handle error
@@ -351,12 +352,8 @@ DomainCtrl.prototype.fetchConversations = async function () {
   let conversations = await persistenceCtrl.getRequest("/conversation", {email: "ivan.jimeno@estudiantat.upc.edu"/** TODO: Pass the logged user email */});
   if (conversations.status === 200) {
     for (const current_conver of conversations.data) {
-        // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
-        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
+        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] === "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
         if (conversant.status === 200) {
-          //let index_lastMessage = 0;
-          //if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
-          //const lastMessage = await this.findMessage(current_conver.messages[index_lastMessage])
           const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
           if (lastMessage.status === 200) {
             if (Array.isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
@@ -400,12 +397,35 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
       fetchedNewConversations.push({
         id: user._id,
         name: user.name,
-        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
+        profileImage: (user.profilePicture !== undefined && user.profilePicture !== "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
       })
     });
     return fetchedNewConversations;
   } else {
     //TODO handle error. Return an error and reload the view with the error
+    return null;
+  }
+};
+
+DomainCtrl.prototype.createConversation = async function (email) {
+  let users = [
+    "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */, email
+  ];
+  const conversation = await persistenceCtrl.postRequest("/conversation", {users: users});
+  if (conversation.status === 200) {
+    return conversation.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+};
+
+DomainCtrl.prototype.deleteConversation = async function (id) {
+  const conversation = await persistenceCtrl.postRequest("/deleteConversation", {id: id, user: "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */});
+  if (conversation.status === 200) {
+    return conversation.data;
+  } else {
+    //TODO handle error
     return null;
   }
 };
@@ -419,54 +439,6 @@ DomainCtrl.prototype.createMessage = async function (conversation, text) {
     return null;
   }
 }
-
-DomainCtrl.prototype.createConversation = async function (email) {
-  let users = [
-    "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */, email
-  ];
-  const conversation = await persistenceCtrl.postRequest("/conversation", {users: users});
-  if (conversation.status === 200) {
-    return conversation.data;
-  } else {
-    //TODO handle error
-    return null;
-  }
-}
-
-
-DomainCtrl.prototype.findUser = async function (email) {
-  //create
-  let DB_URL = "http://localhost:7000/v1/user?email=" + email;
-
-  return await fetch(DB_URL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": " application/json",
-      "X-Api-Key":
-          "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-    },
-  })
-      .then((response) => response.json())
-      .then((data) => data);
-  //console.log(user);
-};
-
-/*DomainCtrl.prototype.findMessage = async function (id) {
-  //create
-  let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
-
-  return await fetch(DB_URL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": " application/json",
-      "X-Api-Key":
-          "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-    },
-  })
-      .then((response) => response.json())
-      .then((data) => data);
-  //console.log(user);
-};*/
 
 /**
  * @param {*} username
