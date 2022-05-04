@@ -407,13 +407,18 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
   }
 };
 
-DomainCtrl.prototype.createConversation = async function (email) {
+DomainCtrl.prototype.createConversation = async function (email, text) {
   let users = [
-    "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */, email
+    "ivan.jimeno@estudiantat.upc.edu",
+    email
   ];
-  const conversation = await persistenceCtrl.postRequest("/conversation", {users: users});
-  if (conversation.status === 200) {
-    return conversation.data;
+  let messages = await persistenceCtrl.postRequest("/conversation", {users: users, message: text});
+  if (messages.status === 200) {
+        message = messages.data;
+        let date = new Date(message.createdAt);
+        message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
+        message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+    return message;
   } else {
     //TODO handle error
     return null;

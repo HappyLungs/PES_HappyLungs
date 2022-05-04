@@ -448,6 +448,16 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	return {users: users, messages: fakeConver}; */
 };
 
+PresentationCtrl.prototype.createConversation = async function (email, text) {
+	let result = await this.domainCtrl.createConversation(email, text);
+	if (result != null) {
+		return result;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+}
+
 PresentationCtrl.prototype.deleteConversation = async function (id) {
 	let result = await this.domainCtrl.deleteConversation(id);
 	if (result != null) {

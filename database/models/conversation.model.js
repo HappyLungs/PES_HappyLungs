@@ -11,7 +11,7 @@ const ConverSchema = new global.Schema({
     }],
     deleted: [{
         type: Boolean,
-        default: false
+        default: [false, false]
     }]
 }, {
     timestamps: true
