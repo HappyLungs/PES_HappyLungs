@@ -420,6 +420,54 @@ DomainCtrl.prototype.createMessage = async function (conversation, text) {
   }
 }
 
+DomainCtrl.prototype.createConversation = async function (email) {
+  let users = [
+    "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */, email
+  ];
+  const conversation = await persistenceCtrl.postRequest("/conversation", {users: users});
+  if (conversation.status === 200) {
+    return conversation.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+}
+
+
+DomainCtrl.prototype.findUser = async function (email) {
+  //create
+  let DB_URL = "http://localhost:7000/v1/user?email=" + email;
+
+  return await fetch(DB_URL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": " application/json",
+      "X-Api-Key":
+          "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+    },
+  })
+      .then((response) => response.json())
+      .then((data) => data);
+  //console.log(user);
+};
+
+/*DomainCtrl.prototype.findMessage = async function (id) {
+  //create
+  let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
+
+  return await fetch(DB_URL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": " application/json",
+      "X-Api-Key":
+          "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+    },
+  })
+      .then((response) => response.json())
+      .then((data) => data);
+  //console.log(user);
+};*/
+
 /**
  * @param {*} username
  * @param {*} email
