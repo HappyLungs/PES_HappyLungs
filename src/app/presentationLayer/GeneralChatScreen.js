@@ -34,6 +34,7 @@ function GeneralChatScreen({ navigation }) {
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
 	const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+	const [chatDeleted, setChatDeleted] = useState({id:"", name:"unin"});
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
 
@@ -222,6 +223,7 @@ function GeneralChatScreen({ navigation }) {
 							>
 								<TouchableOpacity
 									onPress={() => {
+										setChatDeleted({id:item.id,name:item.name})
 										setModalDeleteVisible(true);
 									}}
 								>
@@ -385,7 +387,7 @@ function GeneralChatScreen({ navigation }) {
 				<View style={styles.centeredView}>
 					<View style={[styles.modalView, styles.shadow, {flexDirection:"column"}]}>
 						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
-							Are you sure you want to delete the chat with X?
+							Are you sure you want to delete the chat with {chatDeleted.name}?
 						</Text>
 						<View 
 							style={{
@@ -430,6 +432,7 @@ function GeneralChatScreen({ navigation }) {
 									}]}
 									onPress={() => {
 										setModalDeleteVisible(false);
+										await presentationCtrl.deleteConversation(chatDeleted.id);
 									}}
 								>
 									<Text style={{color:COLORS.primary,fontWeight:"bold"}}>Yes</Text>
