@@ -85,69 +85,84 @@ exports.create = async (request, response) => {
     if (request.body.params) {
         params = request.body.params;
     } else {
-        responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
-        responseObj.message = "Required parameters missing";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
     }
          /* Check if users of the body exists */
-    request.body.params.users.forEach(async email => {
+    for (user of params.users) {
         const where = {};
-        where.email = email;
+        where.email = user;
         let result = await userDatalayer.findUser(where).then();
-        if(result != null) console.log("Usuario encontrado");
-        else {
-            console.log("Usuario no encontrado");
-            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-            responseObj.message = `User ${email} doesn't exist`;
-            responseObj.data    = {};
-            response.send(responseObj);
-            return;    
+        if (result == undefined || result == null || result.length == 0) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
+            return;
         }
-    });
-       /* Check if messages of the body exists */
-
-    request.body.params.messages.forEach(async message => {
-        const where = {};
-        where._id = mongodb.ObjectId(message);
-        let result = await messageDataLayer.findMessage(where).then();
-        if(result != null) console.log("Mensaje encontrado");
-        else {
-            console.log("Mensaje no encontrado");
-            responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-            responseObj.message = `Message ${message} doesn't exist`;
-            responseObj.data    = {};
-            response.send(responseObj);
-            return;    
-        }
-    });
-    
-          /* Create the conversation */
+    }
+    /* Create the conversation */
     conversationDataLayer.createConversation(params)
     .then((conversationData) => {
-        console.log(conversationData);
         if (conversationData !== null && typeof conversationData !== undefined) {
-            responseObj.status  = errorCodes.SUCCESS;
-            responseObj.message = "Success";
-            responseObj.data    = conversationData;
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Sucess", conversationData);
         } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Bad req", {});
         }
         response.send(responseObj);
     })
     .catch(error => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
 
 };
 
-function aggregateArray(match, group, sort) {
+exports.delete = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+    }
+
+    let result = await conversationDataLayer.findConversation( {_id: params.id} ).then();
+    if (result == null || result == undefined || result.length == 0) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "The conversation does not exist", {});
+        return;
+    }
+
+    //get the position from the user in the users array
+    let index = result.users.indexOf(params.user);
+    if (!result.deleted[index] && result.deleted[1-index]) {
+      //The conversation have been deleted for both of the users. Delete conversation
+       conversationDataLayer.deleteConversation({_id: params.id})
+       .then((conversationData) => {
+         if (conversationData != null && conversationData != undefined && conversationData.length != 0) {
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Sucess", conversationData);
+         } else {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Bad req", {});
+         }
+       })
+       .catch(error => {
+          sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+       })
+    } else if (!result.deleted[index] && !result.deleted[1-index]) {
+      //Update param deleted from the user
+      result.deleted[index] = true;
+      conversationDataLayer.updateConversation({_id: params.id}, result)
+      .then((conversationData) => {
+        if (conversationData != null && conversationData != undefined && conversationData.length != 0) {
+          sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Sucess", conversationData);
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Bad req", {});
+        }
+      })
+      .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+      });
+    } else {
+      //Nothing to be done, return
+      sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "Nothing to be done", {});
+    }
+}
+
+function aggregateArray(match, group, sort) {   //TODO Generate aggregate array to get all messages related to the conversation
     return [
         {
             $match: match

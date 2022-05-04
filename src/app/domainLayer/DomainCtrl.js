@@ -405,6 +405,33 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
   }
 };
 
+<<<<<<< Updated upstream
+=======
+DomainCtrl.prototype.createMessage = async function (conversation, text) {
+  const message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: "ivan.jimeno@estudiantat.upc.edu" /*TODO Pass the logged user email */, text: text});
+  if (message.status === 200) {
+    return message.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+}
+
+DomainCtrl.prototype.createConversation = async function (email) {
+  let users = [
+    "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */, email
+  ];
+  const conversation = await persistenceCtrl.postRequest("/conversation", {users: users});
+  if (conversation.status === 200) {
+    return conversation.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+}
+
+
+>>>>>>> Stashed changes
 DomainCtrl.prototype.findUser = async function (email) {
   //create
   let DB_URL = "http://localhost:7000/v1/user?email=" + email;
