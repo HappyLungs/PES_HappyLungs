@@ -15,18 +15,18 @@
 
     <script type="text/javascript">
       // Client ID and API key from the Developer Console
-      var CLIENT_ID = '<YOUR_CLIENT_ID>';
-      var API_KEY = '<YOUR_API_KEY>';
+      let CLIENT_ID = '<YOUR_CLIENT_ID>';
+      let API_KEY = '<YOUR_API_KEY>';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
-      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+      let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+      let SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
-      var authorizeButton = document.getElementById('authorize_button');
-      var signoutButton = document.getElementById('signout_button');
+      let authorizeButton = document.getElementById('authorize_button');
+      let signoutButton = document.getElementById('signout_button');
 
       /**
        *  On load, called to load the auth2 library and API client library.
@@ -94,8 +94,8 @@
        * @param {string} message Text to be placed in pre element.
        */
       function appendPre(message) {
-        var pre = document.getElementById('content');
-        var textContent = document.createTextNode(message + '\n');
+        let pre = document.getElementById('content');
+        let textContent = document.createTextNode(message + '\n');
         pre.appendChild(textContent);
       }
 
@@ -113,13 +113,13 @@
           'maxResults': 10,
           'orderBy': 'startTime'
         }).then(function(response) {
-          var events = response.result.items;
+          let events = response.result.items;
           appendPre('Upcoming events:');
 
           if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-              var event = events[i];
-              var when = event.start.dateTime;
+            for (let i = 0; i < events.length; i++) {
+              let event = events[i];
+              let when = event.start.dateTime;
               if (!when) {
                 when = event.start.date;
               }

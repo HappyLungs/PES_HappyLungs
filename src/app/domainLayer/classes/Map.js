@@ -1,8 +1,8 @@
 class Map {
     title
 
-    constructor (nameeeeee) {
-        this.titleeeddddde = name;
+    constructor (name) {
+        this.title = name;
     }
 
     //Getters

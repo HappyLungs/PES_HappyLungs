@@ -67,7 +67,7 @@ class MeasureStation {
         measures.forEach( measure => {
             let pollutant = measure.contaminant;
             if (availablePollutants.includes(pollutant)) {
-                let quantity = this.calcHourQuantity(measure, this.hour2JsonHour(hour));
+                let quantity = this.calcHourQuantity(measure, parseInt( this.hour2JsonHour(hour)));// he hecho un parse int ya que la funcion pide un int no un string @author arnausempau
                 calculatorData.set(pollutant,quantity);
             }
             
@@ -129,7 +129,7 @@ class MeasureStation {
      */
     async getHourLevel(date, hour) {
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
-        return calcHourLevel(measures, hour)
+        return this.calcHourLevel(measures, hour)
     }
 
     /**
@@ -247,7 +247,7 @@ class MeasureStation {
         let measuresByMonth = new Map();
         measures.forEach(measure => {
             let measureDate = new Date(measure.data);
-            let auxMonth = (parseInt(measureDate.getMonth())<9 ? "0"+(parseInt(measureDate.getMonth())+1).toString() : (parseInt(measureDate.getMonth())+1).toString());
+            let auxMonth = (measureDate.getMonth()<9 ? "0"+(measureDate.getMonth()+1).toString() : (measureDate.getMonth()+1).toString());//he suprimido los parse ints ya que retorna un int ya la funcion getMonth @author arnau sempau
             let month = measureDate.getFullYear().toString()+auxMonth;
             if (! measuresByMonth.has(month)) measuresByMonth.set(month, [measure]);
             else {
@@ -366,7 +366,7 @@ class MeasureStation {
         const dLat = this.toRad(lat2 - lat1);
         const dLon = this.toRad(lon2 - lon1);
         lat1 = this.toRad(lat1);
-        var lat2 = this.toRad(lat2);
+        lat2 = this.toRad(lat2);
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -388,7 +388,7 @@ class MeasureStation {
     /*
         Returns the contamination level on this MeasureStation at the hour "hour" on the day date
     */
-    async getHourLevel(date, hour) {
+    async getHourLevelversion2(date, hour) {//he cambiado el nombre ya que esta funcion ya existia mas arriba @author arnausempau
         //Some stuff - Revisar Alex
         let data = new Map();
         let jsonHour = null;
