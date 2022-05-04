@@ -448,8 +448,8 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	return {users: users, messages: fakeConver}; */
 };
 
-PresentationCtrl.prototype.deleteConversation = async function (id, user) {
-	let result = await this.domainCtrl.deleteConversation(id, user);
+PresentationCtrl.prototype.deleteConversation = async function (id) {
+	let result = await this.domainCtrl.deleteConversation(id);
 	if (result != null) {
 		return true;
 	} else {

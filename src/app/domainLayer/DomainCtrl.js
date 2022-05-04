@@ -420,8 +420,8 @@ DomainCtrl.prototype.createConversation = async function (email) {
   }
 };
 
-DomainCtrl.prototype.deleteConversation = async function (id, user) {
-  const conversation = await persistenceCtrl.postRequest("/deleteConversation", {id: id, user: user});
+DomainCtrl.prototype.deleteConversation = async function (id) {
+  const conversation = await persistenceCtrl.postRequest("/deleteConversation", {id: id, user: "ivan.jimeno@estudiantat.upc.edu" /** TODO pass the logged user email */});
   if (conversation.status === 200) {
     return conversation.data;
   } else {
