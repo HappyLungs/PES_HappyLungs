@@ -34,7 +34,11 @@ const UsersSchema = new global.Schema({
         enum: ["Pregnant", "Old People", "Respiratory disease", "None"],
         default: "None"
     },
-    profilePicture: String
+    profilePicture: String,
+    savedPins: [{
+        type: global.Schema.Types.ObjectId,
+        ref: "Pins"
+    }],
 }, {
     timestamps: true
 });

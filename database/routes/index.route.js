@@ -47,6 +47,12 @@ router.put(
     UserController.changePassword
 );
 
+router.put(
+    "/savePin",
+    licenseMiddleware.validate,
+    UserController.savePin
+);
+
 router.post(
     "/deleteUser",
     licenseMiddleware.validate,
@@ -117,6 +123,7 @@ router.post(
     licenseMiddleware.validate,
     PinController.delete
 );
+
 /*  /Pin */
 
 /*  Message */
