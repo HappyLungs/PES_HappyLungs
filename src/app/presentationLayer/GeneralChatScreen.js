@@ -8,6 +8,8 @@ import {
 	TouchableOpacity,
 	ScrollView,
 	FlatList,
+	Image,
+	Dimensions
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
@@ -16,7 +18,13 @@ import i18n from "../config/translation";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
+
+
+
+
+
 
 function GeneralChatScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -24,17 +32,9 @@ function GeneralChatScreen({ navigation }) {
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
-	const [auxiliarFilterData2, setAuxiliarFilterData2] = useState([]);
+	const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
 	const [search, setSearch] = useState("");
-	const [dateFilter, setDateFilter] = useState(true);
-	const [ratingFilter, setRatingFilter] = useState(false);
-	const [createdFilter, setCreatedFilter] = useState(false);
-	const [savedFilter, setSavedFilter] = useState(false);
-
 	const AnimationRefFilter1 = useRef(null);
-	const AnimationRefFilter2 = useRef(null);
-	const AnimationRefFilter3 = useRef(null);
-	const AnimationRefFilter4 = useRef(null);
 
 	useEffect(() => {
 		fetchChats();
@@ -68,6 +68,8 @@ function GeneralChatScreen({ navigation }) {
 		}
 		setSearch(text);
 	};
+
+	
 
 	function renderHeader() {
 		return (
@@ -186,6 +188,8 @@ function GeneralChatScreen({ navigation }) {
 		);
 	}
 
+	
+
 	return (
 		<View
 			style={{
@@ -196,7 +200,7 @@ function GeneralChatScreen({ navigation }) {
 		>
 			{renderHeader()}
 			<View style={[{ flex: 1, marginTop: 10 }]}>
-				<ChatList chatsList={filteredData} navigation={navigation}></ChatList>
+				{renderChatList(filteredData)}
 			</View>
 		</View>
 	);
@@ -210,6 +214,18 @@ const styles = StyleSheet.create({
 	containerTxt: {
 		fontSize: 13,
 		fontWeight: "bold",
+	},
+	chatName: {
+		textAlign: "center",
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.secondary,
+	},
+	chatLastMessage: {
+		fontSize: 13,
+		alignSelf: "flex-start",
+		color: COLORS.darkGrey,
+		marginHorizontal: 5,
 	},
 	shadow: {
 		shadowColor: COLORS.black,
