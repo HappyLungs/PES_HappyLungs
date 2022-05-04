@@ -115,12 +115,14 @@ exports.create = async (request, response) => {
         params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
     }
          /* Check if users of the body exists */
     for (user of params.users) {
         const where = {};
         where.email = user;
         let result = await userDatalayer.findUser(where).then();
+
         if (result == undefined || result == null || result.length == 0) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
             return;
@@ -129,32 +131,16 @@ exports.create = async (request, response) => {
     /* Create the conversation */
     conversationDataLayer.createConversation({users: params.users, deleted: [false, false]})
     .then((conversationData) => {
-        console.log("Conversation created", conversationData);
         if (conversationData !== null && typeof conversationData !== undefined) {
-            //create the message related to the conversation. The first user is the sender
-            let message = {
-                text: params.message,
-                user: params.users[0],
-                conversation: conversationData._id
-            };
-            messageDataLayer.createMessage(message)
-            .then((messageData) => {
-                if (messageData !== null && typeof messageData !== undefined) {
-                    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", messageData);
-                } else {
-                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Error while creating message", {});
-                }
-            })
-            .catch(error => {
-                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-            });
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Sucess", conversationData);
         } else {
-            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Error while creating conversation", {});
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Bad req", {});
         }
     })
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
+
 };
 
 exports.delete = async (request, response) => {
