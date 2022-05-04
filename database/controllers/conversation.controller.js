@@ -92,6 +92,7 @@ exports.create = async (request, response) => {
         const where = {};
         where.email = user;
         let result = await userDatalayer.findUser(where).then();
+
         if (result == undefined || result == null || result.length == 0) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
             return;

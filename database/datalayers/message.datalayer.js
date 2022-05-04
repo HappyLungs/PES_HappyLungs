@@ -1,7 +1,6 @@
 const MessageModel = require('./../models/message.model');
 
 exports.createMessage = async (params) => {
-    console.log("Pàramos: " +  params)
     return new Promise((resolve, reject) => {
         MessageModel
         .create(params)

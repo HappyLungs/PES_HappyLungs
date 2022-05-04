@@ -13,7 +13,7 @@ const UsersSchema = new global.Schema({
         required: [true, "Please provide an email"],
         unique: true,
         match:[
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
             "Please provide a valid email"
         ]
     },

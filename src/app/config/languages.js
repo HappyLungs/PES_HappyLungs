@@ -192,7 +192,6 @@ const es = {
 	allowOption1: "Este pin será visible al resto de usuarios.",
 	allowOption2: "Este pin solo lo podrás ver tú.",
 	saveChanges: "Guardar cambios",
-	seeOnMap: "Ver en el mapa",
 	confirmationTitle: "¿Estás seguro?",
 	confirmationText:
 		"¿De verdad quieres eliminar este pin? Esta acción es irreversible.",

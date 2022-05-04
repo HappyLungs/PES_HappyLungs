@@ -41,7 +41,7 @@ const ChatList = ({ chatsList, navigation }) => {
 									alignItems: "center",
 								}}
 								onPress={() => {
-									navigation.navigate("ChatConversation");
+									navigation.navigate("ChatConversation", {id: item.id});
 								}}
 							>
 								<Image

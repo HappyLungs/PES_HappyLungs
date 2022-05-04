@@ -17,7 +17,6 @@ import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 
-import Modal from "react-native-modal";
 import { UserContext } from "./navigation/UserContext";
 import i18n from "../config/translation";
 

@@ -49,10 +49,10 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 				<View
 					style={[
 						{
-							backgroundColor: item.user===loggedUser.id ? COLORS.white : COLORS.green3,
+							backgroundColor: item.user===loggedUser.email ? COLORS.green3 : COLORS.white,
 							borderRadius: 30,
-							marginRight: item.user===loggedUser.id ? 50 : 20,
-							marginLeft: item.user===loggedUser.id ? 20 : 50,
+							marginRight: item.user===loggedUser.email ? 20 : 50,
+							marginLeft: item.user===loggedUser.email ? 50 : 20,
 							marginTop: 4,
 							marginBottom: 4
 						},
@@ -60,7 +60,7 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 				>
 					
 					<View style={{ flexDirection: "row" }}>
-						{item.user===loggedUser.id ? 
+						{item.user===loggedUser.email ?  <View></View> :
 						<View
 							style={{
 								paddingLeft: 10,
@@ -75,7 +75,7 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 									size={25}
 								/>
 							</TouchableOpacity>
-						</View> : <View></View>}
+						</View>}
 						<View 
 							style={{
 								flexDirection: "row",
@@ -83,7 +83,7 @@ const ChatMessagesList = ({ loggedUser, conversant, messagesList, navigation }) 
 								paddingTop: 6,
 								paddingRight: 7,
 								paddingBottom: 8,
-								paddingLeft: item.user===loggedUser.id ? 2 : 9,
+								paddingLeft: item.user===loggedUser.email ? 9 : 2,
 							}}
 						>
 							<View>

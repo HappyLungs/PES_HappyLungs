@@ -77,7 +77,7 @@ exports.create = async (request, response) => {
         response.send(responseObj);
         return;
     }
-    measureStation.createmeasureStation(params)
+    measureStation.createMeasureStation(params)
     .then((measureStationData) => {
         console.log(measureStationData);
         if (measureStationData !== null && typeof measureStationData !== undefined) {

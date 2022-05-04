@@ -24,6 +24,6 @@ async function findComment (where = {}) {
             reject(error)
         })
     })
-};
+}
 
 export {createComment, findComment}
