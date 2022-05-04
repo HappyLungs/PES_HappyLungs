@@ -6,6 +6,7 @@ import {
 	Text,
 	Image,
 	TextInput,
+	Keyboard,
 	KeyboardAvoidingView,
 	Button,
 	TouchableOpacity,
@@ -17,12 +18,13 @@ const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 
-function ChatScreen({ navigation }) {
+function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const [messages, setMessages] = useState([]);
 	const [loggedUser, setLoggedUser] = useState([]);
 	const [conversant, setConversantUsers] = useState([]);
+	const [message, setMessage] = useState("");
 
 	useEffect(() => {
 		fetchChats();
@@ -32,13 +34,20 @@ function ChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
-		const data = await presentationCtrl.fetchConversation("2");
+		const id = route.params.id;
+		const data = await presentationCtrl.fetchConversation(id);
         
 		setLoggedUser(data.users.logged);
 		setConversantUsers(data.users.conversant);
 		setMessages(data.messages);
 	};
 
+	const sendMessage = async () => {
+		await presentationCtrl.createMessage(route.params.id, message);
+		setMessage('');
+		Keyboard.dismiss();
+
+	}
 
 	function renderHeader() {
 		return (
@@ -113,17 +122,22 @@ function ChatScreen({ navigation }) {
 					}}
 				>
 					<TextInput
-						//value={value}
-						//onChangeText={setValue}
-						//onSubmitEditing={() => alert(value)}
+						onChangeText={setMessage}
 						style={styles.messageInput}
+						onSubmitEditing={sendMessage}
+						value={message}
 					/>
-					<MaterialIcons
-						name="send"
-						style={styles.sendIcon}
-						color={COLORS.secondary}
-						size={35}
-					/>
+					<TouchableOpacity
+						onPress={sendMessage}
+						style={{justifyContent:"center"}}
+					>
+						<MaterialIcons
+							name="send"
+							style={styles.sendIcon}
+							color={COLORS.secondary}
+							size={35}
+						/>
+					</TouchableOpacity>
 				</View>
   			</KeyboardAvoidingView>
 				
