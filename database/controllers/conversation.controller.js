@@ -115,6 +115,7 @@ exports.create = async (request, response) => {
         params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
     }
          /* Check if users of the body exists */
     for (user of params.users) {

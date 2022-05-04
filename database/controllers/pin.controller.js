@@ -22,7 +22,42 @@ exports.list = async (request, response) => {
             pinDatalayer.listPins({creatorEmail: params.user})
             .then((pinData) => {
                 if (pinData !== null && typeof pinData !== "undefined") {
-                    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", pinData);
+                    //get pins saved by the user
+                    userDatalayer.aggregateUser(
+                        [
+                            {
+                              '$match': {
+                                'email': params.user
+                              }
+                            }, {
+                              '$lookup': {
+                                'from': 'pins', 
+                                'localField': 'savedPins', 
+                                'foreignField': '_id', 
+                                'as': 'savedPins'
+                              }
+                            }, {
+                              '$project': {
+                                'savedPins': 1, 
+                                '_id': 0
+                              }
+                            }
+                          ]
+                    )
+                    .then((userPins) => {
+                        if (userPins !== null && typeof userPins !== "undefined") {
+                            let result = {};
+                            result.pins = pinData;
+                            result.savedPins = userPins[0].savedPins;
+                            console.log("result: ", result);
+                            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                        } else {
+                            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
+                        }
+                    })
+                    .catch((error) => {
+                        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                    });
                 } else {
                     sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                 }
