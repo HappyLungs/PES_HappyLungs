@@ -14,9 +14,9 @@ export default class Article extends BaseClass {
 
   //Getters
 
-  get articleID() {
+ /* get articleID() {
     return this.id;
-  }
+  }*/
 
   get user() {
     return this.userID;

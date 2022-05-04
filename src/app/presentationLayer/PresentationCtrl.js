@@ -107,7 +107,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @param {*} rating
  * @param {*} status
  * @returns the created pin
- * 
+ *
  */
 PresentationCtrl.prototype.createPin = function (
 	title,
@@ -166,7 +166,7 @@ PresentationCtrl.prototype.editPin = function (
  * @param {*} birthdate
  * @returns message if error
  */
- PresentationCtrl.prototype.registerUser = async function (
+PresentationCtrl.prototype.registerUser = async function (
 	name,
 	email,
 	password,
@@ -174,15 +174,19 @@ PresentationCtrl.prototype.editPin = function (
 	birthdate
 ) {
 	if (name && email && password && confirmPassword && birthdate) {
-		return await this.domainCtrl.registerUser(
-			name,
-			email,
-			password,
-			confirmPassword,
-			birthdate
-		);
+		if (password.length > 5) {
+			return await this.domainCtrl.registerUser(
+				name,
+				email,
+				password,
+				confirmPassword,
+				birthdate
+			);
+		} else {
+			return {"data": {}, "message": "Your password is too short, use at least 6 characters.", "status": 502};
+		}
 	} else {
-		return {"data": {}, "message": "Required parameters missing", "status": 422};
+		return { data: {}, message: "Required parameters missing", status: 422 };
 	}
 };
 
@@ -192,17 +196,11 @@ PresentationCtrl.prototype.editPin = function (
  * @param {*} password
  * @returns an acces_token for the user
  */
- PresentationCtrl.prototype.loginUser = async function (
-	email,
-	password
-) {
+PresentationCtrl.prototype.loginUser = async function (email, password) {
 	if (email && password) {
-		return await this.domainCtrl.loginUser(
-			email,
-			password
-		);
+		return await this.domainCtrl.loginUser(email, password);
 	} else {
-		return {"data": {}, "message": "Required parameters missing", "status": 422};
+		return { data: {}, message: "Required parameters missing", status: 422 };
 	}
 };
 
@@ -236,12 +234,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 	const fakePins = [
 		new Pin(
 			"FIB UPC",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title:
-					"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			[
 				"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
@@ -253,11 +248,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 		),
 		new Pin(
 			"PALAU REIAL",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title: "Av. Diagonal, 686, 08034 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"Av. Diagonal, 686, 08034 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			[
 				"https://www.bcncatfilmcommission.com/sites/default/files/styles/fancybox/public/locations/Districte%20(3).jpg",
@@ -268,11 +261,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 		),
 		new Pin(
 			"CAMP NOU",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"C. d'Arístides Maillol, 12, 08028 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
 			4,
@@ -281,11 +272,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 		),
 		new Pin(
 			"CAMP NOUu",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"C. d'Arístides Maillol, 12, 08028 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
 			5,
@@ -294,11 +283,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 		),
 		new Pin(
 			"CAMP NOUuu",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"C. d'Arístides Maillol, 12, 08028 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
 			2,
@@ -307,11 +294,9 @@ PresentationCtrl.prototype.fetchPins = async function () {
 		),
 		new Pin(
 			"CAMP NOUuuu",
-			{
-				latitude: 41.38941,
-				longitude: 2.113436,
-				title: "C. d'Arístides Maillol, 12, 08028 Barcelona",
-			},
+			41.38941,
+			2.113436,
+			"C. d'Arístides Maillol, 12, 08028 Barcelona",
 			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
 			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
 			1,
@@ -327,13 +312,14 @@ PresentationCtrl.prototype.getMapData = async function () {
 };
 
 PresentationCtrl.prototype.fetchConversations = async function () {
-	let conversations = await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+	let conversations =
+		await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
 	if (conversations != null) {
 		return conversations;
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
-	}/* 
+	} /* 
 	let fakeConvers = [
 		{
 			id: "1",
@@ -367,7 +353,8 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function () {
-	let conversation = await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+	let conversation =
+		await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
 	if (conversation != null) {
 		return conversation;
 	} else {
@@ -413,8 +400,8 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 PresentationCtrl.prototype.fetchConversation = async function (id) {
 	let conversation = await this.domainCtrl.fetchConversation(id);
 	if (conversation != null) {
-		let {users, messages} = conversation;
-		return {users: users, messages: messages};
+		let { users, messages } = conversation;
+		return { users: users, messages: messages };
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;
@@ -460,5 +447,15 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	
 	return {users: users, messages: fakeConver}; */
 };
+
+PresentationCtrl.prototype.createMessage = async function (id, text) {
+	let newMessage = await this.domainCtrl.createMessage(id, text);
+	if (newMessage != null) {
+		return newMessage;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+}
 
 module.exports = PresentationCtrl;

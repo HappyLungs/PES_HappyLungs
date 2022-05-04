@@ -12,6 +12,7 @@ import {
 
 import COLORS from "../config/stylesheet/colors";
 import ChatList from "./components/ChatList";
+import i18n from "../config/translation";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -88,7 +89,7 @@ function GeneralChatScreen({ navigation }) {
 						flex: 1,
 						flexDirection: "column",
 						alignItems: "center",
-						marginBottom: 15
+						marginBottom: 15,
 					}}
 				>
 					<Text
@@ -132,12 +133,11 @@ function GeneralChatScreen({ navigation }) {
 								width={175}
 								value={search}
 								style={[styles.body, { marginStart: 10 }]}
-								placeholder={"Search"}
+								placeholder={i18n.t("search")}
 								onChangeText={(text) => {
 									filterBySearch(text);
 								}}
 							/>
-							
 						</View>
 						<View
 							style={[
@@ -146,7 +146,6 @@ function GeneralChatScreen({ navigation }) {
 									flexDirection: "row",
 									alignItems: "center",
 									alignSelf: "flex-end",
-									
 								},
 							]}
 						>
@@ -175,13 +174,8 @@ function GeneralChatScreen({ navigation }) {
 									animation="pulse"
 									duration={1000}
 								>
-									<Text
-										style={[
-											styles.containerTxt,
-											{ color: COLORS.white },
-										]}
-									>
-										New chat
+									<Text style={[styles.containerTxt, { color: COLORS.white }]}>
+										{i18n.t("newChat")}
 									</Text>
 								</Animatable.View>
 							</TouchableOpacity>

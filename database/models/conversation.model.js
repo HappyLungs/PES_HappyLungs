@@ -8,6 +8,10 @@ const ConverSchema = new global.Schema({
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             "Please provide a valid email"
         ]
+    }],
+    deleted: [{
+        type: Boolean,
+        default: false
     }]
 }, {
     timestamps: true

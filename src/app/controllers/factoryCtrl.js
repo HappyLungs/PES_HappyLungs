@@ -1,4 +1,4 @@
-import domainCtrl from "../domainLayer/DomainCtrl.js";
+import DomainCtrl from "../domainLayer/DomainCtrl.js";
 import PersistenceCtrl from "../persistenceLayer/PersistenceCtrl.js";
 import PresentationCtrl from "../presentationLayer/PresentationCtrl.js";
 
@@ -9,7 +9,7 @@ let factory = (function () {
 		instance = this;
 		// initialize any properties of the singleton
 		this.persistenceCtrl = new PersistenceCtrl();
-		this.domainCtrl = new domainCtrl();
+		this.domainCtrl = new DomainCtrl();
 		this.presentationCtrl = new PresentationCtrl();
 	};
 })();
