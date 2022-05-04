@@ -121,6 +121,7 @@ exports.delete = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
     }
 
+    
     let result = await conversationDataLayer.findConversation( {_id: params.id} ).then();
     if (result == null || result == undefined || result.length == 0) {
         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "The conversation does not exist", {});
