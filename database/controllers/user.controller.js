@@ -3,7 +3,9 @@ const mongodb = require("mongodb");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
-const loginHelper = require("../helpers/loginHelpers");
+
+const loginHelpers = require("../helpers/loginHelpers");
+
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
 //Datalayers
@@ -37,7 +39,7 @@ exports.users = async (request, response) => {
     let where = {};
     if (!params.hasOwnProperty("email")) {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
-        return;
+
     } else {
         // find all users in the database that have at least one conversation with the user with the given email
         let aggregateArr = [
@@ -106,14 +108,13 @@ exports.register = async (request, response, next) => {
     let error = false;
     await UserDataLayer.findUser({"email":params.email})
     .then((userData) => {
-        if (userData != null && userData != undefined && userData != {}) {
+        if (userData != null && userData !== {}) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "The email is already registered", {});
             error = true;
         }
     })
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-        error = true;
     });
     if (error) return;
 
@@ -123,7 +124,7 @@ exports.register = async (request, response, next) => {
         responseObj.message = "The passwords don't match";
         responseObj.data    = {};
         response.send(responseObj);
-        return;
+
     }
     else {
         UserDataLayer.create(params)
@@ -142,7 +143,7 @@ exports.register = async (request, response, next) => {
         .catch(error => {
             sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
         });
-        return;
+
     }
 };
 
@@ -156,20 +157,12 @@ exports.login = async (request, response) => {
     }
     const {email, password} = params;
 
-    if (!loginHelper.validateUserInput(email, password)) {
-        responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
-        responseObj.message = "Please check your inputs";
-        responseObj.data    = {};
-        response.send(responseObj);
-        return;
-    }
-
     const where = {};
     where.email = email;
     UserDataLayer.findUser(where)
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
-            if (!loginHelper.comparePassword(password, userData.password)) {
+            if (!loginHelpers.comparePassword(password, userData.password)) {
                 responseObj.status  = errorCodes.RESOURCE_NOT_FOUND;
                 responseObj.message = "Invalid password";
                 responseObj.data    = {};
@@ -198,13 +191,13 @@ exports.changePassword = async (request, response) => {
         return;
     }
     //Find the user given the id in the params
-    userDatalayer.findUser({email: params.email})
+    UserDataLayer.findUser({email: params.email})
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
             if (comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
-                userDatalayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
+                UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
                         sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
@@ -232,11 +225,11 @@ exports.delete = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    userDatalayer
+    UserDataLayer
     .findUser({_id: mongodb.ObjectId(params.id)})
     .then((userData) => {
         if (userData !== undefined && userData !== null) {
-            userDatalayer
+            UserDataLayer
             .deleteUser({_id: mongodb.ObjectId(params.id)})
             .then((deletedData) => {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", deletedData);

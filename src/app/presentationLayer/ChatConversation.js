@@ -11,7 +11,6 @@ import {
 	Button,
 	TouchableOpacity,
 } from "react-native";
-import KeyboardStickyView from 'rn-keyboard-sticky-view';
 
 import COLORS from "../config/stylesheet/colors";
 import ChatMessagesList from "./components/ChatMessagesList";

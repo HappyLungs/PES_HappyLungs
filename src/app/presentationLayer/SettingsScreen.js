@@ -11,13 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-
-import Icon from 'react-native-ico-flags/src/data';
-
 import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -454,12 +448,6 @@ const styles = StyleSheet.create({
 	modalText: {
 		textAlign: "center",
 		fontSize: 16,
-	},
-	textOption: {
-		color: COLORS.secondary,
-		fontWeight: "bold",
-		fontSize: 15,
-		marginHorizontal: 10,
 	},
 });
 

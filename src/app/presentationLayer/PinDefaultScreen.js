@@ -8,10 +8,10 @@ import {
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
+import i18n from "../config/translation";
 
 import { Rating } from "react-native-ratings";
 import ImageCarousel from "./components/ImageCarousel";
-
 import { Ionicons } from "@expo/vector-icons";
 
 const PresentationCtrl = require("./PresentationCtrl.js");
@@ -54,7 +54,7 @@ function PinDefaultScreen({ navigation, route }) {
 				}}
 			>
 				<View style={{ flexDirection: "row", height: 35 }}>
-					<Text style={[styles.title, { width: "85%" }]}>{pin.name}</Text>
+					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
 						onPress={
@@ -88,14 +88,14 @@ function PinDefaultScreen({ navigation, route }) {
 						color={COLORS.secondary}
 					/>
 					<Text style={[styles.body, { marginStart: 10 }]}>
-						{pin.location.title}
+						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity
 					style={{ alignSelf: "flex-start", marginStart: 10 }}
 					onPress={handleSeeOnMap}
 				>
-					<Text style={styles.highlight}>See on map</Text>
+					<Text style={styles.highlight}>{i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -160,7 +160,7 @@ function PinDefaultScreen({ navigation, route }) {
 							color={COLORS.green1}
 							size={35}
 						/>
-						<Text style={styles.highlight}>See Statistics</Text>
+						<Text style={styles.highlight}>{i18n.t("seeStatistics")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

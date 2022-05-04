@@ -10,5 +10,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="openjdk-17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="api" level="application" />
   </component>
 </module>

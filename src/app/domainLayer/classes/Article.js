@@ -1,8 +1,6 @@
-import Comment from "./Comment.js";
 import BaseClass from "./BaseClass.js";
-import User from "./User.js";
 
-class Article extends BaseClass {
+export default class Article extends BaseClass {
   constructor(title, userID) {
     super();
     if(userID === undefined || userID === "") throw "Un articulo necesita un ID de usuario"
@@ -42,7 +40,7 @@ class Article extends BaseClass {
   }
 }
 
-const usuario = new User("alexsoriano@hotmail.es");
+/*const usuario = new User("alexsoriano@hotmail.es");
 
 const id_user = usuario.userID;
 
@@ -50,4 +48,4 @@ const articulo_prueba = new Article("Lo que el viento se llevó", id_user);
 articulo_prueba.add_comment(new Comment("Me gusta este articulo"));
 articulo_prueba.add_comment(new Comment("Odio este articulo"));
 
-console.log(articulo_prueba);
+console.log(articulo_prueba);*/

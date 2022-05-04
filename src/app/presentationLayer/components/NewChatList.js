@@ -13,11 +13,8 @@ import * as Animatable from "react-native-animatable";
 
 import COLORS from "../../config/stylesheet/colors";
 
-
-const ChatList = ({ chatsList, navigation }) => {	
-
+const ChatList = ({ chatsList, navigation }) => {
 	const renderItem = ({ item, index }) => (
-
 		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
 			<View
 				style={[
@@ -34,7 +31,7 @@ const ChatList = ({ chatsList, navigation }) => {
 								flexDirection: "row",
 								flex: 1,
 								alignItems: "center",
-                                padding: 10
+								padding: 10,
 							}}
 							onPress={() => {
 								//navigation.navigate("ChatScreen");
@@ -45,7 +42,7 @@ const ChatList = ({ chatsList, navigation }) => {
 								style={{
 									width: 50,
 									height: 50,
-									borderRadius: 100
+									borderRadius: 100,
 								}}
 							/>
 							<View
@@ -60,18 +57,23 @@ const ChatList = ({ chatsList, navigation }) => {
 										flexDirection: "row",
 										justifyContent: "space-between",
 										alignItems: "flex-start",
-                                        paddingStart: 5,
-										width: 280
+										paddingStart: 5,
+										width: 280,
 									}}
 								>
 									<View
 										style={{
 											alignSelf: "flex-start",
 											padding: 2,
-											width:215,
+											width: 215,
 										}}
 									>
-										<Text numberOfLines={1} style={[styles.chatName, {textAlign:"left"}]}>{item.name}</Text>
+										<Text
+											numberOfLines={1}
+											style={[styles.chatName, { textAlign: "left" }]}
+										>
+											{item.name}
+										</Text>
 									</View>
 								</View>
 							</View>
@@ -85,7 +87,7 @@ const ChatList = ({ chatsList, navigation }) => {
 	return (
 		<FlatList
 			stickyHeaderHiddenOnScroll={true}
-			contentContainerStyle={{ }}
+			contentContainerStyle={{}}
 			scrollEnabled={true}
 			data={chatsList}
 			keyExtractor={(item) => `${item.name}`}
@@ -107,11 +109,10 @@ const ChatList = ({ chatsList, navigation }) => {
 
 const styles = StyleSheet.create({
 	chatName: {
-        textAlign: 'center',
+		textAlign: "center",
 		fontSize: 15,
 		fontWeight: "bold",
 		color: COLORS.secondary,
-		
 	},
 	shadow: {
 		shadowColor: COLORS.black,

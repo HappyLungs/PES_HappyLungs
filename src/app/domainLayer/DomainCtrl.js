@@ -36,12 +36,12 @@ DomainCtrl.prototype.getMapData = async function () {
     let eoiCode = measure.codi_eoi;
     if (!measureStations.has(eoiCode)) {
       let ms = new MeasureStation(
-        measure.codi_eoi,
-        measure.nom_estacio,
-        measure.tipus_estacio,
-        measure.latitud,
-        measure.longitud,
-        null
+          measure.codi_eoi,
+          measure.nom_estacio,
+          measure.tipus_estacio,
+          measure.latitud,
+          measure.longitud,
+          null
       );
       measureStations.set(eoiCode, ms);
     }
@@ -71,8 +71,8 @@ DomainCtrl.prototype.getMapData = async function () {
  * @returns
  */
 DomainCtrl.prototype.getPollutionLevelLastDay = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -98,8 +98,8 @@ DomainCtrl.prototype.getPollutionLevelLastDay = async function (
  * @returns
  */
 DomainCtrl.prototype.getPollutionLevelLastWeek = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -107,8 +107,8 @@ DomainCtrl.prototype.getPollutionLevelLastWeek = async function (
 };
 
 DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -128,8 +128,8 @@ DomainCtrl.prototype.getPollutionLevelLastMonth = async function (
 };
 
 DomainCtrl.prototype.getPollutionLevelLastYear = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -142,8 +142,8 @@ DomainCtrl.prototype.getPollutionLevelLastYear = async function (
 //STATISTICS - POLLUTANTS
 
 DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -151,8 +151,8 @@ DomainCtrl.prototype.getPollutantsQuantLastDay = async function (
 };
 
 DomainCtrl.prototype.getPollutantsQuantLastWeek = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -160,8 +160,8 @@ DomainCtrl.prototype.getPollutantsQuantLastWeek = async function (
 };
 
 DomainCtrl.prototype.getPollutantsQuantLastMonth = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -169,8 +169,8 @@ DomainCtrl.prototype.getPollutantsQuantLastMonth = async function (
 };
 
 DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
-  latitude,
-  length
+    latitude,
+    length
 ) {
   let date = new Date();
   let point = new DataPointMap(latitude, length);
@@ -189,13 +189,13 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
  * @returns the created pin in case of success. Otherwise an error message.
  */
 DomainCtrl.prototype.createPin = async function (
-  title,
-  location,
-  description,
-  media,
-  rating,
-  date,
-  status
+    title,
+    location,
+    description,
+    media,
+    rating,
+    date,
+    status
 ) {
   let {latitude, longitude} = location;
   let pin = new Pin(title, latitude, longitude, description, media, rating, new Date(date), status);
@@ -209,10 +209,10 @@ DomainCtrl.prototype.createPin = async function (
     rating: pin.rating,
     status: pin.status,
     //TODO: creator email. Should get it from the context (auth token when login)
-    media: pin.media, 
+    media: pin.media,
   }
   let response = await persistenceCtrl.postRequest("/newPin", params);
-  if (response.status == 200) {
+  if (response.status === 200) {
     return response.data;   // Returns the object inserted in the DB
   } else {
     //TODO: handle error. Return an error and reload the view with the error
@@ -230,12 +230,12 @@ DomainCtrl.prototype.createPin = async function (
  * @returns the updated pin
  */
 DomainCtrl.prototype.editPin = function (
-  name,
-  location,
-  description,
-  media,
-  rating,
-  status
+    name,
+    location,
+    description,
+    media,
+    rating,
+    status
 ) {
   //edit not create
   return new Pin(name, location, description, media, rating, status);
@@ -252,11 +252,11 @@ DomainCtrl.prototype.editPin = function (
  * @returns message if error
  */
 DomainCtrl.prototype.registerUser = async function (
-  name,
-  email,
-  password,
-  confirmPassword,
-  birthdate
+    name,
+    email,
+    password,
+    confirmPassword,
+    birthdate
 ) {
   //create
   let myUser = new User(name, email, password, birthdate);
@@ -269,17 +269,25 @@ DomainCtrl.prototype.registerUser = async function (
  * @param {*} password
  * @returns an acces_token for the user
  */
-DomainCtrl.prototype.loginUser = async function (email, password) {
+
+DomainCtrl.prototype.loginUser = async function (
+    email,
+    password
+) {
   //create
-  let myUser = new User(email, password);
-  return await myUser.login(); //login to db
+  let myUser = new User(
+      null,
+      email,
+      password,
+      null
+  );
+  return await myUser.login();	//login to db
 };
 
 //Return the conversation with the id parameter.
 
 /*
  To update:
-
   1. We dont have the function for logged user, so atm the first user in the array is the logged and the second the conversant
   2. We need to check if the id is and mongoDB id. If the id doesnt exists we return empty object.
   3. Dont have the Images ATM
@@ -287,15 +295,12 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 DomainCtrl.prototype.fetchConversation = async function (id) {
   console.log("1");
   let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
-  if (conversation.status == 200) {
-    console.log("2");
+  if (conversation.status === 200) {
     var users = {};
     const logged = await persistenceCtrl.getRequest("/user", {email: "ivan.jimeno@estudiantat.upc.edu" /** TODO replace with the logged user email */});
-    if (logged.status == 200) {
-      console.log("3");
-      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] == logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
-      if (conversant.status == 200) {
-        console.log("4");
+    if (logged.status === 200) {
+      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] === logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
+      if (conversant.status === 200) {
         users = {
           logged: {
             email: logged.data.email,
@@ -315,9 +320,6 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
           message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         })
         if (dbMessages.status == 200) {
-          console.log("5");
-          console.log("Users: ", users);
-          console.log("messages", dbMessages.data);
           return { users:  users, messages: dbMessages.data };
         } else {
           //TODO handle error
@@ -339,11 +341,9 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
 
 /*
  To update:
-
   1. We dont have the function for logged user, so atm the first user in the array is the logged and the second the conversant
-  2. Need the messages boolean to know if the messages are unread or not. 
+  2. Need the messages boolean to know if the messages are unread or not.
   3. Dont have the Images ATM
-
 */
 
 DomainCtrl.prototype.fetchConversations = async function () {
@@ -371,21 +371,20 @@ DomainCtrl.prototype.fetchConversations = async function () {
                 lastMessageTime: [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/'),
                 unreadMessages: unreadMessages.data.length
               })
-              return conver;
             } else {
               //TODO handle error searching for the unread messages
               return null;
             }
           } else {
-            //TODO handle error searching for the last message
+            //TODO handle error searching for the unread messages
             return null;
           }
         } else {
-          //TODO handle error searching for the specified user
+          //TODO handle error searching for the last message
           return null;
         }
+        return conver;
     }
-    
   } else {
     //TODO handle error
     return null;
@@ -395,7 +394,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
   //get all users with no conversation with logged user
   const all_users = await persistenceCtrl.getRequest("/users", {email: "ivan.jimeno@estudiantat.upc.edu"/*TODO Pass the google id from the logged user */});
-  if (all_users.status == 200) {
+  if (all_users.status === 200) {
     const fetchedNewConversations = [];
     all_users.data.forEach(user => {
       fetchedNewConversations.push({
@@ -411,75 +410,6 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
   }
 };
 
-DomainCtrl.prototype.findUser = async function (email) {
-  //create
-  /*
-  DB_URL = "http://localhost:7000/v1/user?email=" + email;
-
-  let user = await fetch(DB_URL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": " application/json",
-      "X-Api-Key":
-        "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => data);
-
-  return user;
-  console.log(user);
-  */
-};
-
-DomainCtrl.prototype.findMessage = async function (id) {
-  //create
-  /*
-  DB_URL = "http://localhost:7000/v1/message?_id=" + id;
-
-  let message = await fetch(DB_URL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": " application/json",
-      "X-Api-Key":
-        "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => data);
-  return message;
-  console.log(user);
-  */
-};
-
-/**
- *
- * @param {*} username
- * @param {*} email
- * @param {*} points
- * @param {*} healthState
- * @param {*} profilePicture
- * @returns the updated user
- */
-DomainCtrl.prototype.updateUser = function (
-  username,
-  email,
-  points,
-  healthState,
-  profilePicture
-) {
-  //edit, not create
-  let updatedUser = new User(
-    username,
-    email,
-    points,
-    healthState,
-    profilePicture
-  );
-  return updatedUser;
-  //update to db
-};
-
 DomainCtrl.prototype.createMessage = async function (conversation, text) {
   const message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: "ivan.jimeno@estudiantat.upc.edu" /*TODO Pass the logged user email */, text: text});
   if (message.status === 200) {
@@ -489,5 +419,31 @@ DomainCtrl.prototype.createMessage = async function (conversation, text) {
     return null;
   }
 }
+
+/**
+ * @param {*} username
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+DomainCtrl.prototype.updateUser = function (
+    username,
+    email,
+    points,
+    healthState,
+    profilePicture
+) {
+  //edit, not create
+  return new User(
+      username,
+      email,
+      points,
+      healthState,
+      profilePicture
+  );
+  //update to db
+};
 
 module.exports = DomainCtrl;

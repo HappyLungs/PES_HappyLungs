@@ -103,7 +103,7 @@ exports.create = async (request, response) => {
             responseObj.message = `User ${email} doesn't exist`;
             responseObj.data    = {};
             response.send(responseObj);
-            return;    
+
         }
     });
        /* Check if messages of the body exists */
@@ -119,7 +119,7 @@ exports.create = async (request, response) => {
             responseObj.message = `Message ${message} doesn't exist`;
             responseObj.data    = {};
             response.send(responseObj);
-            return;    
+
         }
     });
     
@@ -147,6 +147,8 @@ exports.create = async (request, response) => {
 
 };
 
+/*
+
 function aggregateArray(match, group, sort) {
     return [
         {
@@ -159,4 +161,4 @@ function aggregateArray(match, group, sort) {
             $sort: sort
         }
     ];
-}
+}*/

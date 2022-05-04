@@ -20,7 +20,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints();
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-            return await nearPoint.getHourLevel(date, hour);
+            return nearPoint.getHourLevel(date, hour);
     }
     
    /**
@@ -32,7 +32,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-       return await nearPoint.getDayLevel(date);
+       return nearPoint.getDayLevel(date);
     }
     
    /**
@@ -44,7 +44,7 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-       return await nearPoint.getWeekLevel(date);
+       return nearPoint.getWeekLevel(date);
     }
  /**
      * Calculates the pollution level at every day of a month
@@ -55,14 +55,14 @@ class DataPointMap {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-     return await nearPoint.getMonthLevel(date);
+     return nearPoint.getMonthLevel(date);
     }
 
     async getYearLevel (date) {
         let puntos_cercanos = await this.nearerPoints(date);
 
         let punto_cercano = new MeasureStation(puntos_cercanos[0][1].codi_eoi);
-        return await punto_cercano.getYearLevel(date);
+        return punto_cercano.getYearLevel(date);
     }
     
     //PIE CHART GETTERS
@@ -83,35 +83,35 @@ class DataPointMap {
      * @param {Date} date
      * @returns Returns the quantities of each pollutant on a week of the nearer Measure Station.
      */
-    async getPollutantsQuantWeek (date) {
+    /*async getPollutantsQuantWeek (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
        return await nearPoint.getQuantityOfEachPollutantWeek(date);
-    }
+    }*/
  /**
      * Calculates the quantities of each pollutant on a month.
      * @param {*} date
      * @returns Returns the quantities of each pollutant on a month of the nearer Measure Station.
      */
-    async getPollutantsQuantMonth (date) {
+    /*async getPollutantsQuantMonth (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
      return await nearPoint.getQuantityOfEachPollutantMonth(date);
-    }
+    }*/
          /**
      * Calculates the quantities of each pollutant on a Year.
      * @param {*} date
      * @returns Returns the quantities of each pollutant on a Year of the nearer Measure Station..
      */
-    async getPollutantsQuantYear (date) {
+   /* async getPollutantsQuantYear (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
              return await nearPoint.getQuantityOfEachPollutantYear(date);
     }
-
+*/
     //Getters
   /**
    * Get the nearest Measure Stations ordered.

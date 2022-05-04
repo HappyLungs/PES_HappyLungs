@@ -13,8 +13,8 @@ class User {
         this.birthdate = birthdate;
         this.points = 0;
         this.language = LanguageEnum.catalan;
-        this.healthStatus = HealthStatusEnum.None;
-        this.profilePicture = null;
+        this.healthStatus = [false, false, false]; //cardiorespiratory problems, pregnant, elderly
+        this.profilePicture = "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg";
     }
 
     async register (confirmPassword) {
@@ -29,7 +29,7 @@ class User {
     }
 
     async login () {
-        let res = await persistCtrl.postRequest("/login", {
+        let res = await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
         });
