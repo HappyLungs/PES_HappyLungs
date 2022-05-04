@@ -319,7 +319,7 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
           message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
           message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         })
-        if (dbMessages.status == 200) {
+        if (dbMessages.status === 200) {
           return { users:  users, messages: dbMessages.data };
         } else {
           //TODO handle error
@@ -352,7 +352,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
   if (conversations.status === 200) {
     for (const current_conver of conversations.data) {
         // const logged = 	await this.findUser(current_conver.users[0]); //No sense to search the user email on the database (data for the logged user is in the context)
-        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] == "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
+        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] === "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
         if (conversant.status === 200) {
           //let index_lastMessage = 0;
           //if((current_conver.messages.length - 1) > 0) index_lastMessage = current_conver.messages.length - 1
@@ -400,7 +400,7 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
       fetchedNewConversations.push({
         id: user._id,
         name: user.name,
-        profileImage: (user.profilePicture != undefined && user.profilePicture != "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
+        profileImage: (user.profilePicture !== undefined && user.profilePicture !== "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
       })
     });
     return fetchedNewConversations;

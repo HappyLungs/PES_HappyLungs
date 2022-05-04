@@ -42,7 +42,7 @@ class LevelCalculator {
     }
     calculatePollutantLevel(element, num) {
         let ranges = this.getPollutantRange(element);
-        for (var i=0; i<ranges.length-1; i++) {
+        for (let i=0; i<ranges.length-1; i++) {
             let lo = ranges[i]
             let hi = ranges[i+1]
             if (num >= lo && num < hi) return i
