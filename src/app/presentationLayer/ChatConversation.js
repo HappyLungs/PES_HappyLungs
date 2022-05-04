@@ -44,7 +44,7 @@ function ChatScreen({ route, navigation }) {
 	};
 
 	const sendMessage = async () => {
-		alert(message);
+		await presentationCtrl.createMessage(route.params.id, message);
 		setMessage('');
 		Keyboard.dismiss();
 

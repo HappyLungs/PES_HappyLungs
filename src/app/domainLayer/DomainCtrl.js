@@ -480,4 +480,14 @@ DomainCtrl.prototype.updateUser = function (
   //update to db
 };
 
+DomainCtrl.prototype.createMessage = async function (conversation, text) {
+  const message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: "ivan.jimeno@estudiantat.upc.edu" /*TODO Pass the logged user email */, text: text});
+  if (message.status === 200) {
+    return message.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+}
+
 module.exports = DomainCtrl;

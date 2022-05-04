@@ -461,4 +461,14 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	return {users: users, messages: fakeConver}; */
 };
 
+PresentationCtrl.prototype.createMessage = async function (id, text) {
+	let newMessage = await this.domainCtrl.createMessage(id, text);
+	if (newMessage != null) {
+		return newMessage;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+}
+
 module.exports = PresentationCtrl;
