@@ -1,10 +1,10 @@
 const messageDataLayer = require("./../datalayers/message.datalayer.js");
 const conversationDataLayer = require("./../datalayers/conversation.datalayer.js");
 const userDatalayer =  require("./../datalayers/user.datalayer.js");
-const sanitizeHtml = require('sanitize-html');
+//const sanitizeHtml = require('sanitize-html');
 
 
-const responseObj = {};
+//const responseObj = {};
 const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js")
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
@@ -80,7 +80,7 @@ exports.create = async (request, response) => {
     let where = {};
     where.email = params.user;
     let result = await userDatalayer.findUser(where).then();
-    if (result == null || result == undefined || result.length == 0) {
+    if (result == null || result.length === 0) {
         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
         return;
     }
@@ -89,7 +89,7 @@ exports.create = async (request, response) => {
         where = {};
         where._id = mongodb.ObjectId(params.conversation);
         let result_conver = await conversationDataLayer.findConversation(where).then();
-        if (result_conver == null || result_conver == undefined || result_conver.length == 0) {
+        if (result_conver == null || result_conver.length === 0) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Conversation not found", {});
             return;
         }
