@@ -96,6 +96,7 @@ exports.update = async(request, response) => {
         params = request.body.Pin;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
     }
     if (params.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params._id)) {
         pinDatalayer
