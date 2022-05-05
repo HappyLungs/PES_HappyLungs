@@ -259,11 +259,11 @@ exports.delete = async (request, response) => {
         return;
     }
     UserDataLayer
-    .findUser({_id: mongodb.ObjectId(params.id)})
+    .findUser({email: params.email})
     .then((userData) => {
         if (userData !== undefined && userData !== null) {
             UserDataLayer
-            .deleteUser({_id: mongodb.ObjectId(params.id)})
+            .deleteUser({email: params.email})
             .then((deletedData) => {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", deletedData);
             })

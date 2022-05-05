@@ -2,7 +2,6 @@ const PersistenceCtrl = require("../../persistenceLayer/PersistenceCtrl");
 persistCtrl = new PersistenceCtrl();
 
 const LanguageEnum = Object.freeze({"english":1, "catalan":2, "spanish":3});
-const HealthStatusEnum = Object.freeze({"None":1, "RespiratoryDisease":2, "Pregnant":3, "OldPeople":4})
 class User {
     
     //Constructors
