@@ -191,6 +191,7 @@ exports.updateUser = async (request, response) => {
     UserDataLayer.updateUser({email: params.email}, {params})
         .then((updatedData) => {
             if (updatedData !== null && typeof updatedData !== undefined) {
+                console.log(updatedData)
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
@@ -223,7 +224,6 @@ exports.changePassword = async (request, response) => {
                 UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
-                        console.log(updatedData)
                         sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
                     } else {
                         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
