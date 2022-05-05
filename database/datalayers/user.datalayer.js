@@ -23,7 +23,7 @@ exports.findUser = async (where = {}) => {
     })
 }
 
-exports.updateUser = async (where = {}, update) => {
+exports.updateUser = async (where = {}, update = {}) => {
     return new Promise((resolve, reject) => {
         console.log("UPDATE IS: ", update)
         UserModel
