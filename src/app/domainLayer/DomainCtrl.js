@@ -253,7 +253,7 @@ DomainCtrl.prototype.fetchPins  = async function () {
  * @param {*} Pin
  * @returns the updated pin. Else returns null => error
  */
-DomainCtrl.prototype.editPin = function (
+DomainCtrl.prototype.editPin = async function (
     Pin
 ) {
   let result = await persistenceCtrl.putRequest("/pin", Pin)
@@ -270,7 +270,7 @@ DomainCtrl.prototype.editPin = function (
  * @param {*} id
  * @returns the updated pin. Else returns null => error
  */
- DomainCtrl.prototype.editPin = function (
+ DomainCtrl.prototype.editPin = async function (
   Pin
 ) {
   let result = await persistenceCtrl.putRequest("/pin", Pin)
@@ -287,7 +287,7 @@ DomainCtrl.prototype.editPin = function (
  * @param {*} id
  * @returns deletes pin with identifier = id. Else returns null => error
  */
- DomainCtrl.prototype.deletePin = function (
+ DomainCtrl.prototype.deletePin = async function (
   Pin
 ) {
   let result = await persistenceCtrl.postRequest("/deletePin", {_id: Pin._id})
