@@ -699,7 +699,11 @@ function MapScreen({ navigation, route }) {
 						/>
 					))}
 
-					<Heatmap points={heatpoints} radius={50} />
+					<Heatmap points={heatpoints}
+							 radius={50}
+							 opacity{0.7}
+							gradient{{startPoints: []}}
+					/>
 				</MapView>
 			</View>
 			{renderHeader(profile)}
