@@ -27,7 +27,7 @@ exports.updateUser = async (where = {}, update = {}) => {
     return new Promise((resolve, reject) => {
         console.log("UPDATE IS: ", update)
         UserModel
-        .findOneAndUpdate(where, update, {returnNewDocument:true})
+        .findOneAndUpdate(where, update, {returnOriginal:false})
         .then((data) => {
             console.log("DATA TO RESOLVE IS", data)
             resolve(data)
