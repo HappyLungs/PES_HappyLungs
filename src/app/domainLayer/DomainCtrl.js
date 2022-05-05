@@ -358,7 +358,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
           if (lastMessage.status === 200) {
             if (Array.isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
             const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "ivan.jimeno@estudiantat.upc.edu" /** TODO Pass the logged user email instead */});
-            let date = new Date(lastMessage.data.createdAt)
+            let date = new Date(lastMessage.data.createdAt);
             if (unreadMessages.status === 200) {
               conver.push({
                 id: current_conver._id,
@@ -380,8 +380,8 @@ DomainCtrl.prototype.fetchConversations = async function () {
           //TODO handle error searching for the last message
           return null;
         }
-        return conver;
-    }
+      }
+    return conver;
   } else {
     //TODO handle error
     return null;
