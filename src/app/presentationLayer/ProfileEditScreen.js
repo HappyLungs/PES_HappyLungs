@@ -17,7 +17,7 @@ import Modal from "react-native-modal";
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
 
-import { UserContext } from "./navigation/UserContext";
+import { UserContext } from "../domainLayer/UserContext";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -88,12 +88,13 @@ function ProfileEditScreen({ navigation }) {
 			isValid = false;
 		}
 		if (isValid) {
+			  
 			let updatedUser = presentationCtrl.updateUser(
 				inputs.username,
-				inputs.email,
-				inputs.password,
 				user.points,
+				user.language,
 				[state1, state2, state3],
+				user.notifications,
 				profilePicture
 			);
 			navigation.popToTop();

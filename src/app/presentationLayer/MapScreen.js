@@ -12,7 +12,7 @@ import {
 import COLORS from "../config/stylesheet/colors";
 import PinPreview from "./components/PinPreview";
 import i18n from "../config/translation";
-import { UserContext } from "./navigation/UserContext";
+import { UserContext } from "../domainLayer/UserContext";
 
 import {
 	Ionicons,

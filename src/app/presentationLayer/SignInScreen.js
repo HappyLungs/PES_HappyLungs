@@ -16,7 +16,7 @@ import Feather from "react-native-vector-icons/Feather";
 import COLORS from "../config/stylesheet/colors";
 
 import Axios from "axios";
-import { UserContext } from './navigation/UserContext';
+import { UserContext } from '../domainLayer/UserContext';
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -73,6 +73,8 @@ function SignInScreen({ navigation, route }) {
 		});
 	};
 
+	const { user, setUser } = useContext(UserContext);
+
     const loginUser = async () => {
         const { email, password } = data;
         let response = await presentationCtrl.loginUser(
@@ -93,8 +95,6 @@ function SignInScreen({ navigation, route }) {
 		}
 		return;
 	};
-
-    const { user, setUser } = useContext(UserContext);
 
     return (
         <View style={styles.container}>
