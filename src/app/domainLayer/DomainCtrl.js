@@ -390,12 +390,14 @@ DomainCtrl.prototype.fetchConversations = async function () {
 
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
   //get all users with no conversation with logged user
+  console.log("a cridar a la bd per fetch")
   const all_users = await persistenceCtrl.getRequest("/users", {email: "ivan.jimeno@estudiantat.upc.edu"/*TODO Pass the google id from the logged user */});
+  console.log("db new conversations: ", all_users)
   if (all_users.status === 200) {
     const fetchedNewConversations = [];
     all_users.data.forEach(user => {
       fetchedNewConversations.push({
-        id: user._id,
+        email: user.email,
         name: user.name,
         profileImage: (user.profilePicture !== undefined && user.profilePicture !== "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
       })
@@ -413,12 +415,13 @@ DomainCtrl.prototype.createConversation = async function (email, text) {
     email
   ];
   let messages = await persistenceCtrl.postRequest("/conversation", {users: users, message: text});
+  console.log("----------db conver: ", messages)
   if (messages.status === 200) {
         message = messages.data;
         let date = new Date(message.createdAt);
         message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
         message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
-    return message;
+    return message.conversation;
   } else {
     //TODO handle error
     return null;
@@ -470,5 +473,15 @@ DomainCtrl.prototype.updateUser = function (
   );
   //update to db
 };
+
+DomainCtrl.prototype.fetchUser = async function (email) {
+  const user = await persistenceCtrl.getRequest("/user", {email: email});
+  if (user.status === 200) {
+    return user.data;
+  } else {
+    //TODO handle error
+    return null;
+  }
+}
 
 module.exports = DomainCtrl;

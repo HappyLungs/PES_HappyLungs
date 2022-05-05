@@ -461,7 +461,6 @@ PresentationCtrl.prototype.createConversation = async function (email, text) {
 PresentationCtrl.prototype.deleteConversation = async function (id) {
 	let result = await this.domainCtrl.deleteConversation(id);
 	if (result != null) {
-		console.log("conversa borrada")
 		return true;
 	} else {
 		//TODO ERROR: Show error message && reload page
@@ -473,6 +472,16 @@ PresentationCtrl.prototype.createMessage = async function (id, text) {
 	let newMessage = await this.domainCtrl.createMessage(id, text);
 	if (newMessage != null) {
 		return newMessage;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+}
+
+PresentationCtrl.prototype.fetchUser = async function (email) {
+	let user = await this.domainCtrl.fetchUser(email);
+	if (user != null) {
+		return user;
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;

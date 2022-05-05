@@ -34,7 +34,9 @@ function GeneralChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
+		console.log("a la vista de new chat")
 		const data = await presentationCtrl.fetchNewConversations();
+		console.log("screen new chats:",data)
 
 		setMasterData(data);
 		setFilteredData(data);
