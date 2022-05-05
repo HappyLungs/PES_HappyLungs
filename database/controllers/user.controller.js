@@ -182,9 +182,9 @@ exports.login = async (request, response) => {
 
 exports.updateUser = async (request, response) => {
     let params = {};
-    console.log(request)
-    if (request.query) {
-        params = request.query;
+    console.log(request.body.params)
+    if (request.body.params) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
