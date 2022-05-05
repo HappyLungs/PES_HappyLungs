@@ -26,6 +26,7 @@ const ca = {
 	ranking: "Rànquing",
 	shareOption: "Avisa als teus amics",
 	logOut: "Tancar sessió",
+	logOutConfirmation: "Segur que vols tancar la sessió?",
 	editingProfile: "Editar perfil",
 	username: "Nom d'usuari",
 	email: "Correu electrònic",
@@ -63,6 +64,8 @@ const ca = {
 		"De veritat vols eliminar aquest pin? Aquesta acció és irreversible",
 	chat: "Xats",
 	newChat: "Nou xat",
+	yes: "Sí",
+	no: "No",
 };
 
 const en = {
@@ -93,6 +96,7 @@ const en = {
 	ranking: "Ranking",
 	shareOption: "Tell your friends",
 	logOut: "Logout",
+	logOutConfirmation: "Do you really want to logout?",
 	editingProfile: "Edit profile",
 	username: "Username",
 	email: "Email",
@@ -130,6 +134,8 @@ const en = {
 		"Do you really want to delete this pin? This cannot be undone.",
 	chat: "Chats",
 	newChat: "New chat",
+	yes: "Yes",
+	no: "No",
 };
 
 const es = {
@@ -160,6 +166,7 @@ const es = {
 	ranking: "Ranking",
 	shareOption: "Avisa a tus amigos",
 	logOut: "Cerrar sesión",
+	logOutConfirmation: "¿Estás seguro que quiéres cerrar la sessión?",
 	editingProfile: "Editar perfil",
 	username: "Nombre de usuario",
 	email: "Correo electrónico",
@@ -197,6 +204,8 @@ const es = {
 		"¿De verdad quieres eliminar este pin? Esta acción es irreversible.",
 	chat: "Chats",
 	newChat: "Nuevo chat",
+	yes: "Sí",
+	no: "No",
 };
 
 export { ca, en, es };

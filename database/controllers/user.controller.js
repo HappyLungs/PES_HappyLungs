@@ -75,7 +75,9 @@ exports.users = async (request, response) => {
         let users = [];
         await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
-                users = userData[0].users;
+                if (userData.length > 0) {
+                    users = userData[0].users;
+                }
             }
         });
         users.push(params.email);   //Add the user himself to the list
@@ -215,6 +217,37 @@ exports.changePassword = async (request, response) => {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
         }
     })
+}
+
+exports.savePin = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    let result = await UserDataLayer.findUser({email: params.email}).then();
+    if (result == null && typeof result == undefined) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Invalid user", {});
+        return;
+    } 
+    if (result.savedPins.indexOf(params.pin) > -1) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "Pin already saved", {});
+        return;
+    }
+    UserDataLayer.updateUser({email: params.email}, {$push: {savedPins: params.pin}})
+    .then((updatedData) => {
+        if (updatedData !== null && typeof updatedData !== undefined) {
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+        }
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
 }
 
 exports.delete = async (request, response) => {

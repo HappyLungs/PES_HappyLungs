@@ -3,7 +3,6 @@ const ConverSchema = new global.Schema({
     users: [{
         type: String,
         required: [true, "Please provide an email"],
-        unique: true,
         match:[
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             "Please provide a valid email"
@@ -11,7 +10,7 @@ const ConverSchema = new global.Schema({
     }],
     deleted: [{
         type: Boolean,
-        default: false
+        default: [false, false]
     }]
 }, {
     timestamps: true

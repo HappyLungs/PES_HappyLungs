@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 
 import {
 	Text,
@@ -24,7 +24,7 @@ function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
 	const { user, setUser } = useContext(UserContext);
-	
+
 	const userFake = {
 		username: "Username",
 		email: "username@email.com",
@@ -90,7 +90,7 @@ function ProfileScreen({ navigation, route }) {
 								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
 							]}
 						>
-							Do you want to Logout?
+							{i18n.t("logOutConfirmation")}
 						</Text>
 						<View>
 							<View
@@ -111,7 +111,7 @@ function ProfileScreen({ navigation, route }) {
 									]}
 									onPress={() => setModalLogoutVisible(false)}
 								>
-									<Text style={styles.containerTxt}>No</Text>
+									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
 									style={[
@@ -121,7 +121,7 @@ function ProfileScreen({ navigation, route }) {
 									]}
 									onPress={logOut}
 								>
-									<Text style={styles.containerTxt}>Yes</Text>
+									<Text style={styles.containerTxt}>{i18n.t("yes")}</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
 	containerOption: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginVertical: 15,
+		marginVertical: 10,
 	},
 	centeredView: {
 		flex: 1,

@@ -183,7 +183,11 @@ PresentationCtrl.prototype.registerUser = async function (
 				birthdate
 			);
 		} else {
-			return {"data": {}, "message": "Your password is too short, use at least 6 characters.", "status": 502};
+			return {
+				data: {},
+				message: "Your password is too short, use at least 6 characters.",
+				status: 502,
+			};
 		}
 	} else {
 		return { data: {}, message: "Required parameters missing", status: 422 };
@@ -230,6 +234,15 @@ PresentationCtrl.prototype.updateUser = function (
 };
 
 PresentationCtrl.prototype.fetchPins = async function () {
+	/*
+	let pins = await this.domainCtrl.fetchPins("rguixaro@protonmail.ch");
+	if (pins != null) {
+		return pins;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+	*/
 	//fake
 	const fakePins = [
 		new Pin(
@@ -448,6 +461,27 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 	return {users: users, messages: fakeConver}; */
 };
 
+PresentationCtrl.prototype.createConversation = async function (email, text) {
+	let result = await this.domainCtrl.createConversation(email, text);
+	if (result != null) {
+		return result;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
+PresentationCtrl.prototype.deleteConversation = async function (id) {
+	let result = await this.domainCtrl.deleteConversation(id);
+	if (result != null) {
+		console.log("conversa borrada");
+		return true;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return false;
+	}
+};
+
 PresentationCtrl.prototype.createMessage = async function (id, text) {
 	let newMessage = await this.domainCtrl.createMessage(id, text);
 	if (newMessage != null) {
@@ -456,6 +490,6 @@ PresentationCtrl.prototype.createMessage = async function (id, text) {
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-}
+};
 
 module.exports = PresentationCtrl;
