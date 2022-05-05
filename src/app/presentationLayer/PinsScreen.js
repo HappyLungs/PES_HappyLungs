@@ -222,19 +222,6 @@ function PinsScreen({ navigation }) {
 						flexDirection: "column",
 					}}
 				>
-					<Text
-						style={[
-							{
-								fontSize: 20,
-								fontWeight: "bold",
-								color: COLORS.secondary,
-								marginTop: 35,
-								marginBottom: 10,
-							},
-						]}
-					>
-						{i18n.t("myPins")}
-					</Text>
 					<View
 						style={{
 							flexDirection: "row",

@@ -30,6 +30,7 @@ import SignInScreen from "../SignInScreen";
 import SignUpScreen from "../SignUpScreen";
 import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 import { UserContext } from "./UserContext";
 
 const Tab = createBottomTabNavigator();
@@ -55,7 +56,10 @@ function RootStack() {
 		>
 			<Stack.Screen name="SignInScreen" component={SignInScreen} />
 			<Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-			<Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} />
+			<Stack.Screen
+				name="TermsAndConditionsScreen"
+				component={TermsAndConditionsScreen}
+			/>
 			<Stack.Screen name="AppTabs" component={AppTabs} />
 		</Stack.Navigator>
 	);
@@ -82,8 +86,16 @@ function PinStack() {
 				name="PinsScreen"
 				component={PinsScreen}
 				options={{
-					title: "My Pins",
-					headerShown: false,
+					title: i18n.t("myPins"),
+					headerTitleAlign: "left",
+					headerShown: true,
+					headerLeft: null,
+					headerTitleStyle: {
+						fontSize: 20,
+						fontWeight: "bold",
+						color: COLORS.secondary,
+					},
+					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
@@ -199,8 +211,15 @@ function ChatStack() {
 				name="ChatScreen"
 				component={GeneralChatScreen}
 				options={{
-					title: "",
-					headerShown: false,
+					title: i18n.t("chat"),
+					headerShown: true,
+					headerLeft: null,
+					headerTitleStyle: {
+						fontSize: 20,
+						fontWeight: "bold",
+						color: COLORS.secondary,
+					},
+					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen
