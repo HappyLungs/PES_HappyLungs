@@ -157,6 +157,7 @@ function ProfileScreen({ navigation, route }) {
 						flex: 2,
 						alignItems: "center",
 						marginTop: 10,
+						marginLeft: -30,
 					}}
 				>
 					<ImageBackground
@@ -218,6 +219,7 @@ function ProfileScreen({ navigation, route }) {
 						<View
 							style={{
 								alignItems: "center",
+								marginLeft: -20,
 							}}
 						>
 							<Text
