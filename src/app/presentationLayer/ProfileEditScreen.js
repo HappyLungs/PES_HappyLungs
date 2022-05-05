@@ -17,7 +17,7 @@ import Modal from "react-native-modal";
 import COLORS from "../config/stylesheet/colors";
 import InputField from "./components/InputField";
 
-import { UserContext } from "../domainLayer/UserContext";
+import UserContext from "../domainLayer/UserContext";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -29,7 +29,7 @@ function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	//should pass userId, and then retrieve the updated data
 
-	const { user, setUser } = useContext(UserContext);
+	const [ user, setUser ] = useContext(UserContext);
 
 	const fakeUserData = {
 		username: "Username",
@@ -91,6 +91,7 @@ function ProfileEditScreen({ navigation }) {
 			  
 			let updatedUser = presentationCtrl.updateUser(
 				inputs.username,
+				user.email,
 				user.points,
 				user.language,
 				[state1, state2, state3],
@@ -98,7 +99,8 @@ function ProfileEditScreen({ navigation }) {
 				profilePicture
 			);
 			navigation.popToTop();
-			navigation.navigate("ProfileScreen", { user: updatedUser }); //not correct, should pass userId and then retrieve the data
+			setUser(updatedUser);
+			navigation.navigate("ProfileScreen"); //not correct, should pass userId and then retrieve the data
 			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
 		}
 	};

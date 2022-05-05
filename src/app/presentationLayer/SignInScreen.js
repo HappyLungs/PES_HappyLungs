@@ -16,7 +16,7 @@ import Feather from "react-native-vector-icons/Feather";
 import COLORS from "../config/stylesheet/colors";
 
 import Axios from "axios";
-import { UserContext } from '../domainLayer/UserContext';
+import UserContext from '../domainLayer/UserContext';
 
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -73,7 +73,8 @@ function SignInScreen({ navigation, route }) {
 		});
 	};
 
-	const { user, setUser } = useContext(UserContext);
+	// const { user, setUser } = useContext(useUserContextState);
+	const [ user, setUser ] = useContext(UserContext);
 
     const loginUser = async () => {
         const { email, password } = data;
@@ -84,6 +85,7 @@ function SignInScreen({ navigation, route }) {
         if (response.status == 200) {
             setUser(response.data);
             navigation.navigate("AppTabs", { screen: "Map"});
+			console.log(user);
         } else {
             errorMsgChange(response.message);
         }

@@ -17,13 +17,13 @@ import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 
-import { UserContext } from "../domainLayer/UserContext";
+import UserContext from "../domainLayer/UserContext";
 import i18n from "../config/translation";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
-	const { user, setUser } = useContext(UserContext);
+	const [ user, setUser ] = useContext(UserContext);
 
 	const userFake = {
 		username: "Username",
@@ -51,11 +51,11 @@ function ProfileScreen({ navigation, route }) {
 			"name": "",
 			"password": "",
 			"points": 0,
-			"savedPins": Array,
+			"savedPins": [],
 			"updatedAt": "",
 		  });
 		navigation.navigate("SignInScreen");
-		//setUser(null)
+		// setUser(null);
 	}
 
 	function calendar() {
@@ -204,7 +204,7 @@ function ProfileScreen({ navigation, route }) {
 							]}
 						>
 							<Text style={{ color: COLORS.secondary, fontWeight: "bold" }}>
-								{user.name}
+								{userFake.username}
 							</Text>
 						</View>
 					</ImageBackground>
@@ -313,7 +313,7 @@ function ProfileScreen({ navigation, route }) {
 									{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
 								]}
 							>
-								{user.points}
+								{userFake.points}
 							</Text>
 							<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
 								{i18n.t("points")}

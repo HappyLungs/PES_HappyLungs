@@ -4,11 +4,6 @@ const fetch = require("node-fetch");
 import Pin from "./classes/Pin";
 import User from "./classes/User";
 
-const { useContext, useState } = require("react");
-const UserContext = require("./UserContext");
-
-
-
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
@@ -364,18 +359,17 @@ DomainCtrl.prototype.updateUser = async function (
     notifications,
     profilePicture
   ) {
-  const { user, setUser } = useContext(UserContext);
 
   let myUser = new User(
       null,
-      user.email,
+      email,
       null,
       null
   );
+  console.log("THE USER TO UPDATE IS", myUser)
   //update to db
   let response = await myUser.update(name, points, language, healthStatus, notifications, profilePicture);
-  console.log("USER UPDATED: ", response.data)
-  setUser(response.data);
+  return response.data;
 };
 
 //Return the conversation with the id parameter.
