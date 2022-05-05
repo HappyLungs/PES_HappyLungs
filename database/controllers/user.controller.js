@@ -75,7 +75,9 @@ exports.users = async (request, response) => {
         let users = [];
         await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
-                users = userData[0].users;
+                if (userData.length > 0) {
+                    users = userData[0].users;
+                }
             }
         });
         users.push(params.email);   //Add the user himself to the list

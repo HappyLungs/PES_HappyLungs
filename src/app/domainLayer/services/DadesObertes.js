@@ -8,7 +8,7 @@ let DadesObertes;
         instance = this;
 
         // initialize any properties of the singleton
-        let api_uri = 'https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json'
+        this.api_uri = 'https://analisi.transparenciacatalunya.cat/resource/tasf-thgu.json'
     };
 }());
 
@@ -39,7 +39,7 @@ DadesObertes.prototype.getMeasuresDay = async function(eoiCode, date) {
     let apiDate = dateApiConverter(date);
     await axios({
         method: 'get',
-        url: api_uri+'?codi_eoi='+eoiCode+'&data='+apiDate,
+        url: this.api_uri+'?codi_eoi='+eoiCode+'&data='+apiDate,
         data: {
             "$$app_token" : "66TexGsqu_6szbRMKhNkE64Rx1uzX-dlfb0D",
         }
@@ -60,7 +60,7 @@ DadesObertes.prototype.getMeasuresDate =  async function(date) {
     let apiDate = dateApiConverter(date);
     await axios({
         method: 'get',
-        url: api_uri+'?data='+apiDate,
+        url: this.api_uri+'?data='+apiDate,
         data: {
             "$$app_token" : "66TexGsqu_6szbRMKhNkE64Rx1uzX-dlfb0D",
         }
@@ -83,7 +83,7 @@ DadesObertes.prototype.getMeasuresMultipleDays = async function(eoiCode, startDa
     let endApiDate = dateApiConverter(endDate);
     await axios({
         method: 'get',
-        url: api_uri+"?$where=data between '"+startApiDate+"' and '"+endApiDate+"'&codi_eoi="+eoiCode,//api_uri+'?codi_eoi='+eoiCode+'&$where=data between'+startDate+' and '+endDate,
+        url: this.api_uri+"?$where=data between '"+startApiDate+"' and '"+endApiDate+"'&codi_eoi="+eoiCode,//api_uri+'?codi_eoi='+eoiCode+'&$where=data between'+startDate+' and '+endDate,
         data: {
             "$$app_token" : "66TexGsqu_6szbRMKhNkE64Rx1uzX-dlfb0D",
         }

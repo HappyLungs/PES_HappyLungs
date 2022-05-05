@@ -10,7 +10,7 @@ import {
 	FlatList,
 	Image,
 	Dimensions,
-	Modal
+	Modal,
 } from "react-native";
 
 import COLORS from "../config/stylesheet/colors";
@@ -22,11 +22,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 
-
-
-
-
-
 function GeneralChatScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 
@@ -34,7 +29,7 @@ function GeneralChatScreen({ navigation }) {
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
 	const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-	const [chatDeleted, setChatDeleted] = useState({id:"", name:"unin"});
+	const [chatDeleted, setChatDeleted] = useState({ id: "", name: "unin" });
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
 
@@ -71,9 +66,13 @@ function GeneralChatScreen({ navigation }) {
 		setSearch(text);
 	};
 
-	function renderChatList () {
+	function renderChatList() {
 		const renderItem = ({ item, index }) => (
-			<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
+			<Animatable.View
+				animation="slideInDown"
+				duration={500}
+				delay={index * 10}
+			>
 				<View
 					style={[
 						{
@@ -98,7 +97,7 @@ function GeneralChatScreen({ navigation }) {
 										alignItems: "center",
 									}}
 									onPress={() => {
-										navigation.navigate("ChatConversation", {id: item.id});
+										navigation.navigate("ChatConversation", { id: item.id });
 									}}
 								>
 									<Image
@@ -176,11 +175,14 @@ function GeneralChatScreen({ navigation }) {
 														width: "90%",
 													}}
 												>
-													<Text numberOfLines={2} style={styles.chatLastMessage}>
+													<Text
+														numberOfLines={2}
+														style={styles.chatLastMessage}
+													>
 														{item.lastMessage}
 													</Text>
 												</View>
-	
+
 												<View
 													style={{
 														backgroundColor:
@@ -223,7 +225,7 @@ function GeneralChatScreen({ navigation }) {
 							>
 								<TouchableOpacity
 									onPress={() => {
-										setChatDeleted({id:item.id,name:item.name})
+										setChatDeleted({ id: item.id, name: item.name });
 										setModalDeleteVisible(true);
 									}}
 								>
@@ -240,7 +242,7 @@ function GeneralChatScreen({ navigation }) {
 				</View>
 			</Animatable.View>
 		);
-	
+
 		return (
 			<FlatList
 				stickyHeaderHiddenOnScroll={true}
@@ -252,7 +254,7 @@ function GeneralChatScreen({ navigation }) {
 				showsVerticalScrollIndicator={false}
 			></FlatList>
 		);
-	};
+	}
 
 	function renderHeader() {
 		return (
@@ -277,19 +279,6 @@ function GeneralChatScreen({ navigation }) {
 						marginBottom: 15,
 					}}
 				>
-					<Text
-						style={[
-							{
-								fontSize: 20,
-								fontWeight: "bold",
-								color: COLORS.secondary,
-								marginTop: 50,
-								marginBottom: 10,
-							},
-						]}
-					>
-						Chats
-					</Text>
 					<View
 						style={{
 							flexDirection: "row",
@@ -385,62 +374,81 @@ function GeneralChatScreen({ navigation }) {
 				}}
 			>
 				<View style={styles.centeredView}>
-					<View style={[styles.modalView, styles.shadow, {flexDirection:"column"}]}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ flexDirection: "column" },
+						]}
+					>
 						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
 							Are you sure you want to delete the chat with {chatDeleted.name}?
 						</Text>
-						<View 
+						<View
 							style={{
-								flexDirection:"row",
-								
+								flexDirection: "row",
 							}}
 						>
 							<View
 								style={{
-									flex:1,
-									flexDirection:"row",
-									justifyContent:"center",
-									marginTop: 10									
+									flex: 1,
+									flexDirection: "row",
+									justifyContent: "center",
+									marginTop: 10,
 								}}
 							>
 								<TouchableOpacity
-									style={[styles.shadow,{
-										backgroundColor:COLORS.green1,
-										width: 80,
-										height: 40,
-										borderRadius: 10,
-										justifyContent:"center",
-										alignItems:"center",
-										margin: 10
-									}]}
+									style={[
+										styles.shadow,
+										{
+											backgroundColor: COLORS.green1,
+											width: 80,
+											height: 40,
+											borderRadius: 10,
+											justifyContent: "center",
+											alignItems: "center",
+											margin: 10,
+										},
+									]}
 									onPress={() => {
 										setModalDeleteVisible(false);
 									}}
 								>
-									<Text style={{color:COLORS.white,fontWeight:"bold"}}>Cancel</Text>
+									<Text style={{ color: COLORS.white, fontWeight: "bold" }}>
+										Cancel
+									</Text>
 								</TouchableOpacity>
-							
+
 								<TouchableOpacity
-									style={[styles.shadow,{
-										backgroundColor:COLORS.white,
-										width: 80,
-										height: 40,
-										borderRadius: 10,
-										justifyContent:"center",
-										alignItems:"center",
-										margin: 10
-									}]}
+									style={[
+										styles.shadow,
+										{
+											backgroundColor: COLORS.white,
+											width: 80,
+											height: 40,
+											borderRadius: 10,
+											justifyContent: "center",
+											alignItems: "center",
+											margin: 10,
+										},
+									]}
 									onPress={async () => {
-										let ok = await presentationCtrl.deleteConversation(chatDeleted.id);
+										let ok = await presentationCtrl.deleteConversation(
+											chatDeleted.id
+										);
 										if (ok) {
-											let dataRemoved = filteredData.filter(item => item.id !== chatDeleted.id);
+											let dataRemoved = filteredData.filter(
+												(item) => item.id !== chatDeleted.id
+											);
 											setFilteredData(dataRemoved);
 										}
 										setModalDeleteVisible(false);
 										//else popup d'error
 									}}
 								>
-									<Text style={{color:COLORS.primary,fontWeight:"bold"}}>Yes</Text>
+									<Text style={{ color: COLORS.primary, fontWeight: "bold" }}>
+										Yes
+									</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -458,11 +466,9 @@ function GeneralChatScreen({ navigation }) {
 				flexDirection: "column",
 			}}
 		>
-				{renderHeader()}
-				<View style={[{ flex: 1, marginTop: 10 }]}>
-					{renderChatList()}
-				</View>
-				{renderDeletePopupDeclare()}
+			{renderHeader()}
+			<View style={[{ flex: 1, marginTop: 10 }]}>{renderChatList()}</View>
+			{renderDeletePopupDeclare()}
 		</View>
 	);
 }
