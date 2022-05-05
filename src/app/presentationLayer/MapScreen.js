@@ -139,7 +139,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	useEffect(async () => {
+	useEffect(async () => {/*
 		const fetchPins = async () => {
 			//get pins from db
 			//ought to fetch them before navigate
@@ -148,13 +148,13 @@ function MapScreen({ navigation, route }) {
 			console.log(data);
 		};
 
-		await fetchPins();
+		await fetchPins();*/
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
 		//console.log('prevoius');
 		await initHeatPoints();
-		//console.log(heatpoints);
+		console.log(heatpoints);
 	}, []);
 
 	//setHeatpoints(await presentationCtrl.getMapData());
@@ -722,7 +722,8 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+					<TouchableOpacity onPress={() => setModalFilterVisible(true)//console.log(heatpoints)//
+						 }>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
