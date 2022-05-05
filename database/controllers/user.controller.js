@@ -182,6 +182,7 @@ exports.login = async (request, response) => {
 
 exports.updateUser = async (request, response) => {
     let params = {};
+    console.log(request)
     if (request.query) {
         params = request.query;
     } else {
