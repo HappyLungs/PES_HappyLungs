@@ -25,9 +25,11 @@ exports.findUser = async (where = {}) => {
 
 exports.updateUser = async (where = {}, update = {}) => {
     return new Promise((resolve, reject) => {
+        console.log("UPDATE IS: ", update)
         UserModel
         .findOneAndUpdate(where, update)
         .then((data) => {
+            console.log("DATA TO RESOLVE IS", data)
             resolve(data)
         })
         .catch((error) => {
