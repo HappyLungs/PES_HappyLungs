@@ -188,11 +188,9 @@ exports.updateUser = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    console.log("PARAMS TO UPDATE", params)
     UserDataLayer.updateUser({email: params.email}, params)
         .then((updatedData) => {
             if (updatedData !== null && typeof updatedData !== undefined) {
-                console.log("WHAT HAS UPDATED", updatedData)
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
