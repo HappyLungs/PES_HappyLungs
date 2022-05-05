@@ -189,7 +189,7 @@ exports.updateUser = async (request, response) => {
         return;
     }
     console.log("PARAMS TO UPDATE", params)
-    UserDataLayer.updateUser({email: params.email}, {params})
+    UserDataLayer.updateUser({email: params.email}, params)
         .then((updatedData) => {
             if (updatedData !== null && typeof updatedData !== undefined) {
                 console.log("WHAT HAS UPDATED", updatedData)
