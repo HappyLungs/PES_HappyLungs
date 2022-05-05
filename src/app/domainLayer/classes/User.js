@@ -13,6 +13,7 @@ class User {
         this.points = 0;
         this.language = LanguageEnum.catalan;
         this.healthStatus = [false, false, false]; //cardiorespiratory problems, pregnant, elderly
+        this.notifications = true;
         this.profilePicture = "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg";
     }
 
@@ -30,6 +31,18 @@ class User {
         return await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
+        });
+    }
+
+    async update (name, points, language, healthStatus, notifications, profilePicture) {
+        return await persistCtrl.postRequest("/updateUser", {
+            "name": name,
+            "email": this.email,
+            "points": points,
+            "language": language,
+            "healthStatus": healthStatus,
+            "notifications": notifications,
+            "profilePicture": profilePicture
         });
     }
 

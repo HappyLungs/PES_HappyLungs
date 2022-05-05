@@ -31,7 +31,11 @@ const UsersSchema = new global.Schema({
     },
     healthStatus: {
         type: Array,
-        default: [False, False, False]
+        default: [false, false, false]
+    },
+    notifications: {
+        type: Boolean,
+        default: true
     },
     profilePicture: String,
     savedPins: [{

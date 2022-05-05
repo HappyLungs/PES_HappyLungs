@@ -31,7 +31,7 @@ import SignUpScreen from "../SignUpScreen";
 import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../../domainLayer/UserContext";
 
 const Tab = createBottomTabNavigator();
 

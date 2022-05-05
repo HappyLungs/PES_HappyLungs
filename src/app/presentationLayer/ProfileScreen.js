@@ -17,7 +17,7 @@ import Modal from "react-native-modal";
 
 import COLORS from "../config/stylesheet/colors";
 
-import { UserContext } from "./navigation/UserContext";
+import { UserContext } from "../domainLayer/UserContext";
 import i18n from "../config/translation";
 
 function ProfileScreen({ navigation, route }) {
@@ -37,6 +37,25 @@ function ProfileScreen({ navigation, route }) {
 
 	function settings() {
 		navigation.navigate("SettingsScreen");
+	}
+
+	function logOut() {
+		setUser({
+			"__v": 0,
+			"_id": "",
+			"birthdate": "",
+			"createdAt": "",
+			"email": "",
+			"healthStatus": "",
+			"language": "",
+			"name": "",
+			"password": "",
+			"points": 0,
+			"savedPins": Array,
+			"updatedAt": "",
+		  });
+		navigation.navigate("SignInScreen");
+		//setUser(null)
 	}
 
 	function calendar() {
@@ -131,10 +150,6 @@ function ProfileScreen({ navigation, route }) {
 		);
 	}
 
-	function logOut() {
-		setUser(null);
-		navigation.navigate("SignInScreen");
-	}
 	return (
 		<View
 			style={{
