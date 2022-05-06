@@ -180,6 +180,27 @@ exports.login = async (request, response) => {
     });
 };
 
+exports.updateUser = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    UserDataLayer.updateUser({email: params.email}, params)
+        .then((updatedData) => {
+            if (updatedData !== null && typeof updatedData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+};
+
 function comparePassword(password, hash) {
     return bcrypt.compareSync(password, hash);
 }
@@ -259,11 +280,11 @@ exports.delete = async (request, response) => {
         return;
     }
     UserDataLayer
-    .findUser({_id: mongodb.ObjectId(params.id)})
+    .findUser({email: params.email})
     .then((userData) => {
         if (userData !== undefined && userData !== null) {
             UserDataLayer
-            .deleteUser({_id: mongodb.ObjectId(params.id)})
+            .deleteUser({email: params.email})
             .then((deletedData) => {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", deletedData);
             })

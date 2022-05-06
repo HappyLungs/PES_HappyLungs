@@ -54,6 +54,12 @@ router.put(
 );
 
 router.post(
+    "/updateUser",
+    licenseMiddleware.validate,
+    UserController.updateUser
+);
+
+router.post(
     "/deleteUser",
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
