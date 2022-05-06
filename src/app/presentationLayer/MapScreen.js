@@ -154,7 +154,7 @@ function MapScreen({ navigation, route }) {
 		};
 		//console.log('prevoius');
 		await initHeatPoints();
-		console.log(heatpoints);
+		//console.log(heatpoints);
 	}, []);
 
 	//setHeatpoints(await presentationCtrl.getMapData());
@@ -451,7 +451,6 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							console.log(pins[2]);
 							navigation.navigate("OwnerPin", { pin: pins[2] });
 							setPinPreview(false);
 						}}

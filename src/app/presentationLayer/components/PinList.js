@@ -3,11 +3,9 @@ import {
 	StyleSheet,
 	View,
 	Text,
-	Animated,
 	FlatList,
 	TouchableOpacity,
 	Image,
-	Dimensions,
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
@@ -15,9 +13,15 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
+import { useContext } from "react";
 
 const PinList = ({ pinList, navigation }) => {
-	const isMyPin = [true, false, true, false, true, true];
+	const [user, setUser] = useContext(UserContext);
+
+	const isMyPin = (email) => {
+		return user.email === email;
+	};
 
 	const renderItem = ({ item, index }) => (
 		//all animations
@@ -45,7 +49,7 @@ const PinList = ({ pinList, navigation }) => {
 								alignItems: "center",
 							}}
 							onPress={() => {
-								if (isMyPin[index]) {
+								if (isMyPin(item.creatorEmail)) {
 									navigation.navigate("OwnerPin", { pin: item });
 								} else {
 									navigation.navigate("DefaultPin", { pin: item, saved: true });
@@ -53,12 +57,17 @@ const PinList = ({ pinList, navigation }) => {
 							}}
 						>
 							<Image
-								source={{ uri: item.media[0] }}
+								source={{
+									uri:
+										item.media.length !== 0
+											? item.media[0]
+											: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
+								}}
 								style={{
 									width: 85,
 									height: 85,
 									borderTopLeftRadius: 10,
-									borderBottomLeftRadius: isMyPin[index] ? 0 : 10,
+									borderBottomLeftRadius: isMyPin(item.creatorEmail) ? 0 : 10,
 								}}
 							/>
 							<View
@@ -78,7 +87,7 @@ const PinList = ({ pinList, navigation }) => {
 									<Text style={styles.itemName}>{item.title}</Text>
 									<View
 										style={{
-											backgroundColor: isMyPin[index]
+											backgroundColor: isMyPin(item.creatorEmail)
 												? COLORS.blue2
 												: COLORS.secondary,
 											alignSelf: "flex-end",
@@ -97,7 +106,9 @@ const PinList = ({ pinList, navigation }) => {
 												},
 											]}
 										>
-											{isMyPin[index] ? item.status : "Saved"}
+											{isMyPin(item.creatorEmail)
+												? i18n.t("created")
+												: i18n.t("saved")}
 										</Text>
 									</View>
 								</View>
@@ -127,7 +138,7 @@ const PinList = ({ pinList, navigation }) => {
 							</View>
 						</TouchableOpacity>
 					</View>
-					{isMyPin[index] && (
+					{isMyPin(item.creatorEmail) && (
 						<View
 							style={{
 								height: 30,
