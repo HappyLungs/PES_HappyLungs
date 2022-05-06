@@ -234,90 +234,13 @@ PresentationCtrl.prototype.updateUser = function (
 };
 
 PresentationCtrl.prototype.fetchPins = async function () {
-	/*
-	let pins = await this.domainCtrl.fetchPins("rguixaro@protonmail.ch");
+	let pins = await this.domainCtrl.fetchPins();
 	if (pins != null) {
 		return pins;
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
 	}
-	*/
-	//fake
-	const fakePins = [
-		new Pin(
-			"FIB UPC",
-			41.38941,
-			2.113436,
-			"Edifici B6 del Campus Nord, C/ Jordi Girona, 1-3, 08034 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			[
-				"https://fisica.upc.edu/ca/graus/centres-i-estudis/imatges-escoles/fib.jpeg/@@images/image.jpeg",
-				"https://pbs.twimg.com/media/Eh3E26xXYAITese.jpg",
-			],
-			5,
-			"03/04/2022",
-			"Public"
-		),
-		new Pin(
-			"PALAU REIAL",
-			41.38941,
-			2.113436,
-			"Av. Diagonal, 686, 08034 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			[
-				"https://www.bcncatfilmcommission.com/sites/default/files/styles/fancybox/public/locations/Districte%20(3).jpg",
-			],
-			4.5,
-			"11/04/2022",
-			"Private"
-		),
-		new Pin(
-			"CAMP NOU",
-			41.38941,
-			2.113436,
-			"C. d'Arístides Maillol, 12, 08028 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			4,
-			"09/04/2022",
-			"Public"
-		),
-		new Pin(
-			"CAMP NOUu",
-			41.38941,
-			2.113436,
-			"C. d'Arístides Maillol, 12, 08028 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			5,
-			"10/04/2022",
-			"Private"
-		),
-		new Pin(
-			"CAMP NOUuu",
-			41.38941,
-			2.113436,
-			"C. d'Arístides Maillol, 12, 08028 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			2,
-			"11/03/2022",
-			"Public"
-		),
-		new Pin(
-			"CAMP NOUuuu",
-			41.38941,
-			2.113436,
-			"C. d'Arístides Maillol, 12, 08028 Barcelona",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit leo non vehicula consequat. Etiam lorem ",
-			["https://cdn.getyourguide.com/img/tour/5cd031d5654c4.jpeg/148.jpg"],
-			1,
-			"12/04/2022",
-			"Public"
-		),
-	];
-	return fakePins;
 };
 
 PresentationCtrl.prototype.getMapData = async function () {

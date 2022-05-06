@@ -23,6 +23,8 @@ function PinsScreen({ navigation }) {
 
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
+	const [savedPins, setSavedPins] = useState([]);
+	const [createdPins, setCreatedPins] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
 	const [auxiliarFilterData2, setAuxiliarFilterData2] = useState([]);
 	const [search, setSearch] = useState("");
@@ -46,12 +48,22 @@ function PinsScreen({ navigation }) {
 		//get pins from db
 		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchPins();
-		const sortedData = [...data].sort(function (item1, item2) {
-			return standarizeDate(item1.date) <= standarizeDate(item2.date);
-		});
-		setMasterData(data);
-		setFilteredData(sortedData);
-		setAuxiliarFilterData(sortedData);
+		//const sortedData = [...data].sort(function (item1, item2) {
+		//	return standarizeDate(item1.date) <= standarizeDate(item2.date);
+		//});
+		setCreatedPins(data.pins);
+
+		setSavedPins(data.savedFilter);
+		const tmp = data.pins;
+		for (const x of savedPins) {
+			tmp.push(x);
+		}
+		setMasterData(tmp);
+		console.log("tmp");
+
+		console.log(typeof data.pins);
+		setFilteredData(data.pins);
+		setAuxiliarFilterData(data.pins);
 	};
 
 	const filterBySearch = (text) => {
@@ -140,29 +152,22 @@ function PinsScreen({ navigation }) {
 	const filterCreated = () => {
 		if (!createdFilter) {
 			let newData = [];
-			if (savedFilter) {
-				setSavedFilter(false);
-				newData = auxiliarFilterData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
+			if (ratingFilter) {
+				newData = filterByRatingAuxiliar(createdPins);
 				setAuxiliarFilterData2(newData);
-			} else if (dateFilter || ratingFilter) {
-				newData = filteredData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
+			} else if (dateFilter) {
+				newData = filterByDateAuxiliar(createdPins);
 				setAuxiliarFilterData2(newData);
 			} else {
-				newData = masterData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData(filteredData);
+				setAuxiliarFilterData(createdPins);
 			}
 			setFilteredData(newData);
 		} else {
-			if (ratingFilter || dateFilter) {
-				setFilteredData(auxiliarFilterData);
+			if (ratingFilter) {
+				setAuxiliarFilterData(filterByRatingAuxiliar(masterData));
+			} else if (dateFilter) {
+				setAuxiliarFilterData(masterData);
 			} else {
-				setFilteredData(masterData);
 				setAuxiliarFilterData(masterData);
 			}
 		}

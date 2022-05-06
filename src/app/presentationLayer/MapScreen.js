@@ -145,7 +145,6 @@ function MapScreen({ navigation, route }) {
 			//ought to fetch them before navigate
 			const data = await presentationCtrl.fetchPins();
 			setPins(data);
-			console.log(data);
 		};
 
 		await fetchPins();
@@ -235,8 +234,8 @@ function MapScreen({ navigation, route }) {
 	const { user } = useContext(UserContext);
 	const fakeProfileData = {
 		username: user.name,
-		points: 200
-	}
+		points: 200,
+	};
 
 	const [profile, setProfile] = useState(fakeProfileData);
 
@@ -699,14 +698,15 @@ function MapScreen({ navigation, route }) {
 						/>
 					))}
 
-					<Heatmap points={heatpoints}
-							 radius={50}
-							 opacity={0.7}
-							gradient={{
-								colors: ["green","yellow","orange","red","purple"],
-								startPoints: [0.01,0.25,0.5,0.75,0.99],
-								colorMapSize: 2000
-							}}
+					<Heatmap
+						points={heatpoints}
+						radius={50}
+						opacity={0.7}
+						gradient={{
+							colors: ["green", "yellow", "orange", "red", "purple"],
+							startPoints: [0.01, 0.25, 0.5, 0.75, 0.99],
+							colorMapSize: 2000,
+						}}
 					/>
 				</MapView>
 			</View>
