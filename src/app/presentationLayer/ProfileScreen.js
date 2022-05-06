@@ -25,16 +25,6 @@ function ProfileScreen({ navigation, route }) {
 
 	const [ user, setUser ] = useContext(UserContext);
 
-	const userFake = {
-		username: "Username",
-		email: "username@email.com",
-		points: 200,
-		healthState: [true, false, true],
-		picture: {
-			uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-		},
-	};
-
 	function settings() {
 		navigation.navigate("SettingsScreen");
 	}
@@ -175,7 +165,7 @@ function ProfileScreen({ navigation, route }) {
 					}}
 				>
 					<ImageBackground
-						source={userFake.picture}
+						source={user.profilePicture}
 						style={[
 							{
 								borderRadius: 20,
@@ -204,7 +194,7 @@ function ProfileScreen({ navigation, route }) {
 							]}
 						>
 							<Text style={{ color: COLORS.secondary, fontWeight: "bold" }}>
-								{userFake.username}
+								{user.name}
 							</Text>
 						</View>
 					</ImageBackground>
@@ -313,7 +303,7 @@ function ProfileScreen({ navigation, route }) {
 									{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
 								]}
 							>
-								{userFake.points}
+								{user.points}
 							</Text>
 							<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
 								{i18n.t("points")}
@@ -355,7 +345,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: userFake.healthState[0]
+									backgroundColor: user.healthStatus[0]
 										? COLORS.green1
 										: COLORS.secondary,
 								},
@@ -371,7 +361,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: userFake.healthState[1]
+									backgroundColor: user.healthStatus[1]
 										? COLORS.green1
 										: COLORS.secondary,
 								},
@@ -391,7 +381,7 @@ function ProfileScreen({ navigation, route }) {
 								styles.containerState,
 								styles.shadow,
 								{
-									backgroundColor: userFake.healthState[2]
+									backgroundColor: user.healthStatus[2]
 										? COLORS.green1
 										: COLORS.secondary,
 								},

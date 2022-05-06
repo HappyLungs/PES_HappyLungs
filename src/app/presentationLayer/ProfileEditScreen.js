@@ -31,20 +31,20 @@ function ProfileEditScreen({ navigation }) {
 
 	const [ user, setUser ] = useContext(UserContext);
 
-	const fakeUserData = {
-		username: "Username",
-		email: "username@email.com",
-		password: "**********",
-		points: 200,
-		healthState: [true, false, true],
-		picture:
-			"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	};
-	const [fakeUser, setFakeUser] = useState(fakeUserData);
-	const [profilePicture, setProfilePicture] = useState(fakeUserData.picture);
-	const [state1, setState1] = useState(fakeUser.healthState[0]);
-	const [state2, setState2] = useState(fakeUser.healthState[1]);
-	const [state3, setState3] = useState(fakeUser.healthState[2]);
+	// const fakeUserData = {
+	// 	username: "Username",
+	// 	email: "username@email.com",
+	// 	password: "**********",
+	// 	points: 200,
+	// 	healthState: [true, false, true],
+	// 	picture:
+	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+	// };
+	//const [fakeUser, setFakeUser] = useState(fakeUserData);
+	const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+	const [state1, setState1] = useState(user.healthStatus[0]);
+	const [state2, setState2] = useState(user.healthStatus[1]);
+	const [state3, setState3] = useState(user.healthStatus[2]);
 
 	const [inputs, setInputs] = useState({
 		username: user.name,
@@ -72,7 +72,7 @@ function ProfileEditScreen({ navigation }) {
 		setInputs((prevState) => ({ ...prevState, [input]: text }));
 	};
 
-	const validate = () => {
+	const validate = async () => {
 		Keyboard.dismiss();
 		let isValid = true;
 		if (!inputs.username) {
@@ -89,7 +89,7 @@ function ProfileEditScreen({ navigation }) {
 		}
 		if (isValid) {
 			  
-			let updatedUser = presentationCtrl.updateUser(
+			let updatedUser = await presentationCtrl.updateUser(
 				inputs.username,
 				user.email,
 				user.points,

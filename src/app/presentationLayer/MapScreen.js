@@ -233,14 +233,8 @@ function MapScreen({ navigation, route }) {
 	}, []);
 
 	const [ user ] = useContext(UserContext);
-	const fakeProfileData = {
-		username: user.name,
-		points: 200
-	}
 
-	const [profile, setProfile] = useState(fakeProfileData);
-
-	function renderHeader(profile) {
+	function renderHeader(user) {
 		return (
 			<View
 				style={[
@@ -269,7 +263,7 @@ function MapScreen({ navigation, route }) {
 						},
 					]}
 				>
-					{profile.username},
+					{user.name},
 					<Text
 						style={[
 							{
@@ -710,7 +704,7 @@ function MapScreen({ navigation, route }) {
 					/>
 				</MapView>
 			</View>
-			{renderHeader(profile)}
+			{renderHeader(user)}
 			<View
 				style={{
 					alignSelf: "flex-end",

@@ -226,9 +226,8 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
     notifications,
     profilePicture
   ) {
-  let aux = await this.domainCtrl.updateUser(name, email, points, language, healthStatus, notifications, profilePicture);
-  console.log("JA PASSA DE PRESENTATION CTRL", aux)
-  return aux;
+  let userUpdated = await this.domainCtrl.updateUser(name, email, points, language, healthStatus, notifications, profilePicture);
+  return userUpdated.data;
 };
 
 PresentationCtrl.prototype.fetchPins = async function () {

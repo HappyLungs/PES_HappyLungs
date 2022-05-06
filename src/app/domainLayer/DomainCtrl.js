@@ -366,10 +366,8 @@ DomainCtrl.prototype.updateUser = async function (
       null,
       null
   );
-  console.log("THE USER TO UPDATE IS", myUser)
   //update to db
-  let response = await myUser.update(name, points, language, healthStatus, notifications, profilePicture);
-  return response.data;
+  return await myUser.update(name, points, language, healthStatus, notifications, profilePicture);
 };
 
 //Return the conversation with the id parameter.

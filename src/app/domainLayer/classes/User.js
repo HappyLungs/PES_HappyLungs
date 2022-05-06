@@ -35,8 +35,7 @@ class User {
     }
 
     async update (name, points, language, healthStatus, notifications, profilePicture) {
-        console.log("THE EMAIL IS: ", this.email)
-        let params = await persistCtrl.postRequest("/updateUser", {
+        return await persistCtrl.postRequest("/updateUser", {
             "name": name,
             "email": this.email,
             "points": points,
@@ -45,8 +44,6 @@ class User {
             "notifications": notifications,
             "profilePicture": profilePicture
         });
-        console.log("THE RETURNED BY DB IS: ", params)
-        return params.data;
     }
 
 }
