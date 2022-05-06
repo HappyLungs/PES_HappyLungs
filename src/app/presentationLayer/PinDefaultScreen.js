@@ -110,7 +110,11 @@ function PinDefaultScreen({ navigation, route }) {
 						color={COLORS.secondary}
 						size={30}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
+					<Text
+						style={[styles.body, { marginStart: 10, alignSelf: "flex-start" }]}
+					>
+						{pin.date}
+					</Text>
 				</View>
 				<Rating
 					type={"custom"}

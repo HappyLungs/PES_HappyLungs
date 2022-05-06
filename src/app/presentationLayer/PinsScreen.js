@@ -43,10 +43,10 @@ function PinsScreen({ navigation }) {
 
 	const fetchPins = async () => {
 		const data = await presentationCtrl.fetchPins();
+		setMasterData([...data.pins, ...data.savedPins]);
+		setFilteredData([...data.pins, ...data.savedPins]);
 		setCreatedPins(data.pins);
 		setSavedPins(data.savedPins);
-		setMasterData([...createdPins, ...savedPins]);
-		setFilteredData(masterData);
 	};
 
 	const filterBySearch = (text) => {

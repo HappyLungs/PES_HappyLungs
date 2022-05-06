@@ -154,7 +154,9 @@ function PinOwnerScreen({ navigation, route }) {
 						</Text>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
+				<Text style={[styles.body, { marginTop: 10, alignSelf: "flex-start" }]}>
+					{pin.description}
+				</Text>
 				<View
 					style={{
 						flexDirection: "row",
