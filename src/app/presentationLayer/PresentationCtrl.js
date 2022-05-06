@@ -209,28 +209,25 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 };
 
 /**
- *
- * @param {*} username
+ * @param {*} name
  * @param {*} email
  * @param {*} points
  * @param {*} healthState
+ * @param {*} notifications
  * @param {*} profilePicture
  * @returns the updated user
  */
-PresentationCtrl.prototype.updateUser = function (
-	username,
+ PresentationCtrl.prototype.updateUser = async function (
+    name,
 	email,
-	points,
-	healthState,
-	profilePicture
-) {
-	return this.domainCtrl.updateUser(
-		username,
-		email,
-		points,
-		healthState,
-		profilePicture
-	);
+    points,
+    language,
+    healthStatus,
+    notifications,
+    profilePicture
+  ) {
+  let userUpdated = await this.domainCtrl.updateUser(name, email, points, language, healthStatus, notifications, profilePicture);
+  return userUpdated.data;
 };
 
 PresentationCtrl.prototype.fetchPins = async function () {

@@ -341,6 +341,35 @@ DomainCtrl.prototype.loginUser = async function (
   return await myUser.login();	//login to db
 };
 
+/**
+ * @param {*} name
+ * @param {*} email
+ * @param {*} points
+ * @param {*} healthState
+ * @param {*} notifications
+ * @param {*} profilePicture
+ * @returns the updated user
+ */
+DomainCtrl.prototype.updateUser = async function (
+    name,
+    email,
+    points,
+    language,
+    healthStatus,
+    notifications,
+    profilePicture
+  ) {
+
+  let myUser = new User(
+      null,
+      email,
+      null,
+      null
+  );
+  //update to db
+  return await myUser.update(name, points, language, healthStatus, notifications, profilePicture);
+};
+
 //Return the conversation with the id parameter.
 
 /*
@@ -494,31 +523,5 @@ DomainCtrl.prototype.findUser = async function (email) {
       .then((data) => data);
   //console.log(user);
 };*/
-
-/**
- * @param {*} username
- * @param {*} email
- * @param {*} points
- * @param {*} healthState
- * @param {*} profilePicture
- * @returns the updated user
- */
-DomainCtrl.prototype.updateUser = function (
-    username,
-    email,
-    points,
-    healthState,
-    profilePicture
-) {
-  //edit, not create
-  return new User(
-      username,
-      email,
-      points,
-      healthState,
-      profilePicture
-  );
-  //update to db
-};
 
 module.exports = DomainCtrl;

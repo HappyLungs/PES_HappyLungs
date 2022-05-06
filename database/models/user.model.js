@@ -30,9 +30,12 @@ const UsersSchema = new global.Schema({
         default: "Catalan"
     },
     healthStatus: {
-        type: String,
-        enum: ["Pregnant", "Old People", "Respiratory disease", "None"],
-        default: "None"
+        type: Array,
+        default: [false, false, false]
+    },
+    notifications: {
+        type: Boolean,
+        default: true
     },
     profilePicture: String,
     savedPins: [{
