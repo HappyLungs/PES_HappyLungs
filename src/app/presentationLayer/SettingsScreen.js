@@ -1,31 +1,25 @@
 import React, { useState } from "react";
-
 import {
 	Text,
 	StyleSheet,
 	View,
 	TouchableOpacity,
-	ImageBackground,
 	Keyboard,
-    Image,
+	Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
-import COLORS from "../config/stylesheet/colors";
-
 import { Ionicons } from "@expo/vector-icons";
-
+import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import { Feather } from "@expo/vector-icons";
-
+import COLORS from "../config/stylesheet/colors";
+import i18n from "../config/translation";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	//should pass userId, and then retrieve the updated data
-
-    const fakeUserData = {
+	const fakeUserData = {
 		username: "Username",
 		email: "username@email.com",
 		password: "**********",
@@ -35,70 +29,15 @@ function SettingsScreen({ navigation }) {
 			"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
 	};
 	const [user, setUser] = useState(fakeUserData);
-	
+
 	const [state1, setState1] = useState(user.healthState[0]);
 	const [state2, setState2] = useState(user.healthState[1]);
 	const [state3, setState3] = useState(user.healthState[2]);
-    const [state4, setState4] = useState(user.healthState[3]);
+	const [state4, setState4] = useState(user.healthState[3]);
 	const [state5, setState5] = useState(user.healthState[4]);
 
-    const [inputs, setInputs] = useState({
-		username: user.username,
-		email: user.email,
-		password: user.password,
-	});
-	const [errors, setErrors] = useState({});
-
-	const pickImage = async () => {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			aspect: [4, 3],
-			quality: 1,
-		});
-		if (!result.cancelled) {
-			setProfilePicture(result.uri);
-		}
-	};
-
-	const handleError = (error, input) => {
-		setErrors((prevState) => ({ ...prevState, [input]: error }));
-	};
-
-	const handleOnChange = (text, input) => {
-		setInputs((prevState) => ({ ...prevState, [input]: text }));
-	};
-
-	const validate = () => {
-		Keyboard.dismiss();
-		let isValid = true;
-		if (!inputs.username) {
-			handleError("Please add a valid username", "username");
-			isValid = false;
-		}
-		if (!inputs.email) {
-			handleError("Please add a valid email", "email");
-			isValid = false;
-		}
-		if (!inputs.password) {
-			handleError("Please add a valid password", "password");
-			isValid = false;
-		}
-		if (isValid) {
-			let updatedUser = presentationCtrl.updateUser(
-				inputs.username,
-				inputs.email,
-				inputs.password,
-				user.points,
-				[state1, state2, state3],
-				profilePicture
-			);
-			navigation.popToTop();
-			navigation.navigate("ProfileScreen", { user: updatedUser }); //not correct, should pass userId and then retrieve the data
-			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
-		}
-	};
-
-	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] = useState(false);
+	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
+		useState(false);
 
 	function renderModalDeleteAccount() {
 		return (
@@ -113,7 +52,7 @@ function SettingsScreen({ navigation }) {
 					setModalDeleteAccountVisible(!modalDeleteAccountVisible);
 				}}
 			>
-			<View style={styles.centeredView}>
+				<View style={styles.centeredView}>
 					<View
 						style={[
 							styles.modalView,
@@ -127,7 +66,7 @@ function SettingsScreen({ navigation }) {
 								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
 							]}
 						>
-							Are you sure you want to delete the account?
+							{i18n.t("deleteAccountConfirmation1")}
 						</Text>
 						<Text
 							style={[
@@ -135,45 +74,46 @@ function SettingsScreen({ navigation }) {
 								{ fontWeight: "bold", alignSelf: "center", bottom: -10 },
 							]}
 						>
-							This action will be irreversible
+							{i18n.t("deleteAccountConfirmation2")}
 						</Text>
-					<View>
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-around",
-							alignSelf: "center",
-							marginTop: 30,
-							marginHorizontal: 0,
-							width: 200,
-						}}
-					>
-						<TouchableOpacity
-							style={[
-								styles.containerBtn2,
-								styles.shadow,
-								{ backgroundColor: COLORS.red1 },
-							]}
-							onPress={() => setModalDeleteAccountVisible(false)}
-						>
-							<Text style={styles.containerTxt}>No</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={[
-								styles.containerBtn2,
-								styles.shadow,
-								{ backgroundColor: COLORS.green1 },
-							]}
-							//onPress={validate}
-						>
-							<Text style={styles.containerTxt}>Yes</Text>
-						</TouchableOpacity>
+						<View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-around",
+									alignSelf: "center",
+									marginTop: 30,
+									marginHorizontal: 0,
+									width: 200,
+								}}
+							>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.red1 },
+									]}
+									onPress={() => setModalDeleteAccountVisible(false)}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.green1 },
+									]}
+									//onPress={validate}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("yes")}</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
 					</View>
 				</View>
-			</View>
-		</View>
-	</Modal>
-	);}
+			</Modal>
+		);
+	}
 
 	return (
 		<View
@@ -192,7 +132,7 @@ function SettingsScreen({ navigation }) {
 					marginTop: 15,
 				}}
 			>
-                <View
+				<View
 					style={{
 						flex: 3,
 						alignSelf: "center",
@@ -200,156 +140,173 @@ function SettingsScreen({ navigation }) {
 						padding: 5,
 					}}
 				>
-                 
-				<Text style={[styles.textOption, { fontSize: 17 }]}>Language</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						marginVertical: 15,
-					}}
-				>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state1 && (state3 || state2)) {
-                                    setState3(false);
-                                    setState2(false);
-                                }
-								setState1(!state1);
-                               //changeLanguage();
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-                        <Image
-                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Spain_flag_300.png' }}
-                                style={{
-                                width: 45,
-                                height: 30,
-                                borderRadius: 5,
-
-                            }}
-                        /> 
-                    	</TouchableOpacity>
-						<Text style={styles.textState}>Spanish</Text>
+					<Text style={[styles.textOption, { fontSize: 17 }]}>
+						{i18n.t("language")}
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							marginVertical: 15,
+						}}
+					>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								onPress={() => {
+									if (!state1 && (state3 || state2)) {
+										setState3(false);
+										setState2(false);
+									}
+									setState1(!state1);
+									//changeLanguage();
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<Image
+									source={{
+										uri: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Spain_flag_300.png",
+									}}
+									style={{
+										width: 45,
+										height: 30,
+										borderRadius: 5,
+									}}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("spanish")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								onPress={() => {
+									if (!state2 && (state3 || state1)) {
+										setState3(false);
+										setState1(false);
+									}
+									setState2(!state2);
+									//changeLanguage();
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<Image
+									source={{
+										uri: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Catalonia_in_PNG.png",
+									}}
+									style={{
+										width: 45,
+										height: 30,
+										borderRadius: 5,
+									}}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("catalan")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								onPress={() => {
+									if (!state3 && (state2 || state1)) {
+										setState2(false);
+										setState1(false);
+									}
+									setState3(!state3);
+									//changeLanguage();
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<Image
+									source={{
+										uri: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_the_United_Kingdom_clo.png",
+									}}
+									style={{
+										width: 45,
+										height: 30,
+										borderRadius: 5,
+									}}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("english")}</Text>
+						</View>
 					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state2 && (state3 || state1)) {
-                                    setState3(false);
-                                    setState1(false);
-                                }
-								setState2(!state2);
-                               //changeLanguage();
-
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-						<Image
-                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Catalonia_in_PNG.png' }}
-                                style={{
-                                width: 45,
-                                height: 30,
-                                borderRadius: 5,
-
-                            }}
-                        /> 
-						</TouchableOpacity>
-						<Text style={styles.textState}>Catalan</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state3 && (state2 || state1)) {
-                                    setState2(false);
-                                    setState1(false);
-                                }
-								setState3(!state3);
-                                //changeLanguage();
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-						<Image
-                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_the_United_Kingdom_clo.png' }}
-                                style={{
-                                width: 45,
-                                height: 30,
-                                borderRadius: 5,
-
-                            }}
-                        /> 
-						</TouchableOpacity>
-						<Text style={styles.textState}>English</Text>
-					</View>
-                    
-				</View>
-                <Text style={[styles.textOption, { fontSize: 17 }]}>Notifications</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						marginVertical: 15,
-					}}
-				>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state4 && state5 ) setState5(false);
-								setState4(!state4);
-                               //changeLanguage();
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state4 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-                        <Ionicons name="notifications" size={27} color={COLORS.white} /> 
-                    	</TouchableOpacity>
-						<Text style={styles.textState}>On</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state5 && state4) setState4(false);
-								setState5(!state5);
-                               //changeLanguage();
-
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state5 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-						<Ionicons name="notifications-off" size={27} color={COLORS.white} /> 
-						</TouchableOpacity>
-						<Text style={styles.textState}>Off</Text>
+					<Text style={[styles.textOption, { fontSize: 17 }]}>
+						{i18n.t("notifications")}
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							marginVertical: 15,
+						}}
+					>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								onPress={() => {
+									if (!state4 && state5) setState5(false);
+									setState4(!state4);
+									//changeLanguage();
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state4 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<Ionicons name="notifications" size={27} color={COLORS.white} />
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("on")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								onPress={() => {
+									if (!state5 && state4) setState4(false);
+									setState5(!state5);
+									//changeLanguage();
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state5 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<Ionicons
+									name="notifications-off"
+									size={27}
+									color={COLORS.white}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("off")}</Text>
+						</View>
 					</View>
 				</View>
 			</View>
-		</View>
-		<View 
-			style={{
-				flexDirection: "column",
-				flex: 1,
-				alignItems: "flex-end",
-				justifyContent: "flex-end",
-				backgroundColor: COLORS.white,
-			}}
-		>
-			<TouchableOpacity
+			<View
+				style={{
+					flexDirection: "column",
+					flex: 1,
+					alignItems: "flex-end",
+					justifyContent: "flex-end",
+					backgroundColor: COLORS.white,
+				}}
+			>
+				<TouchableOpacity
 					onPress={() => setModalDeleteAccountVisible()}
 					style={[
 						styles.containerOption,
@@ -357,11 +314,11 @@ function SettingsScreen({ navigation }) {
 					]}
 				>
 					<Feather name="power" size={27} color={COLORS.red1} />
-					<Text style={styles.textOption}>Delete Account</Text>
+					<Text style={styles.textOption}>{i18n.t("deleteAccount")}</Text>
 				</TouchableOpacity>
+			</View>
+			{renderModalDeleteAccount()}
 		</View>
-		{renderModalDeleteAccount()}
-    </View>
 	);
 }
 

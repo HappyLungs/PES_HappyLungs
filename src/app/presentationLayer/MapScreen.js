@@ -139,13 +139,13 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	useEffect(async () => {/*
+	useEffect(async () => {
+		/*
 		const fetchPins = async () => {
 			//get pins from db
 			//ought to fetch them before navigate
 			const data = await presentationCtrl.fetchPins();
 			setPins(data);
-			console.log(data);
 		};
 
 		await fetchPins();*/
@@ -154,7 +154,7 @@ function MapScreen({ navigation, route }) {
 		};
 		//console.log('prevoius');
 		await initHeatPoints();
-		console.log(heatpoints);
+		//console.log(heatpoints);
 	}, []);
 
 	//setHeatpoints(await presentationCtrl.getMapData());
@@ -232,7 +232,7 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
-	const [ user ] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 
 	function renderHeader(user) {
 		return (
@@ -451,7 +451,6 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							console.log(pins[2]);
 							navigation.navigate("OwnerPin", { pin: pins[2] });
 							setPinPreview(false);
 						}}
@@ -693,14 +692,15 @@ function MapScreen({ navigation, route }) {
 						/>
 					))}
 
-					<Heatmap points={heatpoints}
-							 radius={50}
-							 opacity={0.7}
-							gradient={{
-								colors: ["green","yellow","orange","red","purple"],
-								startPoints: [0.01,0.25,0.5,0.75,0.99],
-								colorMapSize: 2000
-							}}
+					<Heatmap
+						points={heatpoints}
+						radius={50}
+						opacity={0.7}
+						gradient={{
+							colors: ["green", "yellow", "orange", "red", "purple"],
+							startPoints: [0.01, 0.25, 0.5, 0.75, 0.99],
+							colorMapSize: 2000,
+						}}
 					/>
 				</MapView>
 			</View>
@@ -716,8 +716,11 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)//console.log(heatpoints)//
-						 }>
+					<TouchableOpacity
+						onPress={
+							() => setModalFilterVisible(true) //console.log(heatpoints)//
+						}
+					>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}

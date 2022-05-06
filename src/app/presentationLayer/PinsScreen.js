@@ -23,8 +23,8 @@ function PinsScreen({ navigation }) {
 
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
-	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
-	const [auxiliarFilterData2, setAuxiliarFilterData2] = useState([]);
+	const [savedPins, setSavedPins] = useState([]);
+	const [createdPins, setCreatedPins] = useState([]);
 	const [search, setSearch] = useState("");
 	const [dateFilter, setDateFilter] = useState(true);
 	const [ratingFilter, setRatingFilter] = useState(false);
@@ -35,7 +35,6 @@ function PinsScreen({ navigation }) {
 	const AnimationRefFilter2 = useRef(null);
 	const AnimationRefFilter3 = useRef(null);
 	const AnimationRefFilter4 = useRef(null);
-	const isMyPin = [true, false, true, false, true, true];
 
 	useEffect(() => {
 		fetchPins();
@@ -43,20 +42,15 @@ function PinsScreen({ navigation }) {
 	}, []);
 
 	const fetchPins = async () => {
-		//get pins from db
-		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchPins();
-		const sortedData = [...data].sort(function (item1, item2) {
-			return standarizeDate(item1.date) <= standarizeDate(item2.date);
-		});
-		setMasterData(data);
-		setFilteredData(sortedData);
-		setAuxiliarFilterData(sortedData);
+		setMasterData([...data.pins, ...data.savedPins]);
+		setFilteredData([...data.pins, ...data.savedPins]);
+		setCreatedPins(data.pins);
+		setSavedPins(data.savedPins);
 	};
 
 	const filterBySearch = (text) => {
 		if (text) {
-			setAuxiliarFilterData(filteredData);
 			setFilteredData(
 				masterData.filter((item) => {
 					const itemData = item.title
@@ -72,39 +66,22 @@ function PinsScreen({ navigation }) {
 		setSearch(text);
 	};
 
-	const filterByDateAuxiliar = (data) => {
-		return [...data].sort(function (item1, item2) {
-			return standarizeDate(item1.date) <= standarizeDate(item2.date);
-		});
-	};
-
-	const standarizeDate = (date) => {
-		var standarizedDate = "";
-		return standarizedDate.concat(
-			date.slice(6, 10),
-			"/",
-			date.slice(3, 5),
-			"/",
-			date.slice(0, 2)
-		);
-	};
-
 	const filterByDate = () => {
 		if (!dateFilter) {
-			let newData = [];
-			if (createdFilter || savedFilter) {
-				newData = filterByDateAuxiliar(filteredData);
-			} else {
-				newData = filterByDateAuxiliar(masterData);
-				setAuxiliarFilterData(newData);
-			}
-			setFilteredData(newData);
-		} else {
-			if (createdFilter || savedFilter) {
-				setFilteredData(auxiliarFilterData2);
+			if (createdFilter) {
+				setFilteredData(createdPins);
+			} else if (savedFilter) {
+				setFilteredData(savedPins);
 			} else {
 				setFilteredData(masterData);
-				setAuxiliarFilterData(masterData);
+			}
+		} else {
+			if (createdFilter) {
+				setFilteredData(createdPins);
+			} else if (savedFilter) {
+				setFilteredData(savedPins);
+			} else {
+				setFilteredData(masterData);
 			}
 		}
 		setDateFilter(!dateFilter);
@@ -118,20 +95,20 @@ function PinsScreen({ navigation }) {
 
 	const filterByRating = () => {
 		if (!ratingFilter) {
-			let newData = [];
-			if (createdFilter || savedFilter) {
-				newData = filterByRatingAuxiliar(filteredData);
+			if (createdFilter) {
+				setFilteredData(filterByRatingAuxiliar(createdPins));
+			} else if (savedFilter) {
+				setFilteredData(filterByRatingAuxiliar(savedPins));
 			} else {
-				newData = filterByRatingAuxiliar(masterData);
-				setAuxiliarFilterData(newData);
+				setFilteredData(filterByRatingAuxiliar(masterData));
 			}
-			setFilteredData(newData);
 		} else {
-			if (createdFilter || savedFilter) {
-				setFilteredData(auxiliarFilterData2);
+			if (createdFilter) {
+				setFilteredData(createdPins);
+			} else if (savedFilter) {
+				setFilteredData(savedPins);
 			} else {
 				setFilteredData(masterData);
-				setAuxiliarFilterData(masterData);
 			}
 		}
 		setRatingFilter(!ratingFilter);
@@ -139,31 +116,19 @@ function PinsScreen({ navigation }) {
 
 	const filterCreated = () => {
 		if (!createdFilter) {
-			let newData = [];
 			if (savedFilter) {
 				setSavedFilter(false);
-				newData = auxiliarFilterData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData2(newData);
-			} else if (dateFilter || ratingFilter) {
-				newData = filteredData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData2(newData);
-			} else {
-				newData = masterData.filter((item, index) => {
-					return isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData(filteredData);
 			}
-			setFilteredData(newData);
+			if (ratingFilter) {
+				setFilteredData(filterByRatingAuxiliar(createdPins));
+			} else {
+				setFilteredData(createdPins);
+			}
 		} else {
-			if (ratingFilter || dateFilter) {
-				setFilteredData(auxiliarFilterData);
+			if (ratingFilter) {
+				setFilteredData(filterByRatingAuxiliar(masterData));
 			} else {
 				setFilteredData(masterData);
-				setAuxiliarFilterData(masterData);
 			}
 		}
 		setCreatedFilter(!createdFilter);
@@ -171,31 +136,19 @@ function PinsScreen({ navigation }) {
 
 	const filterSaved = () => {
 		if (!savedFilter) {
-			let newData = [];
 			if (createdFilter) {
 				setCreatedFilter(false);
-				newData = auxiliarFilterData.filter((item, index) => {
-					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData2(newData);
-			} else if (ratingFilter || createdFilter) {
-				newData = filteredData.filter((item, index) => {
-					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData2(newData);
-			} else {
-				newData = masterData.filter((item, index) => {
-					return !isMyPin[index]; //fake, rn there's no way to check if a pin is mine => author attrib in pin
-				});
-				setAuxiliarFilterData(filteredData);
 			}
-			setFilteredData(newData);
+			if (ratingFilter) {
+				setFilteredData(filterByRatingAuxiliar(savedPins));
+			} else {
+				setFilteredData(savedPins);
+			}
 		} else {
-			if (ratingFilter || dateFilter) {
-				setFilteredData(auxiliarFilterData);
+			if (ratingFilter) {
+				setFilteredData(filterByRatingAuxiliar(masterData));
 			} else {
 				setFilteredData(masterData);
-				setAuxiliarFilterData(masterData);
 			}
 		}
 		setSavedFilter(!savedFilter);

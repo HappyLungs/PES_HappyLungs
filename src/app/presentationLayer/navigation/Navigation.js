@@ -119,7 +119,7 @@ function PinStack() {
 				name="EditPinScreen"
 				component={PinEditScreen}
 				options={{
-					title: "Editing pin",
+					title: i18n.t("editingPin"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -152,7 +152,6 @@ function ProfileStack() {
 				name="ProfileScreen"
 				component={ProfileScreen}
 				options={{
-					title: "",
 					headerShown: false,
 				}}
 			/>
@@ -160,7 +159,7 @@ function ProfileStack() {
 				name="ProfileEditScreen"
 				component={ProfileEditScreen}
 				options={{
-					title: "Editing profile",
+					title: i18n.t("editingProfile"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -175,7 +174,7 @@ function ProfileStack() {
 				name="SettingsScreen"
 				component={SettingsScreen}
 				options={{
-					title: "Settings",
+					title: i18n.t("settings"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -226,7 +225,6 @@ function ChatStack() {
 				name="ChatConversation"
 				component={ChatConversation}
 				options={{
-					title: "",
 					headerShown: false,
 				}}
 			/>
@@ -234,7 +232,7 @@ function ChatStack() {
 				name="NewChat"
 				component={NewChatScreen}
 				options={{
-					title: "New chat",
+					title: i18n.t("newChat"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -263,14 +261,13 @@ function MapStack() {
 					fontWeight: "bold",
 					fontSize: 27,
 				},
-				headerShown: false,
+				headerShown: true,
 			}}
 		>
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}
 				options={{
-					title: "Happy Lungs",
 					headerShown: false,
 				}}
 				initialParams={{ tmpLat: false, tmpLng: false }}
@@ -291,6 +288,7 @@ function MapStack() {
 				component={PinDefaultScreen}
 				options={{
 					title: "",
+					headerShown: false,
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
@@ -299,6 +297,7 @@ function MapStack() {
 				component={PinOwnerScreen}
 				options={{
 					title: "",
+					headerShown: false,
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
@@ -306,7 +305,7 @@ function MapStack() {
 				name="EditPinScreen"
 				component={PinEditScreen}
 				options={{
-					title: "Editing pin",
+					title: i18n.t("editingPin"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -343,7 +342,6 @@ function AppTabs() {
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
-					title: "General Chat",
 					headerShown: false,
 				}}
 			/>
@@ -354,7 +352,6 @@ function AppTabs() {
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="pushpino" size={size} color={color} />
 					),
-					title: "My Pins",
 					headerShown: false,
 				}}
 			/>
