@@ -14,6 +14,7 @@ const ca = {
 	share: "Compartir",
 	recommended1: "Recomanat",
 	recommended2: "No recomanat",
+	author: "Autor",
 	createdPins: "Pins creats",
 	sharedPins: "Pins compartits",
 	points: "punts",
@@ -66,6 +67,16 @@ const ca = {
 	newChat: "Nou xat",
 	yes: "Sí",
 	no: "No",
+	language: "Idioma",
+	catalan: "Català",
+	english: "Anglès",
+	espanish: "Espanyol",
+	notifications: "Notificacions",
+	on: "Activades",
+	off: "Desactivades",
+	deleteAccount: "Eliminar compte",
+	deleteAccountConfirmation1: "Estàs segur que vols eliminar el teu compte?",
+	deleteAccountConfirmation2: "Aquesta acció és irreversible",
 };
 
 const en = {
@@ -84,6 +95,7 @@ const en = {
 	share: "Share",
 	recommended1: "Recommended",
 	recommended2: "Not recommended",
+	author: "Author",
 	createdPins: "Created pins",
 	sharedPins: "Shared pins",
 	points: "points",
@@ -136,6 +148,16 @@ const en = {
 	newChat: "New chat",
 	yes: "Yes",
 	no: "No",
+	language: "Idioma",
+	catalan: "Catalan",
+	english: "English",
+	spanish: "Spanish",
+	notifications: "Notifications",
+	on: "On",
+	off: "Off",
+	deleteAccount: "Delete account",
+	deleteAccountConfirmation1: "Do you really want to delete your account?",
+	deleteAccountConfirmation2: "This cannot be undone",
 };
 
 const es = {
@@ -154,6 +176,7 @@ const es = {
 	share: "Compartir",
 	recommended1: "Recomendado",
 	recommended2: "No recomendado",
+	author: "Autor",
 	createdPins: "Pins creados",
 	sharedPins: "Pins compartidos",
 	points: "puntos",
@@ -166,7 +189,7 @@ const es = {
 	ranking: "Ranking",
 	shareOption: "Avisa a tus amigos",
 	logOut: "Cerrar sesión",
-	logOutConfirmation: "¿Estás seguro que quiéres cerrar la sessión?",
+	logOutConfirmation: "¿Estás seguro que quieres cerrar la sessión?",
 	editingProfile: "Editar perfil",
 	username: "Nombre de usuario",
 	email: "Correo electrónico",
@@ -206,6 +229,16 @@ const es = {
 	newChat: "Nuevo chat",
 	yes: "Sí",
 	no: "No",
+	language: "Idioma",
+	catalan: "Catalán",
+	english: "Inglés",
+	espanish: "Español",
+	notifications: "Notificaciones",
+	on: "Activadas",
+	off: "Desactivadas",
+	deleteAccount: "Eliminar cuenta",
+	deleteAccountConfirmation1: "¿De verdad quieres eliminar tu cuenta?",
+	deleteAccountConfirmation2: "Esta acción es irreversible",
 };
 
 export { ca, en, es };

@@ -1,9 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import * as Animatable from "react-native-animatable";
 
 import COLORS from "../../config/stylesheet/colors";
-import * as Animatable from "react-native-animatable";
 const PresentationCtrl = require("../PresentationCtrl.js");
+import i18n from "../../config/translation";
 
 const PinPreview = ({ item }) => {
 	let presentationCtrl = new PresentationCtrl();
@@ -29,10 +30,10 @@ const PinPreview = ({ item }) => {
 						flexDirection: "column",
 					}}
 				>
-					<Text style={styles.pinName}>{item.title}</Text>
+					<Text style={styles.pinName}>{item.name}</Text>
 
 					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
-					<Text style={styles.profile}>author</Text>
+					<Text style={styles.profile}>{i18n.t("author")}</Text>
 				</View>
 				<View style={styles.shadow}>
 					<Image
