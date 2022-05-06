@@ -4,6 +4,7 @@ const PinSchema = new global.Schema({
     description: String,
     latitude: Number,
     longitude: Number,
+    locationTitle: String,
     date: {
         type: Date,
         default: null

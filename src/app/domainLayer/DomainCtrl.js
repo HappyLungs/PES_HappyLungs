@@ -192,6 +192,7 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
 DomainCtrl.prototype.createPin = async function (
     title,
     location,
+    locationTitle,
     description,
     media,
     rating,
@@ -199,13 +200,14 @@ DomainCtrl.prototype.createPin = async function (
     status
 ) {
   let {latitude, longitude} = location;
-  let pin = new Pin(title, latitude, longitude, description, media, rating, new Date(date), status);
+  let pin = new Pin(title, latitude, longitude, locationTitle, description, media, rating, new Date(date), status);
   //store db
   let params = {
     title: pin.title,
     description: pin.description,
     latitude: pin.latitude,
     longitude: pin.longitude,
+    locationTitle: pin.locationTitle,
     date: pin.date,
     rating: pin.rating,
     status: pin.status,
