@@ -182,13 +182,13 @@ exports.login = async (request, response) => {
 
 exports.updateUser = async (request, response) => {
     let params = {};
-    if (request.query) {
-        params = request.query;
+    if (request.body.params) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    UserDataLayer.updateUser({email: params.email}, {params})
+    UserDataLayer.updateUser({email: params.email}, params)
         .then((updatedData) => {
             if (updatedData !== null && typeof updatedData !== undefined) {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);

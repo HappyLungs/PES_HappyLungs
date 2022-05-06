@@ -12,7 +12,7 @@ import {
 import COLORS from "../config/stylesheet/colors";
 import PinPreview from "./components/PinPreview";
 import i18n from "../config/translation";
-import { UserContext } from "../domainLayer/UserContext";
+import UserContext from "../domainLayer/UserContext";
 
 import {
 	Ionicons,
@@ -232,15 +232,9 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
-	const { user } = useContext(UserContext);
-	const fakeProfileData = {
-		username: user.name,
-		points: 200
-	}
+	const [ user ] = useContext(UserContext);
 
-	const [profile, setProfile] = useState(fakeProfileData);
-
-	function renderHeader(profile) {
+	function renderHeader(user) {
 		return (
 			<View
 				style={[
@@ -269,7 +263,7 @@ function MapScreen({ navigation, route }) {
 						},
 					]}
 				>
-					{profile.username},
+					{user.name},
 					<Text
 						style={[
 							{
@@ -710,7 +704,7 @@ function MapScreen({ navigation, route }) {
 					/>
 				</MapView>
 			</View>
-			{renderHeader(profile)}
+			{renderHeader(user)}
 			<View
 				style={{
 					alignSelf: "flex-end",

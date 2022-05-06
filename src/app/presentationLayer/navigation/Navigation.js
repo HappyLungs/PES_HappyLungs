@@ -31,7 +31,7 @@ import SignUpScreen from "../SignUpScreen";
 import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
-import { UserContext } from "../../domainLayer/UserContext";
+import { UserContextProvider } from "../../domainLayer/UserContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -386,15 +386,15 @@ function AppTabs() {
 }
 
 export default function Navigation() {
-	const [user, setUser] = useState(null);
+	//const [user, setUser] = useState(null);
 
-	const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+	//const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
 	return (
 		<NavigationContainer>
-			<UserContext.Provider value={value}>
+			<UserContextProvider>
 				<RootStack />
-			</UserContext.Provider>
+			</UserContextProvider>
 		</NavigationContainer>
 	);
 }
