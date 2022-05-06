@@ -30,13 +30,33 @@ exports.list = async (request, response) => {
                                 'email': params.user
                               }
                             }, {
-                              '$lookup': {
-                                'from': 'pins', 
-                                'localField': 'savedPins', 
-                                'foreignField': '_id', 
-                                'as': 'savedPins'
-                              }
-                            }, {
+                                '$lookup': {
+                                  'from': 'pins', 
+                                  'let': {
+                                    'savedPins': '$savedPins'
+                                  }, 
+                                  'pipeline': [
+                                    {
+                                      '$match': {
+                                        '$expr': {
+                                          '$and': [
+                                            {
+                                              '$in': [
+                                                '$_id', '$$savedPins'
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }, {
+                                      '$sort': {
+                                        'date': -1
+                                      }
+                                    }
+                                  ], 
+                                  'as': 'savedPins'
+                                }
+                              }, {
                               '$project': {
                                 'savedPins': 1, 
                                 '_id': 0
