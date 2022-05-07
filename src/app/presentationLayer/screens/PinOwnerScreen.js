@@ -7,15 +7,15 @@ import {
 	TouchableOpacity,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
-import ImageCarousel from "./components/ImageCarousel";
+import ImageCarousel from "../components/ImageCarousel";
 import Modal from "react-native-modal";
 import { Rating } from "react-native-ratings";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -125,7 +125,7 @@ function PinOwnerScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35 }}>
+				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
 					<Text style={[styles.title, { width: "65%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}

@@ -8,7 +8,6 @@ import i18n from "../../config/translation";
 
 const PinPreview = ({ item }) => {
 	let presentationCtrl = new PresentationCtrl();
-
 	const savePin = () => {
 		//presentationCtrl.savePin(item);
 	};
@@ -30,14 +29,19 @@ const PinPreview = ({ item }) => {
 						flexDirection: "column",
 					}}
 				>
-					<Text style={styles.pinName}>{item.name}</Text>
+					<Text style={styles.pinName}>{item.title}</Text>
 
 					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
-					<Text style={styles.profile}>{i18n.t("author")}</Text>
+					<Text style={styles.profile}>{item.creatorEmail}</Text>
 				</View>
 				<View style={styles.shadow}>
 					<Image
-						source={{ uri: item.media[0] }}
+						source={{
+							uri:
+								item.media.length !== 0
+									? item.media[0]
+									: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
+						}}
 						style={{
 							width: 75,
 							height: 75,
@@ -86,8 +90,8 @@ const styles = StyleSheet.create({
 	profile: {
 		color: COLORS.green1,
 		fontSize: 13,
-		fontWeight: "bold",
 		marginTop: 10,
+		fontWeight: "bold",
 	},
 	containerTxt: {
 		fontSize: 15,

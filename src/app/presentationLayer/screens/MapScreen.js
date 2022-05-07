@@ -7,13 +7,13 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Pressable,
+	Image,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import PinPreview from "./components/PinPreview";
-import i18n from "../config/translation";
-import UserContext from "../domainLayer/UserContext";
-
+import COLORS from "../../config/stylesheet/colors";
+import PinPreview from "../components/PinPreview";
+import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 import {
 	Ionicons,
 	MaterialIcons,
@@ -30,7 +30,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 async function callGeocodeAPI(latitude, longitude) {
 	const location = await fetch(
@@ -140,15 +140,21 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
-		/*
 		const fetchPins = async () => {
-			//get pins from db
-			//ought to fetch them before navigate
-			const data = await presentationCtrl.fetchPins();
+			const data = await presentationCtrl.fetchTrendingPins();
 			setPins(data);
+			let fetchedMarkers = [];
+			for (let marker of Object.keys(data)) {
+				fetchedMarkers.push({
+					latitude: data[marker].latitude,
+					longitude: 32.1,
+				});
+			}
+			setMarkers(fetchedMarkers);
+			console.log(data);
 		};
 
-		await fetchPins();*/
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -174,6 +180,10 @@ function MapScreen({ navigation, route }) {
 	}
 	*/
 
+	const isMyPin = (email) => {
+		return user.email === email;
+	};
+
 	const onMapPress = React.useCallback((e) => {
 		//e.persist()
 		navigation.navigate("CreatePin", {
@@ -189,7 +199,6 @@ function MapScreen({ navigation, route }) {
 			{
 				latitude: actualMarker.latitude,
 				longitude: actualMarker.longitude,
-				time: new Date(),
 			},
 		]);
 		setModalPinVisible(!modalPinVisible);
@@ -242,24 +251,33 @@ function MapScreen({ navigation, route }) {
 						height: 70,
 						width: "100%",
 						paddingHorizontal: 20,
-						paddingTop: 25,
-						paddingBottom: 10,
 						alignItems: "center",
 						flexDirection: "row",
 						backgroundColor: COLORS.white,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
-						justifyContent: "space-between",
 					},
 					styles.shadow,
 				]}
 			>
+				<TouchableOpacity
+					onPress={() => {
+						navigation.navigate("Profile");
+					}}
+					style={{}}
+				>
+					<Image
+						source={{ uri: user.profilePicture }}
+						style={[{ borderRadius: 20, width: 40, height: 40 }]}
+					></Image>
+				</TouchableOpacity>
 				<Text
 					style={[
 						{
 							fontSize: 20,
 							fontWeight: "bold",
 							color: COLORS.secondary,
+							marginStart: 15,
 						},
 					]}
 				>
@@ -451,11 +469,17 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							navigation.navigate("OwnerPin", { pin: pins[2] });
+							if (isMyPin(selected.creatorEmail)) {
+								navigation.navigate("OwnerPin", { pin: selected });
+							} else {
+								navigation.navigate("DefaultPin", {
+									pin: selected,
+								});
+							}
 							setPinPreview(false);
 						}}
 					>
-						<PinPreview item={pins[2]}></PinPreview>
+						<PinPreview item={selected}></PinPreview>
 					</Pressable>
 				</View>
 			</Modal>
@@ -543,7 +567,9 @@ function MapScreen({ navigation, route }) {
 									color={COLORS.secondary}
 									size={35}
 								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
+								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+									{i18n.t("share")}
+								</Text>
 							</TouchableOpacity>
 							<Text
 								style={{
@@ -678,19 +704,20 @@ function MapScreen({ navigation, route }) {
 					onPress={onModal}
 					onLoad={onMapLoad}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={marker.time.toISOString()}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setPinPreview(true);
-								setSelected(marker);
-							}}
-						/>
-					))}
+					{pinsShown &&
+						markers.map((marker, idx) => (
+							<Marker
+								key={idx}
+								coordinate={{
+									latitude: marker.latitude,
+									longitude: marker.longitude,
+								}}
+								onPress={() => {
+									setPinPreview(true);
+									setSelected(pins[idx]);
+								}}
+							/>
+						))}
 
 					<Heatmap
 						points={heatpoints}
