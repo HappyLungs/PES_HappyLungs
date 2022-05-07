@@ -251,6 +251,16 @@ PresentationCtrl.prototype.fetchPins = async function () {
 	}
 };
 
+PresentationCtrl.prototype.fetchTrendingPins = async function () {
+	let pins = await this.domainCtrl.fetchTrendingPins();
+	if (pins != null) {
+		return pins;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+};
+
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };

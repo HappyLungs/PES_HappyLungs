@@ -125,7 +125,7 @@ function PinOwnerScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35 }}>
+				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
 					<Text style={[styles.title, { width: "65%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}

@@ -139,15 +139,21 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
-		/*
 		const fetchPins = async () => {
-			//get pins from db
-			//ought to fetch them before navigate
-			const data = await presentationCtrl.fetchPins();
+			const data = await presentationCtrl.fetchTrendingPins();
 			setPins(data);
+			let fetchedMarkers = [];
+			for (let marker of Object.keys(data)) {
+				fetchedMarkers.push({
+					latitude: data[marker].latitude,
+					longitude: 32.1,
+				});
+			}
+			setMarkers(fetchedMarkers);
+			console.log(data);
 		};
 
-		await fetchPins();*/
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -173,6 +179,10 @@ function MapScreen({ navigation, route }) {
 	}
 	*/
 
+	const isMyPin = (email) => {
+		return user.email === email;
+	};
+
 	const onMapPress = React.useCallback((e) => {
 		//e.persist()
 		navigation.navigate("CreatePin", {
@@ -188,7 +198,6 @@ function MapScreen({ navigation, route }) {
 			{
 				latitude: actualMarker.latitude,
 				longitude: actualMarker.longitude,
-				time: new Date(),
 			},
 		]);
 		setModalPinVisible(!modalPinVisible);
@@ -450,11 +459,17 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							navigation.navigate("OwnerPin", { pin: pins[2] });
+							if (isMyPin(selected.creatorEmail)) {
+								navigation.navigate("OwnerPin", { pin: selected });
+							} else {
+								navigation.navigate("DefaultPin", {
+									pin: selected,
+								});
+							}
 							setPinPreview(false);
 						}}
 					>
-						<PinPreview item={pins[2]}></PinPreview>
+						<PinPreview item={selected}></PinPreview>
 					</Pressable>
 				</View>
 			</Modal>
@@ -677,19 +692,20 @@ function MapScreen({ navigation, route }) {
 					onPress={onModal}
 					onLoad={onMapLoad}
 				>
-					{markers.map((marker) => (
-						<Marker
-							key={marker.time.toISOString()}
-							coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
-							}}
-							onPress={() => {
-								setPinPreview(true);
-								setSelected(marker);
-							}}
-						/>
-					))}
+					{pinsShown &&
+						markers.map((marker, idx) => (
+							<Marker
+								key={idx}
+								coordinate={{
+									latitude: marker.latitude,
+									longitude: marker.longitude,
+								}}
+								onPress={() => {
+									setPinPreview(true);
+									setSelected(pins[idx]);
+								}}
+							/>
+						))}
 
 					<Heatmap
 						points={heatpoints}

@@ -57,6 +57,7 @@ function CreatePinScreen({ navigation, route }) {
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
+				coords.title,
 				inputs.description,
 				tmpMedia,
 				rating,

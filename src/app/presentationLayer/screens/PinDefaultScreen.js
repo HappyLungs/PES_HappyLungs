@@ -53,7 +53,7 @@ function PinDefaultScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35 }}>
+				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
 					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
@@ -73,7 +73,9 @@ function PinDefaultScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
+				<Text style={[styles.body, { marginTop: 10, alignSelf: "flex-start" }]}>
+					{pin.description}
+				</Text>
 				<View
 					style={{
 						flexDirection: "row",

@@ -238,8 +238,9 @@ DomainCtrl.prototype.createPin = async function (
  */
 DomainCtrl.prototype.fetchPins = async function () {
 	let result = await persistenceCtrl.getRequest("/pins", {
-		user: "ivan.jimeno@estudiantat.upc.edu" /** TODO: Change the user email for the logged one */,
+		user: "rguixaro@protonmail.ch" /** TODO: Change the user email for the logged one */,
 	});
+	console.log(result.status);
 	if (result.status === 200) {
 		return result.data;
 	} else {
