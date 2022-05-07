@@ -10,15 +10,16 @@ import {
 	ImageBackground,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
-
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
-const PresentationCtrl = require("./PresentationCtrl.js");
+
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+
+const PresentationCtrl = require("../PresentationCtrl");
 
 function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -60,7 +61,7 @@ function CreatePinScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				pinData,
-				(status) ? "Public" : "Private"
+				status ? "Public" : "Private"
 			);
 			navigation.navigate("MapScreen");
 		}

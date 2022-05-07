@@ -10,9 +10,9 @@ import {
 	ImageBackground,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+import i18n from "../../config/translation";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -20,7 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();

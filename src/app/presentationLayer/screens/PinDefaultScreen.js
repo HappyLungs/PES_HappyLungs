@@ -7,14 +7,14 @@ import {
 	TouchableOpacity,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
 import { Rating } from "react-native-ratings";
-import ImageCarousel from "./components/ImageCarousel";
+import ImageCarousel from "../components/ImageCarousel";
 import { Ionicons } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();

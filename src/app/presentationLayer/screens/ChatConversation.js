@@ -12,9 +12,9 @@ import {
 	TouchableOpacity,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import ChatMessagesList from "./components/ChatMessagesList";
-const PresentationCtrl = require("./PresentationCtrl.js");
+import COLORS from "../../config/stylesheet/colors";
+import ChatMessagesList from "../components/ChatMessagesList";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -36,7 +36,7 @@ function ChatScreen({ route, navigation }) {
 		//ought to fetch them before navigate
 		const id = route.params.id;
 		const data = await presentationCtrl.fetchConversation(id);
-        
+
 		setLoggedUser(data.users.logged);
 		setConversantUsers(data.users.conversant);
 		setMessages(data.messages);
@@ -44,10 +44,9 @@ function ChatScreen({ route, navigation }) {
 
 	const sendMessage = async () => {
 		await presentationCtrl.createMessage(route.params.id, message);
-		setMessage('');
+		setMessage("");
 		Keyboard.dismiss();
-
-	}
+	};
 
 	function renderHeader() {
 		return (
@@ -79,7 +78,7 @@ function ChatScreen({ route, navigation }) {
 						style={{
 							width: 50,
 							height: 50,
-							borderRadius: 100
+							borderRadius: 100,
 						}}
 					/>
 					<Text
@@ -109,16 +108,21 @@ function ChatScreen({ route, navigation }) {
 		>
 			{renderHeader()}
 			<View style={[{ flex: 1, marginTop: 10 }]}>
-				<ChatMessagesList loggedUser={loggedUser} conversant={conversant} messagesList={messages} navigation={navigation}></ChatMessagesList>
+				<ChatMessagesList
+					loggedUser={loggedUser}
+					conversant={conversant}
+					messagesList={messages}
+					navigation={navigation}
+				></ChatMessagesList>
 			</View>
 			<KeyboardAvoidingView
 				style={styles.messageInputBox}
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-				keyboardVerticalOffset='0'
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				keyboardVerticalOffset="0"
 			>
 				<View
 					style={{
-						flexDirection: "row"
+						flexDirection: "row",
 					}}
 				>
 					<TextInput
@@ -129,7 +133,7 @@ function ChatScreen({ route, navigation }) {
 					/>
 					<TouchableOpacity
 						onPress={sendMessage}
-						style={{justifyContent:"center"}}
+						style={{ justifyContent: "center" }}
 					>
 						<MaterialIcons
 							name="send"
@@ -139,8 +143,7 @@ function ChatScreen({ route, navigation }) {
 						/>
 					</TouchableOpacity>
 				</View>
-  			</KeyboardAvoidingView>
-				
+			</KeyboardAvoidingView>
 		</View>
 	);
 }
@@ -169,26 +172,26 @@ const styles = StyleSheet.create({
 		shadowColor: COLORS.green1,
 	},
 	messageInputBox: {
-		position: 'absolute',
+		position: "absolute",
 		bottom: 0,
-		width: '100%',
-		alignItems: 'center',
+		width: "100%",
+		alignItems: "center",
 		backgroundColor: COLORS.white,
 		borderTopColor: COLORS.secondary,
-		padding: 0
+		padding: 0,
 	},
 	messageInput: {
 		fontSize: 15,
-		margin:5,
-		padding: Platform.OS === 'ios' ? 10 : 5,
+		margin: 5,
+		padding: Platform.OS === "ios" ? 10 : 5,
 		borderRadius: 20,
 		backgroundColor: COLORS.lightGrey,
-		width: '80%'
+		width: "80%",
 	},
 	sendIcon: {
-		alignSelf: "center", 
+		alignSelf: "center",
 		marginStart: 10,
-		color: COLORS.green1
-	},		
+		color: COLORS.green1,
+	},
 });
 export default ChatScreen;

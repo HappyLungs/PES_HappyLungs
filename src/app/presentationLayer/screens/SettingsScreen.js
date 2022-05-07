@@ -1,20 +1,12 @@
 import React, { useState } from "react";
-import {
-	Text,
-	StyleSheet,
-	View,
-	TouchableOpacity,
-	Keyboard,
-	Image,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
-const PresentationCtrl = require("./PresentationCtrl.js");
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();

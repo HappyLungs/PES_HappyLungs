@@ -1,5 +1,5 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-const fetch = require("node-fetch");
+//const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
 import User from "./classes/User";
@@ -190,36 +190,46 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
  * @returns the created pin in case of success. Otherwise an error message.
  */
 DomainCtrl.prototype.createPin = async function (
-    title,
-    location,
-    locationTitle,
-    description,
-    media,
-    rating,
-    date,
-    status
+	title,
+	location,
+	locationTitle,
+	description,
+	media,
+	rating,
+	date,
+	status
 ) {
-  let {latitude, longitude} = location;
-  let pin = new Pin(title, latitude, longitude, locationTitle, description, media, rating, new Date(date), status);
-  //store db
-  let params = {
-    title: pin.title,
-    description: pin.description,
-    latitude: pin.latitude,
-    longitude: pin.longitude,
-    locationTitle: pin.locationTitle,
-    date: pin.date,
-    rating: pin.rating,
-    status: pin.status,
-    //TODO: creator email. Should get it from the context (auth token when login)
-    media: pin.media,
-  }
-  let response = await persistenceCtrl.postRequest("/newPin", params);
-  if (response.status === 200) {
-    return response.data;   // Returns the object inserted in the DB
-  } else {
-    //TODO: handle error. Return an error and reload the view with the error
-  }
+	let { latitude, longitude } = location;
+	let pin = new Pin(
+		title,
+		latitude,
+		longitude,
+		locationTitle,
+		description,
+		media,
+		rating,
+		new Date(date),
+		status
+	);
+	//store db
+	let params = {
+		title: pin.title,
+		description: pin.description,
+		latitude: pin.latitude,
+		longitude: pin.longitude,
+		locationTitle: pin.locationTitle,
+		date: pin.date,
+		rating: pin.rating,
+		status: pin.status,
+		//TODO: creator email. Should get it from the context (auth token when login)
+		media: pin.media,
+	};
+	let response = await persistenceCtrl.postRequest("/newPin", params);
+	if (response.status === 200) {
+		return response.data; // Returns the object inserted in the DB
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+	}
 };
 
 /**

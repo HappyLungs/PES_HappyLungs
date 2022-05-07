@@ -15,15 +15,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import COLORS from "../config/stylesheet/colors";
-
-import UserContext from "../domainLayer/UserContext";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import UserContext from "../../domainLayer/UserContext";
+import i18n from "../../config/translation";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
-	const [ user, setUser ] = useContext(UserContext);
+	const [user, setUser] = useContext(UserContext);
 
 	function settings() {
 		navigation.navigate("SettingsScreen");
@@ -31,19 +30,19 @@ function ProfileScreen({ navigation, route }) {
 
 	function logOut() {
 		setUser({
-			"__v": 0,
-			"_id": "",
-			"birthdate": "",
-			"createdAt": "",
-			"email": "",
-			"healthStatus": "",
-			"language": "",
-			"name": "",
-			"password": "",
-			"points": 0,
-			"savedPins": [],
-			"updatedAt": "",
-		  });
+			__v: 0,
+			_id: "",
+			birthdate: "",
+			createdAt: "",
+			email: "",
+			healthStatus: "",
+			language: "",
+			name: "",
+			password: "",
+			points: 0,
+			savedPins: [],
+			updatedAt: "",
+		});
 		navigation.navigate("SignInScreen");
 		// setUser(null);
 	}

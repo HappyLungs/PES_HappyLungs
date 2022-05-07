@@ -7,15 +7,15 @@ import {
 	TouchableOpacity,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
-import ImageCarousel from "./components/ImageCarousel";
+import ImageCarousel from "../components/ImageCarousel";
 import Modal from "react-native-modal";
 import { Rating } from "react-native-ratings";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();

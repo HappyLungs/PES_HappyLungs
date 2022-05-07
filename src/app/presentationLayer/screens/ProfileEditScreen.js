@@ -8,28 +8,24 @@ import {
 	ImageBackground,
 	Keyboard,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 
+import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+import UserContext from "../../domainLayer/UserContext";
+import i18n from "../../config/translation";
 
-import UserContext from "../domainLayer/UserContext";
-
-import { Ionicons } from "@expo/vector-icons";
-
-import i18n from "../config/translation";
-
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	//should pass userId, and then retrieve the updated data
 
-	const [ user, setUser ] = useContext(UserContext);
+	const [user, setUser] = useContext(UserContext);
 
 	// const fakeUserData = {
 	// 	username: "Username",
@@ -88,7 +84,6 @@ function ProfileEditScreen({ navigation }) {
 			isValid = false;
 		}
 		if (isValid) {
-			  
 			let updatedUser = await presentationCtrl.updateUser(
 				inputs.username,
 				user.email,

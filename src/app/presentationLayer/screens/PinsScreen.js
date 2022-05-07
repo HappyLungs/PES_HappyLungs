@@ -10,10 +10,10 @@ import {
 	FlatList,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import PinList from "./components/PinList";
-const PresentationCtrl = require("./PresentationCtrl.js");
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import PinList from "../components/PinList";
+const PresentationCtrl = require("../PresentationCtrl.js");
+import i18n from "../../config/translation";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";

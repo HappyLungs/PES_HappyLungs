@@ -16,10 +16,10 @@ import {
 	StackedBarChart,
 } from "react-native-chart-kit";
 
-import COLORS from "../config/stylesheet/colors";
-const PresentationCtrl = require("./PresentationCtrl.js");
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import COLORS from "../../config/stylesheet/colors";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function StatisticsScreen({ navigation, route }) {
 	const { data } = route.params;

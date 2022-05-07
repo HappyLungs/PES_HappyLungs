@@ -9,11 +9,10 @@ import {
 	Pressable,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import PinPreview from "./components/PinPreview";
-import i18n from "../config/translation";
-import UserContext from "../domainLayer/UserContext";
-
+import COLORS from "../../config/stylesheet/colors";
+import PinPreview from "../components/PinPreview";
+import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 import {
 	Ionicons,
 	MaterialIcons,
@@ -30,7 +29,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 async function callGeocodeAPI(latitude, longitude) {
 	const location = await fetch(
