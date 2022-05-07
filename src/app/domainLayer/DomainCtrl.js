@@ -240,7 +240,6 @@ DomainCtrl.prototype.fetchPins = async function () {
 	let result = await persistenceCtrl.getRequest("/pins", {
 		user: "rguixaro@protonmail.ch" /** TODO: Change the user email for the logged one */,
 	});
-	console.log(result.status);
 	if (result.status === 200) {
 		return result.data;
 	} else {

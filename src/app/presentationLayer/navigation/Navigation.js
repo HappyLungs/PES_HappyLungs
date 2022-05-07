@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Text, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
@@ -32,6 +33,7 @@ import TermsAndConditionsScreen from "../screens/TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import { UserContextProvider } from "../../domainLayer/UserContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
@@ -151,9 +153,41 @@ function ProfileStack() {
 			<Stack.Screen
 				name="ProfileScreen"
 				component={ProfileScreen}
-				options={{
-					headerShown: false,
-				}}
+				options={({ navigation }) => ({
+					title: "",
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("ProfileEditScreen");
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingProfile")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
+					headerLeft: null,
+					headerTitleStyle: {
+						fontSize: 20,
+						fontWeight: "bold",
+						color: COLORS.secondary,
+					},
+					headerStyle: { shadowColor: "transparent" },
+				})}
 			/>
 			<Stack.Screen
 				name="ProfileEditScreen"
@@ -277,7 +311,7 @@ function MapStack() {
 				name="CreatePin"
 				component={CreatePinScreen}
 				options={{
-					title: "Create pin",
+					title: i18n.t("createPin"),
 					gestureEnabled: true,
 					gestureDirection: "horizontal",
 					...TransitionPresets.SlideFromRightIOS,

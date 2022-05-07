@@ -8,6 +8,8 @@ const InputField = ({
 	defaultValue,
 	iconName,
 	error,
+	editable,
+	passwordChange,
 	onFocus = () => {},
 	...props
 }) => {
@@ -19,7 +21,7 @@ const InputField = ({
 					{label}
 					<Text style={styles.highlight}> *</Text>
 				</Text>
-				{error && (
+				{error && !passwordChange && (
 					<Text style={{ color: COLORS.red1, fontSize: 12, marginStart: 10 }}>
 						{error}
 					</Text>
@@ -43,6 +45,7 @@ const InputField = ({
 					style={{ fontSize: 22, color: COLORS.green1, marginRight: 10 }}
 				/>
 				<TextInput
+					editable={editable}
 					autoCorrect={false}
 					defaultValue={defaultValue}
 					maxLength={label === "Title" ? 11 : 100}
@@ -57,6 +60,18 @@ const InputField = ({
 					{...props}
 				/>
 			</View>
+			{error && passwordChange && (
+				<Text
+					style={{
+						color: COLORS.red1,
+						fontSize: 12,
+						marginStart: 10,
+						marginTop: 10,
+					}}
+				>
+					{error}
+				</Text>
+			)}
 		</View>
 	);
 };

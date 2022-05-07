@@ -8,7 +8,6 @@ import i18n from "../../config/translation";
 
 const PinPreview = ({ item }) => {
 	let presentationCtrl = new PresentationCtrl();
-	console.log(item);
 	const savePin = () => {
 		//presentationCtrl.savePin(item);
 	};

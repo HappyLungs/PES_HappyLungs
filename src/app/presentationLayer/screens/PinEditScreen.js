@@ -313,6 +313,8 @@ function PinEditScreen({ navigation, route }) {
 					defaultValue={pin.title}
 					label={i18n.t("title")}
 					error={errors.title}
+					editable={true}
+					passwordChange={false}
 				/>
 				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
@@ -321,6 +323,8 @@ function PinEditScreen({ navigation, route }) {
 					defaultValue={pin.description}
 					label={i18n.t("description")}
 					error={errors.description}
+					editable={true}
+					passwordChange={false}
 				/>
 				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
 				{renderDateSelector()}

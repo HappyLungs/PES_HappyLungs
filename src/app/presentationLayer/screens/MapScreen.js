@@ -7,6 +7,7 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Pressable,
+	Image,
 } from "react-native";
 
 import COLORS from "../../config/stylesheet/colors";
@@ -250,24 +251,33 @@ function MapScreen({ navigation, route }) {
 						height: 70,
 						width: "100%",
 						paddingHorizontal: 20,
-						paddingTop: 25,
-						paddingBottom: 10,
 						alignItems: "center",
 						flexDirection: "row",
 						backgroundColor: COLORS.white,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
-						justifyContent: "space-between",
 					},
 					styles.shadow,
 				]}
 			>
+				<TouchableOpacity
+					onPress={() => {
+						navigation.navigate("Profile");
+					}}
+					style={{}}
+				>
+					<Image
+						source={{ uri: user.profilePicture }}
+						style={[{ borderRadius: 20, width: 40, height: 40 }]}
+					></Image>
+				</TouchableOpacity>
 				<Text
 					style={[
 						{
 							fontSize: 20,
 							fontWeight: "bold",
 							color: COLORS.secondary,
+							marginStart: 15,
 						},
 					]}
 				>
@@ -557,7 +567,9 @@ function MapScreen({ navigation, route }) {
 									color={COLORS.secondary}
 									size={35}
 								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>SHARE</Text>
+								<Text style={[styles.subtitle, { marginStart: 5 }]}>
+									{i18n.t("share")}
+								</Text>
 							</TouchableOpacity>
 							<Text
 								style={{

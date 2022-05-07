@@ -23,20 +23,9 @@ const PresentationCtrl = require("../PresentationCtrl.js");
 
 function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
-	//should pass userId, and then retrieve the updated data
 
 	const [user, setUser] = useContext(UserContext);
 
-	// const fakeUserData = {
-	// 	username: "Username",
-	// 	email: "username@email.com",
-	// 	password: "**********",
-	// 	points: 200,
-	// 	healthState: [true, false, true],
-	// 	picture:
-	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	// };
-	//const [fakeUser, setFakeUser] = useState(fakeUserData);
 	const [profilePicture, setProfilePicture] = useState(user.profilePicture);
 	const [state1, setState1] = useState(user.healthStatus[0]);
 	const [state2, setState2] = useState(user.healthStatus[1]);
@@ -46,6 +35,9 @@ function ProfileEditScreen({ navigation }) {
 		username: user.name,
 		email: user.email,
 		password: user.password,
+		oldPassword: "",
+		newPassword1: "",
+		newPassword2: "",
 	});
 	const [errors, setErrors] = useState({});
 
@@ -62,6 +54,7 @@ function ProfileEditScreen({ navigation }) {
 
 	const handleError = (error, input) => {
 		setErrors((prevState) => ({ ...prevState, [input]: error }));
+		console.log(errors);
 	};
 
 	const handleOnChange = (text, input) => {
@@ -70,20 +63,13 @@ function ProfileEditScreen({ navigation }) {
 
 	const validate = async () => {
 		Keyboard.dismiss();
-		let isValid = true;
 		if (!inputs.username) {
-			handleError("Please add a valid username", "username");
-			isValid = false;
-		}
-		if (!inputs.email) {
-			handleError("Please add a valid email", "email");
-			isValid = false;
-		}
-		if (!inputs.password) {
-			handleError("Please add a valid password", "password");
-			isValid = false;
-		}
-		if (isValid) {
+			handleError(i18n.t("usernameError"), "username");
+		} else if (!inputs.email) {
+			handleError("", "email");
+		} else if (!inputs.password) {
+			handleError("", "password");
+		} else {
 			let updatedUser = await presentationCtrl.updateUser(
 				inputs.username,
 				user.email,
@@ -100,7 +86,39 @@ function ProfileEditScreen({ navigation }) {
 		}
 	};
 
-	const [byCertificate, setByCertificate] = useState(false);
+	const validatePasswordChange = async () => {
+		Keyboard.dismiss();
+		console.log(inputs);
+		if (!inputs.oldPassword) {
+			handleError(i18n.t("passwordError"), "oldPassword");
+		} else if (user.password !== inputs.oldPassword) {
+			handleError(i18n.t("passwordIncorrect"), "oldPassword");
+		} else if (!inputs.newPassword1) {
+			handleError(i18n.t("passwordError"), "newPassword1");
+		} else if (!inputs.newPassword2) {
+			handleError(i18n.t("passwordError"), "newPassword2");
+		} else if (inputs.newPassword1 !== inputs.newPassword2) {
+			handleError(i18n.t("passwordMatch"), "newPassword1");
+			handleError(" ", "newPassword2");
+		} else if (inputs.oldPassword === inputs.newPassword1) {
+			handleError(i18n.t("passwordNoChange"), "newPassword1");
+			handleError(" ", "newPassword2");
+		} else {
+			let updatedUser = await presentationCtrl.updateUser(
+				inputs.username,
+				user.email,
+				user.points,
+				user.language,
+				[state1, state2, state3],
+				user.notifications,
+				profilePicture
+			);
+			navigation.popToTop();
+			setUser(updatedUser);
+			navigation.navigate("ProfileScreen"); //not correct, should pass userId and then retrieve the data
+			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
+		}
+	};
 
 	const [modalChangePassword, setModalChangePassword] = useState(false);
 
@@ -112,9 +130,11 @@ function ProfileEditScreen({ navigation }) {
 				visible={modalChangePassword}
 				onRequestClose={() => {
 					setModalChangePassword(false);
+					setErrors({});
 				}}
 				onBackdropPress={() => {
 					setModalChangePassword(false);
+					setErrors({});
 				}}
 			>
 				<View style={styles.centeredView}>
@@ -125,44 +145,71 @@ function ProfileEditScreen({ navigation }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
+						<Text
+							style={{
+								fontWeight: "bold",
+								color: COLORS.secondary,
+								fontSize: 16,
+								alignSelf: "center",
+							}}
+						>
+							{i18n.t("passwordUpdate")}
+						</Text>
+						<Text
+							style={{
+								color: COLORS.darkGrey,
+								fontSize: 13,
+								marginTop: 10,
+								textAlign: "center",
+								alignSelf: "center",
+							}}
+						>
+							{i18n.t("passwordUpdateText")}
+						</Text>
 						<View
 							style={{
 								width: 200,
 								height: 200,
+								marginTop: 10,
 								alignSelf: "center",
 								borderRadius: 5,
-								padding: 5,
 							}}
 						>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(oldPassword) =>
+									handleOnChange(oldPassword, "oldPassword")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "oldPassword")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("actualPassword")}
-								error={errors.password}
+								error={errors.oldPassword}
+								editable={true}
+								passwordChange={true}
 							/>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(newPassword1) =>
+									handleOnChange(newPassword1, "newPassword1")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "newPassword1")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("newPassword")}
-								error={errors.password}
+								error={errors.newPassword1}
+								editable={true}
+								passwordChange={true}
 							/>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(newPassword2) =>
+									handleOnChange(newPassword2, "newPassword2")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "newPassword2")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("confirmNewPassword")}
-								error={errors.password}
+								error={errors.newPassword2}
+								editable={true}
+								passwordChange={true}
 							/>
 						</View>
 						<View
@@ -170,7 +217,7 @@ function ProfileEditScreen({ navigation }) {
 								flexDirection: "row",
 								justifyContent: "space-around",
 								alignSelf: "center",
-								marginTop: 100,
+								marginTop: 120,
 								marginHorizontal: 5,
 								width: 240,
 							}}
@@ -181,7 +228,10 @@ function ProfileEditScreen({ navigation }) {
 									styles.shadow,
 									{ backgroundColor: COLORS.red1 },
 								]}
-								onPress={() => setModalChangePassword(false)}
+								onPress={() => {
+									setErrors({});
+									setModalChangePassword(false);
+								}}
 							>
 								<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 							</TouchableOpacity>
@@ -191,7 +241,7 @@ function ProfileEditScreen({ navigation }) {
 									styles.shadow,
 									{ backgroundColor: COLORS.green1 },
 								]}
-								//onPress={validate}
+								onPress={validatePasswordChange}
 							>
 								<Text style={styles.containerTxt}>{i18n.t("accept")}</Text>
 							</TouchableOpacity>
@@ -224,7 +274,7 @@ function ProfileEditScreen({ navigation }) {
 						flex: 3,
 						alignSelf: "center",
 						borderRadius: 5,
-						padding: 5,
+						paddingEnd: 30,
 					}}
 				>
 					<InputField
@@ -236,6 +286,8 @@ function ProfileEditScreen({ navigation }) {
 						defaultValue={user.name}
 						label={i18n.t("username")}
 						error={errors.username}
+						editable={true}
+						passwordChange={false}
 					/>
 					<InputField
 						onChangeText={(newEmail) => handleOnChange(newEmail, "email")}
@@ -244,6 +296,8 @@ function ProfileEditScreen({ navigation }) {
 						defaultValue={user.email}
 						label={i18n.t("email")}
 						error={errors.email}
+						editable={false}
+						passwordChange={false}
 					/>
 					<InputField
 						onChangeText={(newPassword) =>
@@ -251,14 +305,16 @@ function ProfileEditScreen({ navigation }) {
 						}
 						onFocus={() => handleError(null, "password")}
 						iconName="lock"
-						defaultValue={user.password}
+						defaultValue={"*".repeat(user.password.length)}
 						label={i18n.t("password")}
 						error={errors.password}
+						editable={false}
+						passwordChange={false}
 					/>
 				</View>
 				<View
 					style={{
-						flex: 2,
+						flex: 1.5,
 						alignItems: "center",
 						marginTop: 10,
 					}}
@@ -294,7 +350,10 @@ function ProfileEditScreen({ navigation }) {
 							marginStart: -75,
 							alignItems: "center",
 						}}
-						onPress={() => setModalChangePassword(true)}
+						onPress={() => {
+							console.log(errors);
+							setModalChangePassword(true);
+						}}
 					>
 						<MaterialIcons name={"edit"} size={30} color={COLORS.white} />
 					</TouchableOpacity>
@@ -483,8 +542,9 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 25,
-		height: 400,
-		width: 240,
+		marginTop: 60,
+		height: 500,
+		width: 270,
 		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 20,

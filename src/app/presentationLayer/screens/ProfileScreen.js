@@ -63,11 +63,7 @@ function ProfileScreen({ navigation, route }) {
 		} catch (err) {
 			console.log(err);
 		}
-		//logOut user
-		//navigation.navigate("LogInScreen");
 	}
-
-	const [byCertificate, setByCertificate] = useState(false);
 
 	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);
 
@@ -153,18 +149,16 @@ function ProfileScreen({ navigation, route }) {
 				style={{
 					flexDirection: "row",
 					paddingHorizontal: 20,
-					marginTop: 50,
 				}}
 			>
 				<View
 					style={{
 						flex: 2,
 						alignItems: "center",
-						marginTop: 10,
 					}}
 				>
 					<ImageBackground
-						source={user.profilePicture}
+						source={{ uri: user.profilePicture }}
 						style={[
 							{
 								borderRadius: 20,
@@ -200,23 +194,15 @@ function ProfileScreen({ navigation, route }) {
 				</View>
 				<View
 					style={{
-						flex: 2,
+						flex: 3,
 						justifyContent: "flex-start",
 					}}
 				>
-					<TouchableOpacity
-						style={{ alignItems: "flex-end" }}
-						onPress={() => {
-							navigation.navigate("ProfileEditScreen");
-						}}
-					>
-						<Feather name="edit-3" size={30} color={COLORS.secondary} />
-					</TouchableOpacity>
 					<View
 						style={{
-							marginTop: 10,
 							flexDirection: "row",
 							justifyContent: "space-between",
+							marginTop: 10,
 						}}
 					>
 						<View
@@ -231,7 +217,7 @@ function ProfileScreen({ navigation, route }) {
 									color: COLORS.secondary,
 								}}
 							>
-								12
+								3
 							</Text>
 							<Text style={{ color: COLORS.darkGrey }}>
 								{i18n.t("createdPins")}
@@ -243,6 +229,7 @@ function ProfileScreen({ navigation, route }) {
 								backgroundColor: COLORS.lightGrey,
 								height: "80%",
 								width: 2,
+								marginHorizontal: 5,
 							}}
 						></View>
 						<View
@@ -257,10 +244,10 @@ function ProfileScreen({ navigation, route }) {
 									color: COLORS.secondary,
 								}}
 							>
-								7
+								{user.savedPins.length}
 							</Text>
 							<Text style={{ color: COLORS.darkGrey }}>
-								{i18n.t("sharedPins")}
+								{i18n.t("savedPins")}
 							</Text>
 						</View>
 					</View>
