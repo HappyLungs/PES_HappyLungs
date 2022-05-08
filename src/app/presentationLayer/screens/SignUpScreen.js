@@ -8,6 +8,7 @@ import {
 	StatusBar,
 } from "react-native";
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Animatable from "react-native-animatable";
@@ -205,9 +206,9 @@ function SignUpScreen({ navigation, route }) {
 
 	return (
 		<View style={styles.container}>
-			<StatusBar backgroundColor="#007f5a" barStyle="light-content" />
+			<StatusBar backgroundColor={COLORS.green1} barStyle="light-content" />
 			<View style={styles.header}>
-				<Text style={styles.text_header}>Register Now!</Text>
+				<Text style={styles.text_header}>{i18n.t("signUp2")}</Text>
 			</View>
 			<Animatable.View animation="fadeInLeft" style={styles.footer}>
 				<View>{renderMessage()}</View>
@@ -220,14 +221,14 @@ function SignUpScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Name
+						{i18n.t("name")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<FontAwesome name="user-o" color={COLORS.primary} size={20} />
 							<TextInput
-								placeholder={"Your Name"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("namePlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								style={[
 									styles.textInput,
 									{
@@ -255,14 +256,14 @@ function SignUpScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Email
+						{i18n.t("email")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<Feather name="mail" color={COLORS.primary} size={20} />
 							<TextInput
-								placeholder={"Your Email"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("emailPlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								style={[
 									styles.textInput,
 									{
@@ -290,14 +291,14 @@ function SignUpScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Password
+						{i18n.t("password")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<Feather name="lock" color={COLORS.primary} size={20} />
 							<TextInput
-								placeholder={"Your Password"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("passwordPlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								secureTextEntry={data.secureTextEntry ? true : false}
 								style={styles.textInput}
 								onChangeText={(val) => passwordChange(val)}
@@ -323,15 +324,15 @@ function SignUpScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Confirm Password
+						{i18n.t("confirmNewPassword")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<Feather name="lock" color={COLORS.primary} size={20} />
 							<TextInput
 								type={"password"}
-								placeholder={"Your Password"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("passwordPlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								secureTextEntry={data.confirm_secureTextEntry ? true : false}
 								style={[
 									styles.textInput,
@@ -362,7 +363,7 @@ function SignUpScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Birthdate
+						{i18n.t("birthdate")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
@@ -379,7 +380,7 @@ function SignUpScreen({ navigation, route }) {
 							<Text
 								placeholder={"Your Birthdate"}
 								onPress={showDatePicker}
-								placeholderTextColor="#666666"
+								placeholderTextColor={COLORS.darkGrey}
 								style={[
 									styles.textInput,
 									{
@@ -409,7 +410,7 @@ function SignUpScreen({ navigation, route }) {
 						unfillColor={COLORS.white}
 					/>
 					<Text style={styles.color_textPrivate}>
-						I've read and accept the{" "}
+						{i18n.t("termsAndConditionsConfirmation")}
 					</Text>
 					<Text
 						style={[
@@ -421,33 +422,10 @@ function SignUpScreen({ navigation, route }) {
 						]}
 						onPress={() => navigation.navigate("TermsAndConditionsScreen")}
 					>
-						Terms and conditions
+						{i18n.t("termsAndConditionsConfirmationLink")}
 					</Text>
 				</View>
 				<View style={styles.button}>
-					<TouchableOpacity
-						onPress={() => navigation.navigate("SignInScreen")}
-						style={[
-							styles.signIn,
-							{
-								borderColor: COLORS.green1,
-								borderWidth: 1,
-								marginTop: 15,
-							},
-						]}
-					>
-						<Text
-							style={[
-								styles.textSign,
-								{
-									color: COLORS.green1,
-								},
-							]}
-						>
-							Sign In
-						</Text>
-					</TouchableOpacity>
-
 					<TouchableOpacity
 						onPress={() => {
 							registerUser();
@@ -469,7 +447,29 @@ function SignUpScreen({ navigation, route }) {
 								},
 							]}
 						>
-							Sign Up
+							{i18n.t("signUp")}
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => navigation.navigate("SignInScreen")}
+						style={[
+							styles.signIn,
+							{
+								borderColor: COLORS.green1,
+								borderWidth: 1,
+								marginTop: 15,
+							},
+						]}
+					>
+						<Text
+							style={[
+								styles.textSign,
+								{
+									color: COLORS.green1,
+								},
+							]}
+						>
+							{i18n.t("return")}
 						</Text>
 					</TouchableOpacity>
 				</View>

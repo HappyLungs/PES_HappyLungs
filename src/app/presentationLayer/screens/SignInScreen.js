@@ -14,6 +14,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Axios from "axios";
 
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
@@ -31,11 +32,7 @@ function SignInScreen({ navigation, route }) {
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-		if (emailAdress.match(regexEmail)) {
-			return true;
-		} else {
-			return false;
-		}
+		return emailAdress.match(regexEmail);
 	};
 	const emailChange = (val) => {
 		if (validateEmail(val)) {
@@ -95,9 +92,9 @@ function SignInScreen({ navigation, route }) {
 
 	return (
 		<View style={styles.container}>
-			<StatusBar backgroundColor="#007f5a" barStyle="light-content" />
+			<StatusBar backgroundColor={COLORS.green1} barStyle="light-content" />
 			<View style={styles.header}>
-				<Text style={styles.text_header}>Welcome!</Text>
+				<Text style={styles.text_header}>{i18n.t("welcome2")}</Text>
 			</View>
 			<Animatable.View animation="zoomInUp" style={styles.footer}>
 				<View>{renderMessage()}</View>
@@ -110,14 +107,14 @@ function SignInScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Email
+						{i18n.t("email")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<FontAwesome name="user-o" color={COLORS.primary} size={20} />
 							<TextInput
-								placeholder={"Your Email"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("emailPlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								style={[
 									styles.textInput,
 									{
@@ -144,14 +141,14 @@ function SignInScreen({ navigation, route }) {
 							},
 						]}
 					>
-						Password
+						{i18n.t("password")}
 					</Text>
 					<View style={styles.style1}>
 						<View style={{ flexDirection: "row" }}>
 							<Feather name="lock" color={COLORS.primary} size={20} />
 							<TextInput
-								placeholder={"Your Password"}
-								placeholderTextColor="#666666"
+								placeholder={i18n.t("passwordPlaceholder")}
+								placeholderTextColor={COLORS.darkGrey}
 								secureTextEntry={data.secureTextEntry ? true : false}
 								style={[
 									styles.textInput,
@@ -175,7 +172,7 @@ function SignInScreen({ navigation, route }) {
 				</View>
 				<TouchableOpacity>
 					<Text style={{ color: COLORS.green1, marginTop: 15 }}>
-						Forgot password?
+						{i18n.t("passwordForgot")}
 					</Text>
 				</TouchableOpacity>
 				<View style={styles.button}>
@@ -198,7 +195,7 @@ function SignInScreen({ navigation, route }) {
 								},
 							]}
 						>
-							Sign In
+							{i18n.t("signIn")}
 						</Text>
 					</TouchableOpacity>
 
@@ -221,7 +218,7 @@ function SignInScreen({ navigation, route }) {
 								},
 							]}
 						>
-							Sign Up
+							{i18n.t("signUp")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -254,14 +251,14 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		flex: 3,
-		backgroundColor: "#fff",
+		backgroundColor: COLORS.white,
 		borderTopLeftRadius: 30,
 		borderTopRightRadius: 30,
 		paddingHorizontal: 20,
 		paddingVertical: 30,
 	},
 	text_header: {
-		color: "#fff",
+		color: COLORS.white,
 		fontWeight: "bold",
 		fontSize: 30,
 	},
@@ -272,7 +269,7 @@ const styles = StyleSheet.create({
 	action: {
 		marginTop: 10,
 		borderBottomWidth: 1,
-		borderBottomColor: "#f2f2f2",
+		borderBottomColor: COLORS.light,
 		paddingBottom: 5,
 	},
 	actionError: {

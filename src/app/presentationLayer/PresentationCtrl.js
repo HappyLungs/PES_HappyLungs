@@ -1,5 +1,5 @@
 const DomainCtrl = require("../domainLayer/DomainCtrl.js");
-import Pin from "../domainLayer/classes/Pin"; //eliminar fake
+import i18n from "../config/translation";
 
 let PresentationCtrl;
 (function () {
@@ -188,12 +188,12 @@ PresentationCtrl.prototype.registerUser = async function (
 		} else {
 			return {
 				data: {},
-				message: "Your password is too short, use at least 6 characters.",
+				message: i18n.t("signUpError1"),
 				status: 502,
 			};
 		}
 	} else {
-		return { data: {}, message: "Required parameters missing", status: 422 };
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
 	}
 };
 
@@ -207,7 +207,7 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 	if (email && password) {
 		return await this.domainCtrl.loginUser(email, password);
 	} else {
-		return { data: {}, message: "Required parameters missing", status: 422 };
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
 	}
 };
 
