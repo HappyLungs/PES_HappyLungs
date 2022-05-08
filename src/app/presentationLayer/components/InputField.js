@@ -74,30 +74,32 @@ const InputField = ({
 					style={{ color: COLORS.secondary, flex: 1 }}
 					{...props}
 				/>
-				<TouchableOpacity
-					style={{
-						backgroundColor: COLORS.lightGrey,
-						height: 55,
-						width: 30,
-						alignItems: "center",
-						justifyContent: "center",
-						borderBottomRightRadius: 5,
-						borderTopRightRadius: 5,
-						borderTopWidth: isFocused ? 0.5 : 0,
-						borderBottomWidth: isFocused ? 0.5 : 0,
-					}}
-					onPress={() => {
-						setIsMasked(!isMasked);
-					}}
-				>
-					<Feather
-						name={isMasked ? "eye-off" : "eye"}
+				{passwordChange && (
+					<TouchableOpacity
 						style={{
-							fontSize: 17,
-							color: isMasked ? COLORS.secondary : COLORS.green1,
+							backgroundColor: COLORS.lightGrey,
+							height: 55,
+							width: 30,
+							alignItems: "center",
+							justifyContent: "center",
+							borderBottomRightRadius: 5,
+							borderTopRightRadius: 5,
+							borderTopWidth: isFocused ? 0.5 : 0,
+							borderBottomWidth: isFocused ? 0.5 : 0,
 						}}
-					/>
-				</TouchableOpacity>
+						onPress={() => {
+							setIsMasked(!isMasked);
+						}}
+					>
+						<Feather
+							name={isMasked ? "eye-off" : "eye"}
+							style={{
+								fontSize: 16,
+								color: isMasked ? COLORS.darkGrey : COLORS.green1,
+							}}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 			{error && passwordChange && (
 				<Text
