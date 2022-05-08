@@ -373,6 +373,20 @@ DomainCtrl.prototype.updateUser = async function (
 	);
 };
 
+/** TODO */
+
+/**
+ *
+ * @param {*} name
+ * @param {*} password
+ * @returns the updated user with its new password
+ */
+DomainCtrl.prototype.updateUserPassword = async function (name, password) {
+	let myUser = new User(null, email, null, null);
+	//update to db
+	return await myUser.update(name, password);
+};
+
 //Return the conversation with the id parameter.
 
 /*

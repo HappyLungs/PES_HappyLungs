@@ -241,6 +241,22 @@ PresentationCtrl.prototype.updateUser = async function (
 	return userUpdated.data;
 };
 
+/** TODO */
+
+/**
+ *
+ * @param {*} email
+ * @param {*} password
+ * @returns the updated user with its new password
+ */
+PresentationCtrl.prototype.updateUserPassword = async function (
+	email,
+	password
+) {
+	let userUpdated = await this.domainCtrl.updateUserPassword(email, password);
+	return userUpdated.data;
+};
+
 PresentationCtrl.prototype.fetchPins = async function () {
 	let pins = await this.domainCtrl.fetchPins();
 	if (pins != null) {

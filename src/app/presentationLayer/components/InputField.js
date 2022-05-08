@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Text,
+	TextInput,
+	TouchableOpacity,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Feather } from "@expo/vector-icons";
 import COLORS from "../../config/stylesheet/colors";
 
 const InputField = ({
@@ -13,6 +20,7 @@ const InputField = ({
 	onFocus = () => {},
 	...props
 }) => {
+	const [isMasked, setIsMasked] = useState(true);
 	const [isFocused, setIsFocused] = useState(false);
 	return (
 		<View style={{ marginTop: 10 }}>
@@ -42,10 +50,16 @@ const InputField = ({
 			>
 				<Icon
 					name={iconName}
-					style={{ fontSize: 22, color: COLORS.green1, marginRight: 10 }}
+					style={{
+						fontSize: 22,
+						color: COLORS.green1,
+						marginRight: 10,
+						paddingHorizontal: 15,
+					}}
 				/>
 				<TextInput
 					editable={editable}
+					secureTextEntry={isMasked}
 					autoCorrect={false}
 					defaultValue={defaultValue}
 					maxLength={label === "Title" ? 11 : 100}
@@ -53,12 +67,37 @@ const InputField = ({
 						onFocus();
 						setIsFocused(true);
 					}}
+					onChangeText={(text) => {}}
 					onBlur={() => {
 						setIsFocused(false);
 					}}
 					style={{ color: COLORS.secondary, flex: 1 }}
 					{...props}
 				/>
+				<TouchableOpacity
+					style={{
+						backgroundColor: COLORS.lightGrey,
+						height: 55,
+						width: 30,
+						alignItems: "center",
+						justifyContent: "center",
+						borderBottomRightRadius: 5,
+						borderTopRightRadius: 5,
+						borderTopWidth: isFocused ? 0.5 : 0,
+						borderBottomWidth: isFocused ? 0.5 : 0,
+					}}
+					onPress={() => {
+						setIsMasked(!isMasked);
+					}}
+				>
+					<Feather
+						name={isMasked ? "eye-off" : "eye"}
+						style={{
+							fontSize: 17,
+							color: isMasked ? COLORS.secondary : COLORS.green1,
+						}}
+					/>
+				</TouchableOpacity>
 			</View>
 			{error && passwordChange && (
 				<Text
@@ -94,7 +133,6 @@ const styles = StyleSheet.create({
 		height: 55,
 		backgroundColor: COLORS.light,
 		flexDirection: "row",
-		paddingHorizontal: 15,
 		borderWidth: 0.5,
 		alignItems: "center",
 	},

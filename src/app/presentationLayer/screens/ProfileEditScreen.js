@@ -39,6 +39,8 @@ function ProfileEditScreen({ navigation }) {
 		newPassword1: "",
 		newPassword2: "",
 	});
+
+	const [inputsPasswordChange, setInputsPasswordChange] = useState({});
 	const [errors, setErrors] = useState({});
 
 	const pickImage = async () => {
@@ -54,11 +56,14 @@ function ProfileEditScreen({ navigation }) {
 
 	const handleError = (error, input) => {
 		setErrors((prevState) => ({ ...prevState, [input]: error }));
-		console.log(errors);
 	};
 
 	const handleOnChange = (text, input) => {
 		setInputs((prevState) => ({ ...prevState, [input]: text }));
+	};
+
+	const handleOnChangePassword = (text, input) => {
+		setInputsPasswordChange((prevState) => ({ ...prevState, [input]: text }));
 	};
 
 	const validate = async () => {
@@ -88,35 +93,39 @@ function ProfileEditScreen({ navigation }) {
 
 	const validatePasswordChange = async () => {
 		Keyboard.dismiss();
-		console.log(inputs);
-		if (!inputs.oldPassword) {
+		console.log(inputsPasswordChange);
+		console.log(errors);
+		if (!inputsPasswordChange.oldPassword) {
 			handleError(i18n.t("passwordError"), "oldPassword");
-		} else if (user.password !== inputs.oldPassword) {
+		} else if (user.password !== inputsPasswordChange.oldPassword) {
 			handleError(i18n.t("passwordIncorrect"), "oldPassword");
-		} else if (!inputs.newPassword1) {
+		} else if (!inputsPasswordChange.newPassword1) {
 			handleError(i18n.t("passwordError"), "newPassword1");
-		} else if (!inputs.newPassword2) {
+		} else if (!inputsPasswordChange.newPassword2) {
 			handleError(i18n.t("passwordError"), "newPassword2");
-		} else if (inputs.newPassword1 !== inputs.newPassword2) {
+		} else if (
+			inputsPasswordChange.newPassword1 !== inputsPasswordChange.newPassword2
+		) {
 			handleError(i18n.t("passwordMatch"), "newPassword1");
 			handleError(" ", "newPassword2");
-		} else if (inputs.oldPassword === inputs.newPassword1) {
+		} else if (
+			inputsPasswordChange.oldPassword === inputsPasswordChange.newPassword1
+		) {
 			handleError(i18n.t("passwordNoChange"), "newPassword1");
 			handleError(" ", "newPassword2");
 		} else {
-			let updatedUser = await presentationCtrl.updateUser(
-				inputs.username,
+			console.log("pwd updated");
+			/** TODO */
+			/*let updatedUser = await presentationCtrl.updateUserPassword(
 				user.email,
-				user.points,
-				user.language,
-				[state1, state2, state3],
-				user.notifications,
-				profilePicture
+				inputsPasswordChange.newPassword1
 			);
+			*/
+			setInputsPasswordChange({});
+			setErrors({});
 			navigation.popToTop();
 			setUser(updatedUser);
-			navigation.navigate("ProfileScreen"); //not correct, should pass userId and then retrieve the data
-			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
+			navigation.navigate("ProfileScreen");
 		}
 	};
 
@@ -131,10 +140,7 @@ function ProfileEditScreen({ navigation }) {
 				onRequestClose={() => {
 					setModalChangePassword(false);
 					setErrors({});
-				}}
-				onBackdropPress={() => {
-					setModalChangePassword(false);
-					setErrors({});
+					setInputs({});
 				}}
 			>
 				<View style={styles.centeredView}>
@@ -177,7 +183,7 @@ function ProfileEditScreen({ navigation }) {
 						>
 							<InputField
 								onChangeText={(oldPassword) =>
-									handleOnChange(oldPassword, "oldPassword")
+									handleOnChangePassword(oldPassword, "oldPassword")
 								}
 								onFocus={() => handleError(null, "oldPassword")}
 								iconName="lock"
@@ -189,7 +195,7 @@ function ProfileEditScreen({ navigation }) {
 							/>
 							<InputField
 								onChangeText={(newPassword1) =>
-									handleOnChange(newPassword1, "newPassword1")
+									handleOnChangePassword(newPassword1, "newPassword1")
 								}
 								onFocus={() => handleError(null, "newPassword1")}
 								iconName="lock"
@@ -201,7 +207,7 @@ function ProfileEditScreen({ navigation }) {
 							/>
 							<InputField
 								onChangeText={(newPassword2) =>
-									handleOnChange(newPassword2, "newPassword2")
+									handleOnChangePassword(newPassword2, "newPassword2")
 								}
 								onFocus={() => handleError(null, "newPassword2")}
 								iconName="lock"
@@ -272,7 +278,7 @@ function ProfileEditScreen({ navigation }) {
 				<View
 					style={{
 						flex: 3,
-						alignSelf: "center",
+						alignSelf: "flex-start",
 						borderRadius: 5,
 						paddingEnd: 30,
 					}}
@@ -299,18 +305,21 @@ function ProfileEditScreen({ navigation }) {
 						editable={false}
 						passwordChange={false}
 					/>
-					<InputField
-						onChangeText={(newPassword) =>
-							handleOnChange(newPassword, "password")
-						}
-						onFocus={() => handleError(null, "password")}
-						iconName="lock"
-						defaultValue={"*".repeat(user.password.length)}
-						label={i18n.t("password")}
-						error={errors.password}
-						editable={false}
-						passwordChange={false}
-					/>
+					<TouchableOpacity
+						style={{
+							marginTop: 20,
+							flexDirection: "row",
+							alignItems: "center",
+						}}
+						onPress={() => {
+							setModalChangePassword(true);
+						}}
+					>
+						<Text style={[styles.textOption2, { marginEnd: 10 }]}>
+							{i18n.t("passwordChange")}
+						</Text>
+						<MaterialIcons name={"edit"} size={20} color={COLORS.green1} />
+					</TouchableOpacity>
 				</View>
 				<View
 					style={{
@@ -339,23 +348,6 @@ function ProfileEditScreen({ navigation }) {
 						<Text style={[styles.textState, { color: COLORS.green1 }]}>
 							{i18n.t("upload")}
 						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{
-							flexDirection: "row",
-							backgroundColor: COLORS.green1,
-							borderRadius: 90,
-							padding: 7,
-							marginTop: 64,
-							marginStart: -75,
-							alignItems: "center",
-						}}
-						onPress={() => {
-							console.log(errors);
-							setModalChangePassword(true);
-						}}
-					>
-						<MaterialIcons name={"edit"} size={30} color={COLORS.white} />
 					</TouchableOpacity>
 				</View>
 				{renderModalChangePassword()}
@@ -500,6 +492,11 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 15,
 		marginHorizontal: 10,
+	},
+	textOption2: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.green1,
 	},
 	containerState: {
 		flexDirection: "column",
