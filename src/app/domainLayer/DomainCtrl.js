@@ -197,7 +197,8 @@ DomainCtrl.prototype.createPin = async function (
 	media,
 	rating,
 	date,
-	status
+	status,
+	creatorEmail
 ) {
 	let { latitude, longitude } = location;
 	let pin = new Pin(
@@ -221,9 +222,10 @@ DomainCtrl.prototype.createPin = async function (
 		date: pin.date,
 		rating: pin.rating,
 		status: pin.status,
-		//TODO: creator email. Should get it from the context (auth token when login)
+		creatorEmail: creatorEmail,
 		media: pin.media,
 	};
+	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB

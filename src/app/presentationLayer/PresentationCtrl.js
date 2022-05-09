@@ -118,7 +118,8 @@ PresentationCtrl.prototype.createPin = function (
 	media,
 	rating,
 	pinData,
-	status
+	status,
+	creatorEmail
 ) {
 	return this.domainCtrl.createPin(
 		title,
@@ -128,7 +129,8 @@ PresentationCtrl.prototype.createPin = function (
 		media,
 		rating,
 		pinData,
-		status
+		status,
+		creatorEmail
 	);
 };
 
@@ -165,8 +167,8 @@ PresentationCtrl.prototype.editPin = function (
  * @param {*} pin
  * @returns the saved pin from the logged user
  */
-PresentationCtrl.prototype.savePin = function (pin) {
-	//return this.domainCtrl.savePin(pin);
+PresentationCtrl.prototype.savePin = function (pin, email) {
+	return this.domainCtrl.savePin(pin, email);
 };
 
 /**
@@ -174,8 +176,8 @@ PresentationCtrl.prototype.savePin = function (pin) {
  * @param {*} pin
  * @returns the saved pin from the logged user
  */
-PresentationCtrl.prototype.removeFromSaved = function (pin) {
-	//return this.domainCtrl.removeFromSaved(pin);
+PresentationCtrl.prototype.removeFromSaved = function (pin, email) {
+	return this.domainCtrl.removeFromSaved(pin, email);
 };
 
 /**
