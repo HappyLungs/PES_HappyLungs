@@ -141,7 +141,7 @@ function MapScreen({ navigation, route }) {
 	 */
 	useEffect(async () => {
 		const fetchPins = async () => {
-			const data = await presentationCtrl.fetchTrendingPins();
+			const data = await presentationCtrl.fetchTrendingPins(user.email);
 			setPins(data);
 			let fetchedMarkers = [];
 			for (let marker of Object.keys(data)) {

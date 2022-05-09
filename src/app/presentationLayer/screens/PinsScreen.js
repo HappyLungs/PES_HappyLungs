@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -14,12 +14,15 @@ import COLORS from "../../config/stylesheet/colors";
 import PinList from "../components/PinList";
 const PresentationCtrl = require("../PresentationCtrl.js");
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 
 function PinsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
+
+	const [user] = useContext(UserContext);
 
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
@@ -42,7 +45,7 @@ function PinsScreen({ navigation }) {
 	}, []);
 
 	const fetchPins = async () => {
-		const data = await presentationCtrl.fetchPins();
+		const data = await presentationCtrl.fetchPins(user.email);
 		setMasterData([...data.pins, ...data.savedPins]);
 		setFilteredData([...data.pins, ...data.savedPins]);
 		setCreatedPins(data.pins);

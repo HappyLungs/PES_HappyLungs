@@ -120,7 +120,7 @@ PresentationCtrl.prototype.createPin = function (
 	pinData,
 	status,
 	creatorEmail,
-	creatorName,
+	creatorName
 ) {
 	return this.domainCtrl.createPin(
 		title,
@@ -132,7 +132,7 @@ PresentationCtrl.prototype.createPin = function (
 		pinData,
 		status,
 		creatorEmail,
-		creatorName,
+		creatorName
 	);
 };
 
@@ -171,10 +171,9 @@ PresentationCtrl.prototype.editPin = function (
  */
 PresentationCtrl.prototype.savePin = async function (pin, email) {
 	let result = await this.domainCtrl.savePin(pin, email);
-	if (result != null){
-		return result
-	}
-	else {
+	if (result != null) {
+		return result;
+	} else {
 		//TODO: Handle error
 		return null;
 	}
@@ -185,7 +184,7 @@ PresentationCtrl.prototype.savePin = async function (pin, email) {
  * @param {*} pin
  * @returns the saved pin from the logged user
  */
-PresentationCtrl.prototype.removeFromSaved = function (pin, email) {
+PresentationCtrl.prototype.removeFromSaved = async function (pin, email) {
 	return this.domainCtrl.removeFromSaved(pin, email);
 };
 
@@ -295,8 +294,9 @@ PresentationCtrl.prototype.updateUserPassword = async function (
 	return userUpdated.data;
 };
 
-PresentationCtrl.prototype.fetchPins = async function () {
-	let pins = await this.domainCtrl.fetchPins();
+PresentationCtrl.prototype.fetchPins = async function (email) {
+	console.log(email);
+	let pins = await this.domainCtrl.fetchPins(email);
 	if (pins != null) {
 		return pins;
 	} else {
@@ -305,8 +305,8 @@ PresentationCtrl.prototype.fetchPins = async function () {
 	}
 };
 
-PresentationCtrl.prototype.fetchTrendingPins = async function () {
-	let pins = await this.domainCtrl.fetchTrendingPins();
+PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
+	let pins = await this.domainCtrl.fetchTrendingPins(email);
 	if (pins != null) {
 		return pins;
 	} else {
