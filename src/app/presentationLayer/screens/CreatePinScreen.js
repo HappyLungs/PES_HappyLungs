@@ -46,11 +46,11 @@ function CreatePinScreen({ navigation, route }) {
 		const tmpMedia = [...media];
 
 		if (!inputs.title) {
-			handleError("Please insert the title", "title");
+			handleError(i18n.t("titleText"), "title");
 			isValid = false;
 		}
 		if (!inputs.description) {
-			handleError("Please insert a description", "description");
+			handleError(i18n.t("titleText"), "description");
 			isValid = false;
 		}
 		if (isValid) {
@@ -86,7 +86,7 @@ function CreatePinScreen({ navigation, route }) {
 		if (!result.cancelled) {
 			const tmpMedia = [...media];
 			if (tmpMedia.length >= 2) {
-				Alert.alert("You can only attach 2 pictures!");
+				Alert.alert(i18n.t("picturesError"));
 			} else {
 				tmpMedia.push(result.uri);
 				setMedia([...media, result.uri]);
@@ -309,7 +309,7 @@ function CreatePinScreen({ navigation, route }) {
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
 					label={i18n.t("title")}
-					placeholder={i18n.t("titleText")}
+					placeholder={i18n.t("titlePlaceholder")}
 					error={errors.title}
 					editable={true}
 					passwordChange={false}
@@ -319,7 +319,7 @@ function CreatePinScreen({ navigation, route }) {
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
 					label={i18n.t("description")}
-					placeholder={i18n.t("descriptionText")}
+					placeholder={i18n.t("descriptionPlaceholder")}
 					error={errors.description}
 					editable={true}
 					passwordChange={false}

@@ -109,17 +109,8 @@ function PinDefaultScreen({ navigation, route }) {
 						marginTop: 10,
 					}}
 				>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={30}
-					/>
-					<Text
-						style={[styles.body, { marginStart: 10, alignSelf: "flex-start" }]}
-					>
-						{pin.date}
-					</Text>
+					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
+					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
 				</View>
 				<Rating
 					type={"custom"}

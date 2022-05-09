@@ -147,11 +147,10 @@ function MapScreen({ navigation, route }) {
 			for (let marker of Object.keys(data)) {
 				fetchedMarkers.push({
 					latitude: data[marker].latitude,
-					longitude: 32.1,
+					longitude: data[marker].longitude,
 				});
 			}
 			setMarkers(fetchedMarkers);
-			console.log(data);
 		};
 
 		await fetchPins();
@@ -469,7 +468,7 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							if (isMyPin(selected.creatorEmail)) {
+							if (1) {
 								navigation.navigate("OwnerPin", { pin: selected });
 							} else {
 								navigation.navigate("DefaultPin", {
@@ -479,7 +478,11 @@ function MapScreen({ navigation, route }) {
 							setPinPreview(false);
 						}}
 					>
-						<PinPreview item={selected}></PinPreview>
+						<PinPreview
+							item={selected}
+							saved={false}
+							mine={isMyPin(selected.creatorEmail)}
+						></PinPreview>
 					</Pressable>
 				</View>
 			</Modal>
@@ -702,6 +705,7 @@ function MapScreen({ navigation, route }) {
 					}}
 					onRegionChangeComplete={(region) => setRegion(region)}
 					onPress={onModal}
+					showsCompass={false}
 					onLoad={onMapLoad}
 				>
 					{pinsShown &&
@@ -743,11 +747,7 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity
-						onPress={
-							() => setModalFilterVisible(true) //console.log(heatpoints)//
-						}
-					>
+					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
@@ -755,7 +755,7 @@ function MapScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
-				<View style={[styles.container, styles.shadow]}>
+				<View style={[styles.container, styles.shadow, { marginBottom: 70 }]}>
 					<TouchableOpacity
 						onPress={() => {
 							Location.installWebGeolocationPolyfill();

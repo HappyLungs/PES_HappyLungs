@@ -9,6 +9,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Feather } from "@expo/vector-icons";
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
 const InputField = ({
 	label,
@@ -20,7 +21,7 @@ const InputField = ({
 	onFocus = () => {},
 	...props
 }) => {
-	const [isMasked, setIsMasked] = useState(true);
+	const [isMasked, setIsMasked] = useState(false);
 	const [isFocused, setIsFocused] = useState(false);
 	return (
 		<View style={{ marginTop: 10 }}>
@@ -62,7 +63,7 @@ const InputField = ({
 					secureTextEntry={isMasked}
 					autoCorrect={false}
 					defaultValue={defaultValue}
-					maxLength={label === "Title" ? 11 : 100}
+					maxLength={label === i18n.t("title") ? 11 : 100}
 					onFocus={() => {
 						onFocus();
 						setIsFocused(true);
@@ -84,8 +85,13 @@ const InputField = ({
 							justifyContent: "center",
 							borderBottomRightRadius: 5,
 							borderTopRightRadius: 5,
-							borderTopWidth: isFocused ? 0.5 : 0,
-							borderBottomWidth: isFocused ? 0.5 : 0,
+							borderColor: error
+								? COLORS.red1
+								: isFocused
+								? COLORS.secondary
+								: COLORS.lightGrey,
+							borderTopWidth: 0.5,
+							borderBottomWidth: 0.5,
 						}}
 						onPress={() => {
 							setIsMasked(!isMasked);

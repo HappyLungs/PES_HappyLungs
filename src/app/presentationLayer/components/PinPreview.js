@@ -6,7 +6,7 @@ import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl.js");
 import i18n from "../../config/translation";
 
-const PinPreview = ({ item }) => {
+const PinPreview = ({ item, saved, mine }) => {
 	let presentationCtrl = new PresentationCtrl();
 
 	const savePin = () => {
@@ -14,15 +14,20 @@ const PinPreview = ({ item }) => {
 	};
 
 	return (
-		<Animatable.View animation="pulse" duration={1000} style={styles.shadow}>
+		<Animatable.View animation="pulse" duration={1000}>
 			<View
-				style={{
-					flexDirection: "row",
-					backgroundColor: COLORS.white,
-					borderTopStartRadius: 10,
-					borderTopEndRadius: 10,
-					padding: 15,
-				}}
+				style={[
+					{
+						flexDirection: "row",
+						backgroundColor: COLORS.white,
+						borderTopStartRadius: 10,
+						borderTopEndRadius: 10,
+						borderBottomEndRadius: mine ? 10 : 0,
+						borderBottomStartRadius: mine ? 10 : 0,
+						padding: 15,
+					},
+					styles.shadow,
+				]}
 			>
 				<View
 					style={{
@@ -51,31 +56,33 @@ const PinPreview = ({ item }) => {
 					/>
 				</View>
 			</View>
-			<View
-				style={{
-					height: 30,
-					flexDirection: "row",
-					backgroundColor: COLORS.secondary,
-					borderBottomEndRadius: 10,
-					borderBottomStartRadius: 10,
-				}}
-			>
-				<TouchableOpacity
+			{!mine && (
+				<View
 					style={{
-						flex: 1,
+						height: 30,
 						flexDirection: "row",
 						backgroundColor: COLORS.secondary,
-						justifyContent: "space-evenly",
-						borderRadius: 10,
-						alignItems: "center",
+						borderBottomEndRadius: 10,
+						borderBottomStartRadius: 10,
 					}}
-					onPress={savePin}
 				>
-					<Text style={styles.containerTxt}>
-						{1 ? i18n.t("save") : i18n.t("remove")}
-					</Text>
-				</TouchableOpacity>
-			</View>
+					<TouchableOpacity
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							backgroundColor: COLORS.secondary,
+							justifyContent: "space-evenly",
+							borderRadius: 10,
+							alignItems: "center",
+						}}
+						onPress={savePin}
+					>
+						<Text style={styles.containerTxt}>
+							{saved ? i18n.t("save") : i18n.t("remove")}
+						</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 		</Animatable.View>
 	);
 };
@@ -88,6 +95,7 @@ const styles = StyleSheet.create({
 	},
 	txt: {
 		fontSize: 12,
+		marginTop: 5,
 		color: COLORS.darkGrey,
 	},
 	profile: {
