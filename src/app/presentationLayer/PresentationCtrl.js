@@ -169,7 +169,7 @@ PresentationCtrl.prototype.editPin = function (
  * @param {*} pin
  * @returns the saved pin from the logged user
  */
-PresentationCtrl.prototype.savePin = function (pin, email) {
+PresentationCtrl.prototype.savePin = async function (pin, email) {
 	let result = await this.domainCtrl.savePin(pin, email);
 	if (result != null){
 		return result
