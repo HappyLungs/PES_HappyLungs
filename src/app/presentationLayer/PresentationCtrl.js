@@ -119,7 +119,8 @@ PresentationCtrl.prototype.createPin = function (
 	rating,
 	pinData,
 	status,
-	creatorEmail
+	creatorEmail,
+	creatorName,
 ) {
 	return this.domainCtrl.createPin(
 		title,
@@ -130,7 +131,8 @@ PresentationCtrl.prototype.createPin = function (
 		rating,
 		pinData,
 		status,
-		creatorEmail
+		creatorEmail,
+		creatorName,
 	);
 };
 

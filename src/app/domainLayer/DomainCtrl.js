@@ -198,7 +198,8 @@ DomainCtrl.prototype.createPin = async function (
 	rating,
 	date,
 	status,
-	creatorEmail
+	creatorEmail,
+	creatorName
 ) {
 	let { latitude, longitude } = location;
 	let pin = new Pin(

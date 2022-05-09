@@ -67,7 +67,8 @@ function CreatePinScreen({ navigation, route }) {
 				rating,
 				pinData,
 				status ? "Public" : "Private",
-				user.email
+				user.email,
+				user.name
 			);
 			navigation.navigate("MapScreen");
 		}
