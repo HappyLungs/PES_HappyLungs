@@ -15,12 +15,18 @@ import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 import { useContext } from "react";
+const PresentationCtrl = require("../PresentationCtrl");
 
 const PinList = ({ pinList, navigation }) => {
+	let presentationCtrl = new PresentationCtrl();
 	const [user, setUser] = useContext(UserContext);
 
 	const isMyPin = (email) => {
 		return user.email === email;
+	};
+
+	const handleDelete = (pin) => {
+		presentationCtrl.deletePin(pin);
 	};
 
 	const renderItem = ({ item, index }) => (
@@ -170,7 +176,7 @@ const PinList = ({ pinList, navigation }) => {
 									justifyContent: "center",
 									alignItems: "center",
 								}}
-								onPress={() => console.log("delete")}
+								onPress={() => handleDelete(item)}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
 								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>

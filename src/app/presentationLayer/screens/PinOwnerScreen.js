@@ -35,7 +35,10 @@ function PinOwnerScreen({ navigation, route }) {
 	const handleEdit = () => {
 		navigation.navigate("EditPinScreen", { pin: pin });
 	};
-	const handleDelete = () => console.log("Delete clicked");
+	const handleDelete = () => {
+		presentationCtrl.deletePin(pin);
+	};
+
 	const handleShare = () => console.log("Share clicked");
 
 	function renderDeleteConfirmation() {

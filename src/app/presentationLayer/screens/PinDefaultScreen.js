@@ -31,6 +31,15 @@ function PinDefaultScreen({ navigation, route }) {
 		});
 	};
 
+	const handleSave = () => {
+		if (bookmark) {
+			presentationCtrl.removeFromSaved(pin);
+		} else {
+			presentationCtrl.savePin(pin);
+		}
+		setBookmark(bookmark === "bookmark" ? "bookmark-outline" : "bookmark");
+	};
+
 	const handleShare = () => console.log("Share clicked");
 
 	return (
@@ -57,13 +66,7 @@ function PinDefaultScreen({ navigation, route }) {
 					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
-						onPress={
-							() =>
-								setBookmark(
-									bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
-								)
-							//add/remove to/from pins list
-						}
+						onPress={handleSave}
 					>
 						<Ionicons
 							name={bookmark}

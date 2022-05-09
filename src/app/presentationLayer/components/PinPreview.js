@@ -8,8 +8,9 @@ import i18n from "../../config/translation";
 
 const PinPreview = ({ item }) => {
 	let presentationCtrl = new PresentationCtrl();
+
 	const savePin = () => {
-		//presentationCtrl.savePin(item);
+		presentationCtrl.savePin(item);
 	};
 
 	return (
@@ -68,9 +69,11 @@ const PinPreview = ({ item }) => {
 						borderRadius: 10,
 						alignItems: "center",
 					}}
-					onPress={() => savePin()}
+					onPress={savePin}
 				>
-					<Text style={styles.containerTxt}>{1 ? "SAVE" : "REMOVE"}</Text>
+					<Text style={styles.containerTxt}>
+						{1 ? i18n.t("save") : i18n.t("remove")}
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</Animatable.View>

@@ -432,7 +432,7 @@ function ProfileEditScreen({ navigation }) {
 					style={{
 						flexDirection: "row",
 						justifyContent: "space-evenly",
-						marginTop: 50,
+						marginTop: 150,
 					}}
 				>
 					<TouchableOpacity

@@ -162,6 +162,33 @@ PresentationCtrl.prototype.editPin = function (
 
 /**
  *
+ * @param {*} pin
+ * @returns the saved pin from the logged user
+ */
+PresentationCtrl.prototype.savePin = function (pin) {
+	//return this.domainCtrl.savePin(pin);
+};
+
+/**
+ *
+ * @param {*} pin
+ * @returns the saved pin from the logged user
+ */
+PresentationCtrl.prototype.removeFromSaved = function (pin) {
+	//return this.domainCtrl.removeFromSaved(pin);
+};
+
+/**
+ *
+ * @param {*} pin
+ * @returns deletes pin with identifier = id. Else returns null => error
+ */
+PresentationCtrl.prototype.deletePin = function (pin) {
+	return this.domainCtrl.deletePin(pin);
+};
+
+/**
+ *
  * @param {*} name
  * @param {*} email
  * @param {*} password
