@@ -281,6 +281,25 @@ DomainCtrl.prototype.editPin = async function (Pin) {
 
 /**
  *
+ * @param {*} Pin
+ * @param {*} email
+ * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
+ */
+DomainCtrl.prototype.savePin = async function (Pin, email) {
+	let result = await persistenceCtrl.putRequest("/savePin", {
+		email: email,
+		pin: Pin,
+	});
+	if (result.status === 200) {
+		return result.data;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+/**
+ *
  * @param {*} id
  * @returns the updated pin. Else returns null => error
  */
