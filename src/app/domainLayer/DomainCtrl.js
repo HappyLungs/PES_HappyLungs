@@ -237,12 +237,12 @@ DomainCtrl.prototype.createPin = async function (
 };
 
 /**
- *
+ * @param {*} email Email from the current logged user
  * @returns pins of logged user. Else returns null => error
  */
-DomainCtrl.prototype.fetchPins = async function () {
+DomainCtrl.prototype.fetchPins = async function (email) {
 	let result = await persistenceCtrl.getRequest("/pins", {
-		user: "rguixaro@protonmail.ch" /** TODO: Change the user email for the logged one */,
+		user: email /** TODO: Change the user email for the logged one */,
 	});
 	if (result.status === 200) {
 		return result.data;
@@ -253,11 +253,11 @@ DomainCtrl.prototype.fetchPins = async function () {
 };
 
 /**
- *
+ * @param {*} email Email from the current logged user
  * @returns returns 50 best rated pins. Else returns null => error
  */
-DomainCtrl.prototype.fetchTrendingPins = async function () {
-	let result = await persistenceCtrl.getRequest("/pins", {});
+DomainCtrl.prototype.fetchTrendingPins = async function (email) {
+	let result = await persistenceCtrl.getRequest("/pins", {email: email});
 	if (result.status === 200) {
 		return result.data;
 	} else {

@@ -22,62 +22,68 @@ exports.list = async (request, response) => {
             pinDatalayer.listPins({creatorEmail: params.user})
             .then((pinData) => {
                 if (pinData !== null && typeof pinData !== "undefined") {
-                    //get pins saved by the user
-                    userDatalayer.aggregateUser(
-                        [
-                            {
-                              '$match': {
-                                'email': params.user
-                              }
-                            }, {
-                                '$lookup': {
-                                  'from': 'pins', 
-                                  'let': {
-                                    'savedPins': '$savedPins'
-                                  }, 
-                                  'pipeline': [
-                                    {
-                                      '$match': {
-                                        '$expr': {
-                                          '$and': [
-                                            {
-                                              '$in': [
-                                                '$_id', '$$savedPins'
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }
-                                    }, {
-                                      '$sort': {
-                                        'date': -1
-                                      }
-                                    }
-                                  ], 
-                                  'as': 'savedPins'
+                    //get pins saved by the user if any
+                    if (result.savedPins.length > 0) {
+                        userDatalayer.aggregateUser(
+                            [
+                                {
+                                '$match': {
+                                    'email': params.user
                                 }
-                              }, {
-                              '$project': {
-                                'savedPins': 1, 
-                                '_id': 0
-                              }
+                                }, {
+                                    '$lookup': {
+                                    'from': 'pins', 
+                                    'let': {
+                                        'savedPins': '$savedPins'
+                                    }, 
+                                    'pipeline': [
+                                        {
+                                        '$match': {
+                                            '$expr': {
+                                            '$and': [
+                                                {
+                                                '$in': [
+                                                    '$_id', '$$savedPins'
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                        }
+                                        }, {
+                                        '$sort': {
+                                            'date': -1
+                                        }
+                                        }
+                                    ], 
+                                    'as': 'savedPins'
+                                    }
+                                }, {
+                                '$project': {
+                                    'savedPins': 1, 
+                                    '_id': 0
+                                }
+                                }
+                            ]
+                        )
+                        .then((userPins) => {
+                            if (userPins !== null && typeof userPins !== "undefined") {
+                                let result = {};
+                                result.pins = pinData;
+                                result.savedPins = userPins[0].savedPins;
+                                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                            } else {
+                                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
                             }
-                          ]
-                    )
-                    .then((userPins) => {
-                        if (userPins !== null && typeof userPins !== "undefined") {
-                            let result = {};
-                            result.pins = pinData;
-                            result.savedPins = userPins[0].savedPins;
-                            console.log("result: ", result);
-                            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
-                        } else {
-                            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
-                        }
-                    })
-                    .catch((error) => {
-                        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-                    });
+                        })
+                        .catch((error) => {
+                            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                        });
+                    } else {
+                        let result = {};
+                        result.pins = pinData;
+                        result.savedPins = [];
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                    }
                 } else {
                     sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                 }
@@ -87,9 +93,20 @@ exports.list = async (request, response) => {
             });
         }
     } else {
+        if (!request.query.hasOwnProperty("email")) {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Email is required", {});
+            return;
+        }
         //Get 50 pins from all users (ordered by score)
         pinDatalayer.aggregatePins([
             {
+                '$match': {
+                    'status': "Public",
+                    'creatorEmail': {
+                        '$ne': params.email
+                    }
+                }
+            },{
               '$sort': {
                 rating: -1,
                 date: -1
