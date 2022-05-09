@@ -21,6 +21,10 @@ const PinSchema = new global.Schema({
         type: String,
         ref: "user"
     },
+    creatorName: {
+        type: String,
+        ref: "user"
+    },
     media: {
         type: [],
         default: []

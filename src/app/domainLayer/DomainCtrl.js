@@ -221,8 +221,8 @@ DomainCtrl.prototype.createPin = async function (
 		date: pin.date,
 		rating: pin.rating,
 		status: pin.status,
-		creatorEmail: "rguixaro@protonmail.ch",
-		//TODO: creator email. Should get it from the context (auth token when login)
+		creatorEmail: "rguixaro@protonmail.ch",	//TODO: get email from the logged user
+		creatorName: "Ricard",	//TODO: get user name from the logged user
 		media: pin.media,
 	};
 	let response = await persistenceCtrl.postRequest("/newPin", params);
