@@ -40,7 +40,6 @@ function PinsScreen({ navigation }) {
 	const AnimationRefFilter4 = useRef(null);
 
 	useEffect(async () => {
-		console.log("useEffect");
 		const unsubscribe = navigation.addListener("focus", async () => {
 			// The screen is focused
 			// Call any action and update data

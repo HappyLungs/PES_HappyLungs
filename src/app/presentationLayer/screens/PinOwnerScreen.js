@@ -37,6 +37,7 @@ function PinOwnerScreen({ navigation, route }) {
 	};
 	const handleDelete = () => {
 		presentationCtrl.deletePin(pin);
+		navigation.popToTop();
 	};
 
 	const handleShare = () => console.log("Share clicked");
@@ -286,9 +287,6 @@ const styles = StyleSheet.create({
 		borderColor: COLORS.secondary,
 		borderTopWidth: 2,
 		padding: 15,
-	},
-	button: {
-		elevation: 2,
 	},
 	containerBtn: {
 		width: 95,
