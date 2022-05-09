@@ -221,6 +221,7 @@ DomainCtrl.prototype.createPin = async function (
 		date: pin.date,
 		rating: pin.rating,
 		status: pin.status,
+		creatorEmail: "rguixaro@protonmail.ch",
 		//TODO: creator email. Should get it from the context (auth token when login)
 		media: pin.media,
 	};
@@ -269,6 +270,22 @@ DomainCtrl.prototype.fetchTrendingPins = async function () {
  */
 DomainCtrl.prototype.editPin = async function (Pin) {
 	let result = await persistenceCtrl.putRequest("/pin", Pin);
+	if (result.status === 200) {
+		return result.data;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+/**
+ *
+ * @param {*} Pin
+ * @param {*} email
+ * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
+ */
+ DomainCtrl.prototype.savePin = async function (Pin, email) {
+	let result = await persistenceCtrl.putRequest("/savePin", {"email": email, "pin": Pin});
 	if (result.status === 200) {
 		return result.data;
 	} else {
