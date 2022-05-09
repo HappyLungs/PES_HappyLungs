@@ -224,6 +224,7 @@ DomainCtrl.prototype.createPin = async function (
 		rating: pin.rating,
 		status: pin.status,
 		creatorEmail: creatorEmail,
+		creatorName: "Ricard",	//TODO: get user name from the logged user
 		media: pin.media,
 	};
 	console.log(params);
