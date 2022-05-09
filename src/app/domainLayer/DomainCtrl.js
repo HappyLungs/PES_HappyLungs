@@ -211,7 +211,9 @@ DomainCtrl.prototype.createPin = async function (
 		media,
 		rating,
 		new Date(date),
-		status
+		status,
+		creatorEmail,
+		creatorName
 	);
 	//store db
 	let params = {
@@ -224,12 +226,13 @@ DomainCtrl.prototype.createPin = async function (
 		rating: pin.rating,
 		status: pin.status,
 		creatorEmail: creatorEmail,
-		creatorName: "Ricard",	//TODO: get user name from the logged user
+		creatorName: creatorName, //TODO: get user name from the logged user
 		media: pin.media,
 	};
 	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
+		console.log(response.data);
 		return response.data; // Returns the object inserted in the DB
 	} else {
 		//TODO: handle error. Return an error and reload the view with the error
@@ -244,6 +247,7 @@ DomainCtrl.prototype.fetchPins = async function () {
 	let result = await persistenceCtrl.getRequest("/pins", {
 		user: "rguixaro@protonmail.ch" /** TODO: Change the user email for the logged one */,
 	});
+	console.log(result.status);
 	if (result.status === 200) {
 		return result.data;
 	} else {
