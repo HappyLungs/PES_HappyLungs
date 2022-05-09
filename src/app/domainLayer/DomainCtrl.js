@@ -260,7 +260,7 @@ DomainCtrl.prototype.fetchPins = async function () {
  *
  * @returns returns 50 best rated pins. Else returns null => error
  */
-DomainCtrl.prototype.fetchTrendingPins = async function () {
+DomainCtrl.prototype.fetchTrendingPins = async function (email) {
 	let result = await persistenceCtrl.getRequest("/pins", {});
 	if (result.status === 200) {
 		return result.data;

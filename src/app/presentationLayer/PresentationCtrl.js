@@ -305,8 +305,8 @@ PresentationCtrl.prototype.fetchPins = async function (email) {
 	}
 };
 
-PresentationCtrl.prototype.fetchTrendingPins = async function () {
-	let pins = await this.domainCtrl.fetchTrendingPins();
+PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
+	let pins = await this.domainCtrl.fetchTrendingPins(email);
 	if (pins != null) {
 		return pins;
 	} else {
