@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import * as Animatable from "react-native-animatable";
 
 import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl.js");
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 const PinPreview = ({ item, saved, mine }) => {
 	let presentationCtrl = new PresentationCtrl();
+	const [user] = useContext(UserContext);
 
 	const savePin = () => {
-		presentationCtrl.savePin(item);
+		presentationCtrl.savePin(item._id, user.email);
 	};
 
 	return (

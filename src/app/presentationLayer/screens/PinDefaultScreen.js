@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -9,6 +9,7 @@ import {
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 import { Rating } from "react-native-ratings";
 import ImageCarousel from "../components/ImageCarousel";
@@ -18,6 +19,7 @@ const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
+	const [user] = useContext(UserContext);
 
 	const { pin } = route.params;
 	const saved = route.params;
@@ -33,9 +35,9 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const handleSave = () => {
 		if (bookmark) {
-			presentationCtrl.removeFromSaved(pin);
+			presentationCtrl.removeFromSaved(pin._id, user.email);
 		} else {
-			presentationCtrl.savePin(pin);
+			presentationCtrl.savePin(pin._id, user.email);
 		}
 		setBookmark(bookmark === "bookmark" ? "bookmark-outline" : "bookmark");
 	};

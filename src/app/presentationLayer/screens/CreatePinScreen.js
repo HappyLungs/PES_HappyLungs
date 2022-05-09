@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -19,11 +19,14 @@ import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import COLORS from "../../config/stylesheet/colors";
 import InputField from "../components/InputField";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 const PresentationCtrl = require("../PresentationCtrl");
 
 function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
+
+	const [user] = useContext(UserContext);
 
 	const { coords } = route.params;
 	const [date, setDate] = useState(new Date());
@@ -63,7 +66,8 @@ function CreatePinScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				pinData,
-				status ? "Public" : "Private"
+				status ? "Public" : "Private",
+				user.email
 			);
 			navigation.navigate("MapScreen");
 		}

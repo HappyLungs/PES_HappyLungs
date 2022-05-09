@@ -197,7 +197,8 @@ DomainCtrl.prototype.createPin = async function (
 	media,
 	rating,
 	date,
-	status
+	status,
+	creatorEmail
 ) {
 	let { latitude, longitude } = location;
 	let pin = new Pin(
@@ -221,10 +222,11 @@ DomainCtrl.prototype.createPin = async function (
 		date: pin.date,
 		rating: pin.rating,
 		status: pin.status,
-		creatorEmail: "rguixaro@protonmail.ch",	//TODO: get email from the logged user
+		creatorEmail: creatorEmail,
 		creatorName: "Ricard",	//TODO: get user name from the logged user
 		media: pin.media,
 	};
+	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB
@@ -284,8 +286,11 @@ DomainCtrl.prototype.editPin = async function (Pin) {
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
- DomainCtrl.prototype.savePin = async function (Pin, email) {
-	let result = await persistenceCtrl.putRequest("/savePin", {"email": email, "pin": Pin});
+DomainCtrl.prototype.savePin = async function (Pin, email) {
+	let result = await persistenceCtrl.putRequest("/savePin", {
+		email: email,
+		pin: Pin,
+	});
 	if (result.status === 200) {
 		return result.data;
 	} else {
