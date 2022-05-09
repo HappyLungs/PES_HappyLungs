@@ -93,8 +93,6 @@ function ProfileEditScreen({ navigation }) {
 
 	const validatePasswordChange = async () => {
 		Keyboard.dismiss();
-		console.log(inputsPasswordChange);
-		console.log(errors);
 		if (!inputsPasswordChange.oldPassword) {
 			handleError(i18n.t("passwordError"), "oldPassword");
 		} else if (user.password !== inputsPasswordChange.oldPassword) {
@@ -114,7 +112,6 @@ function ProfileEditScreen({ navigation }) {
 			handleError(i18n.t("passwordNoChange"), "newPassword1");
 			handleError(" ", "newPassword2");
 		} else {
-			console.log("pwd updated");
 			/** TODO */
 			/*let updatedUser = await presentationCtrl.updateUserPassword(
 				user.email,

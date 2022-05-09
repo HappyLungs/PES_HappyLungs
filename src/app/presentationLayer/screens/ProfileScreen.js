@@ -60,9 +60,7 @@ function ProfileScreen({ navigation, route }) {
 				message: "Breath Safely, Breath With Us",
 				url: "https://happylungsproject.org/", //url és ios only
 			});
-		} catch (err) {
-			console.log(err);
-		}
+		} catch (err) {}
 	}
 
 	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);

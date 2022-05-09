@@ -157,9 +157,7 @@ function MapScreen({ navigation, route }) {
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
-		//console.log('prevoius');
 		await initHeatPoints();
-		//console.log(heatpoints);
 	}, []);
 
 	//setHeatpoints(await presentationCtrl.getMapData());
@@ -193,13 +191,7 @@ function MapScreen({ navigation, route }) {
 			},
 		});
 		//falta condicionar això perq només passi quan realment es crea un pin
-		setMarkers((current) => [
-			...current,
-			{
-				latitude: actualMarker.latitude,
-				longitude: actualMarker.longitude,
-			},
-		]);
+
 		setModalPinVisible(!modalPinVisible);
 	});
 

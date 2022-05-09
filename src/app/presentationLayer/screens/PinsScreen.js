@@ -39,18 +39,25 @@ function PinsScreen({ navigation }) {
 	const AnimationRefFilter3 = useRef(null);
 	const AnimationRefFilter4 = useRef(null);
 
-	useEffect(() => {
-		fetchPins();
-		return () => {};
-	}, []);
+	useEffect(async () => {
+		console.log("useEffect");
+		const unsubscribe = navigation.addListener("focus", async () => {
+			// The screen is focused
+			// Call any action and update data
+			const fetchPins = async () => {
+				const data = await presentationCtrl.fetchPins(user.email);
+				setMasterData([...data.pins, ...data.savedPins]);
+				setFilteredData([...data.pins, ...data.savedPins]);
+				setCreatedPins(data.pins);
+				setSavedPins(data.savedPins);
+			};
+			await fetchPins();
+		});
 
-	const fetchPins = async () => {
-		const data = await presentationCtrl.fetchPins(user.email);
-		setMasterData([...data.pins, ...data.savedPins]);
-		setFilteredData([...data.pins, ...data.savedPins]);
-		setCreatedPins(data.pins);
-		setSavedPins(data.savedPins);
-	};
+		// Return the function to unsubscribe from the event so it gets removed on unmount
+
+		return unsubscribe;
+	}, [navigation]);
 
 	const filterBySearch = (text) => {
 		if (text) {

@@ -247,7 +247,6 @@ DomainCtrl.prototype.fetchPins = async function (email) {
 	let result = await persistenceCtrl.getRequest("/pins", {
 		user: email /** TODO: Change the user email for the logged one */,
 	});
-	console.log(result.status);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -261,7 +260,7 @@ DomainCtrl.prototype.fetchPins = async function (email) {
  * @returns returns 50 best rated pins. Else returns null => error
  */
 DomainCtrl.prototype.fetchTrendingPins = async function (email) {
-	let result = await persistenceCtrl.getRequest("/pins", {email: email});
+	let result = await persistenceCtrl.getRequest("/pins", { email: email });
 	if (result.status === 200) {
 		return result.data;
 	} else {

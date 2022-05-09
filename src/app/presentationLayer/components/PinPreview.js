@@ -80,7 +80,7 @@ const PinPreview = ({ item, saved, mine }) => {
 						onPress={savePin}
 					>
 						<Text style={styles.containerTxt}>
-							{saved ? i18n.t("save") : i18n.t("remove")}
+							{saved ? i18n.t("remove") : i18n.t("save")}
 						</Text>
 					</TouchableOpacity>
 				</View>
