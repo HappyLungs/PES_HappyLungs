@@ -97,6 +97,7 @@ exports.list = async (request, response) => {
             sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Email is required", {});
             return;
         }
+        params = request.query;
         //Get 50 pins from all users (ordered by score)
         pinDatalayer.aggregatePins([
             {
