@@ -34,7 +34,7 @@ class MeasureStation {
     /**
      * Given a measure from Dades Obertes API and an hour, returns the pollution level at this hour
      * @param {JSON} measure measure of one pollutant at one date
-     * @param {Integer} hour hour from 1 to 24
+     * @param {String} hour hour from 1 to 24
      * @returns pollution level of measure "measure" at hour "hour"
      */
     calcHourQuantity(measure, hour) {
@@ -67,7 +67,7 @@ class MeasureStation {
         measures.forEach( measure => {
             let pollutant = measure.contaminant;
             if (availablePollutants.includes(pollutant)) {
-                let quantity = this.calcHourQuantity(measure, parseInt( this.hour2JsonHour(hour)));// he hecho un parse int ya que la funcion pide un int no un string @author arnausempau
+                let quantity = this.calcHourQuantity(measure, this.hour2JsonHour(hour));
                 calculatorData.set(pollutant,quantity);
             }
             
@@ -129,7 +129,7 @@ class MeasureStation {
      */
     async getHourLevel(date, hour) {
         let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
-        return this.calcHourLevel(measures, hour)
+        return this.calcHourLevel(measures, hour);
     }
 
     /**
@@ -247,7 +247,7 @@ class MeasureStation {
         let measuresByMonth = new Map();
         measures.forEach(measure => {
             let measureDate = new Date(measure.data);
-            let auxMonth = (measureDate.getMonth()<9 ? "0"+(measureDate.getMonth()+1).toString() : (measureDate.getMonth()+1).toString());//he suprimido los parse ints ya que retorna un int ya la funcion getMonth @author arnau sempau
+            let auxMonth = (parseInt(measureDate.getMonth())<9 ? "0"+(parseInt(measureDate.getMonth())+1).toString() : (parseInt(measureDate.getMonth())+1).toString());
             let month = measureDate.getFullYear().toString()+auxMonth;
             if (! measuresByMonth.has(month)) measuresByMonth.set(month, [measure]);
             else {

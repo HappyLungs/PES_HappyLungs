@@ -1,5 +1,5 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-const fetch = require("node-fetch");
+//const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
 import User from "./classes/User";

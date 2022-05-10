@@ -139,7 +139,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
-	useEffect(async () => {/*
+	useEffect(async () => {
 		const fetchPins = async () => {
 			//get pins from db
 			//ought to fetch them before navigate
@@ -148,7 +148,7 @@ function MapScreen({ navigation, route }) {
 			console.log(data);
 		};
 
-		await fetchPins();*/
+		await fetchPins();
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
