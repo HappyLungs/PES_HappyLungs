@@ -295,7 +295,6 @@ PresentationCtrl.prototype.updateUserPassword = async function (
 };
 
 PresentationCtrl.prototype.fetchPins = async function (email) {
-	console.log(email);
 	let pins = await this.domainCtrl.fetchPins(email);
 	if (pins != null) {
 		return pins;

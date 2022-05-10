@@ -40,7 +40,7 @@ const PinPreview = ({ item, saved, mine }) => {
 					<Text style={styles.pinName}>{item.title}</Text>
 
 					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
-					<Text style={styles.profile}>{item.creatorEmail}</Text>
+					<Text style={styles.profile}>{item.creatorName}</Text>
 				</View>
 				<View style={styles.shadow}>
 					<Image

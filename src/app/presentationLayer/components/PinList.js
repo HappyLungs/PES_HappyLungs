@@ -274,7 +274,7 @@ const PinList = ({ pinList, navigation }) => {
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ padding: 10 }}
 				scrollEnabled={true}
-				data={data}
+				data={pinList}
 				keyExtractor={(item) => `${item.title}`}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
