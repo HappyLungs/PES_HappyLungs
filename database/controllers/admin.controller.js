@@ -32,3 +32,14 @@ exports.blockUser = async (request, response) => {
         }
     );
 };
+
+exports.listUsers = async (request, response) => {
+    UserDataLayer.findUsers({})
+    .then((userData) => {
+        if (userData == null || userData == undefined || userData.length === 0) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Request processed successfully", data);
+        else sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "No users found", userData);
+    })
+    .catch((error) => {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No users found", error);
+    });
+};

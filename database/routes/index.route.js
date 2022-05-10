@@ -200,4 +200,9 @@ router.put(
     AdminController.blockUser
 );
 
+router.get(
+    "/listUsers",
+    licenseMiddleware.validate,
+    AdminController.listUsers
+);
 /** /Admin */
