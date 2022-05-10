@@ -8,39 +8,24 @@ import {
 	ImageBackground,
 	Keyboard,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 
+import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+import UserContext from "../../domainLayer/UserContext";
+import i18n from "../../config/translation";
 
-import UserContext from "../domainLayer/UserContext";
-
-import { Ionicons } from "@expo/vector-icons";
-
-import i18n from "../config/translation";
-
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function ProfileEditScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
-	//should pass userId, and then retrieve the updated data
 
-	const [ user, setUser ] = useContext(UserContext);
+	const [user, setUser] = useContext(UserContext);
 
-	// const fakeUserData = {
-	// 	username: "Username",
-	// 	email: "username@email.com",
-	// 	password: "**********",
-	// 	points: 200,
-	// 	healthState: [true, false, true],
-	// 	picture:
-	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	// };
-	//const [fakeUser, setFakeUser] = useState(fakeUserData);
 	const [profilePicture, setProfilePicture] = useState(user.profilePicture);
 	const [state1, setState1] = useState(user.healthStatus[0]);
 	const [state2, setState2] = useState(user.healthStatus[1]);
@@ -50,7 +35,12 @@ function ProfileEditScreen({ navigation }) {
 		username: user.name,
 		email: user.email,
 		password: user.password,
+		oldPassword: "",
+		newPassword1: "",
+		newPassword2: "",
 	});
+
+	const [inputsPasswordChange, setInputsPasswordChange] = useState({});
 	const [errors, setErrors] = useState({});
 
 	const pickImage = async () => {
@@ -72,23 +62,19 @@ function ProfileEditScreen({ navigation }) {
 		setInputs((prevState) => ({ ...prevState, [input]: text }));
 	};
 
+	const handleOnChangePassword = (text, input) => {
+		setInputsPasswordChange((prevState) => ({ ...prevState, [input]: text }));
+	};
+
 	const validate = async () => {
 		Keyboard.dismiss();
-		let isValid = true;
 		if (!inputs.username) {
-			handleError("Please add a valid username", "username");
-			isValid = false;
-		}
-		if (!inputs.email) {
-			handleError("Please add a valid email", "email");
-			isValid = false;
-		}
-		if (!inputs.password) {
-			handleError("Please add a valid password", "password");
-			isValid = false;
-		}
-		if (isValid) {
-			  
+			handleError(i18n.t("usernameError"), "username");
+		} else if (!inputs.email) {
+			handleError("", "email");
+		} else if (!inputs.password) {
+			handleError("", "password");
+		} else {
 			let updatedUser = await presentationCtrl.updateUser(
 				inputs.username,
 				user.email,
@@ -105,7 +91,40 @@ function ProfileEditScreen({ navigation }) {
 		}
 	};
 
-	const [byCertificate, setByCertificate] = useState(false);
+	const validatePasswordChange = async () => {
+		Keyboard.dismiss();
+		if (!inputsPasswordChange.oldPassword) {
+			handleError(i18n.t("passwordError"), "oldPassword");
+		} else if (user.password !== inputsPasswordChange.oldPassword) {
+			handleError(i18n.t("passwordIncorrect"), "oldPassword");
+		} else if (!inputsPasswordChange.newPassword1) {
+			handleError(i18n.t("passwordError"), "newPassword1");
+		} else if (!inputsPasswordChange.newPassword2) {
+			handleError(i18n.t("passwordError"), "newPassword2");
+		} else if (
+			inputsPasswordChange.newPassword1 !== inputsPasswordChange.newPassword2
+		) {
+			handleError(i18n.t("passwordMatch"), "newPassword1");
+			handleError(" ", "newPassword2");
+		} else if (
+			inputsPasswordChange.oldPassword === inputsPasswordChange.newPassword1
+		) {
+			handleError(i18n.t("passwordNoChange"), "newPassword1");
+			handleError(" ", "newPassword2");
+		} else {
+			/** TODO */
+			/*let updatedUser = await presentationCtrl.updateUserPassword(
+				user.email,
+				inputsPasswordChange.newPassword1
+			);
+			*/
+			setInputsPasswordChange({});
+			setErrors({});
+			navigation.popToTop();
+			setUser(updatedUser);
+			navigation.navigate("ProfileScreen");
+		}
+	};
 
 	const [modalChangePassword, setModalChangePassword] = useState(false);
 
@@ -117,9 +136,8 @@ function ProfileEditScreen({ navigation }) {
 				visible={modalChangePassword}
 				onRequestClose={() => {
 					setModalChangePassword(false);
-				}}
-				onBackdropPress={() => {
-					setModalChangePassword(false);
+					setErrors({});
+					setInputs({});
 				}}
 			>
 				<View style={styles.centeredView}>
@@ -130,44 +148,71 @@ function ProfileEditScreen({ navigation }) {
 							{ alignItems: "flex-start" },
 						]}
 					>
+						<Text
+							style={{
+								fontWeight: "bold",
+								color: COLORS.secondary,
+								fontSize: 16,
+								alignSelf: "center",
+							}}
+						>
+							{i18n.t("passwordUpdate")}
+						</Text>
+						<Text
+							style={{
+								color: COLORS.darkGrey,
+								fontSize: 13,
+								marginTop: 10,
+								textAlign: "center",
+								alignSelf: "center",
+							}}
+						>
+							{i18n.t("passwordUpdateText")}
+						</Text>
 						<View
 							style={{
 								width: 200,
 								height: 200,
+								marginTop: 10,
 								alignSelf: "center",
 								borderRadius: 5,
-								padding: 5,
 							}}
 						>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(oldPassword) =>
+									handleOnChangePassword(oldPassword, "oldPassword")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "oldPassword")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("actualPassword")}
-								error={errors.password}
+								error={errors.oldPassword}
+								editable={true}
+								passwordChange={true}
 							/>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(newPassword1) =>
+									handleOnChangePassword(newPassword1, "newPassword1")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "newPassword1")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("newPassword")}
-								error={errors.password}
+								error={errors.newPassword1}
+								editable={true}
+								passwordChange={true}
 							/>
 							<InputField
-								onChangeText={(newPassword) =>
-									handleOnChange(newPassword, "password")
+								onChangeText={(newPassword2) =>
+									handleOnChangePassword(newPassword2, "newPassword2")
 								}
-								onFocus={() => handleError(null, "password")}
+								onFocus={() => handleError(null, "newPassword2")}
 								iconName="lock"
-								defaultValue={user.password}
+								defaultValue={""}
 								label={i18n.t("confirmNewPassword")}
-								error={errors.password}
+								error={errors.newPassword2}
+								editable={true}
+								passwordChange={true}
 							/>
 						</View>
 						<View
@@ -175,7 +220,7 @@ function ProfileEditScreen({ navigation }) {
 								flexDirection: "row",
 								justifyContent: "space-around",
 								alignSelf: "center",
-								marginTop: 100,
+								marginTop: 120,
 								marginHorizontal: 5,
 								width: 240,
 							}}
@@ -186,7 +231,10 @@ function ProfileEditScreen({ navigation }) {
 									styles.shadow,
 									{ backgroundColor: COLORS.red1 },
 								]}
-								onPress={() => setModalChangePassword(false)}
+								onPress={() => {
+									setErrors({});
+									setModalChangePassword(false);
+								}}
 							>
 								<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 							</TouchableOpacity>
@@ -196,7 +244,7 @@ function ProfileEditScreen({ navigation }) {
 									styles.shadow,
 									{ backgroundColor: COLORS.green1 },
 								]}
-								//onPress={validate}
+								onPress={validatePasswordChange}
 							>
 								<Text style={styles.containerTxt}>{i18n.t("accept")}</Text>
 							</TouchableOpacity>
@@ -227,9 +275,9 @@ function ProfileEditScreen({ navigation }) {
 				<View
 					style={{
 						flex: 3,
-						alignSelf: "center",
+						alignSelf: "flex-start",
 						borderRadius: 5,
-						padding: 5,
+						paddingEnd: 30,
 					}}
 				>
 					<InputField
@@ -241,6 +289,8 @@ function ProfileEditScreen({ navigation }) {
 						defaultValue={user.name}
 						label={i18n.t("username")}
 						error={errors.username}
+						editable={true}
+						passwordChange={false}
 					/>
 					<InputField
 						onChangeText={(newEmail) => handleOnChange(newEmail, "email")}
@@ -249,21 +299,28 @@ function ProfileEditScreen({ navigation }) {
 						defaultValue={user.email}
 						label={i18n.t("email")}
 						error={errors.email}
+						editable={false}
+						passwordChange={false}
 					/>
-					<InputField
-						onChangeText={(newPassword) =>
-							handleOnChange(newPassword, "password")
-						}
-						onFocus={() => handleError(null, "password")}
-						iconName="lock"
-						defaultValue={user.password}
-						label={i18n.t("password")}
-						error={errors.password}
-					/>
+					<TouchableOpacity
+						style={{
+							marginTop: 20,
+							flexDirection: "row",
+							alignItems: "center",
+						}}
+						onPress={() => {
+							setModalChangePassword(true);
+						}}
+					>
+						<Text style={[styles.textOption2, { marginEnd: 10 }]}>
+							{i18n.t("passwordChange")}
+						</Text>
+						<MaterialIcons name={"edit"} size={20} color={COLORS.green1} />
+					</TouchableOpacity>
 				</View>
 				<View
 					style={{
-						flex: 2,
+						flex: 1.5,
 						alignItems: "center",
 						marginTop: 10,
 					}}
@@ -288,20 +345,6 @@ function ProfileEditScreen({ navigation }) {
 						<Text style={[styles.textState, { color: COLORS.green1 }]}>
 							{i18n.t("upload")}
 						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{
-							flexDirection: "row",
-							backgroundColor: COLORS.green1,
-							borderRadius: 90,
-							padding: 7,
-							marginTop: 64,
-							marginStart: -75,
-							alignItems: "center",
-						}}
-						onPress={() => setModalChangePassword(true)}
-					>
-						<MaterialIcons name={"edit"} size={30} color={COLORS.white} />
 					</TouchableOpacity>
 				</View>
 				{renderModalChangePassword()}
@@ -386,7 +429,7 @@ function ProfileEditScreen({ navigation }) {
 					style={{
 						flexDirection: "row",
 						justifyContent: "space-evenly",
-						marginTop: 50,
+						marginTop: 150,
 					}}
 				>
 					<TouchableOpacity
@@ -447,6 +490,11 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		marginHorizontal: 10,
 	},
+	textOption2: {
+		fontSize: 15,
+		fontWeight: "bold",
+		color: COLORS.green1,
+	},
 	containerState: {
 		flexDirection: "column",
 		width: 60,
@@ -488,8 +536,9 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 25,
-		height: 400,
-		width: 240,
+		marginTop: 60,
+		height: 500,
+		width: 270,
 		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 20,

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Text, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
@@ -13,25 +14,26 @@ import { Feather } from "@expo/vector-icons";
 import "react-native-gesture-handler";
 
 //screens
-import MapScreen from "../MapScreen";
-import GeneralChatScreen from "../GeneralChatScreen";
-import ChatConversation from "../ChatConversation";
-import NewChatScreen from "../NewChatScreen";
-import PinsScreen from "../PinsScreen";
-import ProfileScreen from "../ProfileScreen";
-import ProfileEditScreen from "../ProfileEditScreen";
-import SettingsScreen from "../SettingsScreen";
-import StatisticsScreen from "../StatisticsScreen";
-import CreatePinScreen from "../CreatePinScreen";
-import PinOwnerScreen from "../PinOwnerScreen";
-import PinEditScreen from "../PinEditScreen";
-import PinDefaultScreen from "../PinDefaultScreen";
-import SignInScreen from "../SignInScreen";
-import SignUpScreen from "../SignUpScreen";
-import TermsAndConditionsScreen from "../TermsAndConditionsScreen";
+import MapScreen from "../screens/MapScreen";
+import GeneralChatScreen from "../screens/GeneralChatScreen";
+import ChatConversation from "../screens/ChatConversation";
+import NewChatScreen from "../screens/NewChatScreen";
+import PinsScreen from "../screens/PinsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import ProfileEditScreen from "../screens/ProfileEditScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import StatisticsScreen from "../screens/StatisticsScreen";
+import CreatePinScreen from "../screens/CreatePinScreen";
+import PinOwnerScreen from "../screens/PinOwnerScreen";
+import PinEditScreen from "../screens/PinEditScreen";
+import PinDefaultScreen from "../screens/PinDefaultScreen";
+import SignInScreen from "../screens/SignInScreen";
+import SignUpScreen from "../screens/SignUpScreen";
+import TermsAndConditionsScreen from "../screens/TermsAndConditionsScreen";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import { UserContextProvider } from "../../domainLayer/UserContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
@@ -119,7 +121,7 @@ function PinStack() {
 				name="EditPinScreen"
 				component={PinEditScreen}
 				options={{
-					title: "Editing pin",
+					title: i18n.t("editingPin"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -151,16 +153,47 @@ function ProfileStack() {
 			<Stack.Screen
 				name="ProfileScreen"
 				component={ProfileScreen}
-				options={{
+				options={({ navigation }) => ({
 					title: "",
-					headerShown: false,
-				}}
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("ProfileEditScreen");
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingProfile")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
+					headerLeft: null,
+					headerTitleStyle: {
+						fontSize: 20,
+						fontWeight: "bold",
+						color: COLORS.secondary,
+					},
+					headerStyle: { shadowColor: "transparent" },
+				})}
 			/>
 			<Stack.Screen
 				name="ProfileEditScreen"
 				component={ProfileEditScreen}
 				options={{
-					title: "Editing profile",
+					title: i18n.t("editingProfile"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -175,7 +208,7 @@ function ProfileStack() {
 				name="SettingsScreen"
 				component={SettingsScreen}
 				options={{
-					title: "Settings",
+					title: i18n.t("settings"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -226,7 +259,6 @@ function ChatStack() {
 				name="ChatConversation"
 				component={ChatConversation}
 				options={{
-					title: "",
 					headerShown: false,
 				}}
 			/>
@@ -234,7 +266,7 @@ function ChatStack() {
 				name="NewChat"
 				component={NewChatScreen}
 				options={{
-					title: "New chat",
+					title: i18n.t("newChat"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -263,14 +295,13 @@ function MapStack() {
 					fontWeight: "bold",
 					fontSize: 27,
 				},
-				headerShown: false,
+				headerShown: true,
 			}}
 		>
 			<Stack.Screen
 				name="MapScreen"
 				component={MapScreen}
 				options={{
-					title: "Happy Lungs",
 					headerShown: false,
 				}}
 				initialParams={{ tmpLat: false, tmpLng: false }}
@@ -280,7 +311,7 @@ function MapStack() {
 				name="CreatePin"
 				component={CreatePinScreen}
 				options={{
-					title: "Create pin",
+					title: i18n.t("createPin"),
 					gestureEnabled: true,
 					gestureDirection: "horizontal",
 					...TransitionPresets.SlideFromRightIOS,
@@ -291,6 +322,7 @@ function MapStack() {
 				component={PinDefaultScreen}
 				options={{
 					title: "",
+					headerShown: false,
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
@@ -299,6 +331,7 @@ function MapStack() {
 				component={PinOwnerScreen}
 				options={{
 					title: "",
+					headerShown: false,
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
@@ -306,7 +339,7 @@ function MapStack() {
 				name="EditPinScreen"
 				component={PinEditScreen}
 				options={{
-					title: "Editing pin",
+					title: i18n.t("editingPin"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -343,7 +376,6 @@ function AppTabs() {
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name="chatbubble-outline" size={size} color={color} />
 					),
-					title: "General Chat",
 					headerShown: false,
 				}}
 			/>
@@ -354,7 +386,6 @@ function AppTabs() {
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="pushpino" size={size} color={color} />
 					),
-					title: "My Pins",
 					headerShown: false,
 				}}
 			/>

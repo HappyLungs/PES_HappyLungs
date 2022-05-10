@@ -1,0 +1,1319 @@
+openapi: 3.0.1
+
+info:
+  title: HappyLungs
+  version: 1.0.0
+  description: "This is the Open API documentation for the REST API of our beloved application **HappyLungs** deployed at <http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/>. <br>All operations are executable. POST, PUT and DELETE operations requires authentication. In this case, you must **Authorize** your request by providing the api_key value, available on your profile."
+
+servers:
+  - url: http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/v1/
+
+paths:
+  /user:
+    get:
+
+      tags:
+        - users
+      summary: Returns a user by email
+      operationId: index
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: ArrayOfUsers
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        204:
+          description: No user found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                Error User not found:
+                 $ref: '#/components/examples/error202UserAlreadyRegistered'
+      parameters:
+      - name: email
+        in: header
+        description: Email that identifies the user
+        required: true
+        type: string
+
+  /register:
+    post:
+      tags:
+        - users
+      summary: Create an user
+      operationId: user_create
+      requestBody:
+        description: Attributes needed to create an user.
+        content:
+          application/json:
+            schema:
+              required:
+                - User
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 'API_name'
+                password:
+                  type: string
+                  example: 'API_password'
+                confirmPassword:
+                  type: string
+                  example: 'API_password'
+                email:
+                  type: string
+                  example: 'Email@API.es'
+                birthdate:
+                  type: string
+                  example: '2018-03-29T13:34:00.000'
+                points:
+                  type: integer
+                  example: 0
+                profilePicture:
+                  type: string
+                  example: "/icon.png"
+                healthStatus:
+                  type: string
+                  example: "Pregnant"
+        required: true
+
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        202: 
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                User already registered:
+                  $ref: '#/components/examples/error202UserAlreadyRegistered'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                Error blank Title:
+                  $ref: '#/components/examples/error400TitleBlank'
+                Error invalid Url:
+                  $ref: '#/components/examples/error400InvalidUrl'
+                Error Url and Text are blank:
+                  $ref: '#/components/examples/error400UrlAndTextBlank'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ApiKeyNotValid:
+                  $ref: '#/components/examples/error403'
+      security:
+        - ApiKeyAuth: []
+
+  /newPin:
+    post:
+      tags:
+        - Pin
+      summary: Create a Pin
+      operationId: pin_create
+      requestBody:
+        description: Attributes needed to create a pin.
+        content:
+          application/json:
+            schema:
+              required:
+                - User
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Nuevo Pin de prueba'
+                description:
+                  type: string
+                  example: 'Pin de prueba'
+                latitude:
+                  type: integer
+                  example: 42.3
+                longitude:
+                  type: integer
+                  example: 32.1
+                date:
+                  type: string
+                  example: '2018-03-29T13:34:00.000'
+                rating:
+                  type: integer
+                  example: 0
+                status:
+                  type: string
+                  example: "Public"
+                creatorEmail:
+                  type: string
+                  example: "hasbulla@gmail.com"
+                media:
+                  type: array
+                  example: []
+        required: true
+
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pin'
+        202: 
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                User already registered:
+                  $ref: '#/components/examples/error400TitleBlank'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                Error blank Title:
+                  $ref: '#/components/examples/error400TitleBlank'
+                Error invalid Url:
+                  $ref: '#/components/examples/error400InvalidUrl'
+                Error Url and Text are blank:
+                  $ref: '#/components/examples/error400UrlAndTextBlank'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ApiKeyNotValid:
+                  $ref: '#/components/examples/error403'
+      security:
+        - ApiKeyAuth: []
+
+  /pins:
+    get:
+
+      tags:
+        - Pin
+      summary: Return pins of a user (ERROR CODES TO DOCUMENT)
+      operationId: list
+      parameters:
+      - name: email
+        in: header
+        description: Email that identifies the user
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: ArrayOfArticles
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pin'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                UserNotFound:
+                  $ref: '#/components/examples/error404U'
+
+
+
+  /pin:
+    put:
+      parameters:
+      - name: _id
+        in: header
+        description: Id of the pin to update
+        required: true
+        type: string
+      tags:
+        - Pin
+      summary: Update the pin with a valid id (TO VALIDATE)
+      operationId: put
+      requestBody:
+        description: Attributes needed to create a pin.
+        content:
+          application/json:
+            schema:
+              required:
+                - User
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Descripcion para actualizar'
+                description:
+                  type: string
+                  example: 'Descripción para actualizar'
+                latitude:
+                  type: integer
+                  example: 33.3
+                longitude:
+                  type: integer
+                  example: 21.1
+                date:
+                  type: string
+                  example: '2008-03-29T13:34:00.000'
+                rating:
+                  type: integer
+                  example: 4
+                status:
+                  type: string
+                  example: "Private"
+                creatorEmail:
+                  type: string
+                  example: "hasbullabrother@gmail.com"
+                media:
+                  type: array
+                  example: []
+        required: true
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pin'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ReplyNotFound:
+                  $ref: '#/components/examples/error404UserNotFound'
+      security:
+        - ApiKeyAuth: []
+
+
+  /deletePin:
+    delete:
+      tags:
+        - Pin
+      summary: Delete a Pin
+      operationId: delete
+      requestBody:
+        description: Attributes needed to delete a pin.
+        content:
+          application/json:
+            schema:
+              required:
+                - User
+              type: object
+              properties:
+                params:
+                  type: object
+                  example: {_id: 62741eccd05cfb04dc10f429}
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deletedPin'
+        204:
+          description: Pin doesn't exist
+        401:
+          description: 'Error: Unauthorized request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                InvalidApiKey:
+                  $ref: '#/components/examples/error403'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ArticleNotFound:
+                  $ref: '#/components/examples/error404ArticleNotFound'
+
+      security:
+        - ApiKeyAuth: []
+
+  /login:
+    get:
+      tags:
+        - users
+      summary: Loggs the user
+      operationId: loggUser
+      parameters:
+        - name: email
+          in: query
+          description: Email of the user
+          required: true
+          schema:
+            type: string
+            format: email format
+      responses:
+        200:
+          description: Succesfull request
+        502:
+          description: 
+
+  /users:
+    get:
+      parameters:
+      - name: email
+        in: query
+        description: Email that identifies the user 
+        required: true
+        type: string
+      tags:
+        - users
+      summary: Returns an array of users with whom you can generate a conversation from an specific user.
+      operationId: find
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ReplyNotFound:
+                  $ref: '#/components/examples/error404UserNotFound'
+      security:
+        - ApiKeyAuth: []
+  
+  /changePassword:
+    put:
+      parameters:
+      - name: email
+        in: header
+        description: Email that identifies the user
+        required: true
+        type: string
+      tags:
+        - users
+      summary: Update the password of the user, hashed with bcrypt (No funciona correctamente + Docu)
+      operationId: put
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ReplyNotFound:
+                  $ref: '#/components/examples/error404UserNotFound'
+      security:
+        - ApiKeyAuth: []
+
+  /message:
+    get:
+      tags:
+        - message
+      summary: Returns all URL tpye comments FALTA POR DOCUMENTAR
+      operationId: index_comments
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: ArrayOfcomments
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comments'
+
+    post:
+      tags:
+        - message
+      summary: Create a message
+      operationId: message_create
+      requestBody:
+        description: Attributes needed to create an message.
+        content:
+          application/json:
+            schema:
+              required:
+                - Comment
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: 'Texto de prueba'
+                user:
+                  type: string
+                  example: 'hashbulla@gmail.com'
+                conversation:
+                  type: string
+                  example: '6273ad484d6b7e9b8593d878'
+                readed:
+                  type: boolean
+                  format: int64
+                  example: false
+        required: true
+
+      responses:
+        201:
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                Error blank Title:
+                  $ref: '#/components/examples/error400TitleBlank'
+                Error invalid Url:
+                  $ref: '#/components/examples/error400InvalidUrl'
+                Error Url and Text are blank:
+                  $ref: '#/components/examples/error400UrlAndTextBlank'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ApiKeyNotValid:
+                  $ref: '#/components/examples/error403'
+      security:
+        - ApiKeyAuth: [ ]
+
+  /lastMessage:
+    get:
+      tags:
+        - message
+      summary: Returns the last message of the conversation given by ID
+      operationId: lastMessage
+      parameters:
+        - name: conversation
+          in: query
+          description: Conversation identifier.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: ArrayOfcomments
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+
+  /unreadedMessages:
+    get:
+      tags:
+        - message
+      summary: Returns then number of messages unreaded by the user of the conversation
+      operationId: lastMessage
+      parameters:
+        - name: conversation
+          in: query
+          description: Conversation identifier.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: ArrayOfcomments
+                type: array
+                items:
+                  $ref: '#/components/schemas/unreadedMessages'
+
+
+
+  /conversation:
+    post:
+      tags:
+        - conversation
+      summary: Create a conversation (REVISAR CUANDO CREAS CONVERSACION CON DOS USUARIOS CUAL ES EL OUTPUT)
+      operationId: createConversation
+      requestBody:
+        description: Attributes needed to create a pin.
+        content:
+          application/json:
+            schema:
+              required:
+                - User
+              type: object
+              properties:
+                users:
+                  type: array
+                  example: ["hashbulla@gmail.com", "hashbullabrother@gmail.com"]
+                deleted:
+                  type: booelan
+                  example: false
+             
+        required: true
+      responses:
+        201:
+          description: Comment voted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ArticleNotFound:
+                  $ref: '#/components/examples/error404ArticleNotFound'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ApiKeyNotValid:
+                  $ref: '#/components/examples/error403'
+
+      security:
+        - ApiKeyAuth: [ ]
+    get:
+      tags:
+        - conversation
+      summary: Get the conversations of the user defined by email
+      operationId: showupvotedsub
+      parameters:
+        - name: email
+          in: query
+          description: Email of the User
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation_byUser'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ReplyNotFound:
+                  $ref: '#/components/examples/error404UserNotFound'
+      security:
+        - ApiKeyAuth: [ ]
+        
+
+
+  /contamination/{longitude}/{latitude}/{date}:
+    get:
+      parameters:
+        - name: longitude
+          in: path
+          description: ID of the article
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: latitude
+          in: path
+          description: ID of the article
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: date
+          in: path
+          description: ID of the article
+          required: true
+          schema:
+            type: string
+      tags:
+        - contamination
+      summary: Returns the pollution level at a given point on a given date for a 24-hour period
+      operationId: contamination
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                title: Contamination
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contamination'
+
+
+  /deleteConversation:
+    delete:
+      tags:
+        - conversation
+      summary: Delete a Conversation
+      operationId: delete
+      parameters:
+        - name: id
+          in: query
+          description: ID of the Conversation
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Conversation doesn't exist
+        401:
+          description: 'Error: Unauthorized request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                NoApiKey:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                InvalidApiKey:
+                  $ref: '#/components/examples/error403'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                ArticleNotFound:
+                  $ref: '#/components/examples/error404ArticleNotFound'
+
+      security:
+        - ApiKeyAuth: []
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        notifications:
+          type: boolean
+          description: Permission if the user wants to hace the notifications activated or not.
+          example: true
+        name:
+          type: string
+          description: Name of the user
+          example: Hasbulla
+        email:
+          type: string
+          description: Email of the user, this identifiy the user
+          example: hasbulla@gmail.com
+        password:
+          type: string
+          description: Hashed password of the user
+          example: $2a$10$brKRTMp219B4P5XhRD9ME.xfil09gDKUPyV.RbOzR5bpvv8EZOsQC
+        birthdate:
+          type: string
+          format: date-time
+          description: Date and time when the user was born
+          example: "2018-03-29T13:34:00.000Z"
+        points:
+          type: integer
+          description: Points of the user
+          example: 37
+        language:
+          type: string
+          description: Language selected by the user
+          example:  Catalan
+        healthStatus:
+          type: array
+          description: Health Status of the user
+          example: [Pregnant]
+        profilePicture:
+          type: string
+          description: Picture of the User
+          example: /icon.png
+        savedPins:
+          type: array
+          description: Pins that the user has saved
+          example: [6273423474d6b7e9b8593d84d, 627df3434d6eb7e9b8593d83d, 627395c74d6b7e9b8593d8fff]
+        _id:
+          type: string
+          description: Identifier of the User
+          example: 627395c74d6b7e9b8593d84d
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was created
+          example: "2022-05-05T09:15:51.920Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was updated
+          example: "2022-05-05T09:15:51.920Z"
+
+
+
+
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+        
+      properties:
+        name:
+          type: string
+          description: Nddame of the user
+          example: Hasdddbuddlla
+        email:
+          type: string
+          description: Email of the user, this identifiy the user
+          example: hasbulla@gmail.com
+        password:
+          type: string
+          description: Hashed password of the user
+          example: $2a$10$brKRTMp219B4P5XhRD9ME.xfil09gDKUPyV.RbOzR5bpvv8EZOsQC
+        birthdate:
+          type: string
+          format: date-time
+          description: Date and time when the user was born
+          example: "2018-03-29T13:34:00.000Z"
+        language:
+          type: string
+          description: Language of the user
+          example:  Catalan
+        healthStatus:
+          type: array
+          description: Health Status of the user
+          example: Pregnant
+        profilePicture:
+          type: string
+          description: Picture of the User
+          example: 3333
+        savedPins:
+          type: string
+          description: Pins that the user has saved
+          example: Falta ponerlo en array
+        _id:
+          type: string
+          description: Identifier of the User
+          example: 627395c74d6b7e9b8593d84d
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was created
+          example: "2022-05-05T09:15:51.920Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was updated
+          example: "2022-05-05T09:15:51.920Z"         
+
+  
+    deletedPin:
+      
+      properties:
+        status:
+          type: integer
+          example: 200
+
+      
+        message:
+          type: string
+          example: "Pin deleted successfully"
+
+
+        data:
+          type: object
+          properties:
+            acknowledged:
+              type: string
+              description: aknowledge
+              example: true
+            deletedCount:
+              type: integer
+              description: deletedCount
+              example: 1
+    
+    Conversation:
+      type: object
+      properties:
+        user:
+          type: string
+          description: User of the conversation
+          example: hashbulla@gmail.com
+        conversation:
+          type: string
+          description: ID of I dont know
+          example: 6273b0c44d6b7e9b8593d88d
+        readed:
+          type: boolean
+          description: ¿?
+          example: false
+        _id:
+          type: string
+          description: ID of the Article created.
+          example: 6273b0c44d6b7e9b8593d88f,
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time of the Conversation's creation
+          example: "2020-11-25 14:04:56"
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time of the most recent Conversation's update
+          example: "2020-11-25 15:04:56"
+          
+  
+
+    Conversation_little:
+      type: object
+      properties:
+        users:
+          type: array
+          description: Users of the conversation
+          example: [hashbulla@gmail.com,hashbullabrother@gmail.com]
+        _id:
+          type: string
+          description: ID of the Article created.
+          example: 6273b0c44d6b7e9b8593d88f,
+        deleted:
+          type: array
+          description: deleted.
+          example: [false, false]
+
+
+
+
+    Conversation_byUser:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation_little'
+  
+
+
+
+
+
+
+    Message:
+
+
+
+      properties:
+        status:
+          type: integer
+          example: 200
+
+      
+        message:
+          type: string
+          example: "Pin deleted successfully"
+
+
+        data:
+          type: object
+          properties:
+    
+            text:
+              type: string
+              description: Body of the message
+              example: Hello World!
+            user:
+              type: string
+              format: email
+              description: Email of the user that created the message
+              example: Email@API.es
+            conversation:
+              type: string
+              description: Identifier of the conversation that belongs the message
+              example: 627411d44d6b7e9b8593daf7
+            readed:
+              type: boolean
+              description: Boolean that defines if the messages has been readed
+              example: false
+            _id:
+              type: string
+              description: Identifier of the message
+              example: 62741296d05cfb04dc10f3fd
+            createdAt:
+              type: string
+              description: Date of the creation of the message
+              example: "2022-05-05T09:15:51.920Z"
+            updatedAt:
+              type: string
+              description: Date of the last Update of the message
+              example: "2022-05-05T09:15:51.920Z"
+
+
+    Contamination:
+    
+    
+   
+          properties:
+            title:
+              type: string
+              description: Day of the collection data.
+              example: "4/5 - May"   
+
+            tags:
+              type: array
+              description: Hour of the day.
+              example: [
+        20,
+        21,
+        22,
+        23,
+        24,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+    ]
+    
+
+            levels:
+              type: array
+              description: The contamination level on each index of the array maps with the index of the hour array.
+              example: [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        3,
+        4,
+        5,
+        1,
+        1,
+        2,
+        3,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2,
+        1,
+        1
+    ]
+
+
+    unreadedMessages:
+    
+    
+      properties:
+        status:
+          type: integer
+          example: 200
+
+      
+        message:
+          type: string
+          example: "Pin deleted successfully"
+
+
+        data: 
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Number of messages unreaded by the user of the conversation
+              example: 3          
+              
+    Pin:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the Pin
+          example: Nuevo Pin de prueba
+        description:
+          type: string
+          description: Description of the Pin
+          example: Pin de prueba
+        latitude:
+          type: integer
+          format: int64
+          description: Latitude of the Pin.
+          example: 42.3
+        longitude:
+          type: integer
+          format: int64
+          description: Longitude of the Pin.
+          example: 32.1
+        date:
+          type: string
+          format: date-time
+          description: Date and time of the Pin's creation
+          example: "2020-11-25 14:04:56"
+        rating:
+          type: integer
+          format: int64
+          description: Rating of the Pin.
+          example: 3
+        status:
+          type: string
+          description: Public or Private
+          example: Public
+        creatorEmail:
+          type: string
+          description: Email of the user's pin owner
+          example: hasbulla@gmail.com
+        media:
+          type: array
+          description: Email of the user's pin owner
+          example: []
+        _id:
+          type: string
+          description: Identifier of the pin
+          example: 627395c74d6b7e9b8593d84d
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the pin was created
+          example: "2022-05-05T09:15:51.920Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the pin was updated
+          example: "2022-05-05T09:15:51.920Z"
+    ErrorResult:
+      type: object
+      properties:
+        status:
+          type: integer
+          enum: [ 400, 401, 403, 404, 409 ]
+        error:
+          type: string
+          enum: [ "Bad Request", "Unauthorized", "Forbidden", "Not Found", "Conflict" ]
+        message:
+          type: string
+  examples:
+    error204UserNotFound:
+      value:
+        status: 204
+        message: "No user found"
+        data: "{}"
+    error202UserAlreadyRegistered:
+      value:
+        status: 202
+        message: "The email is already registered"
+        data: "{}"
+    error400InvalidUrl:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Invalid URL"
+    error400InvalidIdArticle:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Invalid Article ID"
+    error400UrlAndTextBlank:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "URL and Text can't be blank at the same time"
+    error400TitleBlank:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Title can't be blank"
+    error400ContentBlank:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Content can't be blank"
+    error400TextNotEmpty:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Article is type URL, can not have text"
+    error402AlreadyVoted:
+      value:
+        status: 402
+        error: "Bad Request"
+        message: "This article is already upvoted"
+    error401:
+      value:
+        status: 401
+        error: "Unauthorized"
+        message: "You provided no api key (X-API-KEY Header)"
+    error403:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "Your api key (X-API-KEY Header) is not valid"
+    error403ArticleDoesNotBelong:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "This Article does not belong to you"
+    error403CommentDoesNotBelong:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "This comment does not belong to you"
+    error403ReplyDoesNotBelong:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "This reply does not belong to you"
+    error404U:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No User with that ID"
+    error404ArticleNotFound:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No Article with that ID"
+    error404CommentNotFound:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No Comment with that ID"
+    error404CommentsNotFound:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No Comment with that ID"
+    error404ReplyNotFound:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No Reply with that ID"
+    error404UserNotFound:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No User with that API Key"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-API-KEY #Custom headers in rails apps must have the X- prefix
+      in: header

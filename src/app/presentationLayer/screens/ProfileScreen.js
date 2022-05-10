@@ -15,15 +15,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
-import COLORS from "../config/stylesheet/colors";
-
-import UserContext from "../domainLayer/UserContext";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import UserContext from "../../domainLayer/UserContext";
+import i18n from "../../config/translation";
 
 function ProfileScreen({ navigation, route }) {
 	//should know userId, and then retrieve the user data (updated or not)
 
-	const [ user, setUser ] = useContext(UserContext);
+	const [user, setUser] = useContext(UserContext);
 
 	function settings() {
 		navigation.navigate("SettingsScreen");
@@ -31,19 +30,19 @@ function ProfileScreen({ navigation, route }) {
 
 	function logOut() {
 		setUser({
-			"__v": 0,
-			"_id": "",
-			"birthdate": "",
-			"createdAt": "",
-			"email": "",
-			"healthStatus": "",
-			"language": "",
-			"name": "",
-			"password": "",
-			"points": 0,
-			"savedPins": [],
-			"updatedAt": "",
-		  });
+			__v: 0,
+			_id: "",
+			birthdate: "",
+			createdAt: "",
+			email: "",
+			healthStatus: "",
+			language: "",
+			name: "",
+			password: "",
+			points: 0,
+			savedPins: [],
+			updatedAt: "",
+		});
 		navigation.navigate("SignInScreen");
 		// setUser(null);
 	}
@@ -61,14 +60,8 @@ function ProfileScreen({ navigation, route }) {
 				message: "Breath Safely, Breath With Us",
 				url: "https://happylungsproject.org/", //url és ios only
 			});
-		} catch (err) {
-			console.log(err);
-		}
-		//logOut user
-		//navigation.navigate("LogInScreen");
+		} catch (err) {}
 	}
-
-	const [byCertificate, setByCertificate] = useState(false);
 
 	const [modalLogoutVisible, setModalLogoutVisible] = useState(false);
 
@@ -154,18 +147,16 @@ function ProfileScreen({ navigation, route }) {
 				style={{
 					flexDirection: "row",
 					paddingHorizontal: 20,
-					marginTop: 50,
 				}}
 			>
 				<View
 					style={{
 						flex: 2,
 						alignItems: "center",
-						marginTop: 10,
 					}}
 				>
 					<ImageBackground
-						source={user.profilePicture}
+						source={{ uri: user.profilePicture }}
 						style={[
 							{
 								borderRadius: 20,
@@ -201,23 +192,15 @@ function ProfileScreen({ navigation, route }) {
 				</View>
 				<View
 					style={{
-						flex: 2,
+						flex: 3,
 						justifyContent: "flex-start",
 					}}
 				>
-					<TouchableOpacity
-						style={{ alignItems: "flex-end" }}
-						onPress={() => {
-							navigation.navigate("ProfileEditScreen");
-						}}
-					>
-						<Feather name="edit-3" size={30} color={COLORS.secondary} />
-					</TouchableOpacity>
 					<View
 						style={{
-							marginTop: 10,
 							flexDirection: "row",
 							justifyContent: "space-between",
+							marginTop: 10,
 						}}
 					>
 						<View
@@ -232,7 +215,7 @@ function ProfileScreen({ navigation, route }) {
 									color: COLORS.secondary,
 								}}
 							>
-								12
+								3
 							</Text>
 							<Text style={{ color: COLORS.darkGrey }}>
 								{i18n.t("createdPins")}
@@ -244,6 +227,7 @@ function ProfileScreen({ navigation, route }) {
 								backgroundColor: COLORS.lightGrey,
 								height: "80%",
 								width: 2,
+								marginHorizontal: 5,
 							}}
 						></View>
 						<View
@@ -258,10 +242,10 @@ function ProfileScreen({ navigation, route }) {
 									color: COLORS.secondary,
 								}}
 							>
-								7
+								{user.savedPins.length}
 							</Text>
 							<Text style={{ color: COLORS.darkGrey }}>
-								{i18n.t("sharedPins")}
+								{i18n.t("savedPins")}
 							</Text>
 						</View>
 					</View>

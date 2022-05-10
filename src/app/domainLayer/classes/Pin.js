@@ -11,7 +11,8 @@ class Pin {
 		media,
 		rating,
 		date,
-		status
+		status,
+		creatorEmail
 	) {
 		this.title = title;
 		this.latitude = latitude; //location has {latitude, longitude, title}
@@ -22,6 +23,7 @@ class Pin {
 		this.rating = rating;
 		this.date = date;
 		this.status = status; //"Public" || "Private"
+		this.creatorEmail = creatorEmail;
 
 		//add pin to dataBase
 		/*let res = {};
@@ -140,5 +142,5 @@ class Pin {
 	getActualDate() {}
 }
 
-module.exports =  Pin;
+module.exports = Pin;
 //ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"

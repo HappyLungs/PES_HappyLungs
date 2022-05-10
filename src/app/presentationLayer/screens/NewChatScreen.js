@@ -1,22 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-	StyleSheet,
-	View,
-	SafeAreaView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	ScrollView,
-	FlatList,
-} from "react-native";
+import { StyleSheet, View, SafeAreaView, TextInput } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import NewChatList from "./components/NewChatList";
-import i18n from "../config/translation";
-const PresentationCtrl = require("./PresentationCtrl.js");
+import COLORS from "../../config/stylesheet/colors";
+import NewChatList from "../components/NewChatList";
+import i18n from "../../config/translation";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
-import * as Animatable from "react-native-animatable";
 
 function GeneralChatScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
