@@ -42,6 +42,10 @@ const UsersSchema = new global.Schema({
         type: global.Schema.Types.ObjectId,
         ref: "Pins"
     }],
+    status: {
+        type: Number,
+        default: 1
+    }
 }, {
     timestamps: true
 });
