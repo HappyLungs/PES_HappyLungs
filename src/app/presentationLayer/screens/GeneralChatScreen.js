@@ -13,10 +13,10 @@ import {
 	Modal,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import ChatList from "./components/ChatList";
-import i18n from "../config/translation";
-const PresentationCtrl = require("./PresentationCtrl.js");
+import COLORS from "../../config/stylesheet/colors";
+import ChatList from "../components/ChatList";
+import i18n from "../../config/translation";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";

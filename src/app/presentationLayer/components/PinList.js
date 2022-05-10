@@ -1,23 +1,111 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
 	Text,
-	Animated,
 	FlatList,
 	TouchableOpacity,
 	Image,
-	Dimensions,
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import Modal from "react-native-modal";
+
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
+const PresentationCtrl = require("../PresentationCtrl");
 
 const PinList = ({ pinList, navigation }) => {
-	const isMyPin = [true, false, true, false, true, true];
+	let presentationCtrl = new PresentationCtrl();
+	const [user, setUser] = useContext(UserContext);
+	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
+		useState(false);
+	const [selectedPin, setSelectedPin] = useState(null);
+	const [data, setData] = useState(pinList);
+
+	const isMyPin = (email) => {
+		return user.email === email;
+	};
+
+	const handleDeleteModal = (pin) => {
+		setDeleteConfirmationVisible(true);
+		setSelectedPin(pin);
+	};
+
+	const handleDelete = () => {
+		presentationCtrl.deletePin(selectedPin);
+		const updatedPins = data.filter((item) => item._id !== selectedPin._id);
+		setData(updatedPins);
+	};
+
+	function renderDeleteConfirmation() {
+		return (
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={deleteConfirmationVisible}
+				onRequestClose={() => {
+					setDeleteConfirmationVisible(false);
+				}}
+				onBackdropPress={() => {
+					setDeleteConfirmationVisible(false);
+				}}
+				style={{
+					marginBottom: 60,
+					justifyContent: "flex-end",
+				}}
+			>
+				<View
+					style={[
+						styles.modalView,
+						styles.shadow,
+						{ borderBottomEndRadius: 10, borderBottomStartRadius: 10 },
+					]}
+				>
+					<Text
+						style={[styles.modalText, { fontWeight: "bold", fontSize: 16 }]}
+					>
+						{i18n.t("confirmationTitle")}
+					</Text>
+					<Text style={[styles.modalText, { fontSize: 15 }]}>
+						{i18n.t("confirmationText")}
+					</Text>
+					<View
+						style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+					>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn,
+								{ backgroundColor: COLORS.secondary },
+								styles.shadow,
+							]}
+							onPress={() =>
+								setDeleteConfirmationVisible(!deleteConfirmationVisible)
+							}
+						>
+							<Text style={styles.textStyle}>{i18n.t("cancel")}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[
+								styles.containerBtn,
+								{ backgroundColor: COLORS.red1, marginStart: 15 },
+								styles.shadow,
+							]}
+							onPress={() => {
+								setDeleteConfirmationVisible(!deleteConfirmationVisible);
+								handleDelete();
+							}}
+						>
+							<Text style={styles.textStyle}>{i18n.t("delete")}</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
 
 	const renderItem = ({ item, index }) => (
 		//all animations
@@ -45,7 +133,7 @@ const PinList = ({ pinList, navigation }) => {
 								alignItems: "center",
 							}}
 							onPress={() => {
-								if (isMyPin[index]) {
+								if (isMyPin(item.creatorEmail)) {
 									navigation.navigate("OwnerPin", { pin: item });
 								} else {
 									navigation.navigate("DefaultPin", { pin: item, saved: true });
@@ -53,12 +141,17 @@ const PinList = ({ pinList, navigation }) => {
 							}}
 						>
 							<Image
-								source={{ uri: item.media[0] }}
+								source={{
+									uri:
+										item.media.length !== 0
+											? item.media[0]
+											: "https://retodiario.com/wp-content/uploads/2021/01/no-image.png",
+								}}
 								style={{
 									width: 85,
 									height: 85,
 									borderTopLeftRadius: 10,
-									borderBottomLeftRadius: isMyPin[index] ? 0 : 10,
+									borderBottomLeftRadius: isMyPin(item.creatorEmail) ? 0 : 10,
 								}}
 							/>
 							<View
@@ -78,7 +171,7 @@ const PinList = ({ pinList, navigation }) => {
 									<Text style={styles.itemName}>{item.title}</Text>
 									<View
 										style={{
-											backgroundColor: isMyPin[index]
+											backgroundColor: isMyPin(item.creatorEmail)
 												? COLORS.blue2
 												: COLORS.secondary,
 											alignSelf: "flex-end",
@@ -97,7 +190,9 @@ const PinList = ({ pinList, navigation }) => {
 												},
 											]}
 										>
-											{isMyPin[index] ? item.status : "Saved"}
+											{isMyPin(item.creatorEmail)
+												? i18n.t("created")
+												: i18n.t("saved")}
 										</Text>
 									</View>
 								</View>
@@ -127,7 +222,7 @@ const PinList = ({ pinList, navigation }) => {
 							</View>
 						</TouchableOpacity>
 					</View>
-					{isMyPin[index] && (
+					{isMyPin(item.creatorEmail) && (
 						<View
 							style={{
 								height: 30,
@@ -159,7 +254,9 @@ const PinList = ({ pinList, navigation }) => {
 									justifyContent: "center",
 									alignItems: "center",
 								}}
-								onPress={() => console.log("delete")}
+								onPress={() => {
+									handleDeleteModal(item);
+								}}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
 								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>
@@ -172,25 +269,28 @@ const PinList = ({ pinList, navigation }) => {
 	);
 
 	return (
-		<FlatList
-			stickyHeaderHiddenOnScroll={true}
-			contentContainerStyle={{ padding: 10 }}
-			scrollEnabled={true}
-			data={pinList}
-			keyExtractor={(item) => `${item.title}`}
-			renderItem={renderItem}
-			showsVerticalScrollIndicator={false}
-			ItemSeparatorComponent={() => {
-				return (
-					<View
-						style={{
-							width: "100%",
-							marginTop: 10,
-						}}
-					></View>
-				);
-			}}
-		></FlatList>
+		<View>
+			<FlatList
+				stickyHeaderHiddenOnScroll={true}
+				contentContainerStyle={{ padding: 10 }}
+				scrollEnabled={true}
+				data={data}
+				keyExtractor={(item) => `${item.title}`}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+				ItemSeparatorComponent={() => {
+					return (
+						<View
+							style={{
+								width: "100%",
+								marginTop: 10,
+							}}
+						></View>
+					);
+				}}
+			></FlatList>
+			{renderDeleteConfirmation()}
+		</View>
 	);
 };
 
@@ -227,6 +327,28 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 8,
+	},
+	modalView: {
+		backgroundColor: COLORS.white,
+		borderColor: COLORS.secondary,
+		borderTopWidth: 2,
+		padding: 15,
+	},
+	modalText: {
+		marginBottom: 15,
+		textAlign: "center",
+	},
+	containerBtn: {
+		width: 95,
+		padding: 10,
+		borderRadius: 5,
+	},
+	textStyle: {
+		color: COLORS.white,
+		fontWeight: "bold",
+		fontSize: 15,
+		textAlign: "center",
+		alignSelf: "center",
 	},
 });
 

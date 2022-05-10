@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -10,18 +10,23 @@ import {
 	ImageBackground,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
-
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
-const PresentationCtrl = require("./PresentationCtrl.js");
+
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
+
+const PresentationCtrl = require("../PresentationCtrl");
 
 function CreatePinScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
+
+	const [user] = useContext(UserContext);
 
 	const { coords } = route.params;
 	const [date, setDate] = useState(new Date());
@@ -44,11 +49,11 @@ function CreatePinScreen({ navigation, route }) {
 		const tmpMedia = [...media];
 
 		if (!inputs.title) {
-			handleError("Please insert the title", "title");
+			handleError(i18n.t("titleText"), "title");
 			isValid = false;
 		}
 		if (!inputs.description) {
-			handleError("Please insert a description", "description");
+			handleError(i18n.t("titleText"), "description");
 			isValid = false;
 		}
 		if (isValid) {
@@ -56,11 +61,14 @@ function CreatePinScreen({ navigation, route }) {
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
+				coords.title,
 				inputs.description,
 				tmpMedia,
 				rating,
 				pinData,
-				(status) ? "Public" : "Private"
+				status ? "Public" : "Private",
+				user.email,
+				user.name
 			);
 			navigation.navigate("MapScreen");
 		}
@@ -83,7 +91,7 @@ function CreatePinScreen({ navigation, route }) {
 		if (!result.cancelled) {
 			const tmpMedia = [...media];
 			if (tmpMedia.length >= 2) {
-				Alert.alert("You can only attach 2 pictures!");
+				Alert.alert(i18n.t("picturesError"));
 			} else {
 				tmpMedia.push(result.uri);
 				setMedia([...media, result.uri]);
@@ -279,11 +287,7 @@ function CreatePinScreen({ navigation, route }) {
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
-					text={
-						status
-							? "This pin will be visible to other people."
-							: "This pin will only be visible to you."
-					}
+					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
 		);
@@ -299,7 +303,9 @@ function CreatePinScreen({ navigation, route }) {
 			}}
 		>
 			<View style={{ marginVertical: 20 }}>
-				<Text style={[styles.subtitle, { marginTop: 0 }]}>Location</Text>
+				<Text style={[styles.subtitle, { marginTop: 0 }]}>
+					{i18n.t("location")}
+				</Text>
 				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
 					{[coords.latitude, "   ", coords.longitude]}
 				</Text>
@@ -307,23 +313,27 @@ function CreatePinScreen({ navigation, route }) {
 					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
 					onFocus={() => handleError(null, "title")}
 					iconName="title"
-					label="Title"
-					placeholder="Enter the pin title"
+					label={i18n.t("title")}
+					placeholder={i18n.t("titlePlaceholder")}
 					error={errors.title}
+					editable={true}
+					passwordChange={false}
 				/>
 				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
-					label="Description"
-					placeholder="Enter the pin event description"
+					label={i18n.t("description")}
+					placeholder={i18n.t("descriptionPlaceholder")}
 					error={errors.description}
+					editable={true}
+					passwordChange={false}
 				/>
-				<Text style={styles.subtitle}> Date</Text>
+				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
 				{renderDateSelector()}
-				<Text style={styles.subtitle}> Pictures</Text>
+				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
 				{renderImageSelector()}
-				<Text style={styles.subtitle}> Rate</Text>
+				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -335,7 +345,7 @@ function CreatePinScreen({ navigation, route }) {
 					style={{ padding: 10, alignSelf: "flex-start" }}
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
-				<Text style={styles.subtitle}> Allow others to view this pin?</Text>
+				<Text style={styles.subtitle}>{i18n.t("allowOption")}</Text>
 				{renderPinStatusSelector()}
 				<View
 					style={{
@@ -352,7 +362,7 @@ function CreatePinScreen({ navigation, route }) {
 						]}
 						onPress={() => navigation.navigate("MapScreen")}
 					>
-						<Text style={styles.containerTxt}>Cancel</Text>
+						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={[
@@ -362,7 +372,7 @@ function CreatePinScreen({ navigation, route }) {
 						]}
 						onPress={validate}
 					>
-						<Text style={styles.containerTxt}>Save pin</Text>
+						<Text style={styles.containerTxt}>{i18n.t("createPin")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

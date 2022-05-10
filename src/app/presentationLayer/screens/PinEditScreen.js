@@ -10,9 +10,9 @@ import {
 	ImageBackground,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import InputField from "./components/InputField";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import InputField from "../components/InputField";
+import i18n from "../../config/translation";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -20,7 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -79,7 +79,7 @@ function PinEditScreen({ navigation, route }) {
 
 	const pickImage = async () => {
 		if (media.length >= 2) {
-			Alert.alert("You can only attach 2 pictures!");
+			Alert.alert(i18n.t("picturesError"));
 		} else {
 			let result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -89,7 +89,7 @@ function PinEditScreen({ navigation, route }) {
 			if (!result.cancelled) {
 				const tmpMedia = [...media];
 				if (tmpMedia.length >= 2) {
-					Alert.alert("You can only attach 2 pictures!");
+					Alert.alert(i18n.t("picturesError"));
 				} else {
 					tmpMedia.push(result.uri);
 					setMedia([...media, result.uri]);
@@ -312,7 +312,10 @@ function PinEditScreen({ navigation, route }) {
 					iconName="title"
 					defaultValue={pin.title}
 					label={i18n.t("title")}
+					placeholder={i18n.t("titlePlaceholder")}
 					error={errors.title}
+					editable={true}
+					passwordChange={false}
 				/>
 				<InputField
 					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
@@ -320,7 +323,10 @@ function PinEditScreen({ navigation, route }) {
 					iconName="description"
 					defaultValue={pin.description}
 					label={i18n.t("description")}
+					placeholder={i18n.t("descriptionPlaceholder")}
 					error={errors.description}
+					editable={true}
+					passwordChange={false}
 				/>
 				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
 				{renderDateSelector()}
@@ -335,10 +341,7 @@ function PinEditScreen({ navigation, route }) {
 					ratingBackgroundColor={COLORS.secondary}
 					ratingColor={COLORS.green1}
 					tintColor={COLORS.white}
-					style={{
-						padding: 10,
-						alignSelf: "flex-start",
-					}}
+					style={{ padding: 10, alignSelf: "flex-start" }}
 					onFinishRating={(newRating) => setRating(newRating)}
 				/>
 				<Text style={styles.subtitle}> {i18n.t("allowOption")}</Text>
@@ -389,6 +392,7 @@ const styles = StyleSheet.create({
 		width: 125,
 		padding: 10,
 		borderRadius: 5,
+		justifyContent: "center",
 	},
 	containerTxt: {
 		textAlign: "center",

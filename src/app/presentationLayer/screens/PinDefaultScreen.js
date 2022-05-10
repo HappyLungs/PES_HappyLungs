@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -7,17 +7,19 @@ import {
 	TouchableOpacity,
 } from "react-native";
 
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 import { Rating } from "react-native-ratings";
-import ImageCarousel from "./components/ImageCarousel";
+import ImageCarousel from "../components/ImageCarousel";
 import { Ionicons } from "@expo/vector-icons";
 
-const PresentationCtrl = require("./PresentationCtrl.js");
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
+	const [user] = useContext(UserContext);
 
 	const { pin } = route.params;
 	const saved = route.params;
@@ -29,6 +31,15 @@ function PinDefaultScreen({ navigation, route }) {
 			latitude: pin.location.latitude,
 			longitude: pin.location.longitude,
 		});
+	};
+
+	const handleSave = () => {
+		if (bookmark) {
+			presentationCtrl.removeFromSaved(pin._id, user.email);
+		} else {
+			presentationCtrl.savePin(pin._id, user.email);
+		}
+		setBookmark(bookmark === "bookmark" ? "bookmark-outline" : "bookmark");
 	};
 
 	const handleShare = () => console.log("Share clicked");
@@ -53,17 +64,11 @@ function PinDefaultScreen({ navigation, route }) {
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35 }}>
+				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
 					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={{ justifyContent: "center" }}
-						onPress={
-							() =>
-								setBookmark(
-									bookmark === "bookmark" ? "bookmark-outline" : "bookmark"
-								)
-							//add/remove to/from pins list
-						}
+						onPress={handleSave}
 					>
 						<Ionicons
 							name={bookmark}
@@ -73,7 +78,9 @@ function PinDefaultScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 10 }]}>{pin.description}</Text>
+				<Text style={[styles.body, { marginTop: 10, alignSelf: "flex-start" }]}>
+					{pin.description}
+				</Text>
 				<View
 					style={{
 						flexDirection: "row",
@@ -104,12 +111,7 @@ function PinDefaultScreen({ navigation, route }) {
 						marginTop: 10,
 					}}
 				>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={30}
-					/>
+					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
 					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
 				</View>
 				<Rating

@@ -1,16 +1,27 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Text,
+	TextInput,
+	TouchableOpacity,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Feather } from "@expo/vector-icons";
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
 const InputField = ({
 	label,
 	defaultValue,
 	iconName,
 	error,
+	editable,
+	passwordChange,
 	onFocus = () => {},
 	...props
 }) => {
+	const [isMasked, setIsMasked] = useState(false);
 	const [isFocused, setIsFocused] = useState(false);
 	return (
 		<View style={{ marginTop: 10 }}>
@@ -19,7 +30,7 @@ const InputField = ({
 					{label}
 					<Text style={styles.highlight}> *</Text>
 				</Text>
-				{error && (
+				{error && !passwordChange && (
 					<Text style={{ color: COLORS.red1, fontSize: 12, marginStart: 10 }}>
 						{error}
 					</Text>
@@ -40,23 +51,74 @@ const InputField = ({
 			>
 				<Icon
 					name={iconName}
-					style={{ fontSize: 22, color: COLORS.green1, marginRight: 10 }}
+					style={{
+						fontSize: 22,
+						color: COLORS.green1,
+						marginRight: 10,
+						paddingHorizontal: 15,
+					}}
 				/>
 				<TextInput
+					editable={editable}
+					secureTextEntry={isMasked}
 					autoCorrect={false}
 					defaultValue={defaultValue}
-					maxLength={label === "Title" ? 11 : 100}
+					maxLength={label === i18n.t("title") ? 11 : 100}
 					onFocus={() => {
 						onFocus();
 						setIsFocused(true);
 					}}
+					onChangeText={(text) => {}}
 					onBlur={() => {
 						setIsFocused(false);
 					}}
 					style={{ color: COLORS.secondary, flex: 1 }}
 					{...props}
 				/>
+				{passwordChange && (
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.lightGrey,
+							height: 55,
+							width: 30,
+							alignItems: "center",
+							justifyContent: "center",
+							borderBottomRightRadius: 5,
+							borderTopRightRadius: 5,
+							borderColor: error
+								? COLORS.red1
+								: isFocused
+								? COLORS.secondary
+								: COLORS.lightGrey,
+							borderTopWidth: 0.5,
+							borderBottomWidth: 0.5,
+						}}
+						onPress={() => {
+							setIsMasked(!isMasked);
+						}}
+					>
+						<Feather
+							name={isMasked ? "eye-off" : "eye"}
+							style={{
+								fontSize: 16,
+								color: isMasked ? COLORS.darkGrey : COLORS.green1,
+							}}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
+			{error && passwordChange && (
+				<Text
+					style={{
+						color: COLORS.red1,
+						fontSize: 12,
+						marginStart: 10,
+						marginTop: 10,
+					}}
+				>
+					{error}
+				</Text>
+			)}
 		</View>
 	);
 };
@@ -79,7 +141,6 @@ const styles = StyleSheet.create({
 		height: 55,
 		backgroundColor: COLORS.light,
 		flexDirection: "row",
-		paddingHorizontal: 15,
 		borderWidth: 0.5,
 		alignItems: "center",
 	},
