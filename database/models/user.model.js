@@ -45,7 +45,7 @@ const UsersSchema = new global.Schema({
     status: {
         type: Number,
         default: 1
-    }
+    } 
 }, {
     timestamps: true
 });
