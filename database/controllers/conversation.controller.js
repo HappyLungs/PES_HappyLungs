@@ -124,14 +124,18 @@ exports.create = async (request, response) => {
         const where = {};
         where.email = user;
         let exists = false;
+        let a = "hola";
         await userDatalayer.findUser(where)
         .then((userData) => {
+          a = "yepa";
           console.log("UserData: ", userData);
           if (userData !== null && userData !== undefined && userData.email.length > 0) {
             exists = true; 
             console.log("\nThe user exists!!!!");
           }
         });
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Text", a);
+        return;
         if (!exists) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
             return;
