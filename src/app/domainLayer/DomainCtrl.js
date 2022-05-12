@@ -370,6 +370,17 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 };
 
 /**
+ *
+ * @param {*} email
+ * @returns an acces_token for the user
+ */
+
+ DomainCtrl.prototype.deleteUser = async function (email, password) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.delete();
+};
+
+/**
  * @param {*} name
  * @param {*} email
  * @param {*} points
