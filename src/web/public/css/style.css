@@ -4,10 +4,11 @@
 }
 a {
     text-decoration: none;
+    color: #3b3c3b;
 }
 body {
-    background-color: #f0f2f5;
-    
+    background-color: #f5f5f5;
+    color: #3b3c3b;
 }
 .leftMenu {
     display: block;
@@ -65,4 +66,105 @@ main {
 #title h3 {
     font-weight: 500;
     font-size: 18px;
+}
+#usersList {
+    margin: 24px 24px 24px 59px;
+}
+.user {
+    background-color: white;
+    border-radius: .75rem;
+    border: 0 solid rgba(0,0,0,.125);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+    display: flex;
+    margin-bottom: 15px;
+}
+.blockedUser {
+    background-color: rgb(209, 209, 209);
+}
+.userInfo {
+    width: 70%;
+    padding: 16px 16px 16px 0px;
+    display: flex;
+    flex-direction: row;
+}
+.userInfoContent {
+    padding-left: 50px;
+}
+.userName, .blockedText {
+    font-weight: 600;
+}
+.blockedText {
+    color: #b4003c;
+}
+.userEmail {
+    font-size: 14px;
+    color: #555755;
+}
+.userIcons {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #007f5a;
+    display: flex;
+}
+.userIcons div {
+    margin-right: 20px;
+}
+.userIconsBlocked {
+    color:#b4003c;
+}
+.userButtons {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.userButtons a {
+    height: 100%;
+}
+.lockButton {
+    width: 60px;
+    height: 100%;
+    border-top-right-radius: .75rem;
+    border-bottom-right-radius: .75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.lockButton i {
+    font-size: 25px;
+    color: white;
+}
+.unblockedButton {
+    background-color: #007f5a;
+}
+.blockedButton {
+    background-color: #b4003c;
+}
+.reportedMessagesButton {
+    height: 100%;
+    background-color: #ffcadb;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+}
+.userImage {
+    position: absolute;
+    margin-left: -35px;
+    box-shadow: 0 0px 5px -1px #007f5a,0 0px 3px -1px #007f5a;
+    width:70px;
+    height:70px;
+    border-radius: .75rem;
+}
+.userImageBlocked {
+    box-shadow: 0 0px 5px -1px #b4003c,0 0px 3px -1px #b4003c;
+}
+.userImage img {
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius: .75rem;
 }
