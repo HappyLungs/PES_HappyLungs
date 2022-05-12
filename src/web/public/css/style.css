@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+a {
+    text-decoration: none;
+}
+body {
+    background-color: #f0f2f5;
+    
+}
+.leftMenu {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 15.625rem !important;
+    overflow-y: auto;
+    padding: 0;
+    background-color: #3b3c3b;
+    border-radius: .75rem;
+    margin-left: 1rem !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    color:white;
+}
+main {
+    margin-left: 17.125rem;
+}
+#menuTitle {
+    text-align: center;
+    margin: 30px 10px 0px 10px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid white;
+}
+.title {
+    font-weight: 600;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#menuDropdown ul {
+    list-style: none;
+    padding-left: 0px;
+}
+.menuElement {
+    display: flex;
+    color:white;
+    margin: 1.5px 15px 1.5px 15px;
+    padding: 12px 16px 12px 16px;
+    border-radius: .375rem;
+    text-decoration: none;
+}
+.menuElement:hover {
+    background-color: #555755;
+}
+.menuIcon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+#title {
+    margin: 1rem 24px 24px 24px;
+}
+#title h3 {
+    font-weight: 500;
+    font-size: 18px;
+}
