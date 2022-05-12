@@ -39,7 +39,7 @@ const UsersSchema = new global.Schema({
     },
     profilePicture: String,
     savedPins: [{
-        type: global.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Pins"
     }],
     status: {
