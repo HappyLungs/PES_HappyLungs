@@ -119,6 +119,7 @@ exports.create = async (request, response) => {
     }
     /* Check if users of the body exists */
     for (user of params.users) {
+      console.log("User: ", user);
         const where = {};
         where.email = user;
         let exists = false;
