@@ -1,6 +1,6 @@
 const express = require("express");
+const UserCtrl = require("../domain/controllers/UserCtrl");
 const router = express.Router();
-
 module.exports = router;
 
 //[GET] Main page
