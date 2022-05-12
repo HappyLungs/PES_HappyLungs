@@ -118,24 +118,16 @@ exports.create = async (request, response) => {
         return;
     }
     /* Check if users of the body exists */
-    console.log("All users!: ", params.users);
     for (user of params.users) {
-      console.log("User: ", user);
         const where = {};
         where.email = user;
         let exists = false;
-        let a = "hola";
         await userDatalayer.findUser(where)
         .then((userData) => {
-          a = "yepa";
-          console.log("UserData: ", userData);
           if (userData !== null && userData !== undefined && userData.email.length > 0) {
             exists = true; 
-            console.log("\nThe user exists!!!!");
           }
         });
-        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Text", a);
-        return;
         if (!exists) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
             return;
@@ -144,7 +136,6 @@ exports.create = async (request, response) => {
     /* Create the conversation */
     conversationDataLayer.createConversation({users: params.users})
     .then((conversationData) => {
-        console.log("Conversation created", conversationData);
         if (conversationData !== null && typeof conversationData !== undefined) {
             //create the message related to the conversation. The first user is the sender
             let message = {
