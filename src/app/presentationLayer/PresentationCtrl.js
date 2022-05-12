@@ -330,6 +330,9 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
+PresentationCtrl.prototype.getHeatPoints = async function () {
+	return this.domainCtrl.getHeatPoints();
+}
 
 PresentationCtrl.prototype.fetchConversations = async function () {
 	let conversations =

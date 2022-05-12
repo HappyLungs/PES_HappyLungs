@@ -718,11 +718,11 @@ function MapScreen({ navigation, route }) {
 					<Heatmap
 						points={heatpoints}
 						radius={50}
-						opacity={0.7}
+						opacity={0.6}
 						gradient={{
 							colors: ["green", "yellow", "orange", "red", "purple"],
-							startPoints: [0.01, 0.25, 0.5, 0.75, 0.99],
-							colorMapSize: 2000,
+							startPoints: [0.15, 0.3, 0.6, 0.8, 0.99],
+							colorMapSize: 200,
 						}}
 					/>
 				</MapView>

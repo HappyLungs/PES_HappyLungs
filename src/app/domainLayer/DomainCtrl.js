@@ -7,6 +7,8 @@ import User from "./classes/User";
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
+const dataPointMap= require("./classes/DataPointMap");
+
 
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
@@ -48,6 +50,8 @@ DomainCtrl.prototype.getMapData = async function () {
 		}
 	});
 
+
+
 	let measureStationLevels = [];
 	for (let [, ms] of measureStations) {
 		let level = await ms.getHourLevel(date, date.getHours());
@@ -55,14 +59,32 @@ DomainCtrl.prototype.getMapData = async function () {
 			let info = {
 				latitude: parseFloat(ms.latitud),
 				longitude: parseFloat(ms.longitud),
-				weight: parseFloat(level),
+				weight: (parseFloat(level))/6,
 			};
 			measureStationLevels.push(info);
 		}
 	}
 	return measureStationLevels;
 };
+DomainCtrl.prototype.getHeatPoints = async function () {
+	let nsteps=10;
+	let jmax=1;
+	let inilat=40.541006;
+	let inilong=0.680310;
+	let maxlat=42.814019;
+	let maxlong=3.205920;
+	let longstep=(maxlong-inilong)/nsteps;
+	let latsteps= (maxlat-inilat)/nsteps;
+	let datapoints
+	for (let i=0;i<10;i++){
+		for(let j=0;j<jmax ;j++){
 
+		}
+		jmax++;
+	}
+
+	let a = await this.getMapData();
+}
 //STATISTICS - AIR QUALITY
 
 /**
