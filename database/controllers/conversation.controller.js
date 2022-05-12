@@ -118,6 +118,7 @@ exports.create = async (request, response) => {
         return;
     }
     /* Check if users of the body exists */
+    console.log("All users!: ", params.users);
     for (user of params.users) {
       console.log("User: ", user);
         const where = {};
