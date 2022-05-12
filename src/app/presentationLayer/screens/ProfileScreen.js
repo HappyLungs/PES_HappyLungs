@@ -153,11 +153,6 @@ function ProfileScreen({ navigation, route }) {
 					style={{
 						flex: 2,
 						alignItems: "center",
-<<<<<<< HEAD:src/app/presentationLayer/ProfileScreen.js
-						marginTop: 10,
-						marginLeft: -30,
-=======
->>>>>>> 2861ebba59d8c23da214a798f61e76bf0fac9b6f:src/app/presentationLayer/screens/ProfileScreen.js
 					}}
 				>
 					<ImageBackground
