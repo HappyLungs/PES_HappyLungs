@@ -232,7 +232,6 @@ DomainCtrl.prototype.createPin = async function (
 	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
-		console.log(response.data);
 		return response.data; // Returns the object inserted in the DB
 	} else {
 		//TODO: handle error. Return an error and reload the view with the error
@@ -367,6 +366,17 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 	//create
 	let myUser = new User(null, email, password, null);
 	return await myUser.login(); //login to db
+};
+
+/**
+ *
+ * @param {*} email
+ * @returns an acces_token for the user
+ */
+
+ DomainCtrl.prototype.deleteUser = async function (email, password) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.delete();
 };
 
 /**

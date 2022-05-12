@@ -37,8 +37,9 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		const updatedPins = data.filter((item) => item._id !== selectedPin._id);
-		setData(updatedPins);
+		console.log("before:" + data);
+		setData(data.filter((item) => item._id !== selectedPin._id));
+		console.log("after:" + data);
 	};
 
 	function renderDeleteConfirmation() {
@@ -274,7 +275,7 @@ const PinList = ({ pinList, navigation }) => {
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ padding: 10 }}
 				scrollEnabled={true}
-				data={data}
+				data={pinList}
 				keyExtractor={(item) => `${item.title}`}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}

@@ -249,6 +249,19 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 };
 
 /**
+ *
+ * @param {*} email
+ * @returns deletes the user from DB
+ */
+ PresentationCtrl.prototype.deleteUser = async function (email) {
+	if (email) {
+		return await this.domainCtrl.deleteUser(email);
+	} else {
+		return { data: {}, message: "deleteError", status: 422 }; // TODO: return { data: {}, message: i18n.t("deleteError"), status: 422 };
+	}
+};
+
+/**
  * @param {*} name
  * @param {*} email
  * @param {*} points
@@ -295,7 +308,6 @@ PresentationCtrl.prototype.updateUserPassword = async function (
 };
 
 PresentationCtrl.prototype.fetchPins = async function (email) {
-	console.log(email);
 	let pins = await this.domainCtrl.fetchPins(email);
 	if (pins != null) {
 		return pins;

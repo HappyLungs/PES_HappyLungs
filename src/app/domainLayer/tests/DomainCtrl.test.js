@@ -11,6 +11,7 @@ test('test get map data', async ()=> {
     expect(mapdata[0]).toHaveProperty('weight');
     expect(mapdata).toHaveLength(74);
 });
+/*
 test('test get pollution level last day', async ()=>{
     const data=await ctrld.getPollutionLevelLastDay(40.93944,0.83139044);
     expect(data).toHaveProperty('levels');
@@ -49,4 +50,4 @@ test('get quantity of pollutants in a day',
         expect(data[0]).toHaveProperty('name');
         expect(data[0]).toHaveProperty('quantity');
         expect(data).toHaveLength(3);
-});
+});*/

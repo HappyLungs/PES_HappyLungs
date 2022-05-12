@@ -117,18 +117,22 @@ exports.create = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-         /* Check if users of the body exists */
+    /* Check if users of the body exists */
     for (user of params.users) {
         const where = {};
         where.email = user;
-        let result = await userDatalayer.findUser(where).then();
-        if (result == undefined || result == null || result.length == 0) {
+        let exists = false;
+        await userDatalayer.findUser(where)
+        .then((userData) => {
+          if (userData !== null && userData !== undefined && userData.email.length > 0) exists = true; 
+        });
+        if (!exists) {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User does not exist", {});
             return;
         }
     }
     /* Create the conversation */
-    conversationDataLayer.createConversation({users: params.users, deleted: [false, false]})
+    conversationDataLayer.createConversation({users: params.users})
     .then((conversationData) => {
         console.log("Conversation created", conversationData);
         if (conversationData !== null && typeof conversationData !== undefined) {

@@ -140,25 +140,29 @@ function MapScreen({ navigation, route }) {
 	 *
 	 */
 	useEffect(async () => {
-		const fetchPins = async () => {
-			const data = await presentationCtrl.fetchTrendingPins(user.email);
-			setPins(data);
-			let fetchedMarkers = [];
-			for (let marker of Object.keys(data)) {
-				fetchedMarkers.push({
-					latitude: data[marker].latitude,
-					longitude: data[marker].longitude,
-				});
-			}
-			setMarkers(fetchedMarkers);
-		};
+		const unsubscribe = navigation.addListener("focus", async () => {
+			console.log("map");
+			const fetchPins = async () => {
+				const data = await presentationCtrl.fetchTrendingPins(user.email);
+				setPins(data);
+				let fetchedMarkers = [];
+				for (let marker of Object.keys(data)) {
+					fetchedMarkers.push({
+						latitude: data[marker].latitude,
+						longitude: data[marker].longitude,
+					});
+				}
+				setMarkers(fetchedMarkers);
+			};
 
-		await fetchPins();
+			await fetchPins();
+		});
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
 		await initHeatPoints();
-	}, []);
+		return unsubscribe;
+	}, [navigation]);
 
 	//setHeatpoints(await presentationCtrl.getMapData());
 	/*
@@ -460,13 +464,9 @@ function MapScreen({ navigation, route }) {
 				>
 					<Pressable
 						onPress={() => {
-							if (1) {
-								navigation.navigate("OwnerPin", { pin: selected });
-							} else {
-								navigation.navigate("DefaultPin", {
-									pin: selected,
-								});
-							}
+							navigation.navigate("DefaultPin", {
+								pin: selected,
+							});
 							setPinPreview(false);
 						}}
 					>
