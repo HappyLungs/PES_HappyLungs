@@ -11,7 +11,7 @@ class User {
         this.password = password;
         this.birthdate = birthdate;
         this.points = 0;
-        this.language = LanguageEnum.catalan;
+        this.language = "Catalan"; // "Spanish", "English"
         this.healthStatus = [false, false, false]; //cardiorespiratory problems, pregnant, elderly
         this.notifications = true;
         this.profilePicture = "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg";
@@ -31,6 +31,12 @@ class User {
         return await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
+        });
+    }
+
+    async delete () {
+        return await persistCtrl.postRequest("/deleteUser", {
+            "email": this.email
         });
     }
 

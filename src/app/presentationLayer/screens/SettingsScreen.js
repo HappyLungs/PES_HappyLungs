@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -6,30 +6,56 @@ import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	//should pass userId, and then retrieve the updated data
-	const fakeUserData = {
-		username: "Username",
-		email: "username@email.com",
-		password: "**********",
-		points: 200,
-		healthState: [false, false, true, false, true],
-		picture:
-			"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	};
-	const [user, setUser] = useState(fakeUserData);
+	// const fakeUserData = {
+	// 	username: "Username",
+	// 	email: "username@email.com",
+	// 	password: "**********",
+	// 	points: 200,
+	// 	healthState: [false, false, true],
+	// 	picture:
+	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+	// };
+	// const [user, setUser] = useState(fakeUserData);
 
-	const [state1, setState1] = useState(user.healthState[0]);
-	const [state2, setState2] = useState(user.healthState[1]);
-	const [state3, setState3] = useState(user.healthState[2]);
-	const [state4, setState4] = useState(user.healthState[3]);
-	const [state5, setState5] = useState(user.healthState[4]);
+	const [state1, setState1] = useState(false);
+	const [state2, setState2] = useState(false);
+	const [state3, setState3] = useState(true);
+	const [state4, setState4] = useState(false);
+	const [state5, setState5] = useState(true);
 
 	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
 		useState(false);
+
+	const [user, setUser] = useContext(UserContext);
+
+	const deleteUser = async () => {
+		let response = await presentationCtrl.deleteUser(user.email);
+		if (response.status == 200) {
+			setUser({
+				__v: 0,
+				_id: "",
+				birthdate: "",
+				createdAt: "",
+				email: "",
+				healthStatus: "",
+				language: "",
+				name: "",
+				password: "",
+				points: 0,
+				savedPins: [],
+				updatedAt: "",
+			});
+			navigation.navigate("SignInScreen");
+		} else {
+			errorMsgChange(response.message);
+		}
+	};
 
 	function renderModalDeleteAccount() {
 		return (
@@ -95,7 +121,7 @@ function SettingsScreen({ navigation }) {
 										styles.shadow,
 										{ backgroundColor: COLORS.green1 },
 									]}
-									//onPress={validate}
+									onPress={() => deleteUser()}
 								>
 									<Text style={styles.containerTxt}>{i18n.t("yes")}</Text>
 								</TouchableOpacity>
