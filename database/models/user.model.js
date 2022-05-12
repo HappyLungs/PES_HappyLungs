@@ -43,7 +43,7 @@ const UsersSchema = new global.Schema({
         ref: "Pins"
     }],
     status: {
-        type: Number,
+        type: Number,       //-1 => BLOCKED, 0 => Deleted, 1 => Active user
         default: 1
     } 
 }, {
