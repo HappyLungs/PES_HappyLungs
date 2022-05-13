@@ -16,7 +16,7 @@
                 <span class="error"><%= error %></span>
                 <% } else if (!locals.users) { %>
                 <span>Missing users parameter</span>
-                <% } else if (locals.users.length) { %>
+                <% } else if (locals.users.length === 0) { %>
                 <span>There are no users.</span>
                 <% } %>
             </div>
@@ -28,7 +28,8 @@
                 <div class="user blockedUser">
                     <div class="userInfo">
                         <div class="userImage userImageBlocked">
-                            <img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">
+                            <img src="<%= user.picture %>">
+                            <!--<img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">-->
                         </div>
                         <div class="userInfoContent">
                             <div>
@@ -43,7 +44,7 @@
                                 </div>
                                 <div>
                                     <i class="fa fa-trophy"></i>
-                                    <%= user.chats %>
+                                    #<%= user.ranking %>
                                 </div>
                                 <div>
                                     <i class="fa fa-exclamation"></i>
@@ -53,7 +54,7 @@
                         </div>
                     </div>
                     <div class="userButtons">
-                        <a href="#">
+                        <a href="/messages?id=<%= user.email %>">
                             <div class="reportedMessagesButton">
                                 <div>
                                     <i class="fa-solid fa-comment"></i>
@@ -73,7 +74,7 @@
                     <div class="user reportedUser">
                         <div class="userInfo">
                             <div class="userImage userImageReported">
-                                <img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">
+                                <img src="<%= user.picture %>">
                             </div>
                             <div class="userInfoContent">
                                 <div>
@@ -88,7 +89,7 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-trophy"></i>
-                                        <%= user.chats %>
+                                        #<%= user.ranking %>
                                     </div>
                                     <div>
                                         <i class="fa fa-exclamation"></i>
@@ -98,7 +99,7 @@
                             </div>
                         </div>
                         <div class="userButtons">
-                            <a href="#">
+                            <a href="/messages?id=<%= user.email %>">
                                 <div class="reportedMessagesButton reportedMessagesButtonReported">
                                     <div>
                                         <i class="fa-solid fa-comment"></i>
@@ -118,7 +119,7 @@
                     <div class="user">
                         <div class="userInfo">
                             <div class="userImage">
-                                <img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">
+                                <img src="<%= user.picture %>">
                             </div>
                             <div class="userInfoContent">
                                 <div>
@@ -133,7 +134,7 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-trophy"></i>
-                                        <%= user.chats %>
+                                        #<%= user.ranking %>
                                     </div>
                                     <div>
                                         <i class="fa fa-exclamation"></i>
