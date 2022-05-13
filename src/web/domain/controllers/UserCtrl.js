@@ -69,14 +69,13 @@ let UserCtrl;
 
 //[GET] users
 UserCtrl.prototype.fetchUsers = async function(type) {
-    if (!this.types.includes(type)) throw TypeError("Type of submissions is not supported.");
+    if (!this.usersType.includes(type)) throw TypeError("Type of submissions is not supported.");
     //DB get users of type = type
     return users;
 }
 
 //[GET] reported messages
 UserCtrl.prototype.fetchReportedMessages = async function(user) {
-    if (!this.types.includes(type)) throw TypeError("Type of submissions is not supported.");
     //DB get users of type = type
     let messages = [];
     return messages;

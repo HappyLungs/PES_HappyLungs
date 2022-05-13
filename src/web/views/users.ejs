@@ -12,8 +12,19 @@
         <main>
             <div id="title">
                 <h3>All users</h3>
+                <% if (locals.error) { %>
+                <span class="error"><%= error %></span>
+                <% } else if (!locals.users) { %>
+                <span>Missing users parameter</span>
+                <% } else if (locals.users.length) { %>
+                <span>There are no users.</span>
+                <% } %>
             </div>
             <div id="usersList">
+                <% if (locals.users) {
+                    users.forEach((user) => { 
+                        if (!user.blocked) {
+                %>
                 <div class="user">
                     <div class="userInfo">
                         <div class="userImage">
@@ -51,6 +62,7 @@
                         </a>
                     </div>
                 </div>
+                <% } else { %>
                 <div class="user blockedUser">
                     <div class="userInfo">
                         <div class="userImage userImageBlocked">
@@ -95,6 +107,7 @@
                         </a>
                     </div>
                 </div>
+                <%  } }) } %>
             </div>
         </main>
     </body>
