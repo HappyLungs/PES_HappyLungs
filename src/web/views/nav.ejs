@@ -19,6 +19,18 @@
                 </a>
             </li>
             <li>
+                <a href="/reported">
+                    <% if(locals.page&& page==="reported") { %>
+                    <div class="menuElement" style="background-color:#007f5a">
+                    <% } else { %>
+                    <div class="menuElement">
+                    <% } %>
+                        <div class="menuIcon"><i class="fa-solid fa-user-xmark"></i></div>
+                        <div>Reported</div>
+                    </div>
+                </a>
+            </li>
+            <li>
                 <a href="/blocked">
                     <% if(locals.page&& page==="blocked") { %>
                     <div class="menuElement" style="background-color:#007f5a">

@@ -156,7 +156,7 @@ main {
     background-color: #d40047;
 }
 .reportedButton {
-    background-color: #e7c500;
+    background-color: #d4b500;
 }
 .reportedButton:hover {
     background-color: #ffdf2c;
@@ -164,7 +164,8 @@ main {
 .reportedMessagesButton {
     height: 100%;
     background-color: #ffcadb;
-    font-size: 12px;
+    font-size: 25px;
+    color:#b4003c;
     font-weight: 600;
     text-align: center;
     display: flex;
@@ -177,6 +178,7 @@ main {
 }
 .reportedMessagesButtonReported {
     background-color: #fff5be;
+    color: #d4b500;
 }
 .reportedMessagesButtonReported:hover {
     background-color: #fff9db;
