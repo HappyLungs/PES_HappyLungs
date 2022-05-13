@@ -4,6 +4,8 @@ const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 const { check, validationResult } = require("express-validator");
 
+const userController = require("../controllers/user.controller");
+
 const pinDatalayer = require("./../datalayers/pin.datalayer");
 const userDatalayer = require("../datalayers/user.datalayer");
 
@@ -144,42 +146,35 @@ exports.create = async (request, response) => {
     .then((pinData) => {
         console.log(pinData);
         if (pinData !== null && typeof pinData !== undefined) {
-            responseObj.status  = errorCodes.SUCCESS;
-            responseObj.message = "Success";
-            responseObj.data    = pinData;
+            await userController.updateUserPoints(pinData.creatorEmail, 6);
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Pin created", pinData);
         } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Pin not created", {});
         }
-        response.send(responseObj);
     })
     .catch(error => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
-
 };
 
 exports.update = async(request, response) => {
     let params = {};
-    if (request.body.Pin) {
-        params = request.body.Pin;
+    if (request.body.pin) {
+        params = request.body;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    if (params.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params._id)) {
+    if (params.pin.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params.pin._id)) {
         pinDatalayer
-        .findPin({_id: mongodb.ObjectId(params._id)})
+        .findPin({_id: mongodb.ObjectId(params.pin._id)})
         .then((pinData) => {
             if (pinData !== null && typeof pinData !== "undefined") {
                 //update params
                 pinDatalayer
-                .updatePin({_id: mongodb.ObjectId(params._id)}, params)
+                .updatePin({_id: mongodb.ObjectId(params.pin._id)}, params.pin)
                 .then((result) => {
+                    await userController.updateUserPoints(pinData.creatorEmail, 1);
                     sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
                 })
                 .catch((error) => {

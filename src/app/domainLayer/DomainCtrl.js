@@ -295,8 +295,32 @@ DomainCtrl.prototype.fetchTrendingPins = async function (email) {
  * @param {*} Pin
  * @returns the updated pin. Else returns null => error
  */
-DomainCtrl.prototype.editPin = async function (Pin) {
-	let result = await persistenceCtrl.putRequest("/pin", Pin);
+DomainCtrl.prototype.editPin = async function (
+	id,
+	title,
+	location,
+	locationTitle,
+	description,
+	media,
+	rating,
+	date,
+	status,
+	userEmail
+) {
+	let { latitude, longitude } = location;
+	let pin = {
+		_id: id,
+		title: title,
+		latitude: latitude,
+		longitude: longitude,
+		locationTitle: locationTitle,
+		description: description,
+		media: media,
+		rating: rating,
+		date: new Date(date),
+		status: status
+	}
+	let result = await persistenceCtrl.putRequest("/pin", {pin: pin, creatorEmail: userEmail});
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -316,21 +340,6 @@ DomainCtrl.prototype.savePin = async function (Pin, email) {
 		email: email,
 		pin: Pin,
 	});
-	if (result.status === 200) {
-		return result.data;
-	} else {
-		//TODO: handle error. Return an error and reload the view with the error
-		return null;
-	}
-};
-
-/**
- *
- * @param {*} id
- * @returns the updated pin. Else returns null => error
- */
-DomainCtrl.prototype.editPin = async function (Pin) {
-	let result = await persistenceCtrl.putRequest("/pin", Pin);
 	if (result.status === 200) {
 		return result.data;
 	} else {

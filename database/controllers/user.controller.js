@@ -297,3 +297,24 @@ exports.delete = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
 }
+
+exports.updateUserPoints = async function (email, points) {
+    let userData = await UserDataLayer.findUser({email: email}).then();
+    let success = false;
+    if (userData == null && typeof userData == undefined) {
+        return false;
+    }
+    points += userData.points;
+    await UserDataLayer.updateUser({email: email}, {points: points})
+    .then((updatedData) => {
+        if (updatedData !== null && typeof updatedData !== undefined) {
+            success = true;
+        }
+        success = false;
+    }
+    )
+    .catch(error => {
+        success = false;
+    });
+    return success;
+}
