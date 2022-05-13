@@ -147,20 +147,28 @@ PresentationCtrl.prototype.createPin = function (
  * @returns the updated pin
  */
 PresentationCtrl.prototype.editPin = function (
-	name,
+	id,
+	title,
 	location,
+	locationTitle,
 	description,
 	media,
 	rating,
-	status
+	date,
+	status,
+	userEmail
 ) {
 	return this.domainCtrl.editPin(
-		name,
+		id,
+		title,
 		location,
+		locationTitle,
 		description,
 		media,
 		rating,
-		status
+		date,
+		status,
+		userEmail
 	);
 };
 
@@ -249,6 +257,19 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 };
 
 /**
+ *
+ * @param {*} email
+ * @returns deletes the user from DB
+ */
+ PresentationCtrl.prototype.deleteUser = async function (email) {
+	if (email) {
+		return await this.domainCtrl.deleteUser(email);
+	} else {
+		return { data: {}, message: "deleteError", status: 422 }; // TODO: return { data: {}, message: i18n.t("deleteError"), status: 422 };
+	}
+};
+
+/**
  * @param {*} name
  * @param {*} email
  * @param {*} points
@@ -317,6 +338,9 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
+PresentationCtrl.prototype.getHeatPoints = async function () {
+	return this.domainCtrl.getHeatPoints();
+}
 
 PresentationCtrl.prototype.fetchConversations = async function () {
 	let conversations =
