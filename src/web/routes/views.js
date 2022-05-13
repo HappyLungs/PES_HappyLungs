@@ -49,7 +49,7 @@ router.put("/blockUser/:userId", async (req, res) => {
 });
 
 //[PUT] Block a user
-router.put("/unBlockUser/:userId", async (req, res) => {
+router.put("/unblockUser/:userId", async (req, res) => {
     const { page } = req.body;
     //put
     res.redirect("/"+page);

@@ -1,6 +1,6 @@
 
 const User = require("../User");
-const DatabaseCtrl = require("./DatabaseCtrl");
+//const DatabaseCtrl = require("./DatabaseCtrl");
 require("dotenv").config();
 
 let users =  [
@@ -59,7 +59,7 @@ let UserCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.db = new DatabaseCtrl();
+        //this.db = new DatabaseCtrl();
         this.usersType = ["all", "blocked", "reported"];
         
     };
