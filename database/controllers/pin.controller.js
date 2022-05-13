@@ -143,7 +143,7 @@ exports.create = async (request, response) => {
         return;
     }
     pinDatalayer.createPin(params)
-    .then((pinData) => {
+    .then(async (pinData) => {
         console.log(pinData);
         if (pinData !== null && typeof pinData !== undefined) {
             await userController.updateUserPoints(pinData.creatorEmail, 6);
@@ -173,7 +173,7 @@ exports.update = async(request, response) => {
                 //update params
                 pinDatalayer
                 .updatePin({_id: mongodb.ObjectId(params.pin._id)}, params.pin)
-                .then((result) => {
+                .then(async (result) => {
                     await userController.updateUserPoints(pinData.creatorEmail, 1);
                     sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
                 })

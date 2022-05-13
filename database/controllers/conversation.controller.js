@@ -137,7 +137,7 @@ exports.create = async (request, response) => {
     }
     /* Create the conversation */
     conversationDataLayer.createConversation({users: params.users})
-    .then((conversationData) => {
+    .then(async (conversationData) => {
         if (conversationData !== null && typeof conversationData !== undefined) {
             await userCtrl.updateUserPoints(params.users[0], 2);
             //create the message related to the conversation. The first user is the sender

@@ -1,9 +1,9 @@
 
 const User = require("../User");
-//const DatabaseCtrl = require("./DatabaseCtrl");
+const DatabaseCtrl = require("./DatabaseCtrl");
 require("dotenv").config();
 
-let users =  [
+let fakeUsers =  [
     new User({
         username: "Júlia Herrera Caba",
         email: "juliaherreracaba@gmail.com",
@@ -64,7 +64,7 @@ let UserCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        //this.db = new DatabaseCtrl();
+        this.db = new DatabaseCtrl();
         this.usersType = ["all", "blocked", "reported"];
         
     };
@@ -76,7 +76,24 @@ let UserCtrl;
 UserCtrl.prototype.fetchUsers = async function(type) {
     if (!this.usersType.includes(type)) throw TypeError("Type of submissions is not supported.");
     //DB get users of type = type
-    return users;
+    let result = await this.db.getRequest("/listUsers", {type: type});
+    let users = [];
+    if (result.status === 200) {
+        for (let user of result.data) {
+            let params = {
+                username: user.name,
+                email: user.email,
+                picture: user.profilePicture,
+                blocked: (user.status === -1) ? true : false,
+                pins: (user.pins !== undefined) ? user.pins : 0,
+                ranking: user.ranking + 1,
+                chats: (user.chats !== undefined) ? user.chats : 0,
+                reported: user.reported,
+            }
+            users.push(new User(params));
+        }
+        return users;
+    } else return fakeUsers;
 }
 
 //[PUT] block user
@@ -90,6 +107,5 @@ UserCtrl.prototype.unblockUser = async function(user) {
     //DB unblock user
     return dbResponse;
 }
-
 
 module.exports = UserCtrl;

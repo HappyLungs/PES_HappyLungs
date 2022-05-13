@@ -45,7 +45,11 @@ const UsersSchema = new global.Schema({
     status: {
         type: Number,       //-1 => BLOCKED, 0 => Deleted, 1 => Active user
         default: 1
-    } 
+    },
+    reported: {
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true
 });

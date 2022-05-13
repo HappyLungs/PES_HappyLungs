@@ -3,6 +3,7 @@ const conversationDataLayer = require("./../datalayers/conversation.datalayer.js
 const userDatalayer =  require("./../datalayers/user.datalayer.js");
 //const sanitizeHtml = require('sanitize-html');
 
+const userCtrl = require("./user.controller.js");
 
 //const responseObj = {};
 const mongodb = require("mongodb");
@@ -184,6 +185,43 @@ exports.unreadedMessages = async (request, response) => {
         .then((messageData) => {
             if (messageData !== null && typeof messageData !== undefined) {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid id", {});
+    }
+}
+
+exports.reportMessage = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    if (mongodb.ObjectId.isValid(params.message)) {
+        let where = {};
+        where._id = mongodb.ObjectId(params.message);
+        messageDataLayer.findMessage(where)
+        .then((messageData) => {
+            if (messageData !== null && typeof messageData !== undefined) {
+                messageData.reported = true;
+                messageDataLayer.updateMessage({_id: messageData._id}, messageData)
+                .then(async (messageData) => {
+                    if (messageData !== null && typeof messageData !== undefined) {
+                        await userCtrl.updateReports(messageData.user);
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                });
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
             }
