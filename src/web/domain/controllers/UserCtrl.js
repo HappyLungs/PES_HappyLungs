@@ -96,18 +96,18 @@ UserCtrl.prototype.fetchUsers = async function(type) {
     } else return fakeUsers;
 }
 
-//[PUT] block user
+//[POST] block user
 UserCtrl.prototype.blockUser = async function(user) {
     //DB block user
-    let dbResponse = await this.db.putRequest("/blockUser", {email: user});
+    let dbResponse = await this.db.postRequest("/blockUser", {email: user});
     if (dbResponse.status === 200) return true;
     else throw Error("Error blocking user.");
 }
 
-//[PUT] unblock user
+//[POST] unblock user
 UserCtrl.prototype.unblockUser = async function(user) {
     //DB unblock user
-    let dbResponse = await this.db.putRequest("/blockUser", {email: user});
+    let dbResponse = await this.db.postRequest("/blockUser", {email: user});
     if (dbResponse.status === 200) return true;
     else throw Error("Error unblocking user.");
 }

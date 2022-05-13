@@ -11,8 +11,8 @@ const MessageSchema = new global.Schema({
         required: true
     },
     reported: {
-        type: Number,   //-1 => Reportat + acceptat x administrador, 0 => Reportat però declinat x admin, 1 => Reportat (però no gestionat)
-        default: false
+        type: Number,   //-2 => Reportat + acceptat x administrador, -1 => Reportat però declinat x admin, 0 => No reportat, 1 => Reportat (però no gestionat)
+        default: 0
     },
     readed: {
         type: Boolean,
