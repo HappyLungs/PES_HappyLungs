@@ -54,8 +54,8 @@ router.get("/messages", async (req, res) => {
 });
 
 
-//[PUT] Block a user
-router.put("/blockUser/:userId", async (req, res) => {
+//[POST] Block a user
+router.post("/blockUser/:userId", async (req, res) => {
     const userId = req.userId;
     let { page } = req.body;
     if (!page) page = "blocked";
@@ -63,24 +63,25 @@ router.put("/blockUser/:userId", async (req, res) => {
     res.redirect("/"+page);
 });
 
-//[PUT] Block a user
-router.put("/unblockUser/:userId", async (req, res) => {
-    const userId = req.userId;
-    let { page } = req.body;
-    if (!page) page = "users";
-    await userCtrl.unblockUser(userId);
+//[POST] Block a user
+router.post("/unblockUser", async (req, res) => {
+    const id = req.query.id;
+    const page = req.query.page;
+    console.log("email: ", id)
+    console.log("page: ", page)
+    await userCtrl.unblockUser(id);
     res.redirect("/"+page);
 });
 
 
-//[PUT] Accept report
-router.put("/acceptReportedMessage", async (req, res) => {
+//[POST] Accept report
+router.post("/acceptReportedMessage", async (req, res) => {
     //Implement
     res.redirect("/reported");
 });
 
-//[PUT] Decline report
-router.put("/declineReportedMessage", async (req, res) => {
+//[POST] Decline report
+router.post("/declineReportedMessage", async (req, res) => {
     //Implement
     res.redirect("/reported");
 });

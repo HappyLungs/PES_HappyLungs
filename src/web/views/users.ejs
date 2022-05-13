@@ -11,7 +11,7 @@
         <%- include("./nav.ejs") %>
         <main>
             <div id="title">
-                <h3>All users</h3>
+                <h3>All users page: <%= page %></h3>
                 <% if (locals.error) { %>
                 <span class="error"><%= error %></span>
                 <% } else if (!locals.users) { %>
@@ -29,7 +29,6 @@
                     <div class="userInfo">
                         <div class="userImage userImageBlocked">
                             <img src="<%= user.picture %>">
-                            <!--<img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">-->
                         </div>
                         <div class="userInfoContent">
                             <div>
@@ -61,13 +60,15 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="#">
-                            <div class="lockButton blockedButton">
-                                <div>
-                                    <i class="fa fa-lock"></i>
+                        <form method="post" action="/unblockUser?id=<%= user.email %>&page=<%= page %>">
+                            <button type="submit" class="lockButton">
+                                <div class="lockButton blockedButton">
+                                    <div>
+                                        <i class="fa fa-lock"></i>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </button>                                
+                        </form>
                     </div>
                 </div>
                 <% } else if (user.reported > 0) { %>
