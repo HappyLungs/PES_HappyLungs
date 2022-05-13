@@ -46,7 +46,7 @@ const UsersSchema = new global.Schema({
         type: Number,       //-1 => BLOCKED, 0 => Deleted, 1 => Active user
         default: 1
     },
-    reports: {
+    reported: {
         type: Number,
         default: 0
     }
