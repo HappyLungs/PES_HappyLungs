@@ -1,9 +1,11 @@
 const express = require("express");
 const UserCtrl = require("../domain/controllers/UserCtrl");
+const MessageCtrl = require("../domain/controllers/MessageCtrl");
 const router = express.Router();
 module.exports = router;
 
 const userCtrl = new UserCtrl();
+const messageCtrl = new MessageCtrl();
 
 //[GET] Main page
 router.get("/", async (req, res) => {
@@ -35,10 +37,10 @@ router.get("/blocked", async (req, res) => {
 });
 
 //[GET] Reported messages
-router.get("/messages/:id", async (req, res) => {
+router.get("/messages", async (req, res) => {
+    //Implement
     res.render("messages");
 });
-
 
 
 //[PUT] Block a user
@@ -59,16 +61,15 @@ router.put("/unblockUser/:userId", async (req, res) => {
     res.redirect("/"+page);
 });
 
+
 //[PUT] Accept report
-router.put("/acceptReport/:messageId", async (req, res) => {
-    const messageId = req.messageId;
-    await userCtrl.acceptReport(messageId);
+router.put("/acceptReportedMessage", async (req, res) => {
+    //Implement
     res.redirect("/reported");
 });
 
 //[PUT] Decline report
-router.put("/declineReport/:messageId", async (req, res) => {
-    const messageId = req.messageId;
-    await userCtrl.declineReport(messageId);
+router.put("/declineReportedMessage", async (req, res) => {
+    //Implement
     res.redirect("/reported");
 });

@@ -79,13 +79,6 @@ UserCtrl.prototype.fetchUsers = async function(type) {
     return users;
 }
 
-//[GET] reported messages
-UserCtrl.prototype.fetchReportedMessages = async function(user) {
-    //DB get users of type = type
-    let messages = [];
-    return messages;
-}
-
 //[PUT] block user
 UserCtrl.prototype.blockUser = async function(user) {
     //DB block user
@@ -98,16 +91,5 @@ UserCtrl.prototype.unblockUser = async function(user) {
     return dbResponse;
 }
 
-//[PUT] accept reported message
-UserCtrl.prototype.acceptReport = async function(messageId) {
-    //DB unblock user
-    return dbResponse;
-}
-
-//[PUT] decline reported message
-UserCtrl.prototype.declineReport = async function(messageId) {
-    //DB unblock user
-    return dbResponse;
-}
 
 module.exports = UserCtrl;
