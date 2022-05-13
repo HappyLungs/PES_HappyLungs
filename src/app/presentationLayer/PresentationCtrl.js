@@ -147,20 +147,28 @@ PresentationCtrl.prototype.createPin = function (
  * @returns the updated pin
  */
 PresentationCtrl.prototype.editPin = function (
-	name,
+	id,
+	title,
 	location,
+	locationTitle,
 	description,
 	media,
 	rating,
-	status
+	date,
+	status,
+	userEmail
 ) {
 	return this.domainCtrl.editPin(
-		name,
+		id,
+		title,
 		location,
+		locationTitle,
 		description,
 		media,
 		rating,
-		status
+		date,
+		status,
+		userEmail
 	);
 };
 
