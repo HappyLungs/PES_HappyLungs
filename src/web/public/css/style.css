@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+a {
+    text-decoration: none;
+    color: #3b3c3b;
+}
+body {
+    background-color: #f0f2f5;
+    color: #3b3c3b;
+}
+.leftMenu {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 15.625rem !important;
+    overflow-y: auto;
+    padding: 0;
+    background-color: #3b3c3b;
+    border-radius: .75rem;
+    margin-left: 1rem !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    color:white;
+}
+main {
+    margin-left: 17.125rem;
+}
+#menuTitle {
+    text-align: center;
+    margin: 30px 10px 0px 10px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid white;
+}
+.title {
+    font-weight: 600;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#menuDropdown ul {
+    list-style: none;
+    padding-left: 0px;
+}
+.menuElement {
+    display: flex;
+    color:white;
+    margin: 1.5px 15px 1.5px 15px;
+    padding: 12px 16px 12px 16px;
+    border-radius: .375rem;
+    text-decoration: none;
+}
+.menuElement:hover {
+    background-color: #555755;
+}
+.menuIcon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+#title {
+    margin: 1rem 24px 24px 24px;
+}
+#title h3 {
+    font-weight: 500;
+    font-size: 18px;
+}
+#usersList {
+    margin: 24px 24px 24px 59px;
+}
+.user {
+    background-color: white;
+    border-radius: .75rem;
+    border: 0 solid rgba(0,0,0,.125);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+    display: flex;
+    margin-bottom: 15px;
+}
+.blockedUser {
+    background-color: rgb(255, 236, 236);
+}
+.reportedUser {
+    background-color: rgb(255, 252, 232);
+}
+.userInfo {
+    width: 70%;
+    padding: 16px 16px 16px 0px;
+    display: flex;
+    flex-direction: row;
+}
+.userInfoContent {
+    padding-left: 50px;
+}
+.userName, .blockedText {
+    font-weight: 600;
+}
+.blockedText {
+    color: #b4003c;
+}
+.userEmail {
+    font-size: 14px;
+    color: #555755;
+}
+.userIcons {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #007f5a;
+    display: flex;
+}
+.userIcons div {
+    margin-right: 20px;
+}
+.userIconsBlocked {
+    color:#b4003c;
+}
+.userIconsReported {
+    color: #c0a81f;
+}
+.userButtons {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.userButtons a {
+    height: 100%;
+}
+.lockButton {
+    width: 60px;
+    height: 100%;
+    border-top-right-radius: .75rem;
+    border-bottom-right-radius: .75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.lockButton i {
+    font-size: 25px;
+    color: white;
+}
+.unblockedButton {
+    background-color: #007f5a;
+}
+.unblockedButton:hover {
+    background-color: #00a879;
+}
+.blockedButton {
+    background-color: #b4003c;
+}
+.blockedButton:hover {
+    background-color: #d40047;
+}
+.reportedButton {
+    background-color: #d4b500;
+}
+.reportedButton:hover {
+    background-color: #ffdf2c;
+}
+.reportedMessagesButton {
+    height: 100%;
+    background-color: #ffcadb;
+    font-size: 25px;
+    color:#b4003c;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+}
+.reportedMessagesButton:hover {
+    background-color: #ffe0ea;
+}
+.reportedMessagesButtonReported {
+    background-color: #fff5be;
+    color: #d4b500;
+}
+.reportedMessagesButtonReported:hover {
+    background-color: #fff9db;
+}
+.userImage {
+    position: absolute;
+    margin-left: -35px;
+    box-shadow: 0 0px 5px -1px #007f5a,0 0px 3px -1px #007f5a;
+    width:70px;
+    height:70px;
+    border-radius: .75rem;
+}
+.userImageBlocked {
+    box-shadow: 0 0px 5px -1px #b4003c,0 0px 3px -1px #b4003c;
+}
+.userImageReported {
+    box-shadow: 0 0px 5px -1px #ffde23,0 0px 3px -1px #ffde23; 
+}
+.userImage img {
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius: .75rem;
+}
