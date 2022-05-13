@@ -194,7 +194,7 @@ router.get(
 
 /** Admin */
 
-router.put(
+router.post(
     "/blockUser",
     licenseMiddleware.validate,
     AdminController.blockUser
@@ -205,4 +205,11 @@ router.get(
     licenseMiddleware.validate,
     AdminController.listUsers
 );
+
+router.get(
+    "/listReportedMessages",
+    licenseMiddleware.validate,
+    AdminController.listReportedMessages
+);
+
 /** /Admin */
