@@ -128,9 +128,8 @@ exports.create = async (request, response) => {
         }
     }
     /* Create the conversation */
-    conversationDataLayer.createConversation({users: params.users, deleted: [false, false]})
-    .then((conversationData) => {
-        console.log("Conversation created", conversationData);
+    conversationDataLayer.createConversation({users: params.users})
+    .then(async (conversationData) => {
         if (conversationData !== null && typeof conversationData !== undefined) {
             //create the message related to the conversation. The first user is the sender
             let message = {
