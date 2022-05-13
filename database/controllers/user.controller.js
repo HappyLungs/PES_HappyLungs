@@ -318,3 +318,22 @@ exports.updateUserPoints = async function (email, points) {
     });
     return success;
 }
+
+exports.updateReports = async function (email) {
+    let userData = await UserDataLayer.findUser({email: email}).then();
+    let success = false;
+    if (userData == null && typeof userData == undefined) {
+        return false;
+    }
+    await UserDataLayer.updateUser({email: email}, {$inc : {reports: 1}})
+    .then((updatedData) => {
+        if (updatedData !== null && typeof updatedData !== undefined) {
+            success = true;
+        }
+        success = false;
+    })
+    .catch(error => {
+        success = false;
+    });
+    return success;
+}

@@ -19,7 +19,7 @@ function connect() {
         .on("disconnected", connect)
         .once("open", listen);
     return mongoose.connect(process.env.MONGODB_URL, {
-        keepAlive: 1,
+        keepAlive: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
