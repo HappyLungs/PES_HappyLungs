@@ -10,7 +10,6 @@ router.get("/", async (req, res) => {
     try {
         let users = await userCtrl.fetchUsers("all");
         res.render("users", {page:"users", users:users});
-        console.log("users: ", users);
     } catch (e) {
         res.render("users", {error:"Error: "+e.message});
     }
@@ -18,20 +17,32 @@ router.get("/", async (req, res) => {
 
 //[GET] All users
 router.get("/users", async (req, res) => {
-    let users = await userCtrl.fetchUsers("all");
-    res.render("users", {page:"users", users:users});
+    try {
+        let users = await userCtrl.fetchUsers("all");
+        res.render("users", {page:"users", users:users});
+    } catch (e) {
+        res.render("users", {error:"Error: "+e.message});
+    }
 });
 
 //[GET] Reported users
 router.get("/reported", async (req, res) => {
-    let users = await userCtrl.fetchUsers("reported");
-    res.render("users", {page:"reported", users:users});
+    try {
+        let users = await userCtrl.fetchUsers("reported");
+        res.render("users", {page:"reported", users:users});
+    } catch (e) {
+        res.render("users", {error:"Error: "+e.message});
+    }
 });
 
 //[GET] Blocked users
 router.get("/blocked", async (req, res) => {
-    let users = await userCtrl.fetchUsers("blocked");
-    res.render("users", {page:"blocked", users:users});
+    try {
+        let users = await userCtrl.fetchUsers("blocked");
+        res.render("users", {page:"blocked", users:users});
+    } catch (e) {
+        res.render("users", {error:"Error: "+e.message});
+    }
 });
 
 //[GET] Reported messages

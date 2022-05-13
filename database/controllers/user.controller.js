@@ -325,7 +325,7 @@ exports.updateReports = async function (email) {
     if (userData == null && typeof userData == undefined) {
         return false;
     }
-    await UserDataLayer.updateUser({email: email}, {$inc : {reports: 1}})
+    await UserDataLayer.updateUser({email: email}, {$inc : {reported: 1}})
     .then((updatedData) => {
         if (updatedData !== null && typeof updatedData !== undefined) {
             success = true;

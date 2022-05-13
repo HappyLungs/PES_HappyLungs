@@ -44,7 +44,7 @@ exports.listUsers = async (request, response) => {
     if (params.type === "blocked") where.status = -1;
     else if (params.type === "reported") {
         where.status = 1;
-        where.reports = { 
+        where.reported = { 
             $gte: 10
         };
     } else {
@@ -67,7 +67,7 @@ exports.listUsers = async (request, response) => {
                 'email': '$email', 
                 'profilePicture': '$profilePicture', 
                 'status': '$status', 
-                'reports': '$reports', 
+                'reported': '$reported', 
                 'points': '$points'
               }
             }
@@ -84,7 +84,7 @@ exports.listUsers = async (request, response) => {
             'email': '$arr.email', 
             'profilePicture': '$arr.profilePicture', 
             'status': '$arr.status', 
-            'reports': '$arr.reports', 
+            'reported': '$arr.reported', 
             'ranking': '$ranking'
           }
         }, {
