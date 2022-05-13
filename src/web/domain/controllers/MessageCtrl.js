@@ -20,7 +20,9 @@ let MessageCtrl;
 //[GET] reported messages
 MessageCtrl.prototype.fetchMessages = async function(id) {
     //DB get reported messages from user with email = id
-    return "messages";
+    let result = await this.db.getRequest("/listReportedMessages", {email: id});
+    if (result.status === 200) return result.data;
+    else return [];
 }
 
 //[PUT] accept reported message
