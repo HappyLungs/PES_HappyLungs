@@ -7,6 +7,7 @@ let users =  [
     new User({
         username: "Júlia Herrera Caba",
         email: "juliaherreracaba@gmail.com",
+        picture: "https://media.istockphoto.com/photos/african-woman-with-resume-picture-id644186760?k=20&m=644186760&s=612x612&w=0&h=og1WeKE4aUPNG73iRUaR0MjqVuIOvZNcZIRHDHEB3uQ=", 
         blocked: false,
         pins: 50,
         ranking: 1,
@@ -16,15 +17,17 @@ let users =  [
     new User({
         username: "Iván Jimeno Ramírez",
         email: "ivan.jimeno.ramirez@gmail.com",
+        picture: "https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg", 
         blocked: false,
         pins: 40,
         ranking: 2,
         chats: 15,
-        reported: 2
+        reported: 0
     }),
     new User({
         username: "Pol València Luque",
         email: "pol.valencia@gmail.com",
+        picture: "https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg", 
         blocked: true,
         pins: 40,
         ranking: 2,
@@ -34,15 +37,17 @@ let users =  [
     new User({
         username: "Carlos",
         email: "carlos@gmail.com",
-        blocked: true,
+        picture: "https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg", 
+        blocked: false,
         pins: 12,
         ranking: 2,
         chats: 15,
-        reported: 14
+        reported: 0
     }),
     new User({
         username: "Ricard",
-        email: "pol.valencia@gmail.com",
+        email: "ricard@gmail.com",
+        picture: "", 
         blocked: false,
         pins: 15,
         ranking: 8,

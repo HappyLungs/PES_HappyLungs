@@ -79,7 +79,10 @@ main {
     margin-bottom: 15px;
 }
 .blockedUser {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 236, 236);
+}
+.reportedUser {
+    background-color: rgb(255, 252, 232);
 }
 .userInfo {
     width: 70%;
@@ -90,11 +93,14 @@ main {
 .userInfoContent {
     padding-left: 50px;
 }
-.userName, .blockedText {
+.userName, .blockedText, .reportedText{
     font-weight: 600;
 }
 .blockedText {
     color: #b4003c;
+}
+.reportedText {
+    color: #c0a81f;
 }
 .userEmail {
     font-size: 14px;
@@ -111,6 +117,9 @@ main {
 }
 .userIconsBlocked {
     color:#b4003c;
+}
+.userIconsReported {
+    color: #c0a81f;
 }
 .userButtons {
     width:30%;
@@ -137,8 +146,20 @@ main {
 .unblockedButton {
     background-color: #007f5a;
 }
+.unblockedButton:hover {
+    background-color: #00a879;
+}
 .blockedButton {
     background-color: #b4003c;
+}
+.blockedButton:hover {
+    background-color: #d40047;
+}
+.reportedButton {
+    background-color: #e7c500;
+}
+.reportedButton:hover {
+    background-color: #ffdf2c;
 }
 .reportedMessagesButton {
     height: 100%;
@@ -151,6 +172,15 @@ main {
     align-items: center;
     width: 70px;
 }
+.reportedMessagesButton:hover {
+    background-color: #ffe0ea;
+}
+.reportedMessagesButtonReported {
+    background-color: #fff5be;
+}
+.reportedMessagesButtonReported:hover {
+    background-color: #fff9db;
+}
 .userImage {
     position: absolute;
     margin-left: -35px;
@@ -161,6 +191,9 @@ main {
 }
 .userImageBlocked {
     box-shadow: 0 0px 5px -1px #b4003c,0 0px 3px -1px #b4003c;
+}
+.userImageReported {
+    box-shadow: 0 0px 5px -1px #ffde23,0 0px 3px -1px #ffde23; 
 }
 .userImage img {
     width:70px;
