@@ -17,7 +17,7 @@ let fakeUsers =  [
     new User({
         username: "Iván Jimeno Ramírez",
         email: "ivan.jimeno.ramirez@gmail.com",
-        picture: "https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg", 
+        picture: "https://cdn.luxe.digital/media/2019/09/12090452/business-professional-dress-code-men-harvey-specter-suit-style-luxe-digital.jpg", 
         blocked: false,
         pins: 40,
         ranking: 2,
@@ -37,7 +37,7 @@ let fakeUsers =  [
     new User({
         username: "Carlos",
         email: "carlos@gmail.com",
-        picture: "https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg", 
+        picture: "https://www.edx.org/static/a43d4bd4e8c372da3ba0b909a508b831/Aprende_microsoft_office.jpg", 
         blocked: false,
         pins: 12,
         ranking: 2,
@@ -47,7 +47,7 @@ let fakeUsers =  [
     new User({
         username: "Ricard",
         email: "ricard@gmail.com",
-        picture: "", 
+        picture: "http://asilasventas.com/wp-content/uploads/2018/11/man-in-office.jpg", 
         blocked: false,
         pins: 15,
         ranking: 8,

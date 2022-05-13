@@ -46,8 +46,8 @@ router.get("/blocked", async (req, res) => {
 });
 
 //[GET] Reported messages
-router.get("blocked/:userId", async (req, res) => {
-
+router.get("/messages/:id", async (req, res) => {
+    res.render("messages");
 });
 
 

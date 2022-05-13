@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Admin | Happy Lungs</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script src="https://kit.fontawesome.com/5e4b159602.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <%- include("./nav.ejs") %>
+        <main>
+            <div id="messagesTitle">
+                <div class="userImageMessages">
+                    <img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">
+                </div>
+                <div>
+                    <h3><b>Júlia Herrera</b> | Reported chat messages</h3>
+                </div>
+            </div>
+            <div id="messagesList">
+                <div class="legend">
+                    <div><i class=" legendRed fa-solid fa-check"></i></div>
+                    Accept repot
+                    <div><i class="legendGreen fa-solid fa-x"></i></div>
+                    Decline report
+                </div>
+                <div class="messageDay">
+                    10 May 2022
+                </div>
+                <div class="message">
+                    <a href="#">
+                        <div class="confirmButon">
+                            <div>
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="declineButton">
+                            <div>
+                                <i class="fa-solid fa-x"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="messageTime">
+                        <div>
+                            06:28
+                        </div>
+                    </div>
+                    <div class="messageText">
+                        <div>
+                            <span class="reportedBy">Reported by Ricard</span>
+                            <br>
+                            Hola aquest no pot ser un missatge reportat home!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

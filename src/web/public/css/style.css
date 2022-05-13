@@ -62,11 +62,14 @@ main {
 }
 #title {
     margin: 1rem 24px 24px 24px;
+    display:flex;
 }
 #title h3 {
     font-weight: 500;
     font-size: 18px;
 }
+
+/* USERS */
 #usersList {
     margin: 24px 24px 24px 59px;
 }
@@ -111,6 +114,7 @@ main {
 }
 .userIcons div {
     margin-right: 20px;
+    width: 40px;
 }
 .userIconsBlocked {
     color:#b4003c;
@@ -150,17 +154,16 @@ main {
     background-color: #b4003c;
 }
 .blockedButton:hover {
-    background-color: #d40047;
+    background-color: #ec0a55;
 }
 .reportedButton {
     background-color: #d4b500;
 }
 .reportedButton:hover {
-    background-color: #ffdf2c;
+    background-color: #fad608;
 }
 .reportedMessagesButton {
     height: 100%;
-    background-color: #ffcadb;
     font-size: 25px;
     color:#b4003c;
     font-weight: 600;
@@ -171,15 +174,22 @@ main {
     width: 70px;
 }
 .reportedMessagesButton:hover {
-    background-color: #ffe0ea;
+    background-color: #ffcadb;
 }
 .reportedMessagesButtonReported {
-    background-color: #fff5be;
     color: #d4b500;
 }
 .reportedMessagesButtonReported:hover {
-    background-color: #fff9db;
+    background-color: #fff5be;
 }
+
+.blockedUser {
+    background-color: rgb(255, 236, 236);
+}
+.reportedUser {
+    background-color: rgb(255, 252, 232);
+}
+
 .userImage {
     position: absolute;
     margin-left: -35px;
@@ -199,4 +209,117 @@ main {
     height:70px;
     object-fit:cover;
     border-radius: .75rem;
+}
+
+/* MESSAGES */
+#messagesList, #messagesTitle {
+    margin: 24px 24px 24px 24px;
+}
+#messagesTitle {
+    display: flex;
+    font-weight: 600;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 35px;
+}
+#messagesTitle h3 {
+    font-weight: 500;
+    font-size: 18px;
+}
+.userImageMessages {
+    box-shadow: 0 0px 5px -1px #007f5a,0 0px 3px -1px #007f5a;
+    width:70px;
+    height:70px;
+    border-radius: .75rem;
+    margin-right:20px;
+}
+.userImageMessages img {
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius: .75rem;
+}
+.messageDay {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.message {
+    background-color: white;
+    border-radius: .75rem;
+    border: 0 solid rgba(0,0,0,.125);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+    display: flex;
+    margin-bottom: 15px;
+}
+.reportedBy {
+    font-size: 13px;
+    font-weight: 500;
+    color: #818181;
+}
+.messageText {
+    padding: 16px 16px 16px 4px;
+}
+.confirmButon, .declineButton {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:40px;
+    font-size: 20px;
+    font-weight: 800;
+    height: 100%;
+}
+.confirmButon a, .declineButton a {
+    color: white;
+    height: 100%;
+}
+.confirmButon {
+    background-color: #b4003c;
+    border-top-left-radius: .75rem;
+    border-bottom-left-radius: .75rem;
+}
+.confirmButon:hover {
+    background-color: #ec0a55;
+}
+.declineButton {
+    background-color: #007f5a;
+}
+.declineButton:hover {
+    background-color: #00a879;
+}
+.messageTime {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px 4px 16px 8px;
+    font-size: 12px;
+    color: #818181;
+}
+.legend {
+    display: flex;
+    font-size: 15px;
+}
+.legend i {
+    height: 20px;
+    width: 20px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+.legendRed {
+    background-color: #b4003c;
+    font-size: 12px;
+    margin-right: 3px;
+}
+.legendGreen {
+    background-color: #007f5a;
+    font-size: 11px;
+    margin-right: 3px;
+    margin-left: 10px;
 }
