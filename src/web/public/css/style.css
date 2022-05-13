@@ -93,14 +93,11 @@ main {
 .userInfoContent {
     padding-left: 50px;
 }
-.userName, .blockedText, .reportedText{
+.userName, .blockedText {
     font-weight: 600;
 }
 .blockedText {
     color: #b4003c;
-}
-.reportedText {
-    color: #c0a81f;
 }
 .userEmail {
     font-size: 14px;
