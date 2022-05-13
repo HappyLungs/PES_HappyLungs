@@ -11,7 +11,7 @@
         <%- include("./nav.ejs") %>
         <main>
             <div id="title">
-                <h3>All users page: <%= page %></h3>
+                <h3>All users</h3>
                 <% if (locals.error) { %>
                 <span class="error"><%= error %></span>
                 <% } else if (!locals.users) { %>
@@ -107,13 +107,15 @@
                                     </div>
                                 </div>
                             </a>
-                            <a href="#">
-                                <div class="lockButton reportedButton">
-                                    <div>
-                                        <i class="fa fa-lock-open"></i>
+                            <form method="post" action="/blockUser?id=<%= user.email %>&page=<%= page %>">
+                                <button type="submit" class="lockButton">
+                                    <div class="lockButton reportedButton">
+                                        <div>
+                                            <i class="fa fa-lock-open"></i>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </button>                                
+                            </form>
                         </div>
                     </div>
                 <% } else { %>
@@ -145,13 +147,15 @@
                             </div>
                         </div>
                         <div class="userButtons">
-                            <a href="#">
-                                <div class="lockButton unblockedButton">
-                                    <div>
-                                        <i class="fa fa-lock-open"></i>
+                            <form method="post" action="/blockUser?id=<%= user.email %>&page=<%= page %>">
+                                <button type="submit" class="lockButton">
+                                    <div class="lockButton unblockedButton">
+                                        <div>
+                                            <i class="fa fa-lock-open"></i>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </button>                                
+                            </form>
                         </div>
                     </div>
                 <%  } }) } %>

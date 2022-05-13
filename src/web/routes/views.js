@@ -55,20 +55,17 @@ router.get("/messages", async (req, res) => {
 
 
 //[POST] Block a user
-router.post("/blockUser/:userId", async (req, res) => {
-    const userId = req.userId;
-    let { page } = req.body;
-    if (!page) page = "blocked";
-    await userCtrl.blockUser(userId);
+router.post("/blockUser", async (req, res) => {
+    const id = req.query.id;
+    const page = req.query.page;
+    await userCtrl.blockUser(id);
     res.redirect("/"+page);
 });
 
-//[POST] Block a user
+//[POST] Unblock a user
 router.post("/unblockUser", async (req, res) => {
     const id = req.query.id;
     const page = req.query.page;
-    console.log("email: ", id)
-    console.log("page: ", page)
     await userCtrl.unblockUser(id);
     res.redirect("/"+page);
 });
