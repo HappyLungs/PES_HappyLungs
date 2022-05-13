@@ -107,13 +107,17 @@ UserCtrl.prototype.fetchReportedMessages = async function(user) {
 //[PUT] block user
 UserCtrl.prototype.blockUser = async function(user) {
     //DB block user
-    return dbResponse;
+    let dbResponse = await this.db.putRequest("/blockUser", {email: user});
+    if (dbResponse.status === 200) return true;
+    else throw Error("Error blocking user.");
 }
 
 //[PUT] unblock user
 UserCtrl.prototype.unblockUser = async function(user) {
     //DB unblock user
-    return dbResponse;
+    let dbResponse = await this.db.putRequest("/blockUser", {email: user});
+    if (dbResponse.status === 200) return true;
+    else throw Error("Error unblocking user.");
 }
 
 
