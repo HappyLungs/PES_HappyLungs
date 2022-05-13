@@ -61,3 +61,13 @@ exports.createMessage = async (params) => {
         });
     });
 };
+
+exports.listMessages = async (params) => {
+    return new Promise((resolve, reject) => {
+        MessageModel
+        .find(params)
+        .then((data) => { 
+            resolve(data) })
+        .catch((error) => { reject(error) })
+    });
+};

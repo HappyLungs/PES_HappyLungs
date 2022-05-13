@@ -1,4 +1,5 @@
 const UserDataLayer = require("./../datalayers/user.datalayer");
+const MessageDatalayer = require("./../datalayers/message.datalayer");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
@@ -145,3 +146,29 @@ exports.listUsers = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
 };
+
+exports.listReportedMessages = async (request, response) => {
+  let params = {};
+  if (request.query.email) {
+    params.email = request.query.email;
+  }
+
+  let where = {};
+  where.user = params.email;
+  where.reported = {
+    $ne: 0
+  };
+
+  MessageDatalayer.listMessages(where)
+  .then((data) => {
+    if (data == null || data == undefined || data.length == 0) {
+      sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "No messages found", []);
+      return;
+    } else {
+      sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Request processed successfully", data);
+    }
+  })
+  .catch((error) => {
+    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+  });
+}
