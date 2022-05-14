@@ -616,6 +616,20 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
 	}
 };
 
+
+
+DomainCtrl.prototype.getQualifationMap = async function (range_1 , range_2) {
+	
+	const energyMap = await persistenceCtrl.getQualifationMap(range_1,range_2);
+	if (energyMap) {
+		return energyMap;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+
 DomainCtrl.prototype.findUser = async function (email) {
 	//create
 	let DB_URL = "http://localhost:7000/v1/user?email=" + email;
