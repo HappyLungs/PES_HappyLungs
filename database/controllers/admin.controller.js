@@ -159,7 +159,87 @@ exports.listReportedMessages = async (request, response) => {
     $ne: 0
   };
 
-  MessageDatalayer.listMessages(where)
+  let aggregateArr = [
+    {
+      '$match': {
+        'user': params.email, 
+        'reported': {
+          '$ne': 0
+        }
+      }
+    }, {
+      '$lookup': {
+        'from': 'conversations', 
+        'localField': 'conversation', 
+        'foreignField': '_id', 
+        'let': {
+          'user': '$user'
+        }, 
+        'pipeline': [
+          {
+            '$project': {
+              '_id': 0
+            }
+          }
+        ], 
+        'as': 'reportantUsername'
+      }
+    }, {
+      '$unwind': {
+        'path': '$reportantUsername', 
+        'preserveNullAndEmptyArrays': true
+      }
+    }, {
+      '$addFields': {
+        'reportantUsername': '$reportantUsername.users'
+      }
+    }, {
+      '$addFields': {
+        'reportantUsername': {
+          '$arrayElemAt': [
+            '$reportantUsername', {
+              '$subtract': [
+                1, {
+                  '$indexOfArray': [
+                    '$reportantUsername', '$user'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }, {
+      '$lookup': {
+        'from': 'users', 
+        'localField': 'reportantUsername', 
+        'foreignField': 'email', 
+        'pipeline': [
+          {
+            '$project': {
+              'name': 1, 
+              '_id': 0
+            }
+          }
+        ], 
+        'as': 'reportantUsername'
+      }
+    }, {
+      '$unwind': {
+        'path': '$reportantUsername', 
+        'preserveNullAndEmptyArrays': true
+      }
+    }, {
+      '$addFields': {
+        'reportantUsername': '$reportantUsername.name'
+      }
+    }, {
+      '$sort': {
+        'createdAt': -1
+      }
+    }
+  ];
+  MessageDatalayer.aggregateMessage(aggregateArr)
   .then((data) => {
     if (data == null || data == undefined || data.length == 0) {
       sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "No messages found", []);
