@@ -132,7 +132,7 @@ function MapScreen({ navigation, route }) {
 		{
 			latitude: 41.366531,
 			longitude: 2.019336,
-			weight: 3,
+			weight: 0.3,
 		},
 	]);
 
@@ -158,7 +158,7 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 		const initHeatPoints = async () => {
-			setHeatpoints(await presentationCtrl.getMapData());
+			setHeatpoints(await presentationCtrl.getHeatPoints());
 		};
 		await initHeatPoints();
 		return unsubscribe;

@@ -93,6 +93,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		actual.longitude=inilong;
 		jmax++;
 	}
+	return datapoints;
 
 
 }
