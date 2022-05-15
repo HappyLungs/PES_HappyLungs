@@ -67,23 +67,35 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
+	const date=new Date();
 	let nsteps=10;
 	let jmax=1;
 	let inilat=40.541006;
 	let inilong=0.680310;
 	let maxlat=42.814019;
 	let maxlong=3.205920;
+	let actual = {
+		latitude: inilat,
+		longitude: inilong,
+		weight: 0,
+	};
 	let longstep=(maxlong-inilong)/nsteps;
 	let latsteps= (maxlat-inilat)/nsteps;
-	let datapoints
+	let datapoints=[];
 	for (let i=0;i<10;i++){
 		for(let j=0;j<jmax ;j++){
-
+			let dp=new DataPointMap(actual.latitude, actual.longitude);
+			actual.weight=parseFloat(dp.getHourLevel(date,date.getHours())).toFixed(2)/6;
+			datapoints.push(actual);
+			actual.longitude+=longstep;
 		}
+		actual.latitude+=latsteps;
+		actual.longitude=inilong;
 		jmax++;
 	}
+	return datapoints;
 
-	let a = await this.getMapData();
+
 }
 //STATISTICS - AIR QUALITY
 
