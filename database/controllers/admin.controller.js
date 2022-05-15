@@ -256,12 +256,12 @@ exports.listReportedMessages = async (request, response) => {
 
 exports.updateReportedMessage = async (request, response) => {
   let params = {};
-  if (request.body.messageId) {
-    params = request.body;
+  if (request.body.params.messageId) {
+    params = request.body.params;
   }
   let where = {};
   if (mongodb.ObjectId.isValid(params.messageId)) {
-    MessageDatalayer.updateMessage({_id: mongodb.ObjectId(params.messageId)}, {"reported": params.reported})
+    MessageDatalayer.updateMessage({_id: mongodb.ObjectId(params.messageId)}, {reported: params.reported})
     .then((data) => {
       sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
     })

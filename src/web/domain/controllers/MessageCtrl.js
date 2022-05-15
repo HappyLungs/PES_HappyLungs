@@ -47,7 +47,7 @@ MessageCtrl.prototype.fetchMessages = async function(id) {
 //[POST] accept reported message
 MessageCtrl.prototype.acceptReportedMessage = async function(id) {
     //DB accept message with id = id
-    let result = await this.db.postRequest("/updateReportedMessage", {messageId: id, reported: 48});
+    let result = await this.db.postRequest("/updateReportedMessage", {messageId: id, reported: -2});
     if (result.status === 200) return true;
     else return false;
 }
