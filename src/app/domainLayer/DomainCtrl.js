@@ -611,7 +611,6 @@ DomainCtrl.prototype.findUser = async function (email) {
 	})
 		.then((response) => response.json())
 		.then((data) => data);
-	//console.log(user);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {

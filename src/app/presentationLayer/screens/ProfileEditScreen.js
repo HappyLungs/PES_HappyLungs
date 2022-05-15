@@ -117,14 +117,12 @@ function ProfileEditScreen({ navigation }) {
 		} else {
 			let response = await presentationCtrl.changePassword(user.email, inputsPasswordChange.oldPassword, inputsPasswordChange.newPassword1);
 			if (response.status == 200) {
-				console.log("Correcte LOGIN. Password changed ma' bro")
 				setInputsPasswordChange({});
 				setErrors({});
 				navigation.popToTop();
 				setUser(response.data);
 				navigation.navigate("ProfileScreen");
 			} else {
-				console.log("CNOOOOOOOO INCORRECTOOO")
 				if (response.status == 401) handleError(i18n.t("passwordError"), "oldPassword");
 				else handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
 			}
