@@ -41,7 +41,7 @@ class User {
     }
 
     async changePassword (oldPassword, newPassword) {
-        let a = await persistCtrl.getRequest("/changePassword", {
+        let a = await persistCtrl.putRequest("/changePassword", {
             "email": this.email,
             "oldPassword": oldPassword,
             "newPassword": newPassword
