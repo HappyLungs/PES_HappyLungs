@@ -202,10 +202,6 @@ exports.updateUser = async (request, response) => {
     });
 };
 
-function comparePassword(password, hash) {
-    return bcrypt.compareSync(password, hash);
-}
-
 exports.changePassword = async (request, response) => {
     console.log("DATABASE IS RECEIVING THIS")
 
@@ -223,8 +219,8 @@ exports.changePassword = async (request, response) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
             console.log("The old Password: ", params.oldPassword)
-            console.log("The new Password: ", params.password)
-            if (comparePassword(params.oldPassword, userData.password)) {
+            console.log("The new Password: ", params.newPassword)
+            if (loginHelpers.comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
                 UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
                 .then((updatedData) => {
