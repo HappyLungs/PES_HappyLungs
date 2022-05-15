@@ -40,6 +40,16 @@ class User {
         });
     }
 
+    async changePassword (oldPassword, newPassword) {
+        let a = await persistCtrl.getRequest("/changePassword", {
+            "email": this.email,
+            "oldPassword": oldPassword,
+            "newPassword": newPassword
+        });
+        console.log("AIXÔ ES LA A:  ", a);
+        return a;
+    }
+
     async update (name, points, language, healthStatus, notifications, profilePicture) {
         return await persistCtrl.postRequest("/updateUser", {
             "name": name,

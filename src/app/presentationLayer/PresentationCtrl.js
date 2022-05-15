@@ -251,6 +251,21 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 /**
  *
  * @param {*} email
+ * @param {*} oldPassword
+ * @param {*} newPassword
+ * @returns an acces_token for the user
+ */
+ PresentationCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+	if (email && oldPassword && newPassword) {
+		return await this.domainCtrl.changePassword(email, oldPassword, newPassword);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
  * @returns deletes the user from DB
  */
  PresentationCtrl.prototype.deleteUser = async function (email) {

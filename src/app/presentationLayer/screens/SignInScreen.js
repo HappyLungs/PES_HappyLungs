@@ -116,9 +116,11 @@ function SignInScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 300,
 										color: COLORS.primary,
 									},
 								]}
+								keyboardType="email-address"
 								autoCapitalize="none"
 								onChangeText={(val) => emailChange(val)}
 							/>
@@ -151,6 +153,7 @@ function SignInScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 280,
 										color: COLORS.primary,
 									},
 								]}

@@ -11,6 +11,7 @@ const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 //Datalayers
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const ConversationDatalayer = require("./../datalayers/conversation.datalayer");
+const { param } = require("../routes/index.route.js");
 
 
 exports.find = async (request, response) => {
@@ -218,6 +219,8 @@ exports.changePassword = async (request, response) => {
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
+            console.log("The old Password: ", params.oldPassword)
+            console.log("The new Password: ", params.password)
             if (comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
                 UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})

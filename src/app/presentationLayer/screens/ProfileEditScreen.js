@@ -95,8 +95,6 @@ function ProfileEditScreen({ navigation }) {
 		Keyboard.dismiss();
 		if (!inputsPasswordChange.oldPassword) {
 			handleError(i18n.t("passwordError"), "oldPassword");
-		} else if (user.password !== inputsPasswordChange.oldPassword) {
-			handleError(i18n.t("passwordIncorrect"), "oldPassword");
 		} else if (!inputsPasswordChange.newPassword1) {
 			handleError(i18n.t("passwordError"), "newPassword1");
 		} else if (!inputsPasswordChange.newPassword2) {
@@ -111,18 +109,35 @@ function ProfileEditScreen({ navigation }) {
 		) {
 			handleError(i18n.t("passwordNoChange"), "newPassword1");
 			handleError(" ", "newPassword2");
+		} else if (
+			inputsPasswordChange.newPassword1.length < 6
+		) {
+			handleError(i18n.t("signUpError1"), "newPassword1");
+			handleError(" ", "newPassword2");
 		} else {
+			let response = await presentationCtrl.changePassword(user.email, inputsPasswordChange.oldPassword, inputsPasswordChange.newPassword1);
+			if (response.status == 200) {
+				console.log("Correcte LOGIN. Password changed ma' bro")
+				setInputsPasswordChange({});
+				setErrors({});
+				navigation.popToTop();
+				setUser(response.data);
+				navigation.navigate("ProfileScreen");
+			} else {
+				console.log("CNOOOOOOOO INCORRECTOOO")
+				handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
+			}
 			/** TODO */
 			/*let updatedUser = await presentationCtrl.updateUserPassword(
 				user.email,
 				inputsPasswordChange.newPassword1
 			);
 			*/
-			setInputsPasswordChange({});
-			setErrors({});
-			navigation.popToTop();
-			setUser(updatedUser);
-			navigation.navigate("ProfileScreen");
+			// // setInputsPasswordChange({});
+			// // setErrors({});
+			// // navigation.popToTop();
+			// // setUser(updatedUser);
+			// // navigation.navigate("ProfileScreen");
 		}
 	};
 
@@ -189,6 +204,7 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.oldPassword}
 								editable={true}
 								passwordChange={true}
+								secureTextEntry={true}
 							/>
 							<InputField
 								onChangeText={(newPassword1) =>
@@ -201,6 +217,7 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.newPassword1}
 								editable={true}
 								passwordChange={true}
+								secureTextEntry={true}
 							/>
 							<InputField
 								onChangeText={(newPassword2) =>
@@ -213,6 +230,7 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.newPassword2}
 								editable={true}
 								passwordChange={true}
+								secureTextEntry={true}
 							/>
 						</View>
 						<View
