@@ -252,3 +252,21 @@ exports.listReportedMessages = async (request, response) => {
     sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
   });
 }
+
+exports.updateReportedMessage = async (request, response) => {
+  let params = {};
+  if (request.body.messageId) {
+    params = request.body;
+  }
+  let where = {};
+  if (mongodb.ObjectId.isValid(params.messageId)) {
+    where._id = mongodb.ObjectId(params.messageId);
+  }
+  MessageDatalayer.updateMessage(where, {$set: {reported: params.reported}})
+  .then((data) => {
+    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
+  })
+  .catch((error) => {
+    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+  });
+}

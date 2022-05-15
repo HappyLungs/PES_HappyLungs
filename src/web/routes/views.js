@@ -51,8 +51,8 @@ router.get("/blocked", async (req, res) => {
 router.get("/messages", async (req, res) => {
     try {
         const id = req.query.id;
-        let messages = await messageCtrl.fetchMessages(id);
-        res.render("messages", {messages:messages});
+        let data = await messageCtrl.fetchMessages(id);
+        res.render("messages", {messages:data.messages, user:data.user});
     } catch (e) {
         res.render("messages", {error:"Error: "+e.message});
     }

@@ -14,12 +14,14 @@
                 <% if (locals.error) { %>
                     <h3><%= error %></h3>
                 <% } %>
+                <% if (locals.user) { %>
                 <div class="userImageMessages">
-                    <img src="https://d1bvpoagx8hqbg.cloudfront.net/originals/how-to-take-a-good-photo-for-your-cv-our-top-tips-e529cea3222e81502875a139a070a9fe.jpg">
+                    <img src="<%= user.picture %>">
                 </div>
                 <div>
-                    <h3><b>Júlia Herrera</b> | Reported chat messages</h3>
+                    <h3><b><%= user.username %></b> | Reported chat messages</h3>
                 </div>
+                <% } %>
             </div>
             <div id="messagesList">
                 <div class="legend">
@@ -39,7 +41,7 @@
                     <%= message.date %>
                 </div>
                 <% } %>
-                <% if (message.state === -1) { %>
+                <% if (message.state === "accepted") { %>
                 <div class="message messageAccepted">
                     <div class="messageTime">
                         <div>
@@ -54,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <% } else if (message.state === -2) { %>
+                <% } else if (message.state === "declined") { %>
                 <div class="message messageDeclined">
                     <div class="messageTime">
                         <div>
