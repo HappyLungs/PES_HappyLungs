@@ -218,8 +218,8 @@ exports.changePassword = async (request, response) => {
             //Check if the password is correct
             if (loginHelpers.comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed by bcrypt
-                const salt = await bcrypt.genSalt(10);
-                params.newPassword = await bcrypt.hash(params.newPassword, salt);
+                const salt = bcrypt.genSalt(10);
+                params.newPassword = bcrypt.hash(params.newPassword, salt);
                 UserDataLayer.updateUser({email: params.email}, {password: params.newPassword})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
