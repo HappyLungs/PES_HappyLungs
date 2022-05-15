@@ -47,7 +47,7 @@ exports.listUsers = async (request, response) => {
     else if (params.type === "reported") {
         where.status = 1;
         where.reported = { 
-            $gte: 10
+            $gte: 1
         };
     } else {
         where.status = {
