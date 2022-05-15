@@ -76,6 +76,7 @@ function SignInScreen({ navigation, route }) {
 		if (response.status == 200) {
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
+			errorMsgChange("");
 		} else {
 			errorMsgChange(response.message);
 		}

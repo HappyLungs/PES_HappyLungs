@@ -203,7 +203,6 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.oldPassword}
 								editable={true}
 								passwordChange={true}
-								secureTextEntry={true}
 							/>
 							<InputField
 								onChangeText={(newPassword1) =>
@@ -216,7 +215,6 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.newPassword1}
 								editable={true}
 								passwordChange={true}
-								secureTextEntry={true}
 							/>
 							<InputField
 								onChangeText={(newPassword2) =>
@@ -229,7 +227,6 @@ function ProfileEditScreen({ navigation }) {
 								error={errors.newPassword2}
 								editable={true}
 								passwordChange={true}
-								secureTextEntry={true}
 							/>
 						</View>
 						<View
