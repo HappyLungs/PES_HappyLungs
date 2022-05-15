@@ -208,7 +208,9 @@ function comparePassword(password, hash) {
 
 exports.changePassword = async (request, response) => {
     console.log("DATABASE IS RECEIVING THIS")
-    console.log(request)
+    console.log("BODY", request.body)
+    console.log("params", request.body.params)
+
     let params = {};
     if (request.body.params) {
         params = request.body.params;
