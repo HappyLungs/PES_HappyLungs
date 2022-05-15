@@ -222,7 +222,7 @@ exports.changePassword = async (request, response) => {
             console.log("The new Password: ", params.newPassword)
             if (loginHelpers.comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
-                UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
+                UserDataLayer.updateUser({email: params.email}, {password: params.newPassword})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
                         sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
