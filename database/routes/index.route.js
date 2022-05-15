@@ -212,4 +212,9 @@ router.get(
     AdminController.listReportedMessages
 );
 
+router.post(
+    "/updateReportedMessage",
+    licenseMiddleware.validate,
+    AdminController.updateReportedMessage
+);
 /** /Admin */
