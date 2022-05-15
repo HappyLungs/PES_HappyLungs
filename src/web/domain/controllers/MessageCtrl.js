@@ -54,5 +54,4 @@ MessageCtrl.prototype.declineReportedMessage = async function(id) {
     //DB declina message with id = id
 }
 
-
 module.exports = MessageCtrl;

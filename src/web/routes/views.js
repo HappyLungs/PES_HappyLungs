@@ -49,8 +49,13 @@ router.get("/blocked", async (req, res) => {
 
 //[GET] Reported messages
 router.get("/messages", async (req, res) => {
-    //Implement
-    res.render("messages");
+    try {
+        const id = req.query.id;
+        let messages = await messageCtrl.fetchMessages(id);
+        res.render("messages", {messages:messages});
+    } catch (e) {
+        res.render("messages", {error:"Error: "+e.message});
+    }
 });
 
 
@@ -73,12 +78,14 @@ router.post("/unblockUser", async (req, res) => {
 
 //[POST] Accept report
 router.post("/acceptReportedMessage", async (req, res) => {
-    //Implement
-    res.redirect("/reported");
+    const id = req.query.id;
+    await messageCtrl.acceptReportedMessage(id);
+    res.redirect("/messages?id="+id);
 });
 
 //[POST] Decline report
 router.post("/declineReportedMessage", async (req, res) => {
-    //Implement
-    res.redirect("/reported");
+    const id = req.query.id;
+    await messageCtrl.declineReportedMessage(id);
+    res.redirect("/messages?id="+id);
 });
