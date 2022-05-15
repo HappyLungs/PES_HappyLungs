@@ -60,4 +60,11 @@ MessageCtrl.prototype.declineReportedMessage = async function(id) {
     else return false;
 }
 
+MessageCtrl.prototype.editReportedMessage = async function(id) {
+    //DB declina message with id = id
+    let result = await this.db.postRequest("/updateReportedMessage", {messageId: id, reported: 1});
+    if (result.status === 200) return true;
+    else return false;
+}
+
 module.exports = MessageCtrl;
