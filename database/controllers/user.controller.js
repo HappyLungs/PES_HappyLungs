@@ -213,7 +213,7 @@ exports.changePassword = async (request, response) => {
 
     let params = {};
     if (request.body.params) {
-        params = request.body.params;
+        params = request.body;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
