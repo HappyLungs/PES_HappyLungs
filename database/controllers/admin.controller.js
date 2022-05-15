@@ -1,5 +1,6 @@
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const MessageDatalayer = require("./../datalayers/message.datalayer");
+const mongodb = require("mongodb");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
