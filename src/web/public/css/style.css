@@ -300,6 +300,20 @@ main {
     font-weight: 800;
     height: 100%;
 }
+.editButton {
+    color: #3b3c3b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:80px;
+    font-size: 20px;
+    font-weight: 800;
+    height: 100%;
+    background-color: white;
+}
+.editButton {
+    background-color: none;
+}
 .confirmButon a, .declineButton a {
     color: white;
     height: 100%;
