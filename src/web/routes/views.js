@@ -79,13 +79,15 @@ router.post("/unblockUser", async (req, res) => {
 //[POST] Accept report
 router.post("/acceptReportedMessage", async (req, res) => {
     const id = req.query.id;
+    const email = req.query.email;
     await messageCtrl.acceptReportedMessage(id);
-    res.redirect("/messages?id="+id);
+    res.redirect("/messages?id="+email);
 });
 
 //[POST] Decline report
 router.post("/declineReportedMessage", async (req, res) => {
     const id = req.query.id;
+    const email = req.query.email;
     await messageCtrl.declineReportedMessage(id);
-    res.redirect("/messages?id="+id);
+    res.redirect("/messages?id="+email);
 });

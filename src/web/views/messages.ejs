@@ -73,7 +73,7 @@
                 </div>
                 <% } else { %>
                 <div class="message">
-                    <form method="post" action="/acceptReportedMessage?id=<%= message.id %>">
+                    <form method="post" action="/acceptReportedMessage?id=<%= message.id %>&email=<%= user.email %>">
                         <button type="submit" class="confirmButon">
                             <div class="confirmButon">
                                 <div>
@@ -82,7 +82,7 @@
                             </div>
                         </button>
                     </form>
-                    <form method="post" action="/declineReportedMessage?id=<%= message.id %>">
+                    <form method="post" action="/declineReportedMessage?id=<%= message.id %>&email=<%= user.email %>">
                         <button type="submit" class="declineButton">
                             <div class="declineButton">
                                 <div>

@@ -263,7 +263,7 @@ exports.updateReportedMessage = async (request, response) => {
   if (mongodb.ObjectId.isValid(params.messageId)) {
     where._id = mongodb.ObjectId(params.messageId);
   }
-  MessageDatalayer.updateMessage(where, {$set: {reported: params.reported}})
+  MessageDatalayer.updateMessage(where, {reported: params.reported})
   .then((data) => {
     sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
   })
