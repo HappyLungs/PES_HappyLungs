@@ -210,7 +210,7 @@ exports.changePassword = async (request, response) => {
     console.log("DATABASE IS RECEIVING THIS")
 
     let params = {};
-    if (request.body.params) {
+    if (request.body) {
         params = request.body;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
