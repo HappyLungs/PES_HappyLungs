@@ -125,7 +125,8 @@ function ProfileEditScreen({ navigation }) {
 				navigation.navigate("ProfileScreen");
 			} else {
 				console.log("CNOOOOOOOO INCORRECTOOO")
-				handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
+				if (response.status == 401) handleError(i18n.t("passwordError"), "oldPassword");
+				else handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
 			}
 			/** TODO */
 			/*let updatedUser = await presentationCtrl.updateUserPassword(

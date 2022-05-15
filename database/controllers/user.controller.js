@@ -203,8 +203,6 @@ exports.updateUser = async (request, response) => {
 };
 
 exports.changePassword = async (request, response) => {
-    console.log("DATABASE IS RECEIVING THIS")
-
     let params = {};
     if (request.body) {
         params = request.body;
@@ -212,14 +210,11 @@ exports.changePassword = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    console.log("PARAMS",params)
     //Find the user given the id in the params
     UserDataLayer.findUser({email: params.email})
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
-            console.log("The old Password: ", params.oldPassword)
-            console.log("The new Password: ", params.newPassword)
             if (loginHelpers.comparePassword(params.oldPassword, userData.password)) {
                 //If the password is correct, update the password, hashed with bcrypt
                 UserDataLayer.updateUser({email: params.email}, {password: params.newPassword})

@@ -64,5 +64,19 @@ UsersSchema.pre("save", function (next) {
     });
 });
 
+UsersSchema.pre("updateOne", function (next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+    bcrypt.genSalt(10,(err,salt) => {
+        if (err) next (err);
+        bcrypt.hash(this.password,salt,(err,hash)=>{
+            if(err) next(err);
+            this.password=hash;
+            next();
+        });
+    });
+});
+
   const UserModel = global.mongoose.model("User", UsersSchema);
   module.exports = UserModel;
