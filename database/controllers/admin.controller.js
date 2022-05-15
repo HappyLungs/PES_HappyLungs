@@ -261,13 +261,16 @@ exports.updateReportedMessage = async (request, response) => {
   }
   let where = {};
   if (mongodb.ObjectId.isValid(params.messageId)) {
-    where._id = mongodb.ObjectId(params.messageId);
+    where._id = ;
+    MessageDatalayer.updateMessage({_id: mongodb.ObjectId(params.messageId)}, {"reported": params.reported})
+    .then((data) => {
+      sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
+    })
+    .catch((error) => {
+      sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+  } else {
+    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid message id", {});
   }
-  MessageDatalayer.updateMessage(where, {reported: params.reported})
-  .then((data) => {
-    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
-  })
-  .catch((error) => {
-    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-  });
+  
 }
