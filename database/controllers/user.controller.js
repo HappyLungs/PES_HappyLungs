@@ -208,8 +208,6 @@ function comparePassword(password, hash) {
 
 exports.changePassword = async (request, response) => {
     console.log("DATABASE IS RECEIVING THIS")
-    console.log("BODY", request.body)
-    console.log("params", request.body.params)
 
     let params = {};
     if (request.body.params) {
@@ -218,6 +216,7 @@ exports.changePassword = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
+    console.log("PARAMS",params)
     //Find the user given the id in the params
     UserDataLayer.findUser({email: params.email})
     .then((userData) => {
