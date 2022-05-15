@@ -402,6 +402,18 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 /**
  *
  * @param {*} email
+ * @param {*} oldPassword
+ * @param {*} newPassword
+ * @returns an acces_token for the user
+ */
+ DomainCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.changePassword(oldPassword, newPassword);
+};
+
+/**
+ *
+ * @param {*} email
  * @returns an acces_token for the user
  */
 
@@ -644,7 +656,6 @@ DomainCtrl.prototype.findUser = async function (email) {
 	})
 		.then((response) => response.json())
 		.then((data) => data);
-	//console.log(user);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
