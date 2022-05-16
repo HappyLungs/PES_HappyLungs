@@ -29,7 +29,7 @@ exports.find = async (request, response) => {
                 'deleted': 1, 
                 'index': {
                   '$indexOfArray': [
-                    '$users', 'example1@gmail.com'
+                    '$users', request.query.email
                   ]
                 }
               }

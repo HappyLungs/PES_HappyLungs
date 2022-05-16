@@ -3,10 +3,10 @@ const ConverSchema = new global.Schema({
     users: [{
         type: String,
     }],
-    deleted: [{
-        type: Boolean,
+    deleted: {
+        type: Array,
         default: [false, false]
-    }]
+    }
 }, {
     timestamps: true
 });
