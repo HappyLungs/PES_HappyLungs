@@ -91,3 +91,11 @@ router.post("/declineReportedMessage", async (req, res) => {
     await messageCtrl.declineReportedMessage(id);
     res.redirect("/messages?id="+email);
 });
+
+//[POST] Decline report
+router.post("/editReportedMessage", async (req, res) => {
+    const id = req.query.id;
+    const email = req.query.email;
+    await messageCtrl.editReportedMessage(id);
+    res.redirect("/messages?id="+email);
+});

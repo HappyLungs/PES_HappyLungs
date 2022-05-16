@@ -47,7 +47,7 @@ exports.listUsers = async (request, response) => {
     else if (params.type === "reported") {
         where.status = 1;
         where.reported = { 
-            $gte: 10
+            $gte: 1
         };
     } else {
         where.status = {
@@ -256,18 +256,20 @@ exports.listReportedMessages = async (request, response) => {
 
 exports.updateReportedMessage = async (request, response) => {
   let params = {};
-  if (request.body.messageId) {
-    params = request.body;
+  if (request.body.params.messageId) {
+    params = request.body.params;
   }
   let where = {};
   if (mongodb.ObjectId.isValid(params.messageId)) {
-    where._id = mongodb.ObjectId(params.messageId);
+    MessageDatalayer.updateMessage({_id: mongodb.ObjectId(params.messageId)}, {reported: params.reported})
+    .then((data) => {
+      sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
+    })
+    .catch((error) => {
+      sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+  } else {
+    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Invalid message id", {});
   }
-  MessageDatalayer.updateMessage(where, {reported: params.reported})
-  .then((data) => {
-    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "SUCCESS", data);
-  })
-  .catch((error) => {
-    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-  });
+  
 }

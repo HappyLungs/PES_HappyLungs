@@ -11,9 +11,9 @@ exports.createMessage = async (params) => {
   
   };
   
-  exports.updateMessage = async (where = {}, updateParams) => {
+  exports.updateMessage = async (where = {}, updateParams = {}) => {
       return new Promise((resolve, reject) => {
-        MessageModel.updateMany(where, updateParams)
+        MessageModel.findOneAndUpdate(where, updateParams)
           .then((data) => {
             resolve(data);
           })
@@ -22,7 +22,8 @@ exports.createMessage = async (params) => {
           });
       });
     };
-  
+
+
   exports.findMessage = async (where = {}) => {
       return new Promise((resolve, reject) => {
         MessageModel

@@ -43,6 +43,15 @@
                 <% } %>
                 <% if (message.state === "accepted") { %>
                 <div class="message messageAccepted">
+                    <form method="post" action="/editReportedMessage?id=<%= message.id %>&email=<%= user.email %>">
+                        <button type="submit" class="editButton">
+                            <div class="editButton">
+                                <div>
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </form>
                     <div class="messageTime">
                         <div>
                             <%= message.hour %>
@@ -58,6 +67,15 @@
                 </div>
                 <% } else if (message.state === "declined") { %>
                 <div class="message messageDeclined">
+                    <form method="post" action="/editReportedMessage?id=<%= message.id %>&email=<%= user.email %>">
+                        <button type="submit" class="editButton">
+                            <div class="editButton">
+                                <div>
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </form>
                     <div class="messageTime">
                         <div>
                             <%= message.hour %>
