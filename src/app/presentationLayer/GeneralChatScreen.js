@@ -13,8 +13,8 @@ import {
 	Modal
 } from "react-native";
 
+//import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../config/stylesheet/colors";
-import ChatList from "./components/ChatList";
 import i18n from "../config/translation";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -29,12 +29,12 @@ import * as Animatable from "react-native-animatable";
 
 function GeneralChatScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
-
+	//const [user] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
 	const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-	const [chatDeleted, setChatDeleted] = useState({id:"", name:"unin"});
+	const [chatDeleted, setChatDeleted] = useState({id:"", name:""});
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
 
@@ -46,7 +46,7 @@ function GeneralChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
-		const data = await presentationCtrl.fetchConversations();
+		const data = await presentationCtrl.fetchConversations(/* user.email */);
 
 		setMasterData(data);
 		setFilteredData(data);
@@ -247,7 +247,7 @@ function GeneralChatScreen({ navigation }) {
 				contentContainerStyle={{}}
 				scrollEnabled={true}
 				data={filteredData}
-				keyExtractor={(item) => `${item.name}`}
+				keyExtractor={(item) => `${item.id}`}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 			></FlatList>

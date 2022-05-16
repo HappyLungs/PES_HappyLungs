@@ -311,9 +311,9 @@ PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
 
-PresentationCtrl.prototype.fetchConversations = async function () {
+PresentationCtrl.prototype.fetchConversations = async function (email) {
 	let conversations =
-		await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+		await this.domainCtrl.fetchConversations(email);
 	if (conversations != null) {
 		return conversations;
 	} else {
@@ -352,9 +352,9 @@ PresentationCtrl.prototype.fetchConversations = async function () {
 	return fakeConvers; */
 };
 
-PresentationCtrl.prototype.fetchNewConversations = async function () {
+PresentationCtrl.prototype.fetchNewConversations = async function (email) {
 	let conversation =
-		await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+		await this.domainCtrl.fetchNewConversations(email);
 	if (conversation != null) {
 		return conversation;
 	} else {
@@ -397,8 +397,8 @@ PresentationCtrl.prototype.fetchNewConversations = async function () {
 	return fakeNewConvers; */
 };
 
-PresentationCtrl.prototype.fetchConversation = async function (id) {
-	let conversation = await this.domainCtrl.fetchConversation(id);
+PresentationCtrl.prototype.fetchConversation = async function (id/* , email */) {
+	let conversation = await this.domainCtrl.fetchConversation(id/* , email */);
 	if (conversation != null) {
 		let { users, messages } = conversation;
 		return { users: users, messages: messages };
@@ -450,11 +450,11 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 
 PresentationCtrl.prototype.createConversation = async function (email, text) {
 	let result = await this.domainCtrl.createConversation(email, text);
-	if (result != null) {
+	if (result != "error") {
 		return result;
 	} else {
 		//TODO ERROR: Show error message && reload page
-		return null;
+		return "error";
 	}
 }
 

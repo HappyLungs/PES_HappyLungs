@@ -11,10 +11,11 @@ import {
 	Button,
 	TouchableOpacity,
 	FlatList,
+	Modal
 } from "react-native";
 
+//import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../config/stylesheet/colors";
-import ChatMessagesList from "./components/ChatMessagesList";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -23,12 +24,15 @@ import * as Animatable from "react-native-animatable";
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 
+	//const [user] = useContext(UserContext);
 	const [messages, setMessages] = useState([]);
 	const [loggedUser, setLoggedUser] = useState([]);
 	const [conversant, setConversantUsers] = useState([]);
 	const [message, setMessage] = useState("");
+	const [lastDate, setLastDate] = useState("");
 	const [newChat, setNewChat] = useState(false);
 	const [id, setId] = useState("");
+	const [modalErrorVisible, setModalErrorVisible] = useState(false);
 
 	useEffect(() => {
 		fetchChats();
@@ -36,12 +40,9 @@ function ChatScreen({ route, navigation }) {
 	}, []);
 
 	const fetchChats = async () => {
-		console.log("chat conver")
-		console.log("entro a chat amb params: ", route.params)
-		
 		if (route.params.id) {
 			let id = route.params.id;
-			const data = await presentationCtrl.fetchConversation(id);
+			const data = await presentationCtrl.fetchConversation(id/* , user.email */);
 			setId(id);
 			setLoggedUser(data.users.logged);
 			setConversantUsers(data.users.conversant);
@@ -51,41 +52,95 @@ function ChatScreen({ route, navigation }) {
 			setNewChat(true);
 			setConversantUsers(data);
 		}
-		
 	};
 
 	const sendMessage = async () => {
-		console.log("--chat function----")
 		if (newChat) {
-			console.log("create conver")
 			let newId = await presentationCtrl.createConversation(conversant.email, message);
-			setNewChat(false);
-
-			let data = await presentationCtrl.fetchConversation(newId);
-			console.log("conver info: ", data)
-			setId(newId);
-			setLoggedUser(data.users.logged);
-			setConversantUsers(data.users.conversant);
-			setMessages(data.messages);
+			if (newId != "error") {
+				setNewChat(false);
+				let data = await presentationCtrl.fetchConversation(newId);
+				setId(newId);
+				setLoggedUser(data.users.logged);
+				setConversantUsers(data.users.conversant);
+				setLastDate("");
+				setMessages(data.messages);
+			} else {
+				setModalErrorVisible(true);
+			}
 		} else {
 			let newMessage = await presentationCtrl.createMessage(id, message);
 			if(newMessage != null) {
-				let actualMessages = messages.push(newMessage);
-				setMessages(actualMessages);
+				setLastDate("");
+				messages.push(newMessage);
 			}
 		}
-		setMessage('');
+		setMessage("");
 		Keyboard.dismiss();
 	}
 
-	function chatMessagesList () {	
+	function renderErrorPopupDeclare() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalErrorVisible}
+				onRequestClose={() => {
+					setModalErrorVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalErrorVisible(false);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View style={[styles.modalView, styles.shadow, {flexDirection:"column"}]}>
+						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
+							Error!
+						</Text>
+						<View 
+							style={{
+								flexDirection:"row",
+								
+							}}
+						>
+							<View
+								style={{
+									flex:1,
+									flexDirection:"row",
+									justifyContent:"center",
+									marginTop: 10									
+								}}
+							>
+								<TouchableOpacity
+									style={[styles.shadow,{
+										backgroundColor:COLORS.green1,
+										width: 80,
+										height: 40,
+										borderRadius: 10,
+										justifyContent:"center",
+										alignItems:"center",
+										margin: 10
+									}]}
+									onPress={async () => {
+										setModalErrorVisible(false);
+									}}
+								>
+									<Text style={{color:COLORS.white,fontWeight:"bold"}}>Ok</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
 
-		let lastDate = "";
-	
+	function chatMessagesList () {	
+		
 		const renderItem = ({ item, index }) => {
 			let newDate = false;
 			if (item.date != lastDate) {
-				lastDate = item.date;
+				setLastDate(item.date);
 				newDate = true;
 			}
 	
@@ -107,7 +162,6 @@ function ChatScreen({ route, navigation }) {
 							> { lastDate } </Text>
 						</View>
 					: <View></View> }
-	
 					<View
 						style={[
 							{
@@ -284,7 +338,7 @@ function ChatScreen({ route, navigation }) {
 					</TouchableOpacity>
 				</View>
   			</KeyboardAvoidingView>
-				
+			  {renderErrorPopupDeclare()}	
 		</View>
 	);
 }
@@ -349,6 +403,24 @@ const styles = StyleSheet.create({
 	dateText: {
 		color: COLORS.secondary,
 		fontWeight: "bold"
+	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		width: "80%",
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: COLORS.white,
+		borderRadius: 15,
+		padding: 15,
+		alignItems: "center",
+	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
 	},
 });
 

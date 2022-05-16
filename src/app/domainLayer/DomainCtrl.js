@@ -294,7 +294,6 @@ DomainCtrl.prototype.loginUser = async function (
   3. Dont have the Images ATM
 */
 DomainCtrl.prototype.fetchConversation = async function (id) {
-  console.log("1");
   let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
   if (conversation.status === 200) {
     var users = {};
@@ -350,11 +349,14 @@ DomainCtrl.prototype.fetchConversation = async function (id) {
 DomainCtrl.prototype.fetchConversations = async function () {
   let conver = [];
   let conversations = await persistenceCtrl.getRequest("/conversation", {email: "ivan.jimeno@estudiantat.upc.edu"/** TODO: Pass the logged user email */});
+  let ggghhghhghg  = 0;
   if (conversations.status === 200) {
     for (const current_conver of conversations.data) {
         const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] === "ivan.jimeno@estudiantat.upc.edu" /** TODO: Use the logged user email */) ? current_conver.users[1] : current_conver.users[0]});
+        ggghhghhghg = 0;
         if (conversant.status === 200) {
           const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
+          ggghhghhghg = 0;
           if (lastMessage.status === 200) {
             if (Array.isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
             const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: "ivan.jimeno@estudiantat.upc.edu" /** TODO Pass the logged user email instead */});
@@ -367,7 +369,8 @@ DomainCtrl.prototype.fetchConversations = async function () {
                 lastMessage: lastMessage.data.text,
                 lastMessageTime: [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/'),
                 unreadMessages: unreadMessages.data.length
-              })
+              });
+              ggghhghhghg = 0;
             } else {
               //TODO handle error searching for the unread messages
               return null;
@@ -380,8 +383,8 @@ DomainCtrl.prototype.fetchConversations = async function () {
           //TODO handle error searching for the last message
           return null;
         }
-        return conver;
     }
+    return conver;
   } else {
     //TODO handle error
     return null;
@@ -390,9 +393,7 @@ DomainCtrl.prototype.fetchConversations = async function () {
 
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
   //get all users with no conversation with logged user
-  console.log("a cridar a la bd per fetch")
   const all_users = await persistenceCtrl.getRequest("/users", {email: "ivan.jimeno@estudiantat.upc.edu"/*TODO Pass the google id from the logged user */});
-  console.log("db new conversations: ", all_users)
   if (all_users.status === 200) {
     const fetchedNewConversations = [];
     all_users.data.forEach(user => {
@@ -415,7 +416,6 @@ DomainCtrl.prototype.createConversation = async function (email, text) {
     email
   ];
   let messages = await persistenceCtrl.postRequest("/conversation", {users: users, message: text});
-  console.log("----------db conver: ", messages)
   if (messages.status === 200) {
         message = messages.data;
         let date = new Date(message.createdAt);
@@ -424,7 +424,7 @@ DomainCtrl.prototype.createConversation = async function (email, text) {
     return message.conversation;
   } else {
     //TODO handle error
-    return null;
+    return "error";
   }
 };
 
@@ -439,9 +439,13 @@ DomainCtrl.prototype.deleteConversation = async function (id) {
 };
 
 DomainCtrl.prototype.createMessage = async function (conversation, text) {
-  const message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: "ivan.jimeno@estudiantat.upc.edu" /*TODO Pass the logged user email */, text: text});
+  let message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: "ivan.jimeno@estudiantat.upc.edu" /*TODO Pass the logged user email */, text: text});
   if (message.status === 200) {
-    return message.data;
+    message = message.data;
+    let date = new Date(message.createdAt);
+    message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
+    message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+    return message;
   } else {
     //TODO handle error
     return null;
