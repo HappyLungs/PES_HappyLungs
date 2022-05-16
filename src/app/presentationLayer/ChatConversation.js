@@ -15,8 +15,8 @@ import {
 } from "react-native";
 
 import UserContext from "../../domainLayer/UserContext";
-import COLORS from "../../config/stylesheet/colors";
-const PresentationCtrl = require("../PresentationCtrl");
+import COLORS from "../config/stylesheet/colors";
+const PresentationCtrl = require("./PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
@@ -277,7 +277,7 @@ function ChatScreen({ route, navigation }) {
 						style={{
 							width: 50,
 							height: 50,
-							borderRadius: 100,
+							borderRadius: 100
 						}}
 					/>
 					<Text
@@ -311,12 +311,12 @@ function ChatScreen({ route, navigation }) {
 			</View>
 			<KeyboardAvoidingView
 				style={styles.messageInputBox}
-				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				keyboardVerticalOffset="0"
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				keyboardVerticalOffset='0'
 			>
 				<View
 					style={{
-						flexDirection: "row",
+						flexDirection: "row"
 					}}
 				>
 					<TextInput
@@ -327,7 +327,7 @@ function ChatScreen({ route, navigation }) {
 					/>
 					<TouchableOpacity
 						onPress={sendMessage}
-						style={{ justifyContent: "center" }}
+						style={{justifyContent:"center"}}
 					>
 						<MaterialIcons
 							name="send"
@@ -367,24 +367,24 @@ const styles = StyleSheet.create({
 		shadowColor: COLORS.green1,
 	},
 	messageInputBox: {
-		position: "absolute",
+		position: 'absolute',
 		bottom: 0,
-		width: "100%",
-		alignItems: "center",
+		width: '100%',
+		alignItems: 'center',
 		backgroundColor: COLORS.white,
 		borderTopColor: COLORS.secondary,
-		padding: 0,
+		padding: 0
 	},
 	messageInput: {
 		fontSize: 15,
-		margin: 5,
-		padding: Platform.OS === "ios" ? 10 : 5,
+		margin:5,
+		padding: Platform.OS === 'ios' ? 10 : 5,
 		borderRadius: 20,
 		backgroundColor: COLORS.lightGrey,
-		width: "80%",
+		width: '80%'
 	},
 	sendIcon: {
-		alignSelf: "center",
+		alignSelf: "center", 
 		marginStart: 10,
 		color: COLORS.green1
 	},
