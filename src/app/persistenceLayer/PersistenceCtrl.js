@@ -101,4 +101,22 @@ PersistenceCtrl.prototype.getAllConversations = async function (id) {
     return data;
 }
 
+PersistenceCtrl.prototype.getQualifationMap = async function (range_1 , range_2) {
+
+    let res = {};
+    await axios({
+        method: 'get',
+        url: `https://buildgreen.herokuapp.com/qualificationMap?inicioCertificado=${range_1}&finCertificado=${range_2}`
+      })
+      .then(response => {
+          res = response.data;
+      })
+      .catch(err => {
+          res = err;
+      })
+    return res;
+
+}
+
+
 module.exports = PersistenceCtrl;

@@ -2,7 +2,7 @@ const MeasureStation = require("../MeasureStation");
 const DadesObertes = require("../../services/DadesObertes");
 const dadesObertes = new DadesObertes();
 const measureStationTest = new MeasureStation("08102005");
-
+/*
 test('test calc hour level', async()=>{
     let measures = await dadesObertes.getMeasuresDay(this.eoiCode,new Date('March 10, 2022 9:00:00'));
     const data= measureStationTest.calcHourQuantity(measures, 9);
@@ -13,10 +13,15 @@ test('test getPollutantQuantityByHour', () => {
     expect(measureStationTest.getPollutantQuantityByHour([],12)).toBe(3);
 });
 
-test('test getMeasuresByDay(', async () => {
+test('test getMeasuresByDay', async () => {
     const data = await measureStationTest.getMeasuresByDay(new Date('March 10, 2022 9:00:00'));
     expect(data).toBeInstanceOf(Map);
+});*/
+test('test getHour level', async () => {
+    const data = await measureStationTest.getHourLevel(new Date('March 10, 2022 9:00:00'), 2);
+    expect(data).toHaveLength(1);
 });
+/*
 test('test get pollution level at every hour of a day', async()=>{
     const data =await measureStationTest.getDayLevel(new Date('March 10, 2022 9:00:00'));
     expect(data).toHaveProperty('levels');
@@ -49,9 +54,9 @@ test('test get pollution level at every month of a year', async()=>{
     expect(data.tags).toHaveLength(11);
     expect(data).toHaveProperty('title');
 });
-/*test('test get pollutant by hour',()=>{
+test('test get pollutant by hour',()=>{
     const data=measureStationTest.getPollutantQuantityByHour()
-});*/
+});
 test('test quantity of each pollutant at date', async ()=>{
     const data=await measureStationTest.getQuantityOfEachPollutantAtDay(new Date('April 10, 2022 9:00:00'));
     expect(data).toHaveLength(9);
@@ -64,4 +69,4 @@ test('test distance', ()=>{
     expect(dist).toBe(0);
     dist=measureStationTest.distance(42.443584, 2.23889);
     expect(dist).toBeCloseTo( 110.81706691033331);
-});
+});*/

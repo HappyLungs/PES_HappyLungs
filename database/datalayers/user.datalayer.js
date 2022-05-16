@@ -23,6 +23,19 @@ exports.findUser = async (where = {}) => {
     })
 }
 
+exports.updateUser = async (where = {}, update = {}) => {
+    return new Promise((resolve, reject) => {
+        UserModel
+        .findOneAndUpdate(where, update, {returnOriginal:false})
+        .then((data) => {
+            resolve(data)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
+}
+
 exports.findUsers = async (where = {}) => {
     return new Promise((resolve, reject) => {
         UserModel

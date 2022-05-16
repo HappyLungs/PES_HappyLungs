@@ -4,6 +4,8 @@ const mongodb = require("mongodb");
 const errorCodes = require("../helpers/errorCodes.js");
 const { check, validationResult } = require("express-validator");
 
+const userController = require("../controllers/user.controller");
+
 const pinDatalayer = require("./../datalayers/pin.datalayer");
 const userDatalayer = require("../datalayers/user.datalayer");
 
@@ -22,7 +24,68 @@ exports.list = async (request, response) => {
             pinDatalayer.listPins({creatorEmail: params.user})
             .then((pinData) => {
                 if (pinData !== null && typeof pinData !== "undefined") {
-                    sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", pinData);
+                    //get pins saved by the user if any
+                    if (result.savedPins.length > 0) {
+                        userDatalayer.aggregateUser(
+                            [
+                                {
+                                '$match': {
+                                    'email': params.user
+                                }
+                                }, {
+                                    '$lookup': {
+                                    'from': 'pins', 
+                                    'let': {
+                                        'savedPins': '$savedPins'
+                                    }, 
+                                    'pipeline': [
+                                        {
+                                        '$match': {
+                                            '$expr': {
+                                            '$and': [
+                                                {
+                                                '$in': [
+                                                    '$_id', '$$savedPins'
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                        }
+                                        }, {
+                                        '$sort': {
+                                            'date': -1
+                                        }
+                                        }
+                                    ], 
+                                    'as': 'savedPins'
+                                    }
+                                }, {
+                                '$project': {
+                                    'savedPins': 1, 
+                                    '_id': 0
+                                }
+                                }
+                            ]
+                        )
+                        .then((userPins) => {
+                            if (userPins !== null && typeof userPins !== "undefined") {
+                                let result = {};
+                                result.pins = pinData;
+                                result.savedPins = userPins[0].savedPins;
+                                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                            } else {
+                                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "User not found", {});
+                            }
+                        })
+                        .catch((error) => {
+                            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                        });
+                    } else {
+                        let result = {};
+                        result.pins = pinData;
+                        result.savedPins = [];
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
+                    }
                 } else {
                     sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                 }
@@ -32,9 +95,21 @@ exports.list = async (request, response) => {
             });
         }
     } else {
+        if (!request.query.hasOwnProperty("email")) {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Email is required", {});
+            return;
+        }
+        params = request.query;
         //Get 50 pins from all users (ordered by score)
         pinDatalayer.aggregatePins([
             {
+                '$match': {
+                    'status': "Public",
+                    'creatorEmail': {
+                        '$ne': params.email
+                    }
+                }
+            },{
               '$sort': {
                 rating: -1,
                 date: -1
@@ -68,45 +143,38 @@ exports.create = async (request, response) => {
         return;
     }
     pinDatalayer.createPin(params)
-    .then((pinData) => {
+    .then(async (pinData) => {
         console.log(pinData);
         if (pinData !== null && typeof pinData !== undefined) {
-            responseObj.status  = errorCodes.SUCCESS;
-            responseObj.message = "Success";
-            responseObj.data    = pinData;
+            await userController.updateUserPoints(pinData.creatorEmail, 6);
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Pin created", pinData);
         } else {
-            responseObj.status  = errorCodes.DATA_NOT_FOUND;
-            responseObj.message = "No record found";
-            responseObj.data    = {};
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Pin not created", {});
         }
-        response.send(responseObj);
     })
     .catch(error => {
-        responseObj.status  = errorCodes.SYNTAX_ERROR;
-        responseObj.message = error;
-        responseObj.data    = {};
-        response.send(responseObj);
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
-
 };
 
 exports.update = async(request, response) => {
     let params = {};
-    if (request.body.Pin) {
-        params = request.body.Pin;
+    if (request.body.pin) {
+        params = request.body;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    if (params.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params._id)) {
+    if (params.pin.hasOwnProperty("_id") && mongodb.ObjectId.isValid(params.pin._id)) {
         pinDatalayer
-        .findPin({_id: mongodb.ObjectId(params._id)})
+        .findPin({_id: mongodb.ObjectId(params.pin._id)})
         .then((pinData) => {
             if (pinData !== null && typeof pinData !== "undefined") {
                 //update params
                 pinDatalayer
-                .updatePin({_id: mongodb.ObjectId(params._id)}, params)
-                .then((result) => {
+                .updatePin({_id: mongodb.ObjectId(params.pin._id)}, params.pin)
+                .then(async (result) => {
+                    await userController.updateUserPoints(pinData.creatorEmail, 1);
                     sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result);
                 })
                 .catch((error) => {

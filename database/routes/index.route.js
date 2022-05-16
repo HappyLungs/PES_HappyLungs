@@ -14,7 +14,8 @@ const PollutantDayMeasureController = require("../controllers/pollutantDayMeasur
 const PinController = require("../controllers/pin.controller");
 const MessageController = require("../controllers/messages.controller");
 const ConversationController = require("../controllers/conversation.controller");
-const ContaminationController = require("../controllers/contamination.controller")
+const ContaminationController = require("../controllers/contamination.controller");
+const AdminController = require("../controllers/admin.controller");
 /*  User */
 router.post(
     "/register",
@@ -45,6 +46,18 @@ router.put(
     licenseMiddleware.validate,
     //authorizationMiddleware.validate,
     UserController.changePassword
+);
+
+router.put(
+    "/savePin",
+    licenseMiddleware.validate,
+    UserController.savePin
+);
+
+router.post(
+    "/updateUser",
+    licenseMiddleware.validate,
+    UserController.updateUser
 );
 
 router.post(
@@ -117,6 +130,7 @@ router.post(
     licenseMiddleware.validate,
     PinController.delete
 );
+
 /*  /Pin */
 
 /*  Message */
@@ -177,3 +191,30 @@ router.get(
 );
 
 /** /Contamination */
+
+/** Admin */
+
+router.post(
+    "/blockUser",
+    licenseMiddleware.validate,
+    AdminController.blockUser
+);
+
+router.get(
+    "/listUsers",
+    licenseMiddleware.validate,
+    AdminController.listUsers
+);
+
+router.get(
+    "/listReportedMessages",
+    licenseMiddleware.validate,
+    AdminController.listReportedMessages
+);
+
+router.post(
+    "/updateReportedMessage",
+    licenseMiddleware.validate,
+    AdminController.updateReportedMessage
+);
+/** /Admin */

@@ -30,11 +30,26 @@ const UsersSchema = new global.Schema({
         default: "Catalan"
     },
     healthStatus: {
-        type: String,
-        enum: ["Pregnant", "Old People", "Respiratory disease", "None"],
-        default: "None"
+        type: Array,
+        default: [false, false, false]
     },
-    profilePicture: String
+    notifications: {
+        type: Boolean,
+        default: true
+    },
+    profilePicture: String,
+    savedPins: [{
+        type: Schema.Types.ObjectId,
+        ref: "Pins"
+    }],
+    status: {
+        type: Number,       //-1 => BLOCKED, 0 => Deleted, 1 => Active user
+        default: 1
+    },
+    reported: {
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true
 });

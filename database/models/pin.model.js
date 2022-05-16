@@ -4,6 +4,7 @@ const PinSchema = new global.Schema({
     description: String,
     latitude: Number,
     longitude: Number,
+    locationTitle: String,
     date: {
         type: Date,
         default: null
@@ -17,6 +18,10 @@ const PinSchema = new global.Schema({
         enum: ["Public","Private"]
     },
     creatorEmail: {
+        type: String,
+        ref: "user"
+    },
+    creatorName: {
         type: String,
         ref: "user"
     },

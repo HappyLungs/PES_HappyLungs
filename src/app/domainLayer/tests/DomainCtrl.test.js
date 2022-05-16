@@ -10,7 +10,13 @@ test('test get map data', async ()=> {
     expect(mapdata[0]).toHaveProperty('latitude');
     expect(mapdata[0]).toHaveProperty('weight');
     expect(mapdata).toHaveLength(74);
+});*/
+
+test('test get heat points', async() => {
+    const datapoints = await ctrld.getHeatPoints();
+    console.log(datapoints);
 });
+/*
 test('test get pollution level last day', async ()=>{
     const data=await ctrld.getPollutionLevelLastDay(40.93944,0.83139044);
     expect(data).toHaveProperty('levels');
@@ -42,11 +48,11 @@ test('test get pollution level last year', async ()=>{
     expect(data).toHaveProperty('tags');
     expect(data.tags).toHaveLength(12);
     expect(data).toHaveProperty('title');
-});*/
+});
 test('get quantity of pollutants in a day',
     async () => {
         const data = await ctrld.getPollutantsQuantLastDay(40.93944, 0.83139044);
         expect(data[0]).toHaveProperty('name');
         expect(data[0]).toHaveProperty('quantity');
         expect(data).toHaveLength(3);
-});
+});*/
