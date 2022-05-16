@@ -327,6 +327,16 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	}
 };
 
+/*PresentationCtrl.prototype.fetchHouses = async function () {
+	let houses = await this.domainCtrl.fetchHouses();
+	if (houses != null) {
+		return houses;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}; */
+
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };

@@ -30,6 +30,10 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
 
+
+//import customPin from 'https://i.ibb.co/vXZrNbB/A.png'; 
+
+
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 async function callGeocodeAPI(latitude, longitude) {
@@ -93,6 +97,12 @@ function MapScreen({ navigation, route }) {
 	 */
 	const [pins, setPins] = useState([]);
 
+
+	/**
+	 *
+	 */
+	 const [houses, setHouses] = useState([]);
+
 	/**
 	 *
 	 */
@@ -103,6 +113,11 @@ function MapScreen({ navigation, route }) {
 		latitude: 41.366531,
 		longitude: 2.019336,
 		title: "inexistente",
+	});
+	//const [houses, setHouses] = useState([]);
+	const [actualHouses, setActualHouses] = useState({
+		latitude: 41.366531,
+		longitude: 2.019336,
 	});
 	const [selected, setSelected] = useState(null);
 
@@ -157,6 +172,23 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
+		
+		/*const fetchHouses = async () => {
+			const data = await presentationCtrl.fetchHouses();
+			setHouses(data);
+			let fetchedHouses = [];
+			for (let house of Object.keys(data)) {
+				fetchedHouses.push({
+					latitude: data[house].latitude,
+					longitude: data[house].longitude,
+				});
+			}
+			setHouses(fetchedHouses);
+			setByCertificate(false);
+		};
+
+		await fetchHouses();*/
+
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getMapData());
 		};
@@ -395,7 +427,7 @@ function MapScreen({ navigation, route }) {
 								sliderLength={100}
 								//onValuesChange={multiSliderValuesChange}
 								min={0}
-								max={7}
+								max={6}
 								step={1}
 								snapped
 								showSteps
@@ -712,6 +744,20 @@ function MapScreen({ navigation, route }) {
 									setPinPreview(true);
 									setSelected(pins[idx]);
 								}}
+								
+							/>
+						))}
+					
+					{byCertificate &&
+						houses.map((house, idx2) => (
+							<Marker
+								key={idx2}
+								coordinate={{
+									latitude: house.latitude,
+									longitude: house.longitude,
+								}}
+								image={{ uri: "https://i.ibb.co/yShfsG6/A.png" }} /*image={{ https://i.ibb.co/yShfsG6/A.png - https://i.ibb.co/sJtSG9v/B.png - https://i.ibb.co/fQJTpFL/C.png - https://i.ibb.co/D7nt50T/D.png - https://i.ibb.co/BPWjqC4/E.png - https://i.ibb.co/GTdNLQ8/F.png - https://i.ibb.co/CmWbn9f/G.png
+								*/
 							/>
 						))}
 

@@ -1,6 +1,10 @@
 import React, { useState, useContext } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { 
+	Ionicons,
+	MaterialIcons,
+	MaterialCommunityIcons, 
+} from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
@@ -23,11 +27,40 @@ function SettingsScreen({ navigation }) {
 	// };
 	// const [user, setUser] = useState(fakeUserData);
 
+	const [inputs, setInputs] = useState({
+		language: user.language,
+		notifications: user.notifications,
+	});
+
+	const validate = async () => {
+		Keyboard.dismiss();
+		if (!inputs.username) {
+			handleError(i18n.t("usernameError"), "username");
+		} else if (!inputs.email) {
+			handleError("", "email");
+		} else if (!inputs.password) {
+			handleError("", "password");
+		} else {
+			let updatedUser = await presentationCtrl.updateUser(
+				user.username,
+				user.email,
+				user.points,
+				imput.language,
+				[state1, state2, state3],
+				imput.notifications,
+				profilePicture
+			);
+			setUser(updatedUser);
+		}
+	};
+
 	const [state1, setState1] = useState(false);
 	const [state2, setState2] = useState(false);
 	const [state3, setState3] = useState(true);
 	const [state4, setState4] = useState(false);
 	const [state5, setState5] = useState(true);
+
+	
 
 	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
 		useState(false);
@@ -174,7 +207,7 @@ function SettingsScreen({ navigation }) {
 										setState3(false);
 										setState2(false);
 									}
-									setState1(!state1);
+									setState1(true);
 									//changeLanguage();
 								}}
 								style={[
@@ -205,7 +238,7 @@ function SettingsScreen({ navigation }) {
 										setState3(false);
 										setState1(false);
 									}
-									setState2(!state2);
+									setState2(true);
 									//changeLanguage();
 								}}
 								style={[
@@ -236,7 +269,7 @@ function SettingsScreen({ navigation }) {
 										setState2(false);
 										setState1(false);
 									}
-									setState3(!state3);
+									setState3(true);
 									//changeLanguage();
 								}}
 								style={[
@@ -274,8 +307,8 @@ function SettingsScreen({ navigation }) {
 							<TouchableOpacity
 								onPress={() => {
 									if (!state4 && state5) setState5(false);
-									setState4(!state4);
-									//changeLanguage();
+									setState4(true);
+									//changeNotifications();
 								}}
 								style={[
 									styles.containerState,
@@ -293,8 +326,8 @@ function SettingsScreen({ navigation }) {
 							<TouchableOpacity
 								onPress={() => {
 									if (!state5 && state4) setState4(false);
-									setState5(!state5);
-									//changeLanguage();
+									setState5(true);
+									//changeNotifications();
 								}}
 								style={[
 									styles.containerState,
@@ -328,11 +361,47 @@ function SettingsScreen({ navigation }) {
 					onPress={() => setModalDeleteAccountVisible()}
 					style={[
 						styles.containerOption,
-						{ marginHorizontal: 30, marginBottom: 20 },
+						{ marginHorizontal: 30, marginBottom: 325 },
 					]}
 				>
-					<Feather name="power" size={27} color={COLORS.red1} />
+					<MaterialIcons name="delete" size={27} color={COLORS.red1} />
 					<Text style={styles.textOption}>{i18n.t("deleteAccount")}</Text>
+				</TouchableOpacity>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "flex-end",
+					justifyContent: "flex-end",
+					marginTop: -100,
+					marginLeft: 45,
+					marginBottom: 50
+				}}
+			>
+				<TouchableOpacity
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.red1 },
+					]}
+					onPress={() => navigation.navigate("ProfileScreen")
+				}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
+				</TouchableOpacity>			
+				<TouchableOpacity
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.green1 },
+					]}
+					onPress={() => {
+						validate;
+						navigation.navigate("ProfileScreen");
+
+					}}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>
 				</TouchableOpacity>
 			</View>
 			{renderModalDeleteAccount()}
@@ -389,9 +458,10 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 110,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
+		marginHorizontal: 25
 	},
 	containerBtn2: {
 		width: 85,
