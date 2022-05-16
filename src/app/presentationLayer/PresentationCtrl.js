@@ -365,37 +365,7 @@ PresentationCtrl.prototype.fetchConversations = async function (email) {
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
-	} /* 
-	let fakeConvers = [
-		{
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-			lastMessage: "Hola com estas? Jo estic amb el xat",
-			lastMessageTime: "10:30",
-			unreadMessages: 3			
-
-		},
-		{
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-			lastMessage: "Hola com estas? ",
-			lastMessageTime: "22/04/22",
-			unreadMessages: 0			
-
-		},
-		{
-			id: "3",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-			lastMessage: "Hola com estas? Jo estic amb el xat, jo estic amb el xat, jo estic amb el xat, jo estic amb el xat",
-			lastMessageTime: "20/04/22",
-			unreadMessages: 5			
-
-		}
-	];
-	return fakeConvers; */
+	}
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function (email) {
@@ -407,44 +377,10 @@ PresentationCtrl.prototype.fetchNewConversations = async function (email) {
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-	/* let fakeNewConvers = [
-		{
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-		},
-		{
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		{
-			id: "3",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-		},
-		{
-			id: "4",
-			name: "Júlia Herrera 2",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-		},
-		{
-			id: "5",
-			name: "Iván Jimeno 2",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		{
-			id: "6",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-		}
-	];
-
-	return fakeNewConvers; */
 };
 
-PresentationCtrl.prototype.fetchConversation = async function (id/* , email */) {
-	let conversation = await this.domainCtrl.fetchConversation(id/* , email */);
+PresentationCtrl.prototype.fetchConversation = async function (id, email) {
+	let conversation = await this.domainCtrl.fetchConversation(id, email);
 	if (conversation != null) {
 		let { users, messages } = conversation;
 		return { users: users, messages: messages };
@@ -452,50 +388,10 @@ PresentationCtrl.prototype.fetchConversation = async function (id/* , email */) 
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-	/* 
-	let users = {
-		logged: {
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		conversant: {
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg"
-		}
-	};
-	//new Date(year, month, day, hours, minutes, seconds, milliseconds)
-	let fakeConver = [
-		{
-			id: "1",
-			user: "1",
-			date: "26 april 2022",
-			hour: "15:30",
-			text: "Hola!"
-
-		},
-		{
-			id: "2",
-			user: "1",
-			date: "26 april 2022",
-			hour: "15:40",
-			text: "Què tal?"
-		},
-		{
-			id: "3",
-			user: "2",
-			date: "27 april 2022",
-			hour: "15:30",
-			text: "Molt bé i tu?"
-		}
-	];
-	
-	return {users: users, messages: fakeConver}; */
 };
 
-PresentationCtrl.prototype.createConversation = async function (email, text) {
-	let result = await this.domainCtrl.createConversation(email, text);
+PresentationCtrl.prototype.createConversation = async function (email, text, loggedEmail) {
+	let result = await this.domainCtrl.createConversation(email, text, loggedEmail);
 	if (result != "error") {
 		return result;
 	} else {
@@ -514,8 +410,8 @@ PresentationCtrl.prototype.deleteConversation = async function (id) {
 	}
 };
 
-PresentationCtrl.prototype.createMessage = async function (id, text) {
-	let newMessage = await this.domainCtrl.createMessage(id, text);
+PresentationCtrl.prototype.createMessage = async function (id, text, email) {
+	let newMessage = await this.domainCtrl.createMessage(id, text, email);
 	if (newMessage != null) {
 		return newMessage;
 	} else {

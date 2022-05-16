@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -14,7 +14,7 @@ import {
 	Modal
 } from "react-native";
 
-//import UserContext from "../../domainLayer/UserContext";
+import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../config/stylesheet/colors";
 const PresentationCtrl = require("./PresentationCtrl.js");
 
@@ -24,7 +24,7 @@ import * as Animatable from "react-native-animatable";
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 
-	//const [user] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 	const [messages, setMessages] = useState([]);
 	const [loggedUser, setLoggedUser] = useState([]);
 	const [conversant, setConversantUsers] = useState([]);
@@ -42,7 +42,7 @@ function ChatScreen({ route, navigation }) {
 	const fetchChats = async () => {
 		if (route.params.id) {
 			let id = route.params.id;
-			const data = await presentationCtrl.fetchConversation(id/* , user.email */);
+			const data = await presentationCtrl.fetchConversation(id, user.email);
 			setId(id);
 			setLoggedUser(data.users.logged);
 			setConversantUsers(data.users.conversant);
@@ -56,7 +56,7 @@ function ChatScreen({ route, navigation }) {
 
 	const sendMessage = async () => {
 		if (newChat) {
-			let newId = await presentationCtrl.createConversation(conversant.email, message);
+			let newId = await presentationCtrl.createConversation(conversant.email, message, user.email);
 			if (newId != "error") {
 				setNewChat(false);
 				let data = await presentationCtrl.fetchConversation(newId);
@@ -69,7 +69,7 @@ function ChatScreen({ route, navigation }) {
 				setModalErrorVisible(true);
 			}
 		} else {
-			let newMessage = await presentationCtrl.createMessage(id, message);
+			let newMessage = await presentationCtrl.createMessage(id, message, user.email);
 			if(newMessage != null) {
 				setLastDate("");
 				messages.push(newMessage);

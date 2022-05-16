@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -13,10 +13,10 @@ import {
 	Modal,
 } from "react-native";
 
-//import UserContext from "../../domainLayer/UserContext";
-import COLORS from "../config/stylesheet/colors";
-import i18n from "../config/translation";
-const PresentationCtrl = require("./PresentationCtrl.js");
+import UserContext from "../../domainLayer/UserContext";
+import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
+const PresentationCtrl = require("../PresentationCtrl.js");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -24,7 +24,7 @@ import * as Animatable from "react-native-animatable";
 
 function GeneralChatScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
-	//const [user] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
@@ -41,7 +41,7 @@ function GeneralChatScreen({ navigation }) {
 	const fetchChats = async () => {
 		//get chats from db
 		//ought to fetch them before navigate
-		const data = await presentationCtrl.fetchConversations(/* user.email */);
+		const data = await presentationCtrl.fetchConversations(user.email);
 
 		setMasterData(data);
 		setFilteredData(data);
