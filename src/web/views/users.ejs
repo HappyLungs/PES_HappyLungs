@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Admin | Happy Lungs</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script src="https://kit.fontawesome.com/5e4b159602.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <%- include("./nav.ejs") %>
+        <main>
+            <div id="title">
+                <h3>All users</h3>
+                <% if (locals.error) { %>
+                <span class="error"><%= error %></span>
+                <% } else if (!locals.users) { %>
+                <span>Missing users parameter</span>
+                <% } else if (locals.users.length === 0) { %>
+                <span>There are no users.</span>
+                <% } %>
+            </div>
+            <div id="usersList">
+                <% if (locals.users) {
+                    users.forEach((user) => { 
+                        if (user.blocked) {
+                %>
+                <div class="user blockedUser">
+                    <div class="userInfo">
+                        <div class="userImage userImageBlocked">
+                            <img src="<%= user.picture %>">
+                        </div>
+                        <div class="userInfoContent">
+                            <div>
+                                <span class="userName"><%= user.username %></span> <span class="blockedText">- Blocked</span>
+                                <br>
+                                <span class="userEmail"><%= user.email %></span>
+                            </div>
+                            <div class="userIcons userIconsBlocked">
+                                <div>
+                                    <i class="fa fa-thumbtack"></i>
+                                    <%= user.pins %>
+                                </div>
+                                <div>
+                                    <i class="fa fa-trophy"></i>
+                                    #<%= user.ranking %>
+                                </div>
+                                <div>
+                                    <i class="fa fa-exclamation"></i>
+                                    <%= user.reported %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="userButtons">
+                        <a href="/messages?id=<%= user.email %>">
+                            <div class="reportedMessagesButton">
+                                <div>
+                                    <i class="fa-solid fa-comment"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <form method="post" action="/unblockUser?id=<%= user.email %>&page=<%= page %>">
+                            <button type="submit" class="lockButton">
+                                <div class="lockButton blockedButton">
+                                    <div>
+                                        <i class="fa fa-lock"></i>
+                                    </div>
+                                </div>
+                            </button>                                
+                        </form>
+                    </div>
+                </div>
+                <% } else if (user.reported > 0) { %>
+                    <div class="user reportedUser">
+                        <div class="userInfo">
+                            <div class="userImage userImageReported">
+                                <img src="<%= user.picture %>">
+                            </div>
+                            <div class="userInfoContent">
+                                <div>
+                                    <span class="userName"><%= user.username %></span>
+                                    <br>
+                                    <span class="userEmail"><%= user.email %></span>
+                                </div>
+                                <div class="userIcons userIconsReported">
+                                    <div>
+                                        <i class="fa fa-thumbtack"></i>
+                                        <%= user.pins %>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-trophy"></i>
+                                        #<%= user.ranking %>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-exclamation"></i>
+                                        <%= user.reported %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="userButtons">
+                            <a href="/messages?id=<%= user.email %>">
+                                <div class="reportedMessagesButton reportedMessagesButtonReported">
+                                    <div>
+                                        <i class="fa-solid fa-comment"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            <form method="post" action="/blockUser?id=<%= user.email %>&page=<%= page %>">
+                                <button type="submit" class="lockButton">
+                                    <div class="lockButton reportedButton">
+                                        <div>
+                                            <i class="fa fa-lock-open"></i>
+                                        </div>
+                                    </div>
+                                </button>                                
+                            </form>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="user">
+                        <div class="userInfo">
+                            <div class="userImage">
+                                <img src="<%= user.picture %>">
+                            </div>
+                            <div class="userInfoContent">
+                                <div>
+                                    <span class="userName"><%= user.username %></span>
+                                    <br>
+                                    <span class="userEmail"><%= user.email %></span>
+                                </div>
+                                <div class="userIcons">
+                                    <div>
+                                        <i class="fa fa-thumbtack"></i>
+                                        <%= user.pins %>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-trophy"></i>
+                                        #<%= user.ranking %>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-exclamation"></i>
+                                        <%= user.reported %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="userButtons">
+                            <form method="post" action="/blockUser?id=<%= user.email %>&page=<%= page %>">
+                                <button type="submit" class="lockButton">
+                                    <div class="lockButton unblockedButton">
+                                        <div>
+                                            <i class="fa fa-lock-open"></i>
+                                        </div>
+                                    </div>
+                                </button>                                
+                            </form>
+                        </div>
+                    </div>
+                <%  } }) } %>
+            </div>
+        </main>
+    </body>
+</html>

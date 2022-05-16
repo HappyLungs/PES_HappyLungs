@@ -147,20 +147,28 @@ PresentationCtrl.prototype.createPin = function (
  * @returns the updated pin
  */
 PresentationCtrl.prototype.editPin = function (
-	name,
+	id,
+	title,
 	location,
+	locationTitle,
 	description,
 	media,
 	rating,
-	status
+	date,
+	status,
+	userEmail
 ) {
 	return this.domainCtrl.editPin(
-		name,
+		id,
+		title,
 		location,
+		locationTitle,
 		description,
 		media,
 		rating,
-		status
+		date,
+		status,
+		userEmail
 	);
 };
 
@@ -243,6 +251,21 @@ PresentationCtrl.prototype.registerUser = async function (
 PresentationCtrl.prototype.loginUser = async function (email, password) {
 	if (email && password) {
 		return await this.domainCtrl.loginUser(email, password);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
+ * @param {*} oldPassword
+ * @param {*} newPassword
+ * @returns an acces_token for the user
+ */
+ PresentationCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+	if (email && oldPassword && newPassword) {
+		return await this.domainCtrl.changePassword(email, oldPassword, newPassword);
 	} else {
 		return { data: {}, message: i18n.t("signInError1"), status: 422 };
 	}
@@ -340,6 +363,9 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
+PresentationCtrl.prototype.getHeatPoints = async function () {
+	return this.domainCtrl.getHeatPoints();
+}
 
 PresentationCtrl.prototype.fetchConversations = async function () {
 	let conversations =

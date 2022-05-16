@@ -1,0 +1,47 @@
+<aside class="leftMenu">
+    <div id="menuTitle">
+        <span class="title"><b>HAPPY</b> LUNGS</span>
+        <br>
+        <span>Admin Center</span>
+    </div>
+    <div id="menuDropdown">
+        <ul>
+            <li>
+                <a href="/users">
+                    <% if(locals.page && page==="users") { %>
+                    <div class="menuElement" style="background-color:#007f5a">
+                    <% } else { %>
+                    <div class="menuElement">
+                    <% } %>
+                        <div class="menuIcon"><i class="fas fa-users"></i></i></div>
+                        <div>Users</div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/reported">
+                    <% if(locals.page&& page==="reported") { %>
+                    <div class="menuElement" style="background-color:#007f5a">
+                    <% } else { %>
+                    <div class="menuElement">
+                    <% } %>
+                        <div class="menuIcon"><i class="fa-solid fa-user-xmark"></i></div>
+                        <div>Reported</div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/blocked">
+                    <% if(locals.page&& page==="blocked") { %>
+                    <div class="menuElement" style="background-color:#007f5a">
+                    <% } else { %>
+                    <div class="menuElement">
+                    <% } %>
+                        <div class="menuIcon"><i class="fas fa-user-lock"></i></i></div>
+                        <div>Blocked</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>

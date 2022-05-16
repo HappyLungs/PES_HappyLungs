@@ -9,11 +9,11 @@ const MessageSchema = new global.Schema({
     conversation: {
         type: Schema.ObjectId,
         required: true
-    },/* 
-    image: {
-        type: String,
-        default: null
-    }, */
+    },
+    reported: {
+        type: Number,   //-2 => Reportat + acceptat x administrador, -1 => Reportat però declinat x admin, 0 => No reportat, 1 => Reportat (però no gestionat)
+        default: 0
+    },
     readed: {
         type: Boolean,
         default: false

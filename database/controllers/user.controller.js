@@ -1,5 +1,6 @@
 const responseObj = {};
 const mongodb = require("mongodb");
+const bcrypt=require("bcryptjs");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
@@ -11,6 +12,7 @@ const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 //Datalayers
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const ConversationDatalayer = require("./../datalayers/conversation.datalayer");
+const { param } = require("../routes/index.route.js");
 
 
 exports.find = async (request, response) => {
@@ -201,14 +203,10 @@ exports.updateUser = async (request, response) => {
     });
 };
 
-function comparePassword(password, hash) {
-    return bcrypt.compareSync(password, hash);
-}
-
 exports.changePassword = async (request, response) => {
     let params = {};
-    if (request.body.params) {
-        params = request.body.params;
+    if (request.body) {
+        params = request.body;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
@@ -218,9 +216,11 @@ exports.changePassword = async (request, response) => {
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //Check if the password is correct
-            if (comparePassword(params.oldPassword, userData.password)) {
-                //If the password is correct, update the password, hashed with bcrypt
-                UserDataLayer.updateUser({email: params.email}, {password: bcrypt.hashSync(params.newPassword, 10)})
+            if (loginHelpers.comparePassword(params.oldPassword, userData.password)) {
+                //If the password is correct, update the password, hashed by bcrypt
+                var salt = bcrypt.genSaltSync(10);
+                params.newPassword = bcrypt.hashSync(params.newPassword, salt);
+                UserDataLayer.updateUser({email: params.email}, {password: params.newPassword})
                 .then((updatedData) => {
                     if (updatedData !== null && typeof updatedData !== undefined) {
                         sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
@@ -296,4 +296,44 @@ exports.delete = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
+}
+
+exports.updateUserPoints = async function (email, points) {
+    let userData = await UserDataLayer.findUser({email: email}).then();
+    let success = false;
+    if (userData == null && typeof userData == undefined) {
+        return false;
+    }
+    points += userData.points;
+    await UserDataLayer.updateUser({email: email}, {points: points})
+    .then((updatedData) => {
+        if (updatedData !== null && typeof updatedData !== undefined) {
+            success = true;
+        }
+        success = false;
+    }
+    )
+    .catch(error => {
+        success = false;
+    });
+    return success;
+}
+
+exports.updateReports = async function (email) {
+    let userData = await UserDataLayer.findUser({email: email}).then();
+    let success = false;
+    if (userData == null && typeof userData == undefined) {
+        return false;
+    }
+    await UserDataLayer.updateUser({email: email}, {$inc : {reported: 1}})
+    .then((updatedData) => {
+        if (updatedData !== null && typeof updatedData !== undefined) {
+            success = true;
+        }
+        success = false;
+    })
+    .catch(error => {
+        success = false;
+    });
+    return success;
 }

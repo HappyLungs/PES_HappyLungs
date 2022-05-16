@@ -7,6 +7,8 @@ import User from "./classes/User";
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
+const dataPointMap= require("./classes/DataPointMap");
+
 
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
@@ -48,6 +50,8 @@ DomainCtrl.prototype.getMapData = async function () {
 		}
 	});
 
+
+
 	let measureStationLevels = [];
 	for (let [, ms] of measureStations) {
 		let level = await ms.getHourLevel(date, date.getHours());
@@ -55,14 +59,44 @@ DomainCtrl.prototype.getMapData = async function () {
 			let info = {
 				latitude: parseFloat(ms.latitud),
 				longitude: parseFloat(ms.longitud),
-				weight: parseFloat(level),
+				weight: (parseFloat(level))/6,
 			};
 			measureStationLevels.push(info);
 		}
 	}
 	return measureStationLevels;
 };
+DomainCtrl.prototype.getHeatPoints = async function () {
+	const date=new Date();
+	let nsteps=10;
+	let jmax=1;
+	let inilat=40.541006;
+	let inilong=0.680310;
+	let maxlat=42.814019;
+	let maxlong=3.205920;
+	let actual = {
+		latitude: inilat,
+		longitude: inilong,
+		weight: 0,
+	};
+	let longstep=(maxlong-inilong)/nsteps;
+	let latsteps= (maxlat-inilat)/nsteps;
+	let datapoints=[];
+	for (let i=0;i<10;i++){
+		for(let j=0;j<jmax ;j++){
+			let dp=new DataPointMap(actual.latitude, actual.longitude);
+			actual.weight=parseFloat(dp.getHourLevel(date,date.getHours())).toFixed(2)/6;
+			datapoints.push(actual);
+			actual.longitude+=longstep;
+		}
+		actual.latitude+=latsteps;
+		actual.longitude=inilong;
+		jmax++;
+	}
+	return datapoints;
 
+
+}
 //STATISTICS - AIR QUALITY
 
 /**
@@ -273,8 +307,32 @@ DomainCtrl.prototype.fetchTrendingPins = async function (email) {
  * @param {*} Pin
  * @returns the updated pin. Else returns null => error
  */
-DomainCtrl.prototype.editPin = async function (Pin) {
-	let result = await persistenceCtrl.putRequest("/pin", Pin);
+DomainCtrl.prototype.editPin = async function (
+	id,
+	title,
+	location,
+	locationTitle,
+	description,
+	media,
+	rating,
+	date,
+	status,
+	userEmail
+) {
+	let { latitude, longitude } = location;
+	let pin = {
+		_id: id,
+		title: title,
+		latitude: latitude,
+		longitude: longitude,
+		locationTitle: locationTitle,
+		description: description,
+		media: media,
+		rating: rating,
+		date: new Date(date),
+		status: status
+	}
+	let result = await persistenceCtrl.putRequest("/pin", {pin: pin, creatorEmail: userEmail});
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -294,21 +352,6 @@ DomainCtrl.prototype.savePin = async function (Pin, email) {
 		email: email,
 		pin: Pin,
 	});
-	if (result.status === 200) {
-		return result.data;
-	} else {
-		//TODO: handle error. Return an error and reload the view with the error
-		return null;
-	}
-};
-
-/**
- *
- * @param {*} id
- * @returns the updated pin. Else returns null => error
- */
-DomainCtrl.prototype.editPin = async function (Pin) {
-	let result = await persistenceCtrl.putRequest("/pin", Pin);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -366,6 +409,18 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 	//create
 	let myUser = new User(null, email, password, null);
 	return await myUser.login(); //login to db
+};
+
+/**
+ *
+ * @param {*} email
+ * @param {*} oldPassword
+ * @param {*} newPassword
+ * @returns an acces_token for the user
+ */
+ DomainCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.changePassword(oldPassword, newPassword);
 };
 
 /**
@@ -585,6 +640,20 @@ DomainCtrl.prototype.fetchNewConversations = async function (email) {
 	}
 };
 
+
+
+DomainCtrl.prototype.getQualifationMap = async function (range_1 , range_2) {
+	
+	const energyMap = await persistenceCtrl.getQualifationMap(range_1,range_2);
+	if (energyMap) {
+		return energyMap;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+
 DomainCtrl.prototype.findUser = async function (email) {
 	//create
 	let DB_URL = "http://localhost:7000/v1/user?email=" + email;
@@ -599,7 +668,6 @@ DomainCtrl.prototype.findUser = async function (email) {
 	})
 		.then((response) => response.json())
 		.then((data) => data);
-	//console.log(user);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
