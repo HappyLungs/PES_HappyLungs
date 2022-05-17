@@ -32,7 +32,8 @@ sendMail = async (email, password) => {
     } else {
       //return success code
       console.log("Success: ", success)
-      return errorCodes.SUCCESS;
+      return 200;
+      //return errorCodes.SUCCESS;
     }
   });
 
