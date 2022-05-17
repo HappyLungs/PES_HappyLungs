@@ -5,12 +5,13 @@ const errorCodes = require("../helpers/errorCodes.js");
 sendMail = (email, password) => {
   console.log("IT ARRIVED WITH MAIL: ", email)
   console.log("AND PASSWORD", password)
+  console.log("The user happylungs password is? ", process.env.EMAIL_PASS)
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: "happylungsoficial@gmail.com",
-      pass: process.env.EMAIL_PASS,
+      pass: "pes2022!"//process.env.EMAIL_PASS,
     },
     tls: {
       rejectUnauthorized: false,
