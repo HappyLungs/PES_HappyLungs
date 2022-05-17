@@ -161,15 +161,14 @@ function SignInScreen({ navigation, route }) {
 		const { email } = data;
 		let response = await presentationCtrl.restorePassword(email);
 		if (response.status == 200) {
-			errorMsgChange("FUNCIONAA");
-			console.log("FUNCIONA", response);
 			setErrorMsgVisible(true);
 			renderMessage();
 			Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), "OK")
 			setErrorMsgVisible(false);
 		} else {
-			console.log("NO FUNCIONA", response);
-			errorMsgChange(response.message);
+			if (response.status == 204) errorMsgChange(i18n.t("signInError2"));
+			else if (response.status == 422) errorMsgChange(response.message);
+			else errorMsgChange(i18n.t("restorePasswordError"));
 			setErrorMsgVisible(true);
 		}
 	};
@@ -218,7 +217,7 @@ function SignInScreen({ navigation, route }) {
 								onChangeText={(val) => emailChange(val)}
 							/>
 						</View>
-						{data.checkTextInputChange ? (
+						{data.checkEmailInputChange ? (
 							<Animatable.View animation="bounceIn">
 								<Feather name="check-circle" color="green" size={20} />
 							</Animatable.View>
@@ -296,7 +295,9 @@ function SignInScreen({ navigation, route }) {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						onPress={() => navigation.navigate("SignUpScreen")}
+						onPress={
+							() => {navigation.navigate("SignUpScreen"); setErrorMsgVisible(false);} 
+						}
 						style={[
 							styles.signIn,
 							{

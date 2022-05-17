@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 require("dotenv").config;
 const errorCodes = require("../helpers/errorCodes.js");
 
-sendMail = async (email, password) => {
+exports.sendMail = async (email, password) => {
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -22,21 +22,6 @@ sendMail = async (email, password) => {
     text: "Your password has been changed. Your new password is: " + password + "\n\n Change your password as soon as possible.",
   };
 
-  await transporter.sendMail(mailOptions, function(err, success) {
-    console.log("ERROR: ", err)
-    console.log("Success: ", success)
-    if (err) {
-      //return an error to response
-      console.log("ERROR: ", err)
-      return errorCodes.METHOD_NOT_ALLOWED;
-    } else {
-      //return success code
-      console.log("Success: ", success)
-      return 200;
-      //return errorCodes.SUCCESS;
-    }
-  });
+  return await transporter.sendMail(mailOptions);
 
 }
-
-module.exports = {sendMail};
