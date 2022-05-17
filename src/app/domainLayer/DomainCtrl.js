@@ -722,7 +722,7 @@ DomainCtrl.prototype.createMessage = async function (
 };
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
-	let message = await persistenceCtrl.postRequest("/reportMessage", { message: messageId });
+	let message = await persistenceCtrl.putRequest("/reportMessage", { message: messageId });
 	if (message.status === 200) {
 		return message.data;
 	} else {
