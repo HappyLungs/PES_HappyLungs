@@ -185,10 +185,13 @@ router.post(
 /** Contamination */
 
 router.get(
-    "/contamination/:longitude/:latitude/:date", 
+    "/contamination/:longitude/:latitude/:radius", 
     
-    ContaminationController.find
+    ContaminationController.findRadius
 );
+
+
+
 
 /** /Contamination */
 
