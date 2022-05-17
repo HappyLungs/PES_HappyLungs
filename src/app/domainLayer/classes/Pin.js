@@ -28,17 +28,6 @@ class Pin {
 		//NOT SURE HOW TO OBTAIN THE ID
 		let _id = "623cf0b5f98986305e8af47f";
 		let put = {};
-		/*put = await pCtrl.putRequest("/pin?_id=" + _id, {
-			title: name,
-			description: description,
-			latitude: location,
-			length: location,
-			date: date,
-			public: status,
-			creatorEmail: "falta_afegir_mail@gmail.com"
-		});
-		console.log(put);
-		*/
 	}
 
 	//Getters
@@ -59,30 +48,35 @@ class Pin {
 
 	show_charts() {}
 
-	addCalendarEvent(pinName, location, description, date) {
+	//addCalendarEvent(date) {
+	addCalendarEvent() {		
 		var gapi = window.gapi;
-		var CLIENT_ID =
-			"940094993561-ul26es9rio610t1gj6161n2n1oqo6nc0.apps.googleusercontent.com";
-		var API_KEY = "AIzaSyDnGgm8vf2p1rWoEQPb2OxXREvhIh2-CJk";
-		var DISCOVERY_DOCS = [
-			"https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
-		];
+		var CLIENT_ID = "494906188598-m2om2vv1siovnkmim1bbhkatqt4ngrjp.apps.googleusercontent.com"
+  		var API_KEY = "AIzaSyB9WYI1_sLF-I3s5Z7ZChw7bJM6jAKwc4I"
+		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 		var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
-		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
+		gapi.load('client:auth2', () => {
+  
+			gapi.client.init({
+			  apiKey: API_KEY,
+			  clientId: CLIENT_ID,
+			  discoveryDocs: DISCOVERY_DOCS,
+			  scope: SCOPES,
+			})
 
-		let today = new Date().toISOString().slice(0, 10);
-		const isoStrStart = today + "T12:00:00-00:00";
-		const isoStrEnd = today + "T13:00:00-00:00";
+			gapi.client.load("calendar", "v3", () => console.log("google calendar loaded"));
 
-		gapi.auth2
-			.getAuthInstance()
-			.signIn()
-			.then(() => {
+			let today = new Date().toISOString().slice(0, 10);
+			const isoStrStart = today + "T12:00:00-00:00";
+			const isoStrEnd = today + "T13:00:00-00:00";
+
+			gapi.auth2.getAuthInstance().signIn().then(() => {
 				var event = {
-					summary: pinName,
-					location: location,
-					description: description,
+					summary: this.title,
+					location: this.locationTitle,
+					description: this.description,
+
 					start: {
 						dateTime: isoStrStart,
 					},
@@ -95,31 +89,9 @@ class Pin {
 					calendarId: "primary",
 					resource: event,
 				});
-
-				request.execute((event) => {
-					console.log(event);
-					window.open(event.htmlLink);
-				});
-
-				/*
-      // get events
-      gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-      }).then(response => {
-        const events = response.result.items
-        console.log('EVENTS: ', events)
-      })
-      */
-			});
+			})
+		})
 	}
-
-	getActualDate() {}
-}
 
 module.exports = Pin;
 //ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
