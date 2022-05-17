@@ -164,6 +164,12 @@ router.get(
     MessageController.unreadedMessages
 );
 
+router.put(
+    "/reportMessage",
+    licenseMiddleware.validate,
+    MessageController.reportMessage
+);
+
 /*  /Message */
 
 

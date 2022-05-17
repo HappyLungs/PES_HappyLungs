@@ -443,6 +443,15 @@ PresentationCtrl.prototype.createMessage = async function (id, text, email) {
 	}
 };
 
+PresentationCtrl.prototype.reportMessage = async function (id) {
+	try {
+		let result = await this.domainCtrl.reportMessage(id);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	this.domainCtrl.createEvent(date, pin_id, email);
 };
