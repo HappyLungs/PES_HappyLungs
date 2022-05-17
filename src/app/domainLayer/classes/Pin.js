@@ -7,7 +7,6 @@ class Pin {
 		description,
 		media,
 		rating,
-		date,
 		status,
 		creatorEmail
 	) {
@@ -18,7 +17,6 @@ class Pin {
 		this.description = description;
 		this.media = media;
 		this.rating = rating;
-		this.date = date;
 		this.status = status; //"Public" || "Private"
 		this.creatorEmail = creatorEmail;
 	}
@@ -76,7 +74,6 @@ class Pin {
 		let today = new Date().toISOString().slice(0, 10);
 		const isoStrStart = today + "T12:00:00-00:00";
 		const isoStrEnd = today + "T13:00:00-00:00";
-
 
 		gapi.auth2
 			.getAuthInstance()

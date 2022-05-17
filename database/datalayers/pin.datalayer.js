@@ -12,7 +12,7 @@ exports.createPin = async (params) => {
 
 exports.updatePin = async (where = {}, updateParams) => {
     return new Promise((resolve, reject) => {
-      PinModel.updateMany(where, updateParams)
+      PinModel.findOneAndUpdate(where, updateParams, {returnOriginal:false})
         .then((data) => {
           resolve(data);
         })
