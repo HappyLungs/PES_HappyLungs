@@ -1,4 +1,3 @@
-const { DATA_ALREADY_EXISTS } = require("../../../../database/helpers/errorCodes");
 const DadesObertes = require("../services/DadesObertes");
 const MeasureStation = require("./MeasureStation.js");
 
