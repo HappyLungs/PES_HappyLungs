@@ -272,6 +272,7 @@ function SignUpScreen({ navigation, route }) {
 										color: COLORS.primary,
 									},
 								]}
+								keyboardType="email-address"
 								autoCapitalize="none"
 								onChangeText={(val) => emailChange(val)}
 							/>

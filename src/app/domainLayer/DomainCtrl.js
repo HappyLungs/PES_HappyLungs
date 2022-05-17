@@ -426,6 +426,16 @@ DomainCtrl.prototype.changePassword = async function (
 /**
  *
  * @param {*} email
+ * @returns restores the password and sends an email
+ */
+ DomainCtrl.prototype.restorePassword = async function (email) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.restorePassword();
+};
+
+/**
+ *
+ * @param {*} email
  * @returns an acces_token for the user
  */
 
