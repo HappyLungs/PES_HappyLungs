@@ -3,6 +3,9 @@ require("dotenv").config;
 const errorCodes = require("../helpers/errorCodes.js");
 
 sendMail = (email, password) => {
+  console.log("IT ARRIVED WITH MAIL: ", email)
+  console.log("AND PASSWORD", password)
+
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -14,8 +17,6 @@ sendMail = (email, password) => {
     }
   });
 
-  // CALL FUNCTION RESTORE PASSWORD
-
   let mailOptions = {
     from: "happylungsoficial@gmail.com>",
     to: email,
@@ -24,6 +25,7 @@ sendMail = (email, password) => {
   };
 
   transporter.sendMail(mailOptions, function(err, success) {
+    console.log("error is: ", err)
     if (err) {
       //return an error to response
       return errorCodes.METHOD_NOT_ALLOWED;
