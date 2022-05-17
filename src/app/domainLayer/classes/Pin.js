@@ -57,7 +57,6 @@ class Pin {
 		var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 		gapi.load('client:auth2', () => {
-  
 			gapi.client.init({
 			  apiKey: API_KEY,
 			  clientId: CLIENT_ID,
@@ -92,6 +91,6 @@ class Pin {
 			})
 		})
 	}
-
+}
 module.exports = Pin;
 //ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
