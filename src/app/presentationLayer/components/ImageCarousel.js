@@ -34,7 +34,7 @@ const ImageCarousel = ({ media }) => {
 			showIndicator
 			closeIconColor={COLORS.white}
 			caroselImageStyle={{
-				height: 250,
+				height: 200,
 			}}
 			caroselImageContainerStyle={{
 				borderBottomLeftRadius: 50,

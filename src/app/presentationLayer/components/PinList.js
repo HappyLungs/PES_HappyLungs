@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Modal from "react-native-modal";
 
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -25,6 +26,8 @@ const PinList = ({ pinList, navigation }) => {
 		useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
 	const [data, setData] = useState(pinList);
+	const [date, setDate] = useState(new Date());
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
 	const isMyPin = (email) => {
 		return user.email === email;
@@ -37,9 +40,27 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		console.log("before:" + data);
 		setData(data.filter((item) => item._id !== selectedPin._id));
-		console.log("after:" + data);
+	};
+
+	const handleConfirmDate = (date) => {
+		setDatePickerVisibility(false);
+		//setDate(transformDate(date));
+	};
+
+	const transformDate = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const standarizeDate = () => {
+		var standarizedDate = "";
+		return date;
 	};
 
 	function renderDeleteConfirmation() {
@@ -104,6 +125,33 @@ const PinList = ({ pinList, navigation }) => {
 						</TouchableOpacity>
 					</View>
 				</View>
+			</Modal>
+		);
+	}
+
+	function renderDateSelector() {
+		return (
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={isDatePickerVisible}
+				onRequestClose={() => {
+					setDatePickerVisibility(false);
+				}}
+				onBackdropPress={() => {
+					setDatePickerVisibility(false);
+				}}
+				style={{
+					marginBottom: 60,
+					justifyContent: "flex-end",
+				}}
+			>
+				<DateTimePickerModal
+					mode="date"
+					date={new Date(standarizeDate())}
+					onConfirm={handleConfirmDate}
+					visible={false}
+				/>
 			</Modal>
 		);
 	}
@@ -234,8 +282,23 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1.5,
 									flexDirection: "row",
-									backgroundColor: COLORS.secondary,
+									backgroundColor: COLORS.blue2,
 									borderBottomLeftRadius: 10,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									setDatePickerVisibility(true);
+								}}
+							>
+								<Feather name="calendar" size={15} color={COLORS.white} />
+								<Text style={styles.containerTxt}>{i18n.t("addEvent")}</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={{
+									flex: 1.5,
+									flexDirection: "row",
+									backgroundColor: COLORS.secondary,
 									justifyContent: "center",
 									alignItems: "center",
 								}}
@@ -248,7 +311,7 @@ const PinList = ({ pinList, navigation }) => {
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={{
-									flex: 1,
+									flex: 0.75,
 									flexDirection: "row",
 									backgroundColor: COLORS.red1,
 									borderBottomRightRadius: 10,
@@ -260,7 +323,6 @@ const PinList = ({ pinList, navigation }) => {
 								}}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
-								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>
 							</TouchableOpacity>
 						</View>
 					)}
@@ -271,6 +333,8 @@ const PinList = ({ pinList, navigation }) => {
 
 	return (
 		<View>
+			{renderDateSelector()}
+
 			<FlatList
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ padding: 10 }}
@@ -290,6 +354,7 @@ const PinList = ({ pinList, navigation }) => {
 					);
 				}}
 			></FlatList>
+
 			{renderDeleteConfirmation()}
 		</View>
 	);
