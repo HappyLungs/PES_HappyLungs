@@ -110,7 +110,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @returns the created pin
  *
  */
-PresentationCtrl.prototype.createPin = function (
+PresentationCtrl.prototype.createPin = async function (
 	title,
 	location,
 	locationTitle,
