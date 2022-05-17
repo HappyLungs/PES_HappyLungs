@@ -49,6 +49,12 @@ router.put(
 );
 
 router.put(
+    "/restorePassword",
+    licenseMiddleware.validate,
+    UserController.restorePassword
+);
+
+router.put(
     "/savePin",
     licenseMiddleware.validate,
     UserController.savePin

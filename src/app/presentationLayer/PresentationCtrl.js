@@ -274,6 +274,19 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 /**
  *
  * @param {*} email
+ * @returns restores the password and sends an email
+ */
+ PresentationCtrl.prototype.restorePassword = async function (email) {
+	if (email) {
+		return await this.domainCtrl.restorePassword(email);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
  * @returns deletes the user from DB
  */
  PresentationCtrl.prototype.deleteUser = async function (email) {

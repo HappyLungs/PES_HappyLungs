@@ -48,6 +48,12 @@ class User {
         });
     }
 
+    async restorePassword () {
+        return await persistCtrl.putRequest("/restorePassword", {
+            "email": this.email
+        });
+    }
+
     async update (name, points, language, healthStatus, notifications, profilePicture) {
         return await persistCtrl.postRequest("/updateUser", {
             "name": name,

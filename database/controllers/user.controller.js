@@ -1,6 +1,7 @@
 const responseObj = {};
 const mongodb = require("mongodb");
 const bcrypt=require("bcryptjs");
+const randomstring = require("randomstring");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
@@ -8,6 +9,8 @@ const errorCodes = require("../helpers/errorCodes.js");
 const loginHelpers = require("../helpers/loginHelpers");
 
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
+
+const email = require("../helpers/email");
 
 //Datalayers
 const UserDataLayer = require("./../datalayers/user.datalayer");
@@ -234,6 +237,45 @@ exports.changePassword = async (request, response) => {
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.UNAUTHORIZED, "Old password is incorrect", {});
             }
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+        }
+    })
+}
+
+exports.restorePassword = async (request, response) => {
+    let params = {};
+    if (request.body) {
+        params = request.body;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    UserDataLayer.findUser({email: params.email})
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+
+            //CREATE RANDOM STRING (8 chars)
+            let newPassword = randomstring.generate(8);
+            //ENCRYPT AND SAVE AS PASSWORD
+            var salt = bcrypt.genSaltSync(10);
+            newPasswordHashed = bcrypt.hashSync(newPassword, salt);
+            UserDataLayer.updateUser({email: params.email}, {password: newPasswordHashed})
+            .then((updatedData) => {
+                if (updatedData !== null && typeof updatedData !== undefined) {
+                    //SEND EMAIL WITH PASSWORD
+                    let res = email.sendMail(newPassword);
+                    console.log("USER CONTROLLER RES: ", res)
+                    if (res.status == 200) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
+                    else sendResponseHelper.sendResponse(response, errorCodes.METHOD_NOT_ALLOWED, "Mail not sent", {});
+                } else {
+                    sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                }
+            })
+            .catch(error => {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+            });
         } else {
             sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
         }

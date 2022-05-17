@@ -7,11 +7,12 @@ import {
 	TextInput,
 	StyleSheet,
 	StatusBar,
+	Alert,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import Axios from "axios";
+import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
@@ -29,6 +30,76 @@ function SignInScreen({ navigation, route }) {
 		checkEmailInputChange: false,
 		secureTextEntry: true,
 	});
+
+	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
+
+	const renderModalRestorePassword = () => {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalRestorePasswordVisible}
+				onRequestClose={() => {
+					setModalRestorePasswordVisible(!modalRestorePasswordVisible);
+				}}
+				onBackdropPress={() => {
+					setModalRestorePasswordVisible(!modalRestorePasswordVisible);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							{i18n.t("restorePasswordConfirmation")}
+						</Text>
+						<View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-around",
+									alignSelf: "center",
+									marginTop: 30,
+									marginHorizontal: 5,
+									width: 220,
+								}}
+							>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.red1 },
+									]}
+									onPress={() => setModalRestorePasswordVisible(false)}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.green1 },
+									]}
+									onPress={() => restorePassword()}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("yes")}</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -76,6 +147,18 @@ function SignInScreen({ navigation, route }) {
 		if (response.status == 200) {
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
+			errorMsgChange("");
+		} else {
+			errorMsgChange(response.message);
+		}
+	};
+
+	const restorePassword = async () => {
+		setModalRestorePasswordVisible(false);
+		const { email } = data;
+		let response = await presentationCtrl.restorePassword(email);
+		if (response.status == 200) {
+			Alert.alert("Email sent", "Look at your mail to see your new password", "OK")
 			errorMsgChange("");
 		} else {
 			errorMsgChange(response.message);
@@ -172,7 +255,9 @@ function SignInScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => setModalRestorePasswordVisible()}
+				>
 					<Text style={{ color: COLORS.green1, marginTop: 15 }}>
 						{i18n.t("passwordForgot")}
 					</Text>
@@ -225,6 +310,7 @@ function SignInScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</Animatable.View>
+			{renderModalRestorePassword()}
 		</View>
 	);
 }
@@ -244,6 +330,17 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: COLORS.green1,
+	},
+	containerBtn2: {
+		width: 85,
+		padding: 10,
+		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	header: {
 		flex: 1,
@@ -268,6 +365,20 @@ const styles = StyleSheet.create({
 		color: "#05375a",
 		fontSize: 18,
 	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
 	action: {
 		marginTop: 10,
 		borderBottomWidth: 1,
@@ -280,6 +391,13 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: "#FF0000",
 		paddingBottom: 5,
+	},
+	modalView: {
+		margin: 25,
+		backgroundColor: COLORS.white,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
 	},
 	textInput: {
 		marginTop: -5,
