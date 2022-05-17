@@ -106,6 +106,11 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
+	const [housesByCertificate, setHousesByCertificate] = useState([]); 
+	
+	 /**
+	 *
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
 
 	const [markers, setMarkers] = useState([]);
@@ -114,7 +119,6 @@ function MapScreen({ navigation, route }) {
 		longitude: 2.019336,
 		title: "inexistente",
 	});
-	//const [houses, setHouses] = useState([]);
 	const [actualHouses, setActualHouses] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -172,22 +176,7 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
-		
-		/*const fetchHouses = async () => {
-			const data = await presentationCtrl.fetchHouses();
-			setHouses(data);
-			let fetchedHouses = [];
-			for (let house of Object.keys(data)) {
-				fetchedHouses.push({
-					latitude: data[house].latitude,
-					longitude: data[house].longitude,
-				});
-			}
-			setHouses(fetchedHouses);
-			setByCertificate(false);
-		};
-
-		await fetchHouses();*/
+		getHouses(0,6);
 
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getHeatPoints());
@@ -269,6 +258,24 @@ function MapScreen({ navigation, route }) {
 	}, []);
 
 	const [user] = useContext(UserContext);
+
+	function getHouses(range1, range2) /*= async()*/ {
+		//const fetchHouses = async () => {
+		const energyMap = await presentationCtrl.getQualifationMap(range1, range2);
+		setHouses(energyMap);	
+		let fetchedHouses = [];
+		for (let house of Object.keys(energyMap)) {
+		fetchedHouses.push({
+			latitude: energyMap[house].latitude,
+			longitude: energyMap[house].longitude,
+			value: energyMap[house].value,
+			});
+		}
+		setHousesByCertificate(fetchedHouses);
+		setByCertificate(true);	
+	};
+	//await fetchHouses();
+	
 
 	function renderHeader(user) {
 		return (
@@ -749,7 +756,7 @@ function MapScreen({ navigation, route }) {
 						))}
 					
 					{byCertificate &&
-						houses.map((house, idx2) => (
+						housesByCertificate.map((house, idx2) => (
 							<Marker
 								key={idx2}
 								coordinate={{
