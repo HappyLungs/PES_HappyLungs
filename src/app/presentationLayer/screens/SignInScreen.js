@@ -165,7 +165,7 @@ function SignInScreen({ navigation, route }) {
 			console.log("FUNCIONA", response);
 			setErrorMsgVisible(true);
 			renderMessage();
-			Alert.alert("Email sent", "Look at your mail to see your new password", "OK")
+			Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), "OK")
 			setErrorMsgVisible(false);
 		} else {
 			console.log("NO FUNCIONA", response);
