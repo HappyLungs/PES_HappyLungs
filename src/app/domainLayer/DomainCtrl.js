@@ -721,6 +721,15 @@ DomainCtrl.prototype.createMessage = async function (
 	}
 };
 
+DomainCtrl.prototype.reportMessage = async function (messageId) {
+	let message = await persistenceCtrl.postRequest("/reportMessage", { message: messageId });
+	if (message.status === 200) {
+		return message.data;
+	} else {
+		throw new Error("Error reporting message");
+	}
+};
+
 DomainCtrl.prototype.findUser = async function (email) {
 	//create
 	let DB_URL = "http://localhost:7000/v1/user?email=" + email;
