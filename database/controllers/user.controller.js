@@ -253,7 +253,7 @@ exports.restorePassword = async (request, response) => {
     }
     //Find the user given the id in the params
     UserDataLayer.findUser({email: params.email})
-    .then((userData) => {
+    .then( async (userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //CREATE RANDOM STRING (8 chars)
             let newPassword = randomstring.generate(8);

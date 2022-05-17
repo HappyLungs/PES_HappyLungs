@@ -22,7 +22,7 @@ sendMail = async (email, password) => {
     text: "Your password has been changed. Your new password is: " + password + "\n\n Change your password as soon as possible.",
   };
 
-  transporter.sendMail(mailOptions, function(err, success) {
+  await transporter.sendMail(mailOptions, function(err, success) {
     console.log("ERROR: ", err)
     console.log("Success: ", success)
     if (err) {
