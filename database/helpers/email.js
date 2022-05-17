@@ -27,9 +27,11 @@ sendMail = async (email, password) => {
     console.log("Success: ", success)
     if (err) {
       //return an error to response
+      console.log("ERROR: ", err)
       return errorCodes.METHOD_NOT_ALLOWED;
     } else {
       //return success code
+      console.log("Success: ", success)
       return errorCodes.SUCCESS;
     }
   });
