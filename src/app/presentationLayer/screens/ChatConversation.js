@@ -19,7 +19,11 @@ import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl");
 
 import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons';
 import * as Animatable from "react-native-animatable";
+import { setDate } from "date-fns";
+
+
 
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -29,10 +33,12 @@ function ChatScreen({ route, navigation }) {
 	const [loggedUser, setLoggedUser] = useState([]);
 	const [conversant, setConversantUsers] = useState([]);
 	const [message, setMessage] = useState("");
-	const [lastDate, setLastDate] = useState("");
+
 	const [newChat, setNewChat] = useState(false);
 	const [id, setId] = useState("");
 	const [modalErrorVisible, setModalErrorVisible] = useState(false);
+	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
+	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
 
 	useEffect(() => {
 		fetchChats();
@@ -55,28 +61,28 @@ function ChatScreen({ route, navigation }) {
 	};
 
 	const sendMessage = async () => {
-		if (newChat) {
-			let newId = await presentationCtrl.createConversation(conversant.email, message, user.email);
-			if (newId != "error") {
-				setNewChat(false);
-				let data = await presentationCtrl.fetchConversation(newId);
-				setId(newId);
-				setLoggedUser(data.users.logged);
-				setConversantUsers(data.users.conversant);
-				setLastDate("");
-				setMessages(data.messages);
+		if (message != "") {
+			if (newChat) {
+				let newId = await presentationCtrl.createConversation(conversant.email, message, user.email);
+				if (newId != "error") {
+					setNewChat(false);
+					let data = await presentationCtrl.fetchConversation(newId);
+					setId(newId);
+					setLoggedUser(data.users.logged);
+					setConversantUsers(data.users.conversant);
+					setMessages(data.messages);
+				} else {
+					setModalErrorVisible(true);
+				}
 			} else {
-				setModalErrorVisible(true);
+				let newMessage = await presentationCtrl.createMessage(id, message, user.email);
+				if(newMessage != null) {
+					messages.push(newMessage);
+				}
 			}
-		} else {
-			let newMessage = await presentationCtrl.createMessage(id, message, user.email);
-			if(newMessage != null) {
-				setLastDate("");
-				messages.push(newMessage);
-			}
+			setMessage("");
+			Keyboard.dismiss();
 		}
-		setMessage("");
-		Keyboard.dismiss();
 	}
 
 	function renderErrorPopupDeclare() {
@@ -135,105 +141,155 @@ function ChatScreen({ route, navigation }) {
 		);
 	}
 
-	function chatMessagesList () {	
-		
-		const renderItem = ({ item, index }) => {
-			let newDate = false;
-			if (item.date != lastDate) {
-				setLastDate(item.date);
-				newDate = true;
-			}
-	
-			return (
-				<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
-					{ newDate ? 
+	function renderOptionsPopupDeclare() {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalOptionsVisible}
+				onRequestClose={() => {
+					setModalOptionsVisible(false);
+				}}
+				onBackdropPress={() => {
+					setModalOptionsVisible(false);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View 
+						style={[styles.modalView, styles.shadow, {
+							flexDirection:"column",
+						}]}
+					>
 						<View
-							style = {{
-								alignItems: "center",
-								padding: 4,
+							style={{
+								flexDirection: "row",
+								justifyContent: "flex-end",
+								width: "100%"								
 							}}
 						>
-							<Text
-								style = { [styles.dateText ,{
-									borderRadius: 10,
-									paddingLeft: 4,
-									paddingRight: 4,
-								}]}
-							> { lastDate } </Text>
-						</View>
-					: <View></View> }
-					<View
-						style={[
-							{
-								backgroundColor: item.user===loggedUser.email ? COLORS.green3 : COLORS.white,
-								borderRadius: 30,
-								marginRight: item.user===loggedUser.email ? 20 : 50,
-								marginLeft: item.user===loggedUser.email ? 50 : 20,
-								marginTop: 4,
-								marginBottom: 4
-							},
-						]}
-					>
-						
-						<View style={{ flexDirection: "row" }}>
-							{item.user===loggedUser.email ?  <View></View> :
-							<View
-								style={{
-									paddingLeft: 10,
-									justifyContent: "center",
-									alignItems: "center"
+							<TouchableOpacity
+								onPress={() => setModalOptionsVisible(false)}
+								style = {{
+									padding: 10
 								}}
 							>
-								<TouchableOpacity>
-									<MaterialIcons
-										name="report-problem"
-										color={COLORS.red1}
-										size={25}
-									/>
-								</TouchableOpacity>
-							</View>}
-							<View 
-								style={{
+								<AntDesign name="close" size={20} color="black" />
+							</TouchableOpacity>
+						</View>
+						<Text
+							style = {{
+								marginBottom: 20,
+								fontWeight: "bold"
+							}}
+						>
+							{ selectedMessage.text }
+						</Text>
+						<View>
+							<TouchableOpacity
+								style = {{
 									flexDirection: "row",
-									justifyContent: "space-between",
-									paddingTop: 6,
-									paddingRight: 7,
-									paddingBottom: 8,
-									paddingLeft: item.user===loggedUser.email ? 9 : 2,
+									alignItems: "flex-start",
+									marginBottom: 10
+								}}
+							>
+								<MaterialIcons name="content-copy" size={24} color="black" />
+								<Text
+									style = {{
+										marginLeft: 5
+									}}
+								>Copy message</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								onPress={() => {
+									presentationCtrl.reportMessage(selectedMessage._id)
+								}}
+								style = {{
+									flexDirection: "row",
+									alignItems: "flex-start"
+								}}
+							>
+								<MaterialIcons name="report-problem" size={24} color="black" />
+								<Text
+									style = {{
+										marginLeft: 5
+									}}
+								>Report message</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
+
+	function chatMessagesList () {	
+		
+
+		const renderItem = ({ item, index }) => {
+
+			return (
+				<Animatable.View /*animation="slideInDown" duration={500} delay={index * 10}*/>
+					<TouchableOpacity
+						onLongPress={() => {
+							setSelectedMessage(item);
+							setModalOptionsVisible(true);
+						}}
+					>
+						<View
+							style = {{
+								marginRight: item.user===loggedUser.email ? 20 : 50,
+								marginLeft: item.user===loggedUser.email ? 50 : 20,
+								marginBottom: 6
+							}}
+						>
+							<View
+								style = {{
+									borderRadius: 10,
 								}}
 							>
 								<View>
-									<Text style={styles.chatLastMessage}>{item.text}</Text>
+									<Text
+										style = { [styles.dateText ,{
+											borderRadius: 10,
+											paddingLeft: 4,
+											paddingRight: 4,
+											textAlign: item.user===loggedUser.email ? "right" : "left"
+										}]}
+									> { item.date } { item.hour } {item.user===loggedUser.email ? "Me" : ""} </Text>
 								</View>
-								<View
+							</View>
+							<View>
+								<View 
 									style={{
-										justifyContent:"flex-end"
+										flexDirection: "row",
+										justifyContent: item.user===loggedUser.email ? "flex-end": "flex-start",
 									}}
 								>
-									<Text
-										style={[
-											styles.messageHour,
-											{
-												color: COLORS.darkGrey,
-												fontSize: 12,
-												textAlign: "right",
-	
-											},
-										]}
-									>
-										{ item.hour }
-									</Text>
+									<Text 
+										style={[styles.chatLastMessage, {
+											backgroundColor: item.user===loggedUser.email ? COLORS.green3 : COLORS.mediumGrey,
+											borderRadius: 10,
+											paddingTop: 6,
+											paddingRight: 7,
+											paddingBottom: 8,
+											minWidth: 120,
+											maxWidth: 300,
+											paddingLeft: 7,
+											textAlign: item.user===loggedUser.email ? "right" : "left"
+										}]}										
+									>{item.text}</Text>
 								</View>
 							</View>
 						</View>
-					</View>
+					</TouchableOpacity>
 				</Animatable.View>
 			)		
 		};
 	
 		return (
 			
-			<FlatList
+			<View>
+				<FlatList
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ }}
 				scrollEnabled={true}
@@ -241,8 +297,10 @@ function ChatScreen({ route, navigation }) {
 				extraData={messages}
 				keyExtractor={(item) => item.id}
 				renderItem={renderItem}
-				showsVerticalScrollIndicator={false}
+				showsVerticalScrollIndicator={true}
 			></FlatList>
+			</View>
+			
 		)
 	
 	};
@@ -338,7 +396,8 @@ function ChatScreen({ route, navigation }) {
 					</TouchableOpacity>
 				</View>
   			</KeyboardAvoidingView>
-			  {renderErrorPopupDeclare()}	
+			  {renderErrorPopupDeclare()}
+			  {renderOptionsPopupDeclare()}	
 		</View>
 	);
 }
@@ -401,8 +460,8 @@ const styles = StyleSheet.create({
 		marginHorizontal: 5,
 	},
 	dateText: {
-		color: COLORS.secondary,
-		fontWeight: "bold"
+		color: COLORS.darkGrey,
+		fontSize: 12
 	},
 	centeredView: {
 		flex: 1,
