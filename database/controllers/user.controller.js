@@ -252,7 +252,7 @@ exports.restorePassword = async (request, response) => {
         return;
     }
     //Find the user given the id in the params
-    UserDataLayer.findUser({email: params.email})
+    await UserDataLayer.findUser({email: params.email})
     .then( async (userData) => {
         if (userData !== null && typeof userData !== undefined) {
             //CREATE RANDOM STRING (8 chars)
@@ -260,7 +260,7 @@ exports.restorePassword = async (request, response) => {
             //ENCRYPT AND SAVE AS PASSWORD
             var salt = bcrypt.genSaltSync(10);
             newPasswordHashed = bcrypt.hashSync(newPassword, salt);
-            UserDataLayer.updateUser({email: params.email}, {password: newPasswordHashed})
+            await UserDataLayer.updateUser({email: params.email}, {password: newPasswordHashed})
             .then( async (updatedData) => {
                 if (updatedData !== null && typeof updatedData !== undefined) {
                     //SEND EMAIL WITH PASSWORD
