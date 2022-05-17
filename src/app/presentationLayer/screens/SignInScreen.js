@@ -158,16 +158,16 @@ function SignInScreen({ navigation, route }) {
 
 	const restorePassword = async () => {
 		setModalRestorePasswordVisible(false);
-		if (!data.checkEmailInputChange) errorMsgChange(i18n.t("invalidEmail"));
+		if (!data.checkEmailInputChange) {
+			errorMsgChange(i18n.t("invalidEmail"));
+			setErrorMsgVisible(true);
+		}
 		else {
 			const { email } = data;
 			let response = await presentationCtrl.restorePassword(email);
-			console.log(response)
 			if (response.status == 200) {
-				setErrorMsgVisible(true);
-				renderMessage();
-				Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), "OK")
 				setErrorMsgVisible(false);
+				Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), ["OK"]);
 			} else {
 				if (response.status == 204) errorMsgChange(i18n.t("signInError2"));
 				else if (response.status == 422) errorMsgChange(response.message);
