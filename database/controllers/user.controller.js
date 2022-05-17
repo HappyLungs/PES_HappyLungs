@@ -265,8 +265,7 @@ exports.restorePassword = async (request, response) => {
                 if (updatedData !== null && typeof updatedData !== undefined) {
                     //SEND EMAIL WITH PASSWORD
                     let res = await email.sendMail(params.email, newPassword);
-                    console.log(res)
-                    if (res == 200) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
+                    if (res.accepted) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
                     else sendResponseHelper.sendResponse(response, errorCodes.METHOD_NOT_ALLOWED, "Mail not sent", {});
                 } else {
                     sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
