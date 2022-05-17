@@ -141,7 +141,6 @@ function MapScreen({ navigation, route }) {
 	 */
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
-			console.log("map");
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchTrendingPins(user.email);
 				setPins(data);
