@@ -32,6 +32,8 @@ function SignInScreen({ navigation, route }) {
 	});
 
 	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
+	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
+	
 
 	const renderModalRestorePassword = () => {
 		return (
@@ -147,9 +149,10 @@ function SignInScreen({ navigation, route }) {
 		if (response.status == 200) {
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
-			errorMsgChange("");
+			setErrorMsgVisible(false);
 		} else {
 			errorMsgChange(response.message);
+			setErrorMsgVisible(true);
 		}
 	};
 
@@ -158,15 +161,21 @@ function SignInScreen({ navigation, route }) {
 		const { email } = data;
 		let response = await presentationCtrl.restorePassword(email);
 		if (response.status == 200) {
+			errorMsgChange("FUNCIONAA");
+			console.log("FUNCIONA", response);
+			setErrorMsgVisible(true);
+			renderMessage();
 			Alert.alert("Email sent", "Look at your mail to see your new password", "OK")
-			errorMsgChange("");
+			setErrorMsgVisible(false);
 		} else {
+			console.log("NO FUNCIONA", response);
 			errorMsgChange(response.message);
+			setErrorMsgVisible(true);
 		}
 	};
 
 	const renderMessage = () => {
-		if (data.errorMsg != "") {
+		if (errorMsgVisible) {
 			return <Text style={styles.errorMsg}>{data.errorMsg}</Text>;
 		}
 		return;

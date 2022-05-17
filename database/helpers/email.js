@@ -23,6 +23,8 @@ sendMail = (email, password) => {
   };
 
   transporter.sendMail(mailOptions, function(err, success) {
+    console.log("ERROR: ", err)
+    console.log("Success: ", success)
     if (err) {
       //return an error to response
       return errorCodes.METHOD_NOT_ALLOWED;
