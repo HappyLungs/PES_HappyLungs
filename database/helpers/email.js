@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const sendResponseHelper = require("./sendResponse.helper");
 require("dotenv").config;
 const errorCodes = require("../helpers/errorCodes.js");
 
@@ -27,10 +26,10 @@ sendMail = (email, password) => {
   transporter.sendMail(mailOptions, function(err, success) {
     if (err) {
       //return an error to response
-      sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, err, {});
+      return errorCodes.METHOD_NOT_ALLOWED;
     } else {
       //return success code
-      sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
+      return errorCodes.SUCCESS;
     }
   });
 
