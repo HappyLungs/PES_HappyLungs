@@ -200,8 +200,9 @@ function ChatScreen({ route, navigation }) {
 								>Copy message</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
-								onPress={() => {
-									presentationCtrl.reportMessage(selectedMessage._id)
+								onPress={async () => {
+									await presentationCtrl.reportMessage(selectedMessage._id);
+									setModalOptionsVisible(false);
 								}}
 								style = {{
 									flexDirection: "row",
