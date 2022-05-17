@@ -264,7 +264,7 @@ exports.restorePassword = async (request, response) => {
             .then((updatedData) => {
                 if (updatedData !== null && typeof updatedData !== undefined) {
                     //SEND EMAIL WITH PASSWORD
-                    let res = email.sendMail(params.email, newPassword);
+                    let res = await email.sendMail(params.email, newPassword);
                     console.log("USER CONTROLLER RES: ", res)
                     if (res == 200) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
                     else sendResponseHelper.sendResponse(response, errorCodes.METHOD_NOT_ALLOWED, "Mail not sent", {});
