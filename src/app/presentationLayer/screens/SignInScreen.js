@@ -68,7 +68,6 @@ function SignInScreen({ navigation, route }) {
 		});
 	};
 
-	// const { user, setUser } = useContext(useUserContextState);
 	const [user, setUser] = useContext(UserContext);
 
 	const loginUser = async () => {
@@ -77,7 +76,7 @@ function SignInScreen({ navigation, route }) {
 		if (response.status == 200) {
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
-			console.log(user);
+			errorMsgChange("");
 		} else {
 			errorMsgChange(response.message);
 		}
@@ -118,9 +117,11 @@ function SignInScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 300,
 										color: COLORS.primary,
 									},
 								]}
+								keyboardType="email-address"
 								autoCapitalize="none"
 								onChangeText={(val) => emailChange(val)}
 							/>
@@ -153,6 +154,7 @@ function SignInScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 280,
 										color: COLORS.primary,
 									},
 								]}

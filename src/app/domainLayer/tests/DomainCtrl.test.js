@@ -3,13 +3,18 @@ const DomainCtrl = require('../DomainCtrl');
 let ctrld=new DomainCtrl();
 
 jest.setTimeout(100000);
-
+/*
 test('test get map data', async ()=> {
     const mapdata = await ctrld.getMapData();
     expect(mapdata[0]).toHaveProperty('longitude');
     expect(mapdata[0]).toHaveProperty('latitude');
     expect(mapdata[0]).toHaveProperty('weight');
     expect(mapdata).toHaveLength(74);
+});*/
+
+test('test get heat points', async() => {
+    const datapoints = await ctrld.getHeatPoints();
+    console.log(datapoints);
 });
 /*
 test('test get pollution level last day', async ()=>{

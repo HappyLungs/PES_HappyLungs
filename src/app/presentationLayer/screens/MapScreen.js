@@ -132,7 +132,7 @@ function MapScreen({ navigation, route }) {
 		{
 			latitude: 41.366531,
 			longitude: 2.019336,
-			weight: 3,
+			weight: 0.3,
 		},
 	]);
 
@@ -158,7 +158,7 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 		const initHeatPoints = async () => {
-			setHeatpoints(await presentationCtrl.getMapData());
+			setHeatpoints(await presentationCtrl.getHeatPoints());
 		};
 		await initHeatPoints();
 		return unsubscribe;
@@ -718,11 +718,11 @@ function MapScreen({ navigation, route }) {
 					<Heatmap
 						points={heatpoints}
 						radius={50}
-						opacity={0.7}
+						opacity={0.6}
 						gradient={{
 							colors: ["green", "yellow", "orange", "red", "purple"],
-							startPoints: [0.01, 0.25, 0.5, 0.75, 0.99],
-							colorMapSize: 2000,
+							startPoints: [0.15, 0.3, 0.6, 0.8, 0.99],
+							colorMapSize: 200,
 						}}
 					/>
 				</MapView>

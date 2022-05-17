@@ -1,7 +1,4 @@
-//const persistenceCtrl = require("./persistenceLayer/PersistanceCtrl");
-//pCtrl = new persistenceCtrl();
 class Pin {
-	//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"
 	constructor(
 		title,
 		latitude,
@@ -24,22 +21,6 @@ class Pin {
 		this.date = date;
 		this.status = status; //"Public" || "Private"
 		this.creatorEmail = creatorEmail;
-
-		//add pin to dataBase
-		/*let res = {};
-		res = await pCtrl.postRequest("/newPin", {
-			title: this.name,
-			description: this.description,
-			latitude: this.location,
-			length: this.location,
-			date: this.date,
-			public: this.status,
-			creatorEmail: "falta_afegir_mail@gmail.com"
-		});
-		console.log(res);
-*/
-		//ad pin creation to google calendar
-		//addCalendarEvent(name, location, description);
 	}
 
 	create_pin(name, location, description, media, rating, status) {}
@@ -80,7 +61,7 @@ class Pin {
 
 	show_charts() {}
 
-	addCalendarEvent(pinName, location, description) {
+	addCalendarEvent(pinName, location, description, date) {
 		var gapi = window.gapi;
 		var CLIENT_ID =
 			"940094993561-ul26es9rio610t1gj6161n2n1oqo6nc0.apps.googleusercontent.com";
@@ -95,6 +76,7 @@ class Pin {
 		let today = new Date().toISOString().slice(0, 10);
 		const isoStrStart = today + "T12:00:00-00:00";
 		const isoStrEnd = today + "T13:00:00-00:00";
+
 
 		gapi.auth2
 			.getAuthInstance()

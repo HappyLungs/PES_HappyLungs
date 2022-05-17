@@ -34,7 +34,8 @@ const ChatList = ({ chatsList, navigation }) => {
 								padding: 10,
 							}}
 							onPress={() => {
-								//navigation.navigate("ChatScreen");
+								console.log("Vaig a veure a:", item.email);
+								navigation.navigate("ChatConversation", {new:true, user:item.email, name:item.name});
 							}}
 						>
 							<Image

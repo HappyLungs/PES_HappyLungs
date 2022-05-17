@@ -232,6 +232,7 @@ function SignUpScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 300,
 										color: COLORS.primary,
 									},
 								]}
@@ -267,6 +268,7 @@ function SignUpScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 300,
 										color: COLORS.primary,
 									},
 								]}
@@ -300,7 +302,13 @@ function SignUpScreen({ navigation, route }) {
 								placeholder={i18n.t("passwordPlaceholder")}
 								placeholderTextColor={COLORS.darkGrey}
 								secureTextEntry={data.secureTextEntry ? true : false}
-								style={styles.textInput}
+								style={[
+									styles.textInput,
+									{
+										width: 280,
+										color: COLORS.primary,
+									},
+								]}
 								onChangeText={(val) => passwordChange(val)}
 								autoCapitalize="none"
 							/>
@@ -337,6 +345,7 @@ function SignUpScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 280,
 										color: COLORS.primary,
 									},
 								]}
@@ -384,6 +393,7 @@ function SignUpScreen({ navigation, route }) {
 								style={[
 									styles.textInput,
 									{
+										width: 300,
 										color: COLORS.primary,
 										marginTop: 0,
 									},

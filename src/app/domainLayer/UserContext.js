@@ -8,8 +8,6 @@ const UserContext = createContext();
 export const UserContextProvider = ({ children }) => {
 	const [ user, setUser ] = useState(null);
 
-	console.log('usercontext', user);
-
 	return (
 		<UserContext.Provider value={[user, setUser]}>
 			{children}

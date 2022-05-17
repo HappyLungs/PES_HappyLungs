@@ -13,6 +13,7 @@ import {
 import COLORS from "../../config/stylesheet/colors";
 import InputField from "../components/InputField";
 import i18n from "../../config/translation";
+import UserContext from "../../domainLayer/UserContext";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -24,7 +25,7 @@ const PresentationCtrl = require("../PresentationCtrl.js");
 
 function PinEditScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
-
+	const [user] = useContext(UserContext);
 	const { pin } = route.params;
 	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
 	const [date, setDate] = useState(pin.date);
@@ -62,7 +63,8 @@ function PinEditScreen({ navigation, route }) {
 				tmpMedia,
 				rating,
 				date,
-				status === true ? "Public" : "Private"
+				status === true ? "Public" : "Private",
+				user = user.email,
 			);
 			navigation.popToTop();
 			navigation.navigate("OwnerPin", { pin: editedPin });
