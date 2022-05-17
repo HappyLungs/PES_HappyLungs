@@ -261,7 +261,7 @@ exports.restorePassword = async (request, response) => {
             var salt = bcrypt.genSaltSync(10);
             newPasswordHashed = bcrypt.hashSync(newPassword, salt);
             UserDataLayer.updateUser({email: params.email}, {password: newPasswordHashed})
-            .then((updatedData) => {
+            .then( async (updatedData) => {
                 if (updatedData !== null && typeof updatedData !== undefined) {
                     //SEND EMAIL WITH PASSWORD
                     let res = await email.sendMail(params.email, newPassword);
