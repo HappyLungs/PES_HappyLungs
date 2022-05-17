@@ -200,7 +200,31 @@ function SignInScreen({ navigation, route }) {
 							{i18n.t("signIn")}
 						</Text>
 					</TouchableOpacity>
-
+					<TouchableOpacity
+						//onPress={() => openURL()}
+						style={[
+							styles.signIn,
+							{
+								borderColor: COLORS.green1,
+								borderWidth: 1,
+								marginTop: 15,
+								flexDirection: "row",
+								justifyContent: "space-evenly"
+							},
+						]}
+					>
+						<FontAwesome name="google" color={COLORS.green1} size={20} />
+						<Text
+							style={[
+								styles.textSign,
+								{
+									color: COLORS.green1,
+								},
+							]}
+						>
+							{i18n.t("googleLogin")}
+						</Text>
+					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("SignUpScreen")}
 						style={[
