@@ -661,6 +661,28 @@ DomainCtrl.prototype.findUser = async function (email) {
 		.then((data) => data);
 };
 
+DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
+	//TODO
+	console.log(date, pin_id, email);
+};
+
+/*DomainCtrl.prototype.findMessage = async function (id) {
+  //create
+  let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
+
+  return await fetch(DB_URL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": " application/json",
+      "X-Api-Key":
+          "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
+    },
+  })
+      .then((response) => response.json())
+      .then((data) => data);
+  //console.log(user);
+};*/
+
 DomainCtrl.prototype.fetchUser = async function (email) {
   const user = await persistenceCtrl.getRequest("/user", {email: email});
   if (user.status === 200) {

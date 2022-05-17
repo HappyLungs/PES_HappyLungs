@@ -102,40 +102,6 @@ function PinEditScreen({ navigation, route }) {
 		}
 	};
 
-	const showDatePicker = () => {
-		setDatePickerVisibility(true);
-	};
-
-	const hideDatePicker = () => {
-		setDatePickerVisibility(false);
-	};
-
-	const handleConfirmDate = (date) => {
-		hideDatePicker();
-		setDate(transformDate(date));
-	};
-
-	const transformDate = (date) => {
-		var formattedDate =
-			"" + date.getDate() < 10
-				? "0" + date.getDate() + "/"
-				: date.getDate() + "/";
-		formattedDate +=
-			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-		return formattedDate.concat("/", date.getFullYear());
-	};
-
-	const standarizeDate = () => {
-		var standarizedDate = "";
-		return standarizedDate.concat(
-			date.slice(3, 5),
-			"/",
-			date.slice(0, 2),
-			"/",
-			date.slice(6, 10)
-		);
-	};
-
 	function renderImageSelector() {
 		return (
 			<View
@@ -236,45 +202,6 @@ function PinEditScreen({ navigation, route }) {
 		);
 	}
 
-	function renderDateSelector() {
-		return (
-			<View
-				style={{
-					flexDirection: "row",
-					paddingHorizontal: 10,
-					paddingVertical: 5,
-				}}
-			>
-				<TouchableOpacity onPress={showDatePicker}>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={25}
-					/>
-					<DateTimePickerModal
-						mode="date"
-						date={new Date(standarizeDate())}
-						onConfirm={handleConfirmDate}
-						onCancel={hideDatePicker}
-						isVisible={isDatePickerVisible}
-					/>
-				</TouchableOpacity>
-				<Text
-					style={{
-						textAlignVertical: "center",
-						fontSize: 15,
-						marginStart: 20,
-						color: COLORS.secondary,
-					}}
-				>
-					{" "}
-					{date}
-				</Text>
-			</View>
-		);
-	}
-
 	function renderPinStatusSelector() {
 		return (
 			<View style={{ padding: 10 }}>
@@ -330,8 +257,6 @@ function PinEditScreen({ navigation, route }) {
 					editable={true}
 					passwordChange={false}
 				/>
-				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
-				{renderDateSelector()}
 				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
 				{renderImageSelector()}
 				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
