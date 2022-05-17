@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 require("dotenv").config;
 const errorCodes = require("../helpers/errorCodes.js");
 
-sendMail = (email, password) => {
+sendMail = async (email, password) => {
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
