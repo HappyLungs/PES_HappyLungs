@@ -24,10 +24,10 @@ const PinList = ({ pinList, navigation }) => {
 	const [user, setUser] = useContext(UserContext);
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
 	const [data, setData] = useState(pinList);
-	const [date, setDate] = useState(new Date());
-	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+	const [eventDate, setEventDate] = useState(new Date());
 
 	const isMyPin = (email) => {
 		return user.email === email;
@@ -43,12 +43,16 @@ const PinList = ({ pinList, navigation }) => {
 		setData(data.filter((item) => item._id !== selectedPin._id));
 	};
 
-	const handleConfirmDate = (date) => {
-		setDatePickerVisibility(false);
-		//setDate(transformDate(date));
+	const showDatePicker = (pin) => {
+		setDatePickerVisibility(true);
+		setSelectedPin(pin);
 	};
 
-	const transformDate = (date) => {
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
+
+	const transform = (date) => {
 		var formattedDate =
 			"" + date.getDate() < 10
 				? "0" + date.getDate() + "/"
@@ -58,9 +62,13 @@ const PinList = ({ pinList, navigation }) => {
 		return formattedDate.concat("/", date.getFullYear());
 	};
 
-	const standarizeDate = () => {
-		var standarizedDate = "";
-		return date;
+	const createEvent = (date) => {
+		presentationCtrl.createEvent(date, selectedPin._id, user.email);
+	};
+
+	const handleConfirm = (date) => {
+		createEvent(transform(date));
+		hideDatePicker();
 	};
 
 	function renderDeleteConfirmation() {
@@ -125,33 +133,6 @@ const PinList = ({ pinList, navigation }) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-			</Modal>
-		);
-	}
-
-	function renderDateSelector() {
-		return (
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={isDatePickerVisible}
-				onRequestClose={() => {
-					setDatePickerVisibility(false);
-				}}
-				onBackdropPress={() => {
-					setDatePickerVisibility(false);
-				}}
-				style={{
-					marginBottom: 60,
-					justifyContent: "flex-end",
-				}}
-			>
-				<DateTimePickerModal
-					mode="date"
-					date={new Date(standarizeDate())}
-					onConfirm={handleConfirmDate}
-					visible={false}
-				/>
 			</Modal>
 		);
 	}
@@ -288,7 +269,7 @@ const PinList = ({ pinList, navigation }) => {
 									alignItems: "center",
 								}}
 								onPress={() => {
-									setDatePickerVisibility(true);
+									showDatePicker(item);
 								}}
 							>
 								<Feather name="calendar" size={15} color={COLORS.white} />
@@ -333,8 +314,6 @@ const PinList = ({ pinList, navigation }) => {
 
 	return (
 		<View>
-			{renderDateSelector()}
-
 			<FlatList
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ padding: 10 }}
@@ -356,6 +335,12 @@ const PinList = ({ pinList, navigation }) => {
 			></FlatList>
 
 			{renderDeleteConfirmation()}
+			<DateTimePickerModal
+				isVisible={isDatePickerVisible}
+				mode="date"
+				onConfirm={handleConfirm}
+				onCancel={hideDatePicker}
+			/>
 		</View>
 	);
 };

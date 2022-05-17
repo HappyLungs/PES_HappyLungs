@@ -486,4 +486,8 @@ PresentationCtrl.prototype.createMessage = async function (id, text) {
 	}
 };
 
+PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
+	this.domainCtrl.createEvent(date, pin_id, email);
+};
+
 module.exports = PresentationCtrl;

@@ -591,6 +591,11 @@ DomainCtrl.prototype.findUser = async function (email) {
 	//console.log(user);
 };
 
+DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
+	//TODO
+	console.log(date, pin_id, email);
+};
+
 /*DomainCtrl.prototype.findMessage = async function (id) {
   //create
   let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
