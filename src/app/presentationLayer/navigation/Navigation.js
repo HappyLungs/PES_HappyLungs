@@ -112,10 +112,35 @@ function PinStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
-				options={{
+				options={({ navigation, route }) => ({
 					title: "",
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("EditPinScreen", { pin: route.params.pin });
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingPin")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
 					...TransitionPresets.SlideFromRightIOS,
-				}}
+				})}
 			/>
 			<Stack.Screen
 				name="EditPinScreen"
@@ -329,11 +354,36 @@ function MapStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
-				options={{
+				options={({ navigation }) => ({
 					title: "",
-					headerShown: false,
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("ProfileEditScreen");
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingPin")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
+					headerLeft: null,
 					...TransitionPresets.SlideFromRightIOS,
-				}}
+				})}
 			/>
 			<Stack.Screen
 				name="EditPinScreen"

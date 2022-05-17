@@ -32,9 +32,6 @@ function PinOwnerScreen({ navigation, route }) {
 		});
 	};
 
-	const handleEdit = () => {
-		navigation.navigate("EditPinScreen", { pin: pin });
-	};
 	const handleDelete = () => {
 		presentationCtrl.deletePin(pin);
 		navigation.popToTop();
@@ -118,53 +115,77 @@ function PinOwnerScreen({ navigation, route }) {
 		>
 			{renderDeleteConfirmation()}
 			<View
-				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
+				style={[{ height: 200, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
 				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{
 					flex: 1,
-					marginTop: 15,
+					marginTop: 25,
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
-					<Text style={[styles.title, { width: "65%" }]}>{pin.title}</Text>
-					<TouchableOpacity
-						style={{ justifyContent: "center" }}
-						onPress={() => setDeleteConfirmationVisible(true)}
-					>
-						<Feather name="trash-2" color={COLORS.red1} size={20} />
-					</TouchableOpacity>
+				<View
+					style={{
+						flexDirection: "row",
+						marginTop: 10,
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<Text style={[styles.title, { flex: 1 }]}>{pin.title}</Text>
 					<TouchableOpacity
 						style={[
 							{
 								flexDirection: "row",
-								justifyContent: "center",
+								backgroundColor: COLORS.green1,
+								height: 45,
 								alignItems: "center",
-								width: 90,
-								marginStart: 10,
-								borderRadius: 5,
-								backgroundColor: COLORS.secondary,
+								borderRadius: 7,
+								padding: 5,
 							},
 							styles.shadow,
 						]}
-						onPress={handleEdit}
+						onPress={async () => {
+							let data = await presentationCtrl.getDataStatistics(
+								"24hours",
+								pin.location.latitude,
+								pin.location.longitude
+							);
+							navigation.navigate("Statistics", { data: data });
+						}}
 					>
-						<Feather name="edit" size={24} color={COLORS.white} />
-						<Text style={[styles.textStyle, { marginStart: 5 }]}>
-							{i18n.t("edit")}
+						<Text
+							style={{
+								paddingHorizontal: 5,
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							{i18n.t("seeStatistics")}
 						</Text>
+						<Ionicons
+							name="bar-chart"
+							style={{ alignSelf: "center" }}
+							color={COLORS.white}
+							size={25}
+						/>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 10, alignSelf: "flex-start" }]}>
+				<Text
+					style={[
+						styles.body,
+						{ marginTop: 10, alignSelf: "flex-start", flexShrink: 1 },
+					]}
+				>
 					{pin.description}
 				</Text>
 				<View
 					style={{
 						flexDirection: "row",
-						padding: 10,
+						paddingVertical: 10,
 						marginTop: 10,
 					}}
 				>
@@ -174,12 +195,15 @@ function PinOwnerScreen({ navigation, route }) {
 						style={{ alignSelf: "center" }}
 						color={COLORS.secondary}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>
+					<Text style={[styles.body, { marginStart: 10, flexShrink: 1 }]}>
 						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity
-					style={{ alignSelf: "flex-start", marginStart: 10 }}
+					style={{
+						alignSelf: "flex-start",
+						paddingVertical: 10,
+					}}
 					onPress={handleSeeOnMap}
 				>
 					<Text style={styles.highlight}> {i18n.t("seeOnMap")}</Text>
@@ -187,16 +211,11 @@ function PinOwnerScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						padding: 10,
+						paddingVertical: 10,
 						marginTop: 10,
 					}}
 				>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={30}
-					/>
+					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
 					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
 				</View>
 				<Rating
@@ -209,7 +228,7 @@ function PinOwnerScreen({ navigation, route }) {
 					tintColor={COLORS.white}
 					readonly={true}
 					style={{
-						padding: 10,
+						paddingVertical: 10,
 						marginTop: 10,
 						alignSelf: "flex-start",
 					}}
@@ -217,37 +236,57 @@ function PinOwnerScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						padding: 10,
-						justifyContent: "space-between",
 						alignItems: "center",
+						marginTop: 10,
 					}}
 				>
-					<TouchableOpacity onPress={handleShare}>
-						<Ionicons
-							name="share-social-sharp"
-							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={35}
-						/>
-					</TouchableOpacity>
+					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+						<TouchableOpacity
+							style={{ flexDirection: "row" }}
+							onPress={handleShare}
+						>
+							<Ionicons
+								name="share-social-sharp"
+								color={COLORS.secondary}
+								size={35}
+							/>
+							<Text style={[styles.body, { marginStart: 10 }]}>
+								{i18n.t("share")}
+							</Text>
+						</TouchableOpacity>
+					</View>
 					<TouchableOpacity
-						style={{ flexDirection: "column" }}
-						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics(
-								"24hours",
-								pin.location.latitude,
-								pin.location.longitude
-							);
-							navigation.navigate("Statistics", { data: data });
-						}}
+						style={[
+							{
+								flexDirection: "row",
+								backgroundColor: COLORS.red1,
+								height: 35,
+								borderRadius: 7,
+								alignItems: "center",
+								padding: 5,
+							},
+							styles.shadow,
+						]}
+						onPress={() => setDeleteConfirmationVisible(true)}
 					>
-						<Ionicons
-							name="bar-chart"
+						<Text
+							style={{
+								color: COLORS.white,
+								textAlign: "center",
+								textAlignVertical: "center",
+								fontWeight: "bold",
+								fontSize: 15,
+								paddingHorizontal: 5,
+							}}
+						>
+							{i18n.t("delete")}
+						</Text>
+						<Feather
+							name="trash-2"
 							style={{ alignSelf: "center" }}
-							color={COLORS.green1}
-							size={35}
+							color={COLORS.white}
+							size={25}
 						/>
-						<Text style={styles.highlight}>{i18n.t("seeStatistics")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

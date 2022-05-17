@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Modal from "react-native-modal";
 
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -23,8 +24,10 @@ const PinList = ({ pinList, navigation }) => {
 	const [user, setUser] = useContext(UserContext);
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
 	const [data, setData] = useState(pinList);
+	const [eventDate, setEventDate] = useState(new Date());
 
 	const isMyPin = (email) => {
 		return user.email === email;
@@ -37,9 +40,35 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		console.log("before:" + data);
 		setData(data.filter((item) => item._id !== selectedPin._id));
-		console.log("after:" + data);
+	};
+
+	const showDatePicker = (pin) => {
+		setDatePickerVisibility(true);
+		setSelectedPin(pin);
+	};
+
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
+
+	const transform = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const createEvent = (date) => {
+		presentationCtrl.createEvent(date, selectedPin._id, user.email);
+	};
+
+	const handleConfirm = (date) => {
+		createEvent(transform(date));
+		hideDatePicker();
 	};
 
 	function renderDeleteConfirmation() {
@@ -234,8 +263,23 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1.5,
 									flexDirection: "row",
-									backgroundColor: COLORS.secondary,
+									backgroundColor: COLORS.blue2,
 									borderBottomLeftRadius: 10,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									showDatePicker(item);
+								}}
+							>
+								<Feather name="calendar" size={15} color={COLORS.white} />
+								<Text style={styles.containerTxt}>{i18n.t("addEvent")}</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={{
+									flex: 1.5,
+									flexDirection: "row",
+									backgroundColor: COLORS.secondary,
 									justifyContent: "center",
 									alignItems: "center",
 								}}
@@ -248,7 +292,7 @@ const PinList = ({ pinList, navigation }) => {
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={{
-									flex: 1,
+									flex: 0.75,
 									flexDirection: "row",
 									backgroundColor: COLORS.red1,
 									borderBottomRightRadius: 10,
@@ -260,7 +304,6 @@ const PinList = ({ pinList, navigation }) => {
 								}}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
-								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>
 							</TouchableOpacity>
 						</View>
 					)}
@@ -290,7 +333,14 @@ const PinList = ({ pinList, navigation }) => {
 					);
 				}}
 			></FlatList>
+
 			{renderDeleteConfirmation()}
+			<DateTimePickerModal
+				isVisible={isDatePickerVisible}
+				mode="date"
+				onConfirm={handleConfirm}
+				onCancel={hideDatePicker}
+			/>
 		</View>
 	);
 };
