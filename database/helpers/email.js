@@ -5,13 +5,12 @@ const errorCodes = require("../helpers/errorCodes.js");
 sendMail = (email, password) => {
   console.log("IT ARRIVED WITH MAIL: ", email)
   console.log("AND PASSWORD", password)
-  console.log("The user happylungs password is? ", process.env.EMAIL_PASS)
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: "happylungsoficial@gmail.com",
-      pass: "pes2022!"//process.env.EMAIL_PASS,
+      pass: process.env.EMAIL_PASS,
     },
     tls: {
       rejectUnauthorized: false,
@@ -22,7 +21,7 @@ sendMail = (email, password) => {
     from: "happylungsoficial@gmail.com>",
     to: email,
     subject: "Restore Password HappyLungs",
-    text: ["Your password has been changed. Your new password is: ", password, ". Change your password as soon as possible."],
+    text: "Your password has been changed. Your new password is: " + password + "\n\n Change your password as soon as possible.",
   };
 
   transporter.sendMail(mailOptions, function(err, success) {
