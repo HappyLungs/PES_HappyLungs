@@ -11,7 +11,6 @@ import {
 } from "react-native";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -29,7 +28,6 @@ function CreatePinScreen({ navigation, route }) {
 	const [user] = useContext(UserContext);
 
 	const { coords } = route.params;
-	const [date, setDate] = useState(new Date());
 	const [status, setStatus] = useState(false);
 	const [rating, setRating] = useState(3);
 	const [media, setMedia] = useState([]);
@@ -40,7 +38,6 @@ function CreatePinScreen({ navigation, route }) {
 		description: "",
 	});
 	const [errors, setErrors] = useState({});
-	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [deleteMode, setDeleteMode] = useState(false);
 
 	const validate = () => {
@@ -57,7 +54,6 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			let pinData = transformDate(date);
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
@@ -65,7 +61,6 @@ function CreatePinScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				pinData,
 				status ? "Public" : "Private",
 				user.email,
 				user.name
@@ -99,41 +94,6 @@ function CreatePinScreen({ navigation, route }) {
 				else if (!image2) setImage2(result.uri);
 			}
 		}
-	};
-
-	const showDatePicker = () => {
-		setDatePickerVisibility(true);
-	};
-
-	const hideDatePicker = () => {
-		setDatePickerVisibility(false);
-	};
-
-	const handleConfirmDate = (date) => {
-		hideDatePicker();
-		setDate(date);
-	};
-
-	const transformDate = (date) => {
-		var formattedDate =
-			"" + date.getDate() < 10
-				? "0" + date.getDate() + "/"
-				: date.getDate() + "/";
-		formattedDate +=
-			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-		return formattedDate.concat("/", date.getFullYear());
-	};
-
-	const standarizeDate = () => {
-		var tmp = transformDate(date);
-		var standarizedDate = "";
-		return standarizedDate.concat(
-			tmp.slice(3, 5),
-			"/",
-			tmp.slice(0, 2),
-			"/",
-			tmp.slice(6, 10)
-		);
 	};
 
 	function renderImageSelector() {
@@ -236,47 +196,6 @@ function CreatePinScreen({ navigation, route }) {
 		);
 	}
 
-	function renderDateSelector() {
-		return (
-			<View
-				style={{
-					flexDirection: "row",
-					paddingHorizontal: 10,
-					paddingVertical: 5,
-					alignItems: "center",
-				}}
-			>
-				<TouchableOpacity onPress={showDatePicker}>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={25}
-					/>
-					<DateTimePickerModal
-						//style={styles.datePickerStyle}
-						mode="date"
-						date={new Date(standarizeDate())}
-						onConfirm={handleConfirmDate}
-						onCancel={hideDatePicker}
-						isVisible={isDatePickerVisible}
-					/>
-				</TouchableOpacity>
-				<Text
-					style={{
-						textAlignVertical: "center",
-						fontSize: 15,
-						marginStart: 20,
-						color: COLORS.secondary,
-					}}
-				>
-					{" "}
-					{transformDate(date)}
-				</Text>
-			</View>
-		);
-	}
-
 	function renderPinStatusSelector() {
 		return (
 			<View style={{ padding: 10 }}>
@@ -329,8 +248,6 @@ function CreatePinScreen({ navigation, route }) {
 					editable={true}
 					passwordChange={false}
 				/>
-				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
-				{renderDateSelector()}
 				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
 				{renderImageSelector()}
 				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>

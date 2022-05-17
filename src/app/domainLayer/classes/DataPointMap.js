@@ -1,3 +1,4 @@
+const { DATA_ALREADY_EXISTS } = require("../../../../database/helpers/errorCodes");
 const DadesObertes = require("../services/DadesObertes");
 const MeasureStation = require("./MeasureStation.js");
 
@@ -35,6 +36,44 @@ class DataPointMap {
        return nearPoint.getDayLevel(date);
     }
     
+
+
+    async getDayLevel_byRadius (radius) {
+        let nearPoints = await this.radiusPoints(radius);
+       
+        let data = {
+            name: "null",
+            value: 0
+        }
+        let totalData = [];
+      
+        const datos = await Promise.all(nearPoints.map(async (point) => {
+            let nearPoint2 = new MeasureStation(point[1].codi_eoi);
+            const valor_medio = await nearPoint2.getDayLevel(new Date()).then(res =>  { 
+                let valor = 0;
+
+              res.levels.forEach(value => {
+                  if(value != undefined) valor += value;
+
+               })
+               data = Math.round(valor / res.levels.length)
+               return data;
+           })
+           data = ({
+               ...data,
+               name: point[1].nom_estacio,
+               value: valor_medio,
+              })
+            totalData = [...totalData, data];
+            return data;
+        }))
+      
+
+
+      return datos;
+    
+    }
+
    /**
      * Calculates the pollution level at every day of a week
      * @param {Date} date date
@@ -138,6 +177,35 @@ class DataPointMap {
         });
     }
 
+
+    async radiusPoints(radius) {
+
+        //let mas_prox = 6371000;
+        let points = [];
+        //let point1 = new MeasureStation("08015001", "Franciaa", "urbana" , 41.443584, 2.23889, null );
+        //let distancia = point1.distance(this.latitude,this.longitud);
+        let distanciaTotal = 0;
+        let all_points = await dadesObertes.getMeasuresDate(new Date());
+        console.log("cssccss");
+
+        all_points.forEach(c_point => {
+            let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
+            let d = m_s.distance(this.latitude,this.longitud);
+            console.log("Name: " + c_point.stationName +" D: " + d + " radius: " + radius)
+            if(d <= radius) points.push([d,c_point]);
+        });
+        
+        var seen = {};
+
+       const uniquearray = points.filter(function(point) {
+        return seen.hasOwnProperty(point[1].codi_eoi) ? false : (seen[point[1].codi_eoi] = true);
+
+       })
+
+    
+
+     return uniquearray
+    }
 }
 
 module.exports = DataPointMap;

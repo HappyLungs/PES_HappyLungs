@@ -1,9 +1,6 @@
-import {PresentationCtrl} from "./presentationLayer/PresentationCtrl.js"
-import {DomainCtrl} from "./domainLayer/DomainCtrl.js"
+const DomainCtrl = require("./domainLayer/DomainCtrl.js")
 
-let pCtrl = new PresentationCtrl();
 let dCtrl = new DomainCtrl();
 
-
-let data = await pCtrl.getPollutionLastDay();
-console.log(data);
+const data =  dCtrl.getQualifationMap("A", "C").then(res => console.log("s"))
+//let data = await pCtrl.getPollutionLastDay();
