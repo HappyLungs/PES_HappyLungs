@@ -255,7 +255,6 @@ exports.restorePassword = async (request, response) => {
     UserDataLayer.findUser({email: params.email})
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
-
             //CREATE RANDOM STRING (8 chars)
             let newPassword = randomstring.generate(8);
             //ENCRYPT AND SAVE AS PASSWORD
@@ -265,8 +264,8 @@ exports.restorePassword = async (request, response) => {
             .then((updatedData) => {
                 if (updatedData !== null && typeof updatedData !== undefined) {
                     //SEND EMAIL WITH PASSWORD
-                    let res = email.sendMail(newPassword);
-                    console.log("USER CONTROLLER RES: ", res)
+                    email.sendMail(newPassword);
+                    console.log("USER CONTROLLER HAS SENDED MAIL");
                     if (res.status == 200) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
                     else sendResponseHelper.sendResponse(response, errorCodes.METHOD_NOT_ALLOWED, "Mail not sent", {});
                 } else {
