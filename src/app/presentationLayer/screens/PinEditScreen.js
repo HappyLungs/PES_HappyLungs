@@ -53,8 +53,6 @@ function PinEditScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			console.log("pin.location");
-			console.log(pin.location);
 			let editedPin = await presentationCtrl.editPin(
 				pin._id,
 				inputs.title,
@@ -66,6 +64,8 @@ function PinEditScreen({ navigation, route }) {
 				status ? "Public" : "Private",
 				user.email
 			);
+			console.log("editedPin");
+			console.log(editedPin);
 			navigation.popToTop();
 			navigation.navigate("OwnerPin", { pin: editedPin });
 		}

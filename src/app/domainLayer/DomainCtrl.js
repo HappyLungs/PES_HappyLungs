@@ -256,7 +256,6 @@ DomainCtrl.prototype.createPin = async function (
 		creatorName: creatorName,
 		media: pin.media,
 	};
-	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB
@@ -312,8 +311,6 @@ DomainCtrl.prototype.editPin = async function (
 	userEmail
 ) {
 	let { latitude, longitude } = location;
-	console.log("location");
-	console.log(location);
 	let pin = {
 		_id: id,
 		title: title,
@@ -329,6 +326,8 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
+	console.log("result.data");
+	console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
