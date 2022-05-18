@@ -427,7 +427,7 @@ DomainCtrl.prototype.changePassword = async function (
  * @param {*} email
  * @returns restores the password and sends an email
  */
- DomainCtrl.prototype.restorePassword = async function (email) {
+DomainCtrl.prototype.restorePassword = async function (email) {
 	let myUser = new User(null, email, null, null);
 	return await myUser.restorePassword();
 };
@@ -721,7 +721,9 @@ DomainCtrl.prototype.createMessage = async function (
 };
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
-	let message = await persistenceCtrl.putRequest("/reportMessage", { message: messageId });
+	let message = await persistenceCtrl.putRequest("/reportMessage", {
+		message: messageId,
+	});
 	if (message.status === 200) {
 		return message.data;
 	} else {

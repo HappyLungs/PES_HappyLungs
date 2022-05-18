@@ -29,7 +29,7 @@ function GeneralChatScreen({ navigation }) {
 	const [filteredData, setFilteredData] = useState([]);
 	const [auxiliarFilterData, setAuxiliarFilterData] = useState([]);
 	const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-	const [chatDeleted, setChatDeleted] = useState({id:"", name:""});
+	const [chatDeleted, setChatDeleted] = useState({ id: "", name: "" });
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
 
@@ -91,6 +91,7 @@ function GeneralChatScreen({ navigation }) {
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={{
 										flexDirection: "row",
 										flex: 1,
@@ -224,6 +225,7 @@ function GeneralChatScreen({ navigation }) {
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									onPress={() => {
 										setChatDeleted({ id: item.id, name: item.name });
 										setModalDeleteVisible(true);
@@ -264,6 +266,7 @@ function GeneralChatScreen({ navigation }) {
 						flexDirection: "row",
 						paddingHorizontal: 20,
 						alignItems: "center",
+						paddingVertical: 15,
 						backgroundColor: COLORS.white,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
@@ -276,7 +279,6 @@ function GeneralChatScreen({ navigation }) {
 						flex: 1,
 						flexDirection: "column",
 						alignItems: "center",
-						marginBottom: 15,
 					}}
 				>
 					<View
@@ -324,6 +326,7 @@ function GeneralChatScreen({ navigation }) {
 							]}
 						>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={[
 									{
 										marginHorizontal: 7,
@@ -398,6 +401,7 @@ function GeneralChatScreen({ navigation }) {
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.shadow,
 										{
@@ -420,6 +424,7 @@ function GeneralChatScreen({ navigation }) {
 								</TouchableOpacity>
 
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.shadow,
 										{

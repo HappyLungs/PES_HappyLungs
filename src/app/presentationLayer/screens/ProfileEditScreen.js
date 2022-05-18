@@ -109,13 +109,15 @@ function ProfileEditScreen({ navigation }) {
 		) {
 			handleError(i18n.t("passwordNoChange"), "newPassword1");
 			handleError(" ", "newPassword2");
-		} else if (
-			inputsPasswordChange.newPassword1.length < 6
-		) {
+		} else if (inputsPasswordChange.newPassword1.length < 6) {
 			handleError(i18n.t("signUpError1"), "newPassword1");
 			handleError(" ", "newPassword2");
 		} else {
-			let response = await presentationCtrl.changePassword(user.email, inputsPasswordChange.oldPassword, inputsPasswordChange.newPassword1);
+			let response = await presentationCtrl.changePassword(
+				user.email,
+				inputsPasswordChange.oldPassword,
+				inputsPasswordChange.newPassword1
+			);
 			if (response.status == 200) {
 				setInputsPasswordChange({});
 				setErrors({});
@@ -123,7 +125,8 @@ function ProfileEditScreen({ navigation }) {
 				setUser(response.data);
 				navigation.navigate("ProfileScreen");
 			} else {
-				if (response.status == 401) handleError(i18n.t("passwordError"), "oldPassword");
+				if (response.status == 401)
+					handleError(i18n.t("passwordError"), "oldPassword");
 				else handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
 			}
 			/** TODO */
@@ -240,6 +243,7 @@ function ProfileEditScreen({ navigation }) {
 							}}
 						>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={[
 									styles.containerBtn2,
 									styles.shadow,
@@ -253,6 +257,7 @@ function ProfileEditScreen({ navigation }) {
 								<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={[
 									styles.containerBtn2,
 									styles.shadow,
@@ -317,6 +322,7 @@ function ProfileEditScreen({ navigation }) {
 						passwordChange={false}
 					/>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={{
 							marginTop: 20,
 							flexDirection: "row",
@@ -355,7 +361,7 @@ function ProfileEditScreen({ navigation }) {
 							resizeMode: "cover",
 						}}
 					/>
-					<TouchableOpacity onPress={pickImage}>
+					<TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
 						<Text style={[styles.textState, { color: COLORS.green1 }]}>
 							{i18n.t("upload")}
 						</Text>
@@ -389,6 +395,7 @@ function ProfileEditScreen({ navigation }) {
 				>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							onPress={() => {
 								setState1(!state1);
 							}}
@@ -404,6 +411,7 @@ function ProfileEditScreen({ navigation }) {
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							onPress={() => {
 								if (!state2 && state3) setState3(false);
 								setState2(!state2);
@@ -424,6 +432,7 @@ function ProfileEditScreen({ navigation }) {
 					</View>
 					<View style={{ alignItems: "center", width: 115 }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							onPress={() => {
 								if (!state3 && state2) setState2(false);
 								setState3(!state3);
@@ -447,6 +456,7 @@ function ProfileEditScreen({ navigation }) {
 					}}
 				>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -457,6 +467,7 @@ function ProfileEditScreen({ navigation }) {
 						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,

@@ -1,13 +1,11 @@
-import React, { useState, useMemo } from "react";
-import { Text, Pressable } from "react-native";
+import React from "react";
+import { Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
-	HeaderStyleInterpolators,
 	TransitionPresets,
 } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -90,15 +88,13 @@ function PinStack() {
 				component={PinsScreen}
 				options={{
 					title: i18n.t("myPins"),
-					headerTitleAlign: "left",
 					headerShown: true,
 					headerLeft: null,
-					headerTitleStyle: {
-						fontSize: 20,
-						fontWeight: "bold",
-						color: COLORS.secondary,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						shadowColor: "transparent",
+						backgroundColor: COLORS.green1,
 					},
-					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
@@ -118,6 +114,7 @@ function PinStack() {
 					headerShown: true,
 					headerRight: () => (
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								alignItems: "center",
@@ -184,6 +181,7 @@ function ProfileStack() {
 					headerShown: true,
 					headerRight: () => (
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								alignItems: "center",
@@ -288,12 +286,11 @@ function ChatStack() {
 					title: i18n.t("chat"),
 					headerShown: true,
 					headerLeft: null,
-					headerTitleStyle: {
-						fontSize: 20,
-						fontWeight: "bold",
-						color: COLORS.secondary,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						shadowColor: "transparent",
+						backgroundColor: COLORS.green1,
 					},
-					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen
@@ -375,13 +372,14 @@ function MapStack() {
 					headerShown: true,
 					headerRight: () => (
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								alignItems: "center",
 								marginHorizontal: 30,
 							}}
 							onPress={() => {
-								navigation.navigate("ProfileEditScreen");
+								navigation.navigate("EditPinScreen");
 							}}
 						>
 							<Text

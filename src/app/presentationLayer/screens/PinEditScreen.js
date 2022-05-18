@@ -64,10 +64,7 @@ function PinEditScreen({ navigation, route }) {
 				status ? "Public" : "Private",
 				user.email
 			);
-			console.log("editedPin");
-			console.log(editedPin);
-			navigation.popToTop();
-			navigation.navigate("OwnerPin", { pin: editedPin });
+			navigation.replace("OwnerPin", { pin: editedPin });
 		}
 	};
 
@@ -213,6 +210,7 @@ function PinEditScreen({ navigation, route }) {
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
+					activeOpacity={0.8}
 					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
