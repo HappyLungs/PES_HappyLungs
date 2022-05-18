@@ -26,6 +26,7 @@ import StatisticsScreen from "../screens/StatisticsScreen";
 import CreatePinScreen from "../screens/CreatePinScreen";
 import PinOwnerScreen from "../screens/PinOwnerScreen";
 import PinEditScreen from "../screens/PinEditScreen";
+import RankingScreen from "../screens/RankingScreen";
 import PinDefaultScreen from "../screens/PinDefaultScreen";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
@@ -234,6 +235,21 @@ function ProfileStack() {
 				component={SettingsScreen}
 				options={{
 					title: i18n.t("settings"),
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
+			<Stack.Screen
+				name="RankingScreen"
+				component={RankingScreen}
+				options={{
+					title: i18n.t("ranking"),
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,

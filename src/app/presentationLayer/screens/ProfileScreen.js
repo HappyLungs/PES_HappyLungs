@@ -28,6 +28,14 @@ function ProfileScreen({ navigation, route }) {
 		navigation.navigate("SettingsScreen");
 	}
 
+	function calendar() {
+		//no se que ha de fer
+	}
+
+	function rewards() {
+		navigation.navigate("RankingScreen");
+	}
+
 	function logOut() {
 		setUser({
 			__v: 0,
@@ -46,12 +54,6 @@ function ProfileScreen({ navigation, route }) {
 		navigation.navigate("SignInScreen");
 		// setUser(null);
 	}
-
-	function calendar() {
-		//no se que ha de fer
-	}
-
-	function rewards() {}
 
 	async function share() {
 		try {
