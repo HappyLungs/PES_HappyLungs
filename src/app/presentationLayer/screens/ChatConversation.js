@@ -24,6 +24,8 @@ import * as Animatable from "react-native-animatable";
 import { setDate } from "date-fns";
 
 
+import io from "socket.io-client";
+
 
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -39,8 +41,38 @@ function ChatScreen({ route, navigation }) {
 	const [modalErrorVisible, setModalErrorVisible] = useState(false);
 	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
+	
+	const socketRef = useRef(null);
 
 	useEffect(() => {
+		if (socketRef.current == null) {
+			socketRef.current = io('http://localhost:8000');
+		}
+
+		const {current: socket} = socketRef;
+
+		try {
+			let m = "Missatge del socket";
+			socket.open();
+			socket.emit('message', m);
+			socket.on('message', (data) => {
+			  // we get settings data and can do something with it
+			  //setSettings(data);
+			  console.log("Recieved message: ", data)
+			})
+		} catch (error) {
+			console.log(error);
+		}
+
+		/*
+		socketRef.current = io('http://localhost:8000');
+
+		socketRef.current.on('message', (message) => {
+			console.log("Message arrived");
+			console.log("Message: ", message)
+		})
+		*/
+
 		fetchChats();
 		return () => {};
 	}, []);
@@ -67,6 +99,10 @@ function ChatScreen({ route, navigation }) {
 				if (newId != "error") {
 					setNewChat(false);
 					let data = await presentationCtrl.fetchConversation(newId);
+					
+					let m = "Missatge del socket";
+					socketRef.current.emit('message', m);
+
 					setId(newId);
 					setLoggedUser(data.users.logged);
 					setConversantUsers(data.users.conversant);
