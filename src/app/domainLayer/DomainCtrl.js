@@ -731,6 +731,13 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	console.log(date, pin_id, email);
 };
 
+/**
+ * Fetch users {username, picture, points} sorted by points
+ */
+DomainCtrl.prototype.fetchUsers = async function () {
+	//TODO
+};
+
 /*DomainCtrl.prototype.findMessage = async function (id) {
   //create
   let DB_URL = "http://localhost:7000/v1/message?_id=" + id;

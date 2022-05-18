@@ -1,19 +1,18 @@
 import React from "react";
-import {
-	StyleSheet,
-	View,
-	Text,
-	FlatList,
-	TouchableOpacity,
-	Image,
-	Dimensions,
-} from "react-native";
+import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import { LinearGradient } from "expo-linear-gradient";
 
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 
-const Leaderboard = ({ chatsList, navigation }) => {
+const Leaderboard = ({ chatsList }) => {
+	const gold = ["#d9bf70", "#f0e092", "#d9bf70"];
+	const silver = ["#cbc5c6", "#e8e8e8", "#cbc5c6"];
+	const colors = ["#cc8043", "#e3a265", "#cc8043"];
+	const blank = ["#fff", "#fff", "#fff"];
+
 	const renderItem = ({ item, index }) => (
 		<Animatable.View
 			animation="slideInDown"
@@ -22,34 +21,55 @@ const Leaderboard = ({ chatsList, navigation }) => {
 			style={[
 				styles.shadow,
 				{
-					backgroundColor: COLORS.red1,
 					margin: 10,
+					marginHorizontal: 15,
 					flexDirection: "row",
-					marginHorizontal: 10,
-					marginVertical: 5,
-					padding: 10,
 					borderRadius: 7,
 					alignItems: "center",
-					backgroundColor: COLORS.light,
+					height: 60,
+					backgroundColor: COLORS.white,
 				},
 			]}
 		>
-			<View style={{ width: 90 }}>
+			<LinearGradient
+				start={{ x: 0.0, y: 0.25 }}
+				end={{ x: 0.5, y: 1.0 }}
+				locations={[0, 0.5, 1]}
+				colors={
+					index === 0
+						? gold
+						: index === 1
+						? silver
+						: index === 2
+						? colors
+						: blank
+				}
+				style={[
+					styles.rankBox,
+					{
+						borderRightWidth: index <= 2 ? 3 : 0,
+						borderColor: COLORS.secondary,
+					},
+				]}
+			>
 				<Text
 					style={[
 						styles.rank,
 						{
-							fontSize:
-								index === 0 ? 25 : index === 1 ? 22 : index === 2 ? 20 : 17,
+							fontSize: 20,
+							color: index <= 2 ? COLORS.white : COLORS.secondary,
 						},
 					]}
 				>
 					{index + 1}
+					{index === 0 && i18n.t("first")}
+					{index === 1 && i18n.t("second")}
+					{index === 2 && i18n.t("third")}
 				</Text>
-			</View>
+			</LinearGradient>
 			<View
 				style={{
-					marginStart: 5,
+					marginStart: 10,
 					width: 160,
 					flexDirection: "row",
 					alignItems: "center",
@@ -103,7 +123,15 @@ const styles = StyleSheet.create({
 		fontStyle: "italic",
 		textAlign: "center",
 		fontWeight: "bold",
-		color: COLORS.secondary,
+	},
+	rankBox: {
+		height: 60,
+		width: 90,
+		borderTopLeftRadius: 7,
+		borderBottomLeftRadius: 7,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	score: {
 		fontSize: 17,

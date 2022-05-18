@@ -113,15 +113,19 @@ function SettingsScreen({ navigation }) {
 	});
 
 	useEffect(() => {
+		fetchUsers();
 		fetchChats();
 		return () => {};
 	}, []);
 
 	const fetchChats = async () => {
-		//get chats from db
-		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchNewConversations(user.email);
 		setMasterData(data);
+	};
+
+	const fetchUsers = async () => {
+		//const data = await presentationCtrl.fetchUsers();
+		//setMasterData(data);
 	};
 
 	const [index, setIndex] = React.useState(0);

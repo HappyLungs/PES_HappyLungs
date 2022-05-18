@@ -434,6 +434,10 @@ PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	this.domainCtrl.createEvent(date, pin_id, email);
 };
 
+PresentationCtrl.prototype.fetchUsers = async function () {
+	this.domainCtrl.fetchUsers();
+};
+
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);
 	if (user != null) {
