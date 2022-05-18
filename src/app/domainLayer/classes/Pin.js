@@ -54,7 +54,7 @@ class Pin {
 		var CLIENT_ID = "494906188598-m2om2vv1siovnkmim1bbhkatqt4ngrjp.apps.googleusercontent.com"
   		var API_KEY = "AIzaSyB9WYI1_sLF-I3s5Z7ZChw7bJM6jAKwc4I"
 		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-		var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+		var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 		gapi.load('client:auth2', () => {
 			gapi.client.init({
