@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-// import { AuthSession } from 'expo';
-import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 
 import {
 	View,
@@ -13,74 +13,26 @@ import {
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import axios from "axios";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
+import { fetchUserInfoAsync } from "expo-auth-session";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 const queryString = require("query-string");
 
 const GOOGLE_CLIENT_ID = "437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com";
-// const GOOGLE_REDIRECT_URL = myapp
 const CLIENT_ID = "84eca7881ac449abbf7bebd073069026";
+
+WebBrowser.maybeCompleteAuthSession();
+
 function SignInScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
-	handleSpotifyLogin = async () => {
-		let redirectUrl = AuthSession.makeRedirectUri();
-		let results = await AuthSession.startAsync({
-		  authUrl: `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUrl)}&scope=user-read-email&response_type=token`
-		});
-		if (results.type !== 'success') {
-		  console.log(results.type);
-		  console.log("didError: true")
-		//   this.setState({ didError: true });
-		} else {
-		  const userInfo = await axios.get(`https://api.spotify.com/v1/me`, {
-			headers: {
-			  "Authorization": `Bearer ${results.params.access_token}`
-			}
-		  });
-		  console.log("User Info: ", userInfo.data)
-		//   this.setState({ userInfo: userInfo.data });
-		}
-	};
-
-	handleGoogleLogin = async () => {
-		let redirectUrl = AuthSession.makeRedirectUri();
-		const stringifiedParams = queryString.stringify({
-			client_id: GOOGLE_CLIENT_ID,
-			redirect_uri: redirectUrl,
-			scope: [
-			  'https://www.googleapis.com/auth/userinfo.email',
-			  'https://www.googleapis.com/auth/userinfo.profile',
-			].join(' '), // space seperated string
-			response_type: 'code',
-			access_type: 'offline',
-			prompt: 'consent',
-		  });
-
-		let results = await AuthSession.startAsync({
-		  authUrl: `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
-		});
-		if (results.type !== 'success') {
-			console.log(results);
-			console.log("didError: true")
-		  //   this.setState({ didError: true });
-		  } else {
-			const userInfo = await axios.get(`https://www.googleapis.com/userinfo/v2/me`, { //userInfo = await fetch("https:
-			  headers: {
-				"Authorization": `Bearer ${results.params.access_token}`
-			  }
-			});
-			console.log("User Info: ", userInfo)
-		  //   this.setState({ userInfo: userInfo.data });
-		  }
-	};
-
+	const [accessToken, setAccessToken] = useState();
+	const [user, setUser] = useContext(UserContext);
 	const [data, setData] = useState({
 		email: "",
 		password: "",
@@ -88,6 +40,32 @@ function SignInScreen({ navigation, route }) {
 		checkEmailInputChange: false,
 		secureTextEntry: true,
 	});
+	
+	const [request, response, promptAsync] = Google.useAuthRequest({
+		expoClientId: '437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com',
+		androidClientId: '437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com',
+	});
+
+	React.useEffect(() => {
+		console.log("DOING SOMETHING", response)
+		if (response?.type === "success") {
+			const { authentication } = response;
+			console.log("AUHTENTICATION IS HERE", authentication);
+			setAccessToken(authentication.accessToken);
+		}
+	}, [response]);
+
+	
+	const getUserData = async () => {
+		let userInfo = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+			headers: { Authorization: `Bearer ${accessToken}`}
+		});
+		setData({
+			...data,
+			email: userInfo.email,
+			checkEmailInputChange: true,
+		})
+	};
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -126,8 +104,6 @@ function SignInScreen({ navigation, route }) {
 			errorMsg: val,
 		});
 	};
-
-	const [user, setUser] = useContext(UserContext);
 
 	const loginUser = async () => {
 		const { email, password } = data;
@@ -260,7 +236,10 @@ function SignInScreen({ navigation, route }) {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => handleSpotifyLogin()}
+						onPress={() => {
+							promptAsync();
+							consosle.log("OKAY")
+						}}
 						style={[
 							styles.signIn,
 							{
