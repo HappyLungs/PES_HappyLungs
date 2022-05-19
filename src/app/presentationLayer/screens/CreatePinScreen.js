@@ -231,51 +231,59 @@ function CreatePinScreen({ navigation, route }) {
 				paddingHorizontal: 20,
 			}}
 		>
-			<View style={{ marginVertical: 20 }}>
-				<Text style={[styles.subtitle, { marginTop: 0 }]}>
-					{i18n.t("location")}
-				</Text>
-				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{[coords.latitude, "   ", coords.longitude]}
-				</Text>
-				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
-					onFocus={() => handleError(null, "title")}
-					iconName="title"
-					label={i18n.t("title")}
-					placeholder={i18n.t("titlePlaceholder")}
-					error={errors.title}
-					editable={true}
-					passwordChange={false}
-				/>
-				<InputField
-					onChangeText={(newDescription) =>
-						handleOnChange(newDescription, "description")
-					}
-					onFocus={() => handleError(null, "description")}
-					iconName="description"
-					label={i18n.t("description")}
-					placeholder={i18n.t("descriptionPlaceholder")}
-					error={errors.description}
-					editable={true}
-					passwordChange={false}
-				/>
-				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
-				{renderImageSelector()}
-				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
-				<Rating
-					type={"custom"}
-					imageSize={20}
-					fractions={0}
-					startingValue={3}
-					ratingBackgroundColor={COLORS.secondary}
-					ratingColor={COLORS.green1}
-					tintColor={COLORS.white}
-					style={{ padding: 10, alignSelf: "flex-start" }}
-					onFinishRating={(newRating) => setRating(newRating)}
-				/>
-				<Text style={styles.subtitle}>{i18n.t("allowOption")}</Text>
-				{renderPinStatusSelector()}
+			<View
+				style={{
+					marginVertical: 20,
+					flex: 1,
+					justifyContent: "space-between",
+				}}
+			>
+				<View>
+					<Text style={[styles.subtitle, { marginTop: 0 }]}>
+						{i18n.t("location")}
+					</Text>
+					<Text style={{ fontSize: 15, color: COLORS.green1 }}>
+						{[coords.latitude, "   ", coords.longitude]}
+					</Text>
+					<InputField
+						onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
+						onFocus={() => handleError(null, "title")}
+						iconName="title"
+						label={i18n.t("title")}
+						placeholder={i18n.t("titlePlaceholder")}
+						error={errors.title}
+						editable={true}
+						passwordChange={false}
+					/>
+					<InputField
+						onChangeText={(newDescription) =>
+							handleOnChange(newDescription, "description")
+						}
+						onFocus={() => handleError(null, "description")}
+						iconName="description"
+						label={i18n.t("description")}
+						placeholder={i18n.t("descriptionPlaceholder")}
+						error={errors.description}
+						editable={true}
+						passwordChange={false}
+					/>
+					<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
+					{renderImageSelector()}
+					<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
+					<Rating
+						type={"custom"}
+						imageSize={20}
+						fractions={0}
+						startingValue={3}
+						ratingBackgroundColor={COLORS.secondary}
+						ratingColor={COLORS.green1}
+						tintColor={COLORS.white}
+						style={{ padding: 10, alignSelf: "flex-start" }}
+						onFinishRating={(newRating) => setRating(newRating)}
+					/>
+					<Text style={styles.subtitle}>{i18n.t("allowOption")}</Text>
+					{renderPinStatusSelector()}
+				</View>
 				<View
 					style={{
 						flexDirection: "row",
@@ -323,7 +331,7 @@ const styles = StyleSheet.create({
 		color: COLORS.secondary,
 	},
 	containerBtn: {
-		width: 120,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},

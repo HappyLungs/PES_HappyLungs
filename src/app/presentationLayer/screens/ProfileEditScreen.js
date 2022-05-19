@@ -374,85 +374,94 @@ function ProfileEditScreen({ navigation }) {
 					alignSelf: "center",
 					backgroundColor: COLORS.lightGrey,
 					height: 6,
-					marginTop: 35,
-					marginBottom: 15,
+					marginTop: 20,
 					width: "100%",
 				}}
 			/>
 			<View
 				style={{
 					alignSelf: "center",
+					marginVertical: 20,
+					justifyContent: "space-between",
+					flex: 1,
 				}}
 			>
-				<Text style={[styles.textOption, { fontSize: 17 }]}>
-					{i18n.t("healthState")}
-				</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						marginVertical: 15,
-					}}
-				>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							activeOpacity={0.8}
-							onPress={() => {
-								setState1(!state1);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							activeOpacity={0.8}
-							onPress={() => {
-								if (!state2 && state3) setState3(false);
-								setState2(!state2);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<MaterialIcons
-								name="pregnant-woman"
-								size={35}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							activeOpacity={0.8}
-							onPress={() => {
-								if (!state3 && state2) setState2(false);
-								setState3(!state3);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
+				<View>
+					<Text style={[styles.textOption, { fontSize: 17 }]}>
+						{i18n.t("healthState")}
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							marginVertical: 15,
+						}}
+					>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									setState1(!state1);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									if (!state2 && state3) setState3(false);
+									setState2(!state2);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<MaterialIcons
+									name="pregnant-woman"
+									size={35}
+									color={COLORS.white}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									if (!state3 && state2) setState2(false);
+									setState3(!state3);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<MaterialIcons name="elderly" size={35} color={COLORS.white} />
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
+						</View>
 					</View>
 				</View>
 				<View
 					style={{
 						flexDirection: "row",
-						justifyContent: "space-evenly",
-						marginTop: 150,
+						justifyContent: "space-around",
 					}}
 				>
 					<TouchableOpacity
@@ -537,12 +546,12 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 110,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},
 	containerBtn2: {
-		width: 95,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},

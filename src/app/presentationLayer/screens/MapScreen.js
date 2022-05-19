@@ -29,9 +29,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
 
-
-//import customPin from 'https://i.ibb.co/vXZrNbB/A.png'; 
-
+//import customPin from 'https://i.ibb.co/vXZrNbB/A.png';
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -96,29 +94,28 @@ function MapScreen({ navigation, route }) {
 	 */
 	const [pins, setPins] = useState([]);
 
+	/**
+	 *
+	 */
+	const [houses, setHouses] = useState([]);
 
 	/**
 	 *
 	 */
-	 const [houses, setHouses] = useState([]);
+	const [housesByCertificate, setHousesByCertificate] = useState([]);
 
 	/**
-	 *
-	 */
-	const [housesByCertificate, setHousesByCertificate] = useState([]); 
-	
-	 /**
 	 *
 	 */
 	const [byCertificate, setByCertificate] = useState(false);
 
 	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
 
-	const multiSliderValuesChange = values => {
-		setMultiSliderValue(values)
-		console.log(values)
-		let letter = ["A", "B", "C", "D", "E", "F", "G"]
-		getHouses(letter[values[0]], letter[values[1]])
+	const multiSliderValuesChange = (values) => {
+		setMultiSliderValue(values);
+		console.log(values);
+		let letter = ["A", "B", "C", "D", "E", "F", "G"];
+		getHouses(letter[values[0]], letter[values[1]]);
 	};
 
 	const [markers, setMarkers] = useState([]);
@@ -127,7 +124,7 @@ function MapScreen({ navigation, route }) {
 		longitude: 2.019336,
 		title: "inexistente",
 	});
-	
+
 	const [selected, setSelected] = useState(null);
 
 	/**
@@ -181,7 +178,7 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
-		
+
 		const initHeatPoints = async () => {
 			let aux = await presentationCtrl.getHeatPoints();
 			console.log(aux);
@@ -211,6 +208,10 @@ function MapScreen({ navigation, route }) {
 
 	const isMyPin = (email) => {
 		return user.email === email;
+	};
+
+	const isSavedPin = (pin) => {
+		return user.savedPins.includes(pin);
 	};
 
 	const onMapPress = React.useCallback((e) => {
@@ -245,7 +246,15 @@ function MapScreen({ navigation, route }) {
 	 */
 	const mapRef = useRef(null);
 
-	let housesImgages = [ "https://i.ibb.co/yShfsG6/A.png", "https://i.ibb.co/sJtSG9v/B.png", "https://i.ibb.co/fQJTpFL/C.png", "https://i.ibb.co/D7nt50T/D.png", "https://i.ibb.co/BPWjqC4/E.png", "https://i.ibb.co/GTdNLQ8/F.png", "https://i.ibb.co/CmWbn9f/G.png"]
+	let housesImgages = [
+		"https://i.ibb.co/yShfsG6/A.png",
+		"https://i.ibb.co/sJtSG9v/B.png",
+		"https://i.ibb.co/fQJTpFL/C.png",
+		"https://i.ibb.co/D7nt50T/D.png",
+		"https://i.ibb.co/BPWjqC4/E.png",
+		"https://i.ibb.co/GTdNLQ8/F.png",
+		"https://i.ibb.co/CmWbn9f/G.png",
+	];
 
 	const onMapLoad = React.useCallback((map) => {
 		mapRef.current = map;
@@ -268,23 +277,21 @@ function MapScreen({ navigation, route }) {
 
 	const [user] = useContext(UserContext);
 
-	const getHouses = async(range1, range2) => {
+	const getHouses = async (range1, range2) => {
 		//const fetchHouses = async () => {
 		const energyMap = await presentationCtrl.getQualifationMap(range1, range2);
-		setHouses(energyMap);	
+		setHouses(energyMap);
 		let fetchedHouses = [];
 		for (let house of Object.keys(energyMap)) {
-		fetchedHouses.push({
-			latitude: energyMap[house].latitud,
-			longitude: energyMap[house].longitud,
-			value: energyMap[house].value,
+			fetchedHouses.push({
+				latitude: energyMap[house].latitud,
+				longitude: energyMap[house].longitud,
+				value: energyMap[house].value,
 			});
 		}
 		setHousesByCertificate(fetchedHouses);
-		setByCertificate(true);	
+		setByCertificate(true);
 	};
-	
-	
 
 	function renderHeader(user) {
 		return (
@@ -295,50 +302,95 @@ function MapScreen({ navigation, route }) {
 						width: "100%",
 						paddingHorizontal: 20,
 						alignItems: "center",
+						justifyContent: "space-between",
 						flexDirection: "row",
-						backgroundColor: COLORS.white,
+						backgroundColor: COLORS.green1,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
 					},
 					styles.shadow,
 				]}
 			>
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={() => {
+							navigation.navigate("Profile");
+						}}
+						style={[styles.shadow, { borderRadius: 30 }]}
+					>
+						<Image
+							source={{ uri: user.profilePicture }}
+							style={[{ borderRadius: 30, width: 40, height: 40 }]}
+						></Image>
+					</TouchableOpacity>
+					<View
+						style={{
+							flexDirection: "column",
+							marginStart: 15,
+						}}
+					>
+						<Text
+							style={[
+								{
+									fontSize: 20,
+									fontWeight: "bold",
+									color: COLORS.white,
+								},
+							]}
+						>
+							{user.name}
+						</Text>
+						<Text
+							style={[
+								{
+									fontSize: 18,
+									fontWeight: "normal",
+									color: COLORS.white,
+								},
+							]}
+						>
+							{i18n.t("welcome")}
+						</Text>
+					</View>
+				</View>
 				<TouchableOpacity
 					activeOpacity={0.8}
-					onPress={() => {
-						navigation.navigate("Profile");
-					}}
-					style={[styles.shadow, { borderRadius: 30 }]}
-				>
-					<Image
-						source={{ uri: user.profilePicture }}
-						style={[{ borderRadius: 30, width: 40, height: 40 }]}
-					></Image>
-				</TouchableOpacity>
-				<Text
 					style={[
 						{
-							fontSize: 20,
-							fontWeight: "bold",
-							color: COLORS.green1,
-							marginStart: 15,
+							backgroundColor: COLORS.white,
+							padding: 5,
+							borderRadius: 12,
+							alignSelf: "center",
+							justifyContent: "flex-end",
 						},
+						styles.shadow,
 					]}
+					onPress={() => {
+						navigation.navigate("RankingScreen", { scroll: true });
+					}}
 				>
-					{user.name},
-					<Text
-						style={[
-							{
-								fontSize: 18,
-								fontWeight: "normal",
-								color: COLORS.secondary,
-							},
-						]}
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
 					>
-						{" "}
-						{i18n.t("welcome")}
-					</Text>
-				</Text>
+						<View
+							style={{
+								width: 25,
+								height: 25,
+								alignItems: "center",
+								justifyContent: "center",
+								borderRadius: 20,
+								backgroundColor: COLORS.lightGrey,
+							}}
+						>
+							<AntDesign name="Trophy" size={18} color={COLORS.secondary} />
+						</View>
+					</View>
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -479,9 +531,7 @@ function MapScreen({ navigation, route }) {
 									height: 5,
 									borderRadius: 2,
 								}}
-							>
-								{console.log(multiSliderValue)}
-							</MultiSlider>
+							></MultiSlider>
 						</View>
 					</View>
 				</View>
@@ -512,13 +562,14 @@ function MapScreen({ navigation, route }) {
 						onPress={() => {
 							navigation.navigate("DefaultPin", {
 								pin: selected,
+								saved: isSavedPin(selected._id),
 							});
 							setPinPreview(false);
 						}}
 					>
 						<PinPreview
 							item={selected}
-							saved={false}
+							saved={isSavedPin(selected._id)}
 							mine={isMyPin(selected.creatorEmail)}
 						></PinPreview>
 					</Pressable>
@@ -698,10 +749,9 @@ function MapScreen({ navigation, route }) {
 									setPinPreview(true);
 									setSelected(pins[idx]);
 								}}
-								
 							/>
 						))}
-					
+
 					{byCertificate &&
 						housesByCertificate.map((house, idx2) => (
 							<Marker
@@ -709,14 +759,13 @@ function MapScreen({ navigation, route }) {
 								coordinate={{
 									latitude: parseFloat(house.latitude),
 									longitude: parseFloat(house.longitude),
-								}}				
+								}}
 							>
 								<Image
 									source={{ uri: housesImgages[house.value] }}
 									style={[{ borderRadius: 0, width: 40, height: 40 }]}
 								></Image>
 							</Marker>
-					
 						))}
 
 					<Heatmap

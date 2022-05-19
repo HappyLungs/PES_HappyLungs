@@ -7,7 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 
-const Leaderboard = ({ chatsList, email, scroll }) => {
+const Leaderboard = ({ usersList, email, scroll }) => {
 	const gold = ["#d9bf70", "#f0e092", "#d9bf70"];
 	const silver = ["#cbc5c6", "#e8e8e8", "#cbc5c6"];
 	const colors = ["#cc8043", "#e3a265", "#cc8043"];
@@ -15,7 +15,7 @@ const Leaderboard = ({ chatsList, email, scroll }) => {
 
 	const getScrollIndex = () => {
 		if (scroll) {
-			return chatsList.indexOf(email);
+			return usersList.indexOf(email);
 		}
 		return 0;
 	};
@@ -83,7 +83,7 @@ const Leaderboard = ({ chatsList, email, scroll }) => {
 				}}
 			>
 				<Image
-					source={{ uri: item.profileImage }}
+					source={{ uri: item.profilePicture }}
 					style={{
 						width: 45,
 						height: 45,
@@ -98,7 +98,7 @@ const Leaderboard = ({ chatsList, email, scroll }) => {
 				</Text>
 			</View>
 			<View style={{ width: 110 }}>
-				<Text style={styles.score}>20</Text>
+				<Text style={styles.score}>{item.points}</Text>
 			</View>
 		</Animatable.View>
 	);
@@ -108,7 +108,7 @@ const Leaderboard = ({ chatsList, email, scroll }) => {
 			stickyHeaderHiddenOnScroll={true}
 			contentContainerStyle={{}}
 			scrollEnabled={true}
-			data={chatsList}
+			data={usersList}
 			keyExtractor={(item) => `${item.name}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
