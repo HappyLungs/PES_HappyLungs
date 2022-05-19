@@ -159,8 +159,8 @@ exports.create = async (request, response) => {
 
 exports.update = async(request, response) => {
     let params = {};
-    if (request.body.pin) {
-        params = request.body;
+    if (request.body.params.pin) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
