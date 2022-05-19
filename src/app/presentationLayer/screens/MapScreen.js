@@ -112,6 +112,15 @@ function MapScreen({ navigation, route }) {
 	 */
 	const [byCertificate, setByCertificate] = useState(false);
 
+	const [multiSliderValue, setMultiSliderValue] = useState([0, 1]);
+
+	const multiSliderValuesChange = values => {
+		setMultiSliderValue(values)
+		console.log(values)
+		let letter = ["A", "B", "C", "D", "E", "F", "G"]
+		getHouses(letter[values[0]], letter[values[1]])
+	};
+
 	const [markers, setMarkers] = useState([]);
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
@@ -176,10 +185,7 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 		
-		//getHouses(0,6);
-
 		const initHeatPoints = async () => {
-			console.log("abans");
 			let aux = await presentationCtrl.getHeatPoints();
 			console.log(aux);
 			setHeatpoints(aux);
@@ -277,7 +283,6 @@ function MapScreen({ navigation, route }) {
 			value: energyMap[house].value,
 			});
 		}
-		console.log(fetchedHouses),
 		setHousesByCertificate(fetchedHouses);
 		setByCertificate(true);	
 	};
@@ -434,13 +439,14 @@ function MapScreen({ navigation, route }) {
 							</TouchableOpacity>
 							<MultiSlider
 								sliderLength={100}
-								//onValuesChange={multiSliderValuesChange}
+								onValuesChange={multiSliderValuesChange}
 								min={0}
 								max={6}
 								step={1}
 								snapped
 								showSteps
-								values={[0, 1]}
+								values={[multiSliderValue[0], multiSliderValue[1]]}
+								allowOverlap={true}
 								//enableLabel
 								//customLabel={CustomLabel}
 								stepLabelStyle={{
@@ -448,8 +454,8 @@ function MapScreen({ navigation, route }) {
 								}}
 								markerStyle={{
 									backgroundColor: COLORS.green1,
-									height: 10,
-									width: 10,
+									height: 13,
+									width: 13,
 									bottom: -3,
 								}}
 								stepLabel={{
@@ -702,15 +708,16 @@ function MapScreen({ navigation, route }) {
 							<Marker
 								key={idx2}
 								coordinate={{
-									//latitude: 41.366531,
-									//longitude: 2.019336,
-									latitude: parseInt(house.latitude),
-									longitude: parseInt(house.longitude),
-								}}
-								image={{ 
-									uri: housesImgages[house.value]
-								}} 
-							/>
+									latitude: parseFloat(house.latitude),
+									longitude: parseFloat(house.longitude),
+								}}				
+							>
+								<Image
+									source={{ uri: housesImgages[house.value] }}
+									style={[{ borderRadius: 0, width: 40, height: 40 }]}
+								></Image>
+							</Marker>
+					
 						))}
 
 					<Heatmap
