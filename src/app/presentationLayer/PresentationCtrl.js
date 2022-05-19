@@ -186,6 +186,21 @@ PresentationCtrl.prototype.savePin = async function (pin, email) {
 /**
  *
  * @param {*} pin
+ * @returns the saved pin from the logged user that is going to be unsaved
+ */
+ PresentationCtrl.prototype.unsavePin = async function (pin, email) {
+	let result = await this.domainCtrl.unsavePin(pin, email);
+	if (result != null) {
+		return result;
+	} else {
+		//TODO: Handle error
+		return null;
+	}
+};
+
+/**
+ *
+ * @param {*} pin
  * @returns the saved pin from the logged user
  */
 PresentationCtrl.prototype.removeFromSaved = async function (pin, email) {
@@ -356,6 +371,16 @@ PresentationCtrl.prototype.fetchPins = async function (email) {
 		return null;
 	}
 };
+
+PresentationCtrl.prototype.fetchRanking = async function () {
+	let ranking = await this.domainCtrl.fetchRanking();
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}
 
 PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	let pins = await this.domainCtrl.fetchTrendingPins(email);
