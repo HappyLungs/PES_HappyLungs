@@ -53,38 +53,78 @@ function PinDefaultScreen({ navigation, route }) {
 			}}
 		>
 			<View
-				style={[{ height: 250, borderBottomLeftRadius: 50 }, styles.shadow]}
+				style={[{ height: 200, borderBottomLeftRadius: 50 }, styles.shadow]}
 			>
 				<ImageCarousel media={pin.media} />
 			</View>
 			<View
 				style={{
 					flex: 1,
-					marginTop: 15,
+					marginTop: 25,
 					marginHorizontal: 20,
 				}}
 			>
-				<View style={{ flexDirection: "row", height: 35, marginTop: 20 }}>
-					<Text style={[styles.title, { width: "85%" }]}>{pin.title}</Text>
+				<View
+					style={{
+						flexDirection: "row",
+						marginTop: 10,
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<Text style={[styles.title, { flex: 1 }]}>{pin.title}</Text>
 					<TouchableOpacity
-						style={{ justifyContent: "center" }}
-						onPress={handleSave}
+						activeOpacity={0.8}
+						style={[
+							{
+								flexDirection: "row",
+								backgroundColor: COLORS.green1,
+								height: 45,
+								alignItems: "center",
+								borderRadius: 7,
+								padding: 5,
+							},
+							styles.shadow,
+						]}
+						onPress={async () => {
+							let data = await presentationCtrl.getDataStatistics(
+								"24hours",
+								pin.location.latitude,
+								pin.location.longitude
+							);
+							navigation.navigate("Statistics", { data: data });
+						}}
 					>
+						<Text
+							style={{
+								paddingHorizontal: 5,
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							{i18n.t("seeStatistics")}
+						</Text>
 						<Ionicons
-							name={bookmark}
+							name="bar-chart"
 							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={30}
+							color={COLORS.white}
+							size={25}
 						/>
 					</TouchableOpacity>
 				</View>
-				<Text style={[styles.body, { marginTop: 10, alignSelf: "flex-start" }]}>
+				<Text
+					style={[
+						styles.body,
+						{ marginTop: 10, alignSelf: "flex-start", flexShrink: 1 },
+					]}
+				>
 					{pin.description}
 				</Text>
 				<View
 					style={{
 						flexDirection: "row",
-						padding: 10,
+						paddingVertical: 10,
 						marginTop: 10,
 					}}
 				>
@@ -94,26 +134,21 @@ function PinDefaultScreen({ navigation, route }) {
 						style={{ alignSelf: "center" }}
 						color={COLORS.secondary}
 					/>
-					<Text style={[styles.body, { marginStart: 10 }]}>
+					<Text style={[styles.body, { marginStart: 10, flexShrink: 1 }]}>
 						{pin.locationTitle}
 					</Text>
 				</View>
 				<TouchableOpacity
-					style={{ alignSelf: "flex-start", marginStart: 10 }}
+					activeOpacity={0.8}
+					style={{
+						alignSelf: "flex-start",
+						paddingVertical: 10,
+					}}
 					onPress={handleSeeOnMap}
 				>
 					<Text style={styles.highlight}>{i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						padding: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
-				</View>
+
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -124,7 +159,7 @@ function PinDefaultScreen({ navigation, route }) {
 					tintColor={COLORS.white}
 					readonly={true}
 					style={{
-						padding: 10,
+						paddingVertical: 10,
 						marginTop: 10,
 						alignSelf: "flex-start",
 					}}
@@ -132,37 +167,57 @@ function PinDefaultScreen({ navigation, route }) {
 				<View
 					style={{
 						flexDirection: "row",
-						padding: 10,
-						justifyContent: "space-between",
 						alignItems: "center",
+						marginTop: 10,
 					}}
 				>
-					<TouchableOpacity onPress={handleShare}>
-						<Ionicons
-							name="share-social-sharp"
-							style={{ alignSelf: "center" }}
-							color={COLORS.secondary}
-							size={35}
-						/>
-					</TouchableOpacity>
+					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+						<TouchableOpacity
+							activeOpacity={0.8}
+							style={{ flexDirection: "row" }}
+							onPress={handleShare}
+						>
+							<Ionicons
+								name="share-social-sharp"
+								color={COLORS.secondary}
+								size={35}
+							/>
+							<Text style={[styles.body, { marginStart: 10 }]}>
+								{i18n.t("share")}
+							</Text>
+						</TouchableOpacity>
+					</View>
 					<TouchableOpacity
-						style={{ flexDirection: "column" }}
-						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics(
-								"24hours",
-								pin.location.latitude,
-								pin.location.longitude
-							);
-							navigation.navigate("Statistics", { data: data });
-						}}
+						activeOpacity={0.8}
+						style={[
+							{
+								flexDirection: "row",
+								backgroundColor: COLORS.blue2,
+								height: 45,
+								alignItems: "center",
+								borderRadius: 7,
+								padding: 5,
+							},
+							styles.shadow,
+						]}
+						onPress={handleSave}
 					>
+						<Text
+							style={{
+								paddingHorizontal: 5,
+								fontWeight: "bold",
+								fontSize: 15,
+								color: COLORS.white,
+							}}
+						>
+							{i18n.t("savePin")}
+						</Text>
 						<Ionicons
-							name="bar-chart"
+							name={bookmark}
 							style={{ alignSelf: "center" }}
-							color={COLORS.green1}
-							size={35}
+							color={COLORS.white}
+							size={30}
 						/>
-						<Text style={styles.highlight}>{i18n.t("seeStatistics")}</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

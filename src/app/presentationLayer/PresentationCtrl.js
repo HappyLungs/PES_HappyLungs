@@ -110,14 +110,13 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @returns the created pin
  *
  */
-PresentationCtrl.prototype.createPin = function (
+PresentationCtrl.prototype.createPin = async function (
 	title,
 	location,
 	locationTitle,
 	description,
 	media,
 	rating,
-	pinData,
 	status,
 	creatorEmail,
 	creatorName
@@ -129,7 +128,6 @@ PresentationCtrl.prototype.createPin = function (
 		description,
 		media,
 		rating,
-		pinData,
 		status,
 		creatorEmail,
 		creatorName
@@ -154,7 +152,6 @@ PresentationCtrl.prototype.editPin = function (
 	description,
 	media,
 	rating,
-	date,
 	status,
 	userEmail
 ) {
@@ -166,7 +163,6 @@ PresentationCtrl.prototype.editPin = function (
 		description,
 		media,
 		rating,
-		date,
 		status,
 		userEmail
 	);
@@ -263,9 +259,30 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} newPassword
  * @returns an acces_token for the user
  */
- PresentationCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+PresentationCtrl.prototype.changePassword = async function (
+	email,
+	oldPassword,
+	newPassword
+) {
 	if (email && oldPassword && newPassword) {
-		return await this.domainCtrl.changePassword(email, oldPassword, newPassword);
+		return await this.domainCtrl.changePassword(
+			email,
+			oldPassword,
+			newPassword
+		);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
+ * @returns restores the password and sends an email
+ */
+ PresentationCtrl.prototype.restorePassword = async function (email) {
+	if (email) {
+		return await this.domainCtrl.restorePassword(email);
 	} else {
 		return { data: {}, message: i18n.t("signInError1"), status: 422 };
 	}
@@ -276,7 +293,7 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} email
  * @returns deletes the user from DB
  */
- PresentationCtrl.prototype.deleteUser = async function (email) {
+PresentationCtrl.prototype.deleteUser = async function (email) {
 	if (email) {
 		return await this.domainCtrl.deleteUser(email);
 	} else {
@@ -355,96 +372,30 @@ PresentationCtrl.prototype.getMapData = async function () {
 };
 PresentationCtrl.prototype.getHeatPoints = async function () {
 	return this.domainCtrl.getHeatPoints();
-}
+};
 
-PresentationCtrl.prototype.fetchConversations = async function () {
-	let conversations =
-		await this.domainCtrl.fetchConversations(/** TODO: Pass the email from the logged user */);
+PresentationCtrl.prototype.fetchConversations = async function (email) {
+	let conversations = await this.domainCtrl.fetchConversations(email);
 	if (conversations != null) {
 		return conversations;
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
-	} /* 
-	let fakeConvers = [
-		{
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-			lastMessage: "Hola com estas? Jo estic amb el xat",
-			lastMessageTime: "10:30",
-			unreadMessages: 3			
-
-		},
-		{
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-			lastMessage: "Hola com estas? ",
-			lastMessageTime: "22/04/22",
-			unreadMessages: 0			
-
-		},
-		{
-			id: "3",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-			lastMessage: "Hola com estas? Jo estic amb el xat, jo estic amb el xat, jo estic amb el xat, jo estic amb el xat",
-			lastMessageTime: "20/04/22",
-			unreadMessages: 5			
-
-		}
-	];
-	return fakeConvers; */
+	}
 };
 
-PresentationCtrl.prototype.fetchNewConversations = async function () {
-	let conversation =
-		await this.domainCtrl.fetchNewConversations(/** TODO pass the email from the logged user */);
+PresentationCtrl.prototype.fetchNewConversations = async function (email) {
+	let conversation = await this.domainCtrl.fetchNewConversations(email);
 	if (conversation != null) {
 		return conversation;
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-	/* let fakeNewConvers = [
-		{
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-		},
-		{
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		{
-			id: "3",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-		},
-		{
-			id: "4",
-			name: "Júlia Herrera 2",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg",
-		},
-		{
-			id: "5",
-			name: "Iván Jimeno 2",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		{
-			id: "6",
-			name: "Pol Valenciaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2",
-			profileImage: "https://1.bp.blogspot.com/-dtvFFZQ2OTE/YPLdL3iKodI/AAAAAAAAkC8/HuAsGot_sI0QAzp9kqZmxHu6yZwjssOHQCLcBGAsYHQ/s1037/Alone%2BBoy%2BText%2BDP.jpg",
-		}
-	];
-
-	return fakeNewConvers; */
 };
 
-PresentationCtrl.prototype.fetchConversation = async function (id) {
-	let conversation = await this.domainCtrl.fetchConversation(id);
+PresentationCtrl.prototype.fetchConversation = async function (id, email) {
+	let conversation = await this.domainCtrl.fetchConversation(id, email);
 	if (conversation != null) {
 		let { users, messages } = conversation;
 		return { users: users, messages: messages };
@@ -452,62 +403,29 @@ PresentationCtrl.prototype.fetchConversation = async function (id) {
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-	/* 
-	let users = {
-		logged: {
-			id: "2",
-			name: "Iván Jimeno",
-			profileImage: "https://image.winudf.com/v2/image1/Y29tLmxha25haWRyaWFwcHMucHJvZmlsZV9zY3JlZW5fMl8xNjI2Njc1ODcyXzA1NA/screen-2.jpg?fakeurl=1&type=.jpg",
-		},
-		conversant: {
-			id: "1",
-			name: "Júlia Herrera",
-			profileImage: "https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/f/3/5/2/f352b0854c086944629262f2d048416f.jpg"
-		}
-	};
-	//new Date(year, month, day, hours, minutes, seconds, milliseconds)
-	let fakeConver = [
-		{
-			id: "1",
-			user: "1",
-			date: "26 april 2022",
-			hour: "15:30",
-			text: "Hola!"
-
-		},
-		{
-			id: "2",
-			user: "1",
-			date: "26 april 2022",
-			hour: "15:40",
-			text: "Què tal?"
-		},
-		{
-			id: "3",
-			user: "2",
-			date: "27 april 2022",
-			hour: "15:30",
-			text: "Molt bé i tu?"
-		}
-	];
-	
-	return {users: users, messages: fakeConver}; */
 };
 
-PresentationCtrl.prototype.createConversation = async function (email, text) {
-	let result = await this.domainCtrl.createConversation(email, text);
-	if (result != null) {
+PresentationCtrl.prototype.createConversation = async function (
+	email,
+	text,
+	loggedEmail
+) {
+	let result = await this.domainCtrl.createConversation(
+		email,
+		text,
+		loggedEmail
+	);
+	if (result != "error") {
 		return result;
 	} else {
 		//TODO ERROR: Show error message && reload page
-		return null;
+		return "error";
 	}
 };
 
 PresentationCtrl.prototype.deleteConversation = async function (id) {
 	let result = await this.domainCtrl.deleteConversation(id);
 	if (result != null) {
-		console.log("conversa borrada");
 		return true;
 	} else {
 		//TODO ERROR: Show error message && reload page
@@ -515,10 +433,37 @@ PresentationCtrl.prototype.deleteConversation = async function (id) {
 	}
 };
 
-PresentationCtrl.prototype.createMessage = async function (id, text) {
-	let newMessage = await this.domainCtrl.createMessage(id, text);
+PresentationCtrl.prototype.createMessage = async function (id, text, email) {
+	let newMessage = await this.domainCtrl.createMessage(id, text, email);
 	if (newMessage != null) {
 		return newMessage;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
+PresentationCtrl.prototype.reportMessage = async function (id) {
+	try {
+		let result = await this.domainCtrl.reportMessage(id);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
+	this.domainCtrl.createEvent(date, pin_id, email);
+};
+
+PresentationCtrl.prototype.fetchUsers = async function () {
+	this.domainCtrl.fetchUsers();
+};
+
+PresentationCtrl.prototype.fetchUser = async function (email) {
+	let user = await this.domainCtrl.fetchUser(email);
+	if (user != null) {
+		return user;
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;

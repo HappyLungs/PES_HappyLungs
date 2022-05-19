@@ -1,7 +1,5 @@
 const PersistenceCtrl = require("../../persistenceLayer/PersistenceCtrl");
 persistCtrl = new PersistenceCtrl();
-
-const LanguageEnum = Object.freeze({"english":1, "catalan":2, "spanish":3});
 class User {
     
     //Constructors
@@ -45,6 +43,12 @@ class User {
             "email": this.email,
             "oldPassword": oldPassword,
             "newPassword": newPassword
+        });
+    }
+
+    async restorePassword () {
+        return await persistCtrl.putRequest("/restorePassword", {
+            "email": this.email
         });
     }
 

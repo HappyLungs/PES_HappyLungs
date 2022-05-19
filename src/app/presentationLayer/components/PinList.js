@@ -6,10 +6,13 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
+	Pressable,
 } from "react-native";
 
 import * as Animatable from "react-native-animatable";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Modal from "react-native-modal";
+import { Rating } from "react-native-ratings";
 
 import { Feather, Ionicons } from "@expo/vector-icons";
 
@@ -23,8 +26,10 @@ const PinList = ({ pinList, navigation }) => {
 	const [user, setUser] = useContext(UserContext);
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
 	const [data, setData] = useState(pinList);
+	const [eventDate, setEventDate] = useState(new Date());
 
 	const isMyPin = (email) => {
 		return user.email === email;
@@ -37,9 +42,35 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		console.log("before:" + data);
 		setData(data.filter((item) => item._id !== selectedPin._id));
-		console.log("after:" + data);
+	};
+
+	const showDatePicker = (pin) => {
+		setDatePickerVisibility(true);
+		setSelectedPin(pin);
+	};
+
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
+
+	const transform = (date) => {
+		var formattedDate =
+			"" + date.getDate() < 10
+				? "0" + date.getDate() + "/"
+				: date.getDate() + "/";
+		formattedDate +=
+			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		return formattedDate.concat("/", date.getFullYear());
+	};
+
+	const createEvent = (date) => {
+		presentationCtrl.createEvent(date, selectedPin._id, user.email);
+	};
+
+	const handleConfirm = (date) => {
+		createEvent(transform(date));
+		hideDatePicker();
 	};
 
 	function renderDeleteConfirmation() {
@@ -127,7 +158,7 @@ const PinList = ({ pinList, navigation }) => {
 			>
 				<View style={{ flexDirection: "column" }}>
 					<View style={{ flexDirection: "row" }}>
-						<TouchableOpacity
+						<Pressable
 							style={{
 								flexDirection: "row",
 								flex: 1,
@@ -159,7 +190,8 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1,
 									marginHorizontal: 10,
-									alignSelf: "center",
+									marginVertical: 10,
+									alignSelf: "flex-start",
 								}}
 							>
 								<View
@@ -197,7 +229,12 @@ const PinList = ({ pinList, navigation }) => {
 										</Text>
 									</View>
 								</View>
-								<View style={{ flexDirection: "row", marginVertical: 2 }}>
+								<View
+									style={{
+										flexDirection: "row",
+										marginVertical: 8,
+									}}
+								>
 									<Ionicons
 										name="location-sharp"
 										style={{ alignSelf: "center" }}
@@ -211,17 +248,21 @@ const PinList = ({ pinList, navigation }) => {
 										{item.locationTitle}
 									</Text>
 								</View>
-								<View style={{ flexDirection: "row", marginVertical: 2 }}>
-									<Ionicons
-										name="md-calendar"
-										style={{ alignSelf: "center" }}
-										color={COLORS.secondary}
-										size={13}
-									/>
-									<Text style={styles.itemCode}>{item.date}</Text>
-								</View>
+								<Rating
+									type={"custom"}
+									imageSize={15}
+									fractions={0}
+									startingValue={item.rating}
+									ratingBackgroundColor={COLORS.secondary}
+									ratingColor={COLORS.green1}
+									tintColor={COLORS.white}
+									readonly={true}
+									style={{
+										alignSelf: "flex-start",
+									}}
+								/>
 							</View>
-						</TouchableOpacity>
+						</Pressable>
 					</View>
 					{isMyPin(item.creatorEmail) && (
 						<View
@@ -231,11 +272,28 @@ const PinList = ({ pinList, navigation }) => {
 							}}
 						>
 							<TouchableOpacity
+								activeOpacity={0.8}
+								style={{
+									flex: 1.5,
+									flexDirection: "row",
+									backgroundColor: COLORS.blue2,
+									borderBottomLeftRadius: 10,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									showDatePicker(item);
+								}}
+							>
+								<Feather name="calendar" size={15} color={COLORS.white} />
+								<Text style={styles.containerTxt}>{i18n.t("addEvent")}</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flex: 1.5,
 									flexDirection: "row",
 									backgroundColor: COLORS.secondary,
-									borderBottomLeftRadius: 10,
 									justifyContent: "center",
 									alignItems: "center",
 								}}
@@ -247,8 +305,9 @@ const PinList = ({ pinList, navigation }) => {
 								<Text style={styles.containerTxt}>{i18n.t("edit")}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
-									flex: 1,
+									flex: 0.75,
 									flexDirection: "row",
 									backgroundColor: COLORS.red1,
 									borderBottomRightRadius: 10,
@@ -260,7 +319,6 @@ const PinList = ({ pinList, navigation }) => {
 								}}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
-								<Text style={styles.containerTxt}>{i18n.t("delete")}</Text>
 							</TouchableOpacity>
 						</View>
 					)}
@@ -276,7 +334,7 @@ const PinList = ({ pinList, navigation }) => {
 				contentContainerStyle={{ padding: 10 }}
 				scrollEnabled={true}
 				data={pinList}
-				keyExtractor={(item) => `${item.title}`}
+				keyExtractor={(item) => `${item._id}`}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 				ItemSeparatorComponent={() => {
@@ -290,7 +348,14 @@ const PinList = ({ pinList, navigation }) => {
 					);
 				}}
 			></FlatList>
+
 			{renderDeleteConfirmation()}
+			<DateTimePickerModal
+				isVisible={isDatePickerVisible}
+				mode="date"
+				onConfirm={handleConfirm}
+				onCancel={hideDatePicker}
+			/>
 		</View>
 	);
 };

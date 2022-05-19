@@ -10,11 +10,13 @@ const COLORS = {
 	red2: "#ff6347",
 	blue1: "#00bfff",
 	blue2: "#4269c8",
+	purple: "purple",
 	green1: "#007f5a",
 	green2: "#004c35",
 	green3: "#a1ccc0",
 	orange: "#fe7624",
 	dark_orange: "#b15219",
+	bronze: "#c77b30",
 };
 
 module.exports = COLORS;

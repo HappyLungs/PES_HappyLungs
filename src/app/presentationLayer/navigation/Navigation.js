@@ -1,13 +1,11 @@
-import React, { useState, useMemo } from "react";
-import { Text, Pressable } from "react-native";
+import React from "react";
+import { Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
-	HeaderStyleInterpolators,
 	TransitionPresets,
 } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -26,6 +24,7 @@ import StatisticsScreen from "../screens/StatisticsScreen";
 import CreatePinScreen from "../screens/CreatePinScreen";
 import PinOwnerScreen from "../screens/PinOwnerScreen";
 import PinEditScreen from "../screens/PinEditScreen";
+import RankingScreen from "../screens/RankingScreen";
 import PinDefaultScreen from "../screens/PinDefaultScreen";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
@@ -89,15 +88,13 @@ function PinStack() {
 				component={PinsScreen}
 				options={{
 					title: i18n.t("myPins"),
-					headerTitleAlign: "left",
 					headerShown: true,
 					headerLeft: null,
-					headerTitleStyle: {
-						fontSize: 20,
-						fontWeight: "bold",
-						color: COLORS.secondary,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						shadowColor: "transparent",
+						backgroundColor: COLORS.green1,
 					},
-					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
@@ -112,10 +109,36 @@ function PinStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
-				options={{
+				options={({ navigation, route }) => ({
 					title: "",
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							activeOpacity={0.8}
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("EditPinScreen", { pin: route.params.pin });
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingPin")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
 					...TransitionPresets.SlideFromRightIOS,
-				}}
+				})}
 			/>
 			<Stack.Screen
 				name="EditPinScreen"
@@ -158,6 +181,7 @@ function ProfileStack() {
 					headerShown: true,
 					headerRight: () => (
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								alignItems: "center",
@@ -219,6 +243,21 @@ function ProfileStack() {
 					headerShown: true,
 				}}
 			/>
+			<Stack.Screen
+				name="RankingScreen"
+				component={RankingScreen}
+				options={{
+					title: i18n.t("ranking"),
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }
@@ -247,12 +286,11 @@ function ChatStack() {
 					title: i18n.t("chat"),
 					headerShown: true,
 					headerLeft: null,
-					headerTitleStyle: {
-						fontSize: 20,
-						fontWeight: "bold",
-						color: COLORS.secondary,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						shadowColor: "transparent",
+						backgroundColor: COLORS.green1,
 					},
-					headerStyle: { shadowColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen
@@ -329,11 +367,37 @@ function MapStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
-				options={{
+				options={({ navigation }) => ({
 					title: "",
-					headerShown: false,
+					headerShown: true,
+					headerRight: () => (
+						<TouchableOpacity
+							activeOpacity={0.8}
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginHorizontal: 30,
+							}}
+							onPress={() => {
+								navigation.navigate("EditPinScreen");
+							}}
+						>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginEnd: 10,
+									fontSize: 15,
+									color: COLORS.secondary,
+								}}
+							>
+								{i18n.t("editingPin")}
+							</Text>
+							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+						</TouchableOpacity>
+					),
+					headerLeft: null,
 					...TransitionPresets.SlideFromRightIOS,
-				}}
+				})}
 			/>
 			<Stack.Screen
 				name="EditPinScreen"
