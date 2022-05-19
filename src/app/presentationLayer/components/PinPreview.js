@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { Rating } from "react-native-ratings";
 
 import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl.js");
@@ -39,7 +40,20 @@ const PinPreview = ({ item, saved, mine }) => {
 				>
 					<Text style={styles.pinName}>{item.title}</Text>
 
-					<Text style={[styles.txt, { fontStyle: "italic" }]}>{item.date}</Text>
+					<Rating
+						type={"custom"}
+						imageSize={15}
+						fractions={0}
+						startingValue={item.rating}
+						ratingBackgroundColor={COLORS.secondary}
+						ratingColor={COLORS.green1}
+						tintColor={COLORS.white}
+						readonly={true}
+						style={{
+							alignSelf: "flex-start",
+							marginTop: 5,
+						}}
+					/>
 					<Text style={styles.profile}>{item.creatorName}</Text>
 				</View>
 				<View style={styles.shadow}>

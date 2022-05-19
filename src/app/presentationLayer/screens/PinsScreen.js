@@ -44,6 +44,7 @@ function PinsScreen({ navigation }) {
 			// Call any action and update data
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchPins(user.email);
+				console.log(data);
 				setMasterData([...data.pins, ...data.savedPins]);
 				setFilteredData([...data.pins, ...data.savedPins]);
 				setCreatedPins(data.pins);
