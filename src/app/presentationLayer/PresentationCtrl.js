@@ -392,6 +392,17 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	}
 };
 
+PresentationCtrl.prototype.getQualifationMap = async function(range_1, range_2) {
+	let energyMap = await this.domainCtrl.getQualifationMap(range_1,range_2);
+	if (energyMap != null) {
+		return energyMap;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}; 
+
+
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };

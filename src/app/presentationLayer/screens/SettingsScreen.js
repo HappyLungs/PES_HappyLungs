@@ -1,6 +1,10 @@
 import React, { useState, useContext } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { 
+	Ionicons,
+	MaterialIcons,
+	MaterialCommunityIcons, 
+} from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
@@ -23,16 +27,37 @@ function SettingsScreen({ navigation }) {
 	// };
 	// const [user, setUser] = useState(fakeUserData);
 
+	const [user, setUser] = useContext(UserContext);
+
+	const [inputs, setInputs] = useState({
+		language: user.language, 
+		notifications: user.notifications,
+	});
+
+
+	const validate = async () => {
+		let updatedUser = await presentationCtrl.updateUser(
+			user.name,
+			user.email,
+			user.points,
+			inputs.language,	
+			user.healthStatus,
+			inputs.notifications,
+			user.profilePicture
+		);
+		setUser(updatedUser);
+	};
+
 	const [state1, setState1] = useState(false);
 	const [state2, setState2] = useState(false);
 	const [state3, setState3] = useState(true);
+
 	const [state4, setState4] = useState(false);
 	const [state5, setState5] = useState(true);
 
 	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
 		useState(false);
 
-	const [user, setUser] = useContext(UserContext);
 
 	const deleteUser = async () => {
 		let response = await presentationCtrl.deleteUser(user.email);
@@ -167,6 +192,7 @@ function SettingsScreen({ navigation }) {
 							marginVertical: 15,
 						}}
 					>
+						
 						<View style={{ alignItems: "center", width: 115 }}>
 							<TouchableOpacity
 								onPress={() => {
@@ -174,14 +200,17 @@ function SettingsScreen({ navigation }) {
 										setState3(false);
 										setState2(false);
 									}
-									setState1(!state1);
-									//changeLanguage();
+									setState1(true);
+									setInputs({
+										language: "Spanish",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "Spanish" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -205,14 +234,17 @@ function SettingsScreen({ navigation }) {
 										setState3(false);
 										setState1(false);
 									}
-									setState2(!state2);
-									//changeLanguage();
+									setState2(true);
+									setInputs({
+										language: "Catalan",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "Catalan" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -236,14 +268,17 @@ function SettingsScreen({ navigation }) {
 										setState2(false);
 										setState1(false);
 									}
-									setState3(!state3);
-									//changeLanguage();
+									setState3(true);
+									setInputs({
+										language: "English",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "English" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -274,14 +309,17 @@ function SettingsScreen({ navigation }) {
 							<TouchableOpacity
 								onPress={() => {
 									if (!state4 && state5) setState5(false);
-									setState4(!state4);
-									//changeLanguage();
+									setState4(true);
+									setInputs({
+										language: inputs.language,
+										notifications: true
+									});								
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state4 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.notifications ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -293,14 +331,17 @@ function SettingsScreen({ navigation }) {
 							<TouchableOpacity
 								onPress={() => {
 									if (!state5 && state4) setState4(false);
-									setState5(!state5);
-									//changeLanguage();
+									setState5(true);
+									setInputs({
+										language: inputs.language,
+										notifications: false
+									});		
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state5 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: !inputs.notifications ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -328,11 +369,46 @@ function SettingsScreen({ navigation }) {
 					onPress={() => setModalDeleteAccountVisible()}
 					style={[
 						styles.containerOption,
-						{ marginHorizontal: 30, marginBottom: 20 },
+						{ marginHorizontal: 30, marginBottom: 325 },
 					]}
 				>
-					<Feather name="power" size={27} color={COLORS.red1} />
+					<MaterialIcons name="delete" size={27} color={COLORS.red1} />
 					<Text style={styles.textOption}>{i18n.t("deleteAccount")}</Text>
+				</TouchableOpacity>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "flex-end",
+					justifyContent: "flex-end",
+					marginTop: -100,
+					marginLeft: 45,
+					marginBottom: 50
+				}}
+			>
+				<TouchableOpacity
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.red1 },
+					]}
+					onPress={() => navigation.navigate("ProfileScreen")
+				}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
+				</TouchableOpacity>			
+				<TouchableOpacity
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.green1 },
+					]}
+					onPress={() => {
+						validate();
+						navigation.navigate("ProfileScreen");
+					}}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>
 				</TouchableOpacity>
 			</View>
 			{renderModalDeleteAccount()}
@@ -389,9 +465,10 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 110,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
+		marginHorizontal: 25
 	},
 	containerBtn2: {
 		width: 85,
