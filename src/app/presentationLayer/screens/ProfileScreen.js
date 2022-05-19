@@ -32,10 +32,6 @@ function ProfileScreen({ navigation, route }) {
 		//no se que ha de fer
 	}
 
-	function rewards() {
-		navigation.navigate("RankingScreen");
-	}
-
 	function logOut() {
 		setUser({
 			__v: 0,
@@ -151,6 +147,7 @@ function ProfileScreen({ navigation, route }) {
 				style={{
 					flexDirection: "row",
 					paddingHorizontal: 20,
+					marginTop: 20,
 				}}
 			>
 				<View
@@ -166,7 +163,7 @@ function ProfileScreen({ navigation, route }) {
 								borderRadius: 20,
 								width: 100,
 								height: 125,
-								justifyContent: "flex-end",
+								justifyContent: "flex-start",
 							},
 							styles.long_shadow,
 						]}
@@ -181,7 +178,7 @@ function ProfileScreen({ navigation, route }) {
 									backgroundColor: COLORS.light,
 									alignSelf: "center",
 									borderRadius: 5,
-									top: 20,
+									bottom: 20,
 									padding: 5,
 									paddingHorizontal: 10,
 								},
@@ -267,6 +264,9 @@ function ProfileScreen({ navigation, route }) {
 							},
 							styles.shadow,
 						]}
+						onPress={() => {
+							navigation.navigate("RankingScreen", { scroll: true });
+						}}
 					>
 						<View
 							style={{
@@ -307,7 +307,7 @@ function ProfileScreen({ navigation, route }) {
 					alignSelf: "center",
 					backgroundColor: COLORS.lightGrey,
 					height: 6,
-					marginTop: 35,
+					marginTop: 20,
 					marginBottom: 15,
 					width: "100%",
 				}}
@@ -418,7 +418,9 @@ function ProfileScreen({ navigation, route }) {
 				</TouchableOpacity>
 				<TouchableOpacity
 					activeOpacity={0.8}
-					onPress={() => rewards()}
+					onPress={() => {
+						navigation.navigate("RankingScreen", { scroll: false });
+					}}
 					style={styles.containerOption}
 				>
 					<AntDesign name="Trophy" size={27} color={COLORS.green1} />

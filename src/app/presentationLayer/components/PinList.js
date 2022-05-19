@@ -65,7 +65,7 @@ const PinList = ({ pinList, navigation }) => {
 	};
 
 	const createEvent = (date) => {
-		presentationCtrl.createEvent(date, selectedPin._id, user.email);
+		presentationCtrl.createEvent(date, selectedPin, user.email);
 	};
 
 	const handleConfirm = (date) => {
@@ -190,7 +190,7 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1,
 									marginHorizontal: 10,
-									marginVertical: 10,
+									marginVertical: 5,
 									alignSelf: "flex-start",
 								}}
 							>
@@ -232,7 +232,6 @@ const PinList = ({ pinList, navigation }) => {
 								<View
 									style={{
 										flexDirection: "row",
-										marginVertical: 8,
 									}}
 								>
 									<Ionicons
@@ -259,6 +258,7 @@ const PinList = ({ pinList, navigation }) => {
 									readonly={true}
 									style={{
 										alignSelf: "flex-start",
+										marginTop: 5,
 									}}
 								/>
 							</View>

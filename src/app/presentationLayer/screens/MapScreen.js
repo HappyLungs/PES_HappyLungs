@@ -311,11 +311,11 @@ function MapScreen({ navigation, route }) {
 					onPress={() => {
 						navigation.navigate("Profile");
 					}}
-					style={{}}
+					style={[styles.shadow, { borderRadius: 30 }]}
 				>
 					<Image
 						source={{ uri: user.profilePicture }}
-						style={[{ borderRadius: 20, width: 40, height: 40 }]}
+						style={[{ borderRadius: 30, width: 40, height: 40 }]}
 					></Image>
 				</TouchableOpacity>
 				<Text
@@ -323,7 +323,7 @@ function MapScreen({ navigation, route }) {
 						{
 							fontSize: 20,
 							fontWeight: "bold",
-							color: COLORS.secondary,
+							color: COLORS.green1,
 							marginStart: 15,
 						},
 					]}

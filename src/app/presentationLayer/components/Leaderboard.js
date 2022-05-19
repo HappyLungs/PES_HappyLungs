@@ -7,11 +7,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 
-const Leaderboard = ({ chatsList }) => {
+const Leaderboard = ({ chatsList, email, scroll }) => {
 	const gold = ["#d9bf70", "#f0e092", "#d9bf70"];
 	const silver = ["#cbc5c6", "#e8e8e8", "#cbc5c6"];
 	const colors = ["#cc8043", "#e3a265", "#cc8043"];
 	const blank = ["#fff", "#fff", "#fff"];
+
+	const getScrollIndex = () => {
+		if (scroll) {
+			return chatsList.indexOf(email);
+		}
+		return 0;
+	};
 
 	const renderItem = ({ item, index }) => (
 		<Animatable.View
@@ -105,6 +112,7 @@ const Leaderboard = ({ chatsList }) => {
 			keyExtractor={(item) => `${item.name}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
+			initialScrollIndex={getScrollIndex()}
 			style={{ marginTop: 10 }}
 		></FlatList>
 	);
