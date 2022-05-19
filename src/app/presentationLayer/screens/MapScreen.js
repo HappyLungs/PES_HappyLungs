@@ -112,7 +112,7 @@ function MapScreen({ navigation, route }) {
 	 */
 	const [byCertificate, setByCertificate] = useState(false);
 
-	const [multiSliderValue, setMultiSliderValue] = useState([0, 1]);
+	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
 
 	const multiSliderValuesChange = values => {
 		setMultiSliderValue(values)
@@ -127,10 +127,7 @@ function MapScreen({ navigation, route }) {
 		longitude: 2.019336,
 		title: "inexistente",
 	});
-	const [actualHouses, setActualHouses] = useState({
-		latitude: 41.366531,
-		longitude: 2.019336,
-	});
+	
 	const [selected, setSelected] = useState(null);
 
 	/**
@@ -482,7 +479,9 @@ function MapScreen({ navigation, route }) {
 									height: 5,
 									borderRadius: 2,
 								}}
-							/>
+							>
+								{console.log(multiSliderValue)}
+							</MultiSlider>
 						</View>
 					</View>
 				</View>
