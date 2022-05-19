@@ -311,6 +311,42 @@ exports.savePin = async (request, response) => {
     });
 }
 
+exports.unsavePin = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    let result = await UserDataLayer.findUser({email: params.email}).then();
+    if (result == null && typeof result == undefined) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Invalid user", {});
+        return;
+    } 
+    if (result.savedPins.indexOf(params.pin) === -1) {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
+    if (mongodb.ObjectID.isValid(params.pin)) {
+        UserDataLayer.updateUser({email: params.email}, {$unset: {savedPins: mongodb.ObjectId(params.pin)}})
+        .then((updatedData) => {
+            if (updatedData !== null && typeof updatedData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
+}
+
 exports.delete = async (request, response) => {
     let params = {};
     if (request.body.params) {
