@@ -158,7 +158,11 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 		const initHeatPoints = async () => {
-			setHeatpoints(await presentationCtrl.getHeatPoints());
+			console.log("abans");
+			let aux = await presentationCtrl.getHeatPoints();
+			console.log(aux);
+			setHeatpoints(aux);
+			console.log(heatpoints);
 		};
 		await initHeatPoints();
 		return unsubscribe;

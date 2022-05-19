@@ -17,9 +17,9 @@ class DataPointMap {
      * @returns {Integer} pollution level at the date "date" and hour "hour" of the nearer Measure Station.
      */
     async  getHourLevel(date, hour) {
-        let nearPoints = await this.nearerPoints();
+        let nearPoints = await this.nearerPoints(new Date());
 
-        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
+        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi,null,null,this.latitude,this.longitud,null);
             return nearPoint.getHourLevel(date, hour);
     }
     
