@@ -51,7 +51,7 @@ function ChatScreen({ route, navigation }) {
 		}
 		*/
 
-		this.socket = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id=Id de la conversa'});
+		this.socket = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
 		console.log('check 1', this.socket.connected);
 		socket.on('connect', function() {
 			console.log('check 2', this.socket.connected);
