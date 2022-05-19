@@ -176,7 +176,8 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
-		getHouses(0,6);
+		
+		//getHouses(0,6);
 
 		const initHeatPoints = async () => {
 			setHeatpoints(await presentationCtrl.getHeatPoints());
@@ -238,6 +239,8 @@ function MapScreen({ navigation, route }) {
 	 */
 	const mapRef = useRef(null);
 
+	let housesImgages = [ "https://i.ibb.co/yShfsG6/A.png", "https://i.ibb.co/sJtSG9v/B.png", "https://i.ibb.co/fQJTpFL/C.png", "https://i.ibb.co/D7nt50T/D.png", "https://i.ibb.co/BPWjqC4/E.png", "https://i.ibb.co/GTdNLQ8/F.png", "https://i.ibb.co/CmWbn9f/G.png"]
+
 	const onMapLoad = React.useCallback((map) => {
 		mapRef.current = map;
 	});
@@ -259,22 +262,23 @@ function MapScreen({ navigation, route }) {
 
 	const [user] = useContext(UserContext);
 
-	function getHouses(range1, range2) /*= async()*/ {
+	const getHouses = async(range1, range2) => {
 		//const fetchHouses = async () => {
 		const energyMap = await presentationCtrl.getQualifationMap(range1, range2);
 		setHouses(energyMap);	
 		let fetchedHouses = [];
 		for (let house of Object.keys(energyMap)) {
 		fetchedHouses.push({
-			latitude: energyMap[house].latitude,
-			longitude: energyMap[house].longitude,
+			latitude: energyMap[house].latitud,
+			longitude: energyMap[house].longitud,
 			value: energyMap[house].value,
 			});
 		}
+		console.log(fetchedHouses),
 		setHousesByCertificate(fetchedHouses);
 		setByCertificate(true);	
 	};
-	//await fetchHouses();
+	
 	
 
 	function renderHeader(user) {
@@ -760,11 +764,14 @@ function MapScreen({ navigation, route }) {
 							<Marker
 								key={idx2}
 								coordinate={{
-									latitude: house.latitude,
-									longitude: house.longitude,
+									//latitude: 41.366531,
+									//longitude: 2.019336,
+									latitude: parseInt(house.latitude),
+									longitude: parseInt(house.longitude),
 								}}
-								image={{ uri: "https://i.ibb.co/yShfsG6/A.png" }} /*image={{ https://i.ibb.co/yShfsG6/A.png - https://i.ibb.co/sJtSG9v/B.png - https://i.ibb.co/fQJTpFL/C.png - https://i.ibb.co/D7nt50T/D.png - https://i.ibb.co/BPWjqC4/E.png - https://i.ibb.co/GTdNLQ8/F.png - https://i.ibb.co/CmWbn9f/G.png
-								*/
+								image={{ 
+									uri: housesImgages[house.value]
+								}} 
 							/>
 						))}
 

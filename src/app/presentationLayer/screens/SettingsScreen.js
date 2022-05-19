@@ -27,45 +27,37 @@ function SettingsScreen({ navigation }) {
 	// };
 	// const [user, setUser] = useState(fakeUserData);
 
+	const [user, setUser] = useContext(UserContext);
+
 	const [inputs, setInputs] = useState({
-		language: user.language,
+		language: user.language, 
 		notifications: user.notifications,
 	});
 
+
 	const validate = async () => {
-		Keyboard.dismiss();
-		if (!inputs.username) {
-			handleError(i18n.t("usernameError"), "username");
-		} else if (!inputs.email) {
-			handleError("", "email");
-		} else if (!inputs.password) {
-			handleError("", "password");
-		} else {
-			let updatedUser = await presentationCtrl.updateUser(
-				user.username,
-				user.email,
-				user.points,
-				imput.language,
-				[state1, state2, state3],
-				imput.notifications,
-				profilePicture
-			);
-			setUser(updatedUser);
-		}
+		let updatedUser = await presentationCtrl.updateUser(
+			user.name,
+			user.email,
+			user.points,
+			inputs.language,	
+			user.healthStatus,
+			inputs.notifications,
+			user.profilePicture
+		);
+		setUser(updatedUser);
 	};
 
 	const [state1, setState1] = useState(false);
 	const [state2, setState2] = useState(false);
 	const [state3, setState3] = useState(true);
+
 	const [state4, setState4] = useState(false);
 	const [state5, setState5] = useState(true);
-
-	
 
 	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
 		useState(false);
 
-	const [user, setUser] = useContext(UserContext);
 
 	const deleteUser = async () => {
 		let response = await presentationCtrl.deleteUser(user.email);
@@ -200,6 +192,7 @@ function SettingsScreen({ navigation }) {
 							marginVertical: 15,
 						}}
 					>
+						
 						<View style={{ alignItems: "center", width: 115 }}>
 							<TouchableOpacity
 								onPress={() => {
@@ -208,13 +201,16 @@ function SettingsScreen({ navigation }) {
 										setState2(false);
 									}
 									setState1(true);
-									//changeLanguage();
+									setInputs({
+										language: "Spanish",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "Spanish" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -239,13 +235,16 @@ function SettingsScreen({ navigation }) {
 										setState1(false);
 									}
 									setState2(true);
-									//changeLanguage();
+									setInputs({
+										language: "Catalan",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "Catalan" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -270,13 +269,16 @@ function SettingsScreen({ navigation }) {
 										setState1(false);
 									}
 									setState3(true);
-									//changeLanguage();
+									setInputs({
+										language: "English",
+										notifications: inputs.notifications
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "English" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -308,13 +310,16 @@ function SettingsScreen({ navigation }) {
 								onPress={() => {
 									if (!state4 && state5) setState5(false);
 									setState4(true);
-									//changeNotifications();
+									setInputs({
+										language: inputs.language,
+										notifications: true
+									});								
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state4 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.notifications ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -327,13 +332,16 @@ function SettingsScreen({ navigation }) {
 								onPress={() => {
 									if (!state5 && state4) setState4(false);
 									setState5(true);
-									//changeNotifications();
+									setInputs({
+										language: inputs.language,
+										notifications: false
+									});		
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state5 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: !inputs.notifications ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -396,9 +404,8 @@ function SettingsScreen({ navigation }) {
 						{ backgroundColor: COLORS.green1 },
 					]}
 					onPress={() => {
-						validate;
+						validate();
 						navigation.navigate("ProfileScreen");
-
 					}}
 				>
 					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>
