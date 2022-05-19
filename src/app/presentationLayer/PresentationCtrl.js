@@ -280,7 +280,7 @@ PresentationCtrl.prototype.changePassword = async function (
  * @param {*} email
  * @returns restores the password and sends an email
  */
- PresentationCtrl.prototype.restorePassword = async function (email) {
+PresentationCtrl.prototype.restorePassword = async function (email) {
 	if (email) {
 		return await this.domainCtrl.restorePassword(email);
 	} else {

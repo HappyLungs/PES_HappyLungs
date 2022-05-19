@@ -17,8 +17,9 @@ import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
-function SettingsScreen({ navigation }) {
+function RankingScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
+	const scrollToUser = route.params.scroll;
 
 	const [user, setUser] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
@@ -99,7 +100,12 @@ function SettingsScreen({ navigation }) {
 					borderColor: COLORS.green2,
 				}}
 			></View>
-			<Leaderboard chatsList={masterData} navigation={navigation}></Leaderboard>
+			<Leaderboard
+				chatsList={masterData}
+				navigation={navigation}
+				email={user.email}
+				scroll={scrollToUser}
+			></Leaderboard>
 		</View>
 	);
 
@@ -268,4 +274,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SettingsScreen;
+export default RankingScreen;
