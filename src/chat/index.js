@@ -11,7 +11,9 @@ io.on("connection", socket => {
       io.emit("chat message", msg);
     });
 
-    console.log(socket.handshake.query.id);
+    console.log("Id: ",socket.handshake.query.id);
+    //let converId = socket.handshake.query.id;
+    //socket.join(converId);
 });
 
 server.listen(port, () => console.log("server running on port:" + port));
