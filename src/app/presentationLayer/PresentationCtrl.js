@@ -186,6 +186,21 @@ PresentationCtrl.prototype.savePin = async function (pin, email) {
 /**
  *
  * @param {*} pin
+ * @returns the saved pin from the logged user that is going to be unsaved
+ */
+ PresentationCtrl.prototype.unsavePin = async function (pin, email) {
+	let result = await this.domainCtrl.unsavePin(pin, email);
+	if (result != null) {
+		return result;
+	} else {
+		//TODO: Handle error
+		return null;
+	}
+};
+
+/**
+ *
+ * @param {*} pin
  * @returns the saved pin from the logged user
  */
 PresentationCtrl.prototype.removeFromSaved = async function (pin, email) {
