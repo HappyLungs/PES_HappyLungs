@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -17,14 +17,9 @@ import Feather from "react-native-vector-icons/Feather";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import { fetchUserInfoAsync } from "expo-auth-session";
+import axios from "axios";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
-
-const queryString = require("query-string");
-
-const GOOGLE_CLIENT_ID = "437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com";
-const CLIENT_ID = "84eca7881ac449abbf7bebd073069026";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -46,26 +41,50 @@ function SignInScreen({ navigation, route }) {
 		androidClientId: '437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com',
 	});
 
-	React.useEffect(() => {
-		console.log("DOING SOMETHING", response)
+	// const getUserData = async () => {
+	// 	console.log("HELLOOOOOOOOO!!!!!")
+	// 	let userInfo = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+	// 		method: 'get',
+	// 		headers: { Authorization: `Bearer ${accessToken}`}
+	// 	});
+	// 	console.log("USER DATA:  ", userInfo)
+	// 	setData({
+	// 		...data,
+	// 		email: userInfo.email,
+	// 		checkEmailInputChange: true,
+	// 	});
+	// };
+
+	useEffect(() => {
 		if (response?.type === "success") {
 			const { authentication } = response;
-			console.log("AUHTENTICATION IS HERE", authentication);
-			setAccessToken(authentication.accessToken);
+			console.log("TOKEN:    ", authentication.accessToken)
+			getUserInfo(authentication.accessToken);
+			// console.log("MY DATA IS :   ", data)
 		}
 	}, [response]);
 
-	
-	const getUserData = async () => {
-		let userInfo = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-			headers: { Authorization: `Bearer ${accessToken}`}
-		});
-		setData({
-			...data,
-			email: userInfo.email,
-			checkEmailInputChange: true,
-		})
+	const getUserInfo = async (accessToken) => {
+		try {
+			let userRequestInfo = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo",
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`
+					}
+				}
+			);
+			console.log(userRequestInfo.data);
+			// setData({
+			// 	...data,
+			// 	email: userInfo.email,
+			// 	checkEmailInputChange: true,
+			// });
+		}
+		catch (error) {
+			console.log("userRequestInfo error: ", error);
+		}
 	};
+		
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -237,8 +256,7 @@ function SignInScreen({ navigation, route }) {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							promptAsync();
-							consosle.log("OKAY")
+							promptAsync({showInRevents: true});
 						}}
 						style={[
 							styles.signIn,
