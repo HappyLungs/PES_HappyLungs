@@ -21,7 +21,7 @@ class DataPointMap {
         let nearPoint=this.getMeasureStation(nearPoints[0][1].codi_eoi);
         if(nearPoint===undefined){
             nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi,null,null,this.latitude,this.longitud,null);
-        }
+        }console.log(nearPoint);
         return nearPoint.getHourLevel(date, hour);
     }
     
@@ -208,7 +208,7 @@ class DataPointMap {
      return uniquearray
     }
     getMeasureStation(eoiCode){
-        if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+        if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode).station;
         return undefined;
     };
 }

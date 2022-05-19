@@ -7,8 +7,8 @@ test('get hour level test',
         const data = await dataPointMapTest.getHourLevel(new Date('March 19, 2022 9:00:00'), 9);
         expect(data).toEqual(0);
     });
-
-test('test nearer points', ()=>{
-    const points=dataPointMapTest.nearerPoints(new Date('March 19, 2022 9:00:00'));
-    expect(points).toBe({});
-});
+/*
+test('test nearer points', async ()=>{
+    const points= await dataPointMapTest.nearerPoints(new Date('March 19, 2022 9:00:00'));
+    expect(points[0][0]).toBe(5914075.164821431);
+});*/

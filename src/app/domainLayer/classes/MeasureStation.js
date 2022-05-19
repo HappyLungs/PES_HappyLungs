@@ -25,7 +25,15 @@ class MeasureStation {
                 eoi: eoiCode,
                 station: this,
             });
-        }
+        }else if(MeasureStation.Stations!==undefined ){
+            MeasureStation.Stations.push({
+            eoi: eoiCode,
+            station: this,
+        });
+        }else MeasureStation.Stations=[{
+            eoi: eoiCode,
+            station: this,
+        }];
     }
     static Stations;
     level;
