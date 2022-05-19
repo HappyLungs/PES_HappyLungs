@@ -60,6 +60,12 @@ router.put(
     UserController.savePin
 );
 
+router.put(
+    "/unsavePin",
+    licenseMiddleware.validate,
+    UserController.unsavePin
+);
+
 router.post(
     "/updateUser",
     licenseMiddleware.validate,

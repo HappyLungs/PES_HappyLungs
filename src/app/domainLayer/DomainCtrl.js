@@ -370,6 +370,25 @@ DomainCtrl.prototype.savePin = async function (Pin, email) {
 
 /**
  *
+ * @param {*} Pin
+ * @param {*} email
+ * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
+ */
+ DomainCtrl.prototype.unsavePin = async function (Pin, email) {
+	let result = await persistenceCtrl.putRequest("/unsavePin", {
+		email: email,
+		pin: Pin,
+	});
+	if (result.status === 200) {
+		return result.data;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+/**
+ *
  * @param {*} id
  * @returns deletes pin with identifier = id. Else returns null => error
  */
