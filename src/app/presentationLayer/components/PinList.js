@@ -65,7 +65,7 @@ const PinList = ({ pinList, navigation }) => {
 	};
 
 	const createEvent = (date) => {
-		presentationCtrl.createEvent(date, selectedPin._id, user.email);
+		presentationCtrl.createEvent(date, selectedPin, user.email);
 	};
 
 	const handleConfirm = (date) => {
