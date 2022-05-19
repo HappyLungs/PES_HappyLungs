@@ -74,6 +74,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<Text style={[styles.title, { flex: 1 }]}>{pin.title}</Text>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",
@@ -138,6 +139,7 @@ function PinDefaultScreen({ navigation, route }) {
 					</Text>
 				</View>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					style={{
 						alignSelf: "flex-start",
 						paddingVertical: 10,
@@ -146,16 +148,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<Text style={styles.highlight}>{i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						paddingVertical: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
-				</View>
+
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -180,6 +173,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{ flexDirection: "row" }}
 							onPress={handleShare}
 						>
@@ -194,6 +188,7 @@ function PinDefaultScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",

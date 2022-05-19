@@ -28,6 +28,14 @@ function ProfileScreen({ navigation, route }) {
 		navigation.navigate("SettingsScreen");
 	}
 
+	function calendar() {
+		//no se que ha de fer
+	}
+
+	function rewards() {
+		navigation.navigate("RankingScreen");
+	}
+
 	function logOut() {
 		setUser({
 			__v: 0,
@@ -46,12 +54,6 @@ function ProfileScreen({ navigation, route }) {
 		navigation.navigate("SignInScreen");
 		// setUser(null);
 	}
-
-	function calendar() {
-		//no se que ha de fer
-	}
-
-	function rewards() {}
 
 	async function share() {
 		try {
@@ -106,6 +108,7 @@ function ProfileScreen({ navigation, route }) {
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -116,6 +119,7 @@ function ProfileScreen({ navigation, route }) {
 									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -251,6 +255,7 @@ function ProfileScreen({ navigation, route }) {
 						</View>
 					</View>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								backgroundColor: COLORS.green1,
@@ -396,6 +401,7 @@ function ProfileScreen({ navigation, route }) {
 				}}
 			>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => settings()}
 					style={styles.containerOption}
 				>
@@ -403,6 +409,7 @@ function ProfileScreen({ navigation, route }) {
 					<Text style={styles.textOption}>{i18n.t("settings")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => calendar()}
 					style={styles.containerOption}
 				>
@@ -410,6 +417,7 @@ function ProfileScreen({ navigation, route }) {
 					<Text style={styles.textOption}>{i18n.t("calendar")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => rewards()}
 					style={styles.containerOption}
 				>
@@ -417,6 +425,7 @@ function ProfileScreen({ navigation, route }) {
 					<Text style={styles.textOption}>{i18n.t("ranking")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => share()}
 					style={styles.containerOption}
 				>
@@ -425,6 +434,7 @@ function ProfileScreen({ navigation, route }) {
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
+				activeOpacity={0.8}
 				onPress={() => setModalLogoutVisible()}
 				style={[
 					styles.containerOption,

@@ -7,8 +7,7 @@ import User from "./classes/User";
 const DadesObertes = require("./services/DadesObertes");
 const MeasureStation = require("./classes/MeasureStation");
 const dadesObertes = new DadesObertes();
-const dataPointMap= require("./classes/DataPointMap");
-
+const dataPointMap = require("./classes/DataPointMap");
 
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
@@ -20,6 +19,7 @@ let DomainCtrl;
 	DomainCtrl = function () {
 		if (instance) return instance;
 		instance = this;
+
 
 		// initialize any properties of the singleton
 	};
@@ -50,8 +50,6 @@ DomainCtrl.prototype.getMapData = async function () {
 		}
 	});
 
-
-
 	let measureStationLevels = [];
 	for (let [, ms] of measureStations) {
 		let level = await ms.getHourLevel(date, date.getHours());
@@ -59,7 +57,7 @@ DomainCtrl.prototype.getMapData = async function () {
 			let info = {
 				latitude: parseFloat(ms.latitud),
 				longitude: parseFloat(ms.longitud),
-				weight: (parseFloat(level))/6,
+				weight: parseFloat(level) / 6,
 			};
 			measureStationLevels.push(info);
 		}
@@ -68,7 +66,7 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date=new Date();
-	let nsteps=10;
+	let nsteps=100;
 	let jmax=1;
 	let inilat=40.541006;
 	let inilong=0.680310;
@@ -80,13 +78,17 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	let longstep=(maxlong-inilong)/nsteps;
 	let latsteps= (maxlat-inilat)/nsteps;
 	let datapoints=[];
-	for (let i=0;i<nsteps;i++){
-		for(let j=0;j<jmax ;j++){
+	for (let i=0;i<=nsteps;i++){
+		for(let j=0;j<=nsteps ;j++){
+			if(!this.inCat(actuallat,actuallong)){
+				actuallong=actuallong+longstep;
+				continue;
+			}
 			let dp=new DataPointMap(actuallat, actuallong);
 			let actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: await dp.getHourLevel(date,date.getHours()),
+				weight: await dp.getHourLevel(date,date.getHours())/6,
 			};
 			datapoints.push(actual);
 			actuallong=actuallong+longstep;
@@ -95,6 +97,12 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		actuallong=inilong;
 		jmax++;
 	}
+	let actual = {
+		latitude: 0,
+		longitude: 0,
+		weight: 0.99,
+	};
+	datapoints.push(actual);
 	return datapoints;
 
 
@@ -221,7 +229,6 @@ DomainCtrl.prototype.getPollutantsQuantLastYear = async function (
  * @param {*} description
  * @param {*} media
  * @param {*} rating
- * @param {*} date
  * @param {*} status
  * @returns the created pin in case of success. Otherwise an error message.
  */
@@ -232,7 +239,6 @@ DomainCtrl.prototype.createPin = async function (
 	description,
 	media,
 	rating,
-	date,
 	status,
 	creatorEmail,
 	creatorName
@@ -246,7 +252,6 @@ DomainCtrl.prototype.createPin = async function (
 		description,
 		media,
 		rating,
-		new Date(date),
 		status,
 		creatorEmail,
 		creatorName
@@ -258,14 +263,12 @@ DomainCtrl.prototype.createPin = async function (
 		latitude: pin.latitude,
 		longitude: pin.longitude,
 		locationTitle: pin.locationTitle,
-		date: pin.date,
 		rating: pin.rating,
 		status: pin.status,
 		creatorEmail: creatorEmail,
 		creatorName: creatorName,
 		media: pin.media,
 	};
-	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB
@@ -317,7 +320,6 @@ DomainCtrl.prototype.editPin = async function (
 	description,
 	media,
 	rating,
-	date,
 	status,
 	userEmail
 ) {
@@ -331,10 +333,14 @@ DomainCtrl.prototype.editPin = async function (
 		description: description,
 		media: media,
 		rating: rating,
-		date: new Date(date),
-		status: status
-	}
-	let result = await persistenceCtrl.putRequest("/pin", {pin: pin, creatorEmail: userEmail});
+		status: status,
+	};
+	let result = await persistenceCtrl.putRequest("/pin", {
+		pin: pin,
+		creatorEmail: userEmail,
+	});
+	console.log("result.data");
+	console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -420,9 +426,23 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} newPassword
  * @returns an acces_token for the user
  */
- DomainCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+DomainCtrl.prototype.changePassword = async function (
+	email,
+	oldPassword,
+	newPassword
+) {
 	let myUser = new User(null, email, null, null);
 	return await myUser.changePassword(oldPassword, newPassword);
+};
+
+/**
+ *
+ * @param {*} email
+ * @returns restores the password and sends an email
+ */
+DomainCtrl.prototype.restorePassword = async function (email) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.restorePassword();
 };
 
 /**
@@ -431,7 +451,7 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
  * @returns an acces_token for the user
  */
 
- DomainCtrl.prototype.deleteUser = async function (email, password) {
+DomainCtrl.prototype.deleteUser = async function (email, password) {
 	let myUser = new User(null, email, null, null);
 	return await myUser.delete();
 };
@@ -489,49 +509,69 @@ DomainCtrl.prototype.updateUserPassword = async function (name, password) {
   3. Dont have the Images ATM
 */
 DomainCtrl.prototype.fetchConversation = async function (id, email) {
-  let conversation = await persistenceCtrl.getRequest("/conversation", {_id: id});
-  if (conversation.status === 200) {
-    var users = {};
-    const logged = await persistenceCtrl.getRequest("/user", {email: email});
-    if (logged.status === 200) {
-      const conversant = await persistenceCtrl.getRequest("/user", {email: (conversation.data.users[0] === logged.data.email) ? conversation.data.users[1] : conversation.data.users[0]});
-      if (conversant.status === 200) {
-        users = {
-          logged: {
-            email: logged.data.email,
-            name: logged.data.name,
-            profileImage: (logged.data.profilePicture) ? logged.data.profilePicture : "null",
-          },
-          conversant: {
-            id: conversant.data._id,
-            name: conversant.data.name,
-            profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "null",
-          },
-        };
-        let dbMessages = await persistenceCtrl.getRequest("/message", {conversation: conversation.data._id});
-        dbMessages.data.forEach(message => {
-          let date = new Date(message.createdAt);
-          message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
-          message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
-        })
-        if (dbMessages.status === 200) {
-          return { users:  users, messages: dbMessages.data };
-        } else {
-          //TODO handle error
-          return null;
-        }
-      } else {
-        //TODO: handle error
-        return null;
-      }
-    } else {
-      //TODO: handle error
-      return null;
-    }
-  } else {
-    //TODO: handle error. Return an error and reload the view with the error
-    return null;
-  }
+	let conversation = await persistenceCtrl.getRequest("/conversation", {
+		_id: id,
+	});
+	if (conversation.status === 200) {
+		var users = {};
+		const logged = await persistenceCtrl.getRequest("/user", { email: email });
+		if (logged.status === 200) {
+			const conversant = await persistenceCtrl.getRequest("/user", {
+				email:
+					conversation.data.users[0] === logged.data.email
+						? conversation.data.users[1]
+						: conversation.data.users[0],
+			});
+			if (conversant.status === 200) {
+				users = {
+					logged: {
+						email: logged.data.email,
+						name: logged.data.name,
+						profileImage: logged.data.profilePicture
+							? logged.data.profilePicture
+							: "null",
+					},
+					conversant: {
+						id: conversant.data._id,
+						name: conversant.data.name,
+						profileImage: conversant.data.profilePicture
+							? conversant.data.profilePicture
+							: "null",
+					},
+				};
+				let dbMessages = await persistenceCtrl.getRequest("/message", {
+					conversation: conversation.data._id,
+				});
+				dbMessages.data.forEach((message) => {
+					let date = new Date(message.createdAt);
+					message.date = [
+						date.getDate().toString().padStart(2, "0"),
+						(date.getMonth() + 1).toString().padStart(2, "0"),
+						date.getFullYear().toString().substring(2),
+					].join("/");
+					message.hour =
+						date.getHours().toString().padStart(2, "0") +
+						":" +
+						date.getMinutes().toString().padStart(2, "0");
+				});
+				if (dbMessages.status === 200) {
+					return { users: users, messages: dbMessages.data };
+				} else {
+					//TODO handle error
+					return null;
+				}
+			} else {
+				//TODO: handle error
+				return null;
+			}
+		} else {
+			//TODO: handle error
+			return null;
+		}
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
 };
 
 /*
@@ -542,87 +582,120 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 */
 
 DomainCtrl.prototype.fetchConversations = async function (email) {
-  let conver = [];
-  let conversations = await persistenceCtrl.getRequest("/conversation", {email: email});
-  if (conversations.status === 200) {
-    for (const current_conver of conversations.data) {
-        const conversant = await persistenceCtrl.getRequest("/user", {email: (current_conver.users[0] === email) ? current_conver.users[1] : current_conver.users[0]});
-        if (conversant.status === 200) {
-          const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {conversation: current_conver._id});
-          if (lastMessage.status === 200) {
-            if (Array.isArray(lastMessage.data)) lastMessage.data = lastMessage.data[0];
-            const unreadMessages = await persistenceCtrl.getRequest("/unreadedMessages", {conversation: current_conver._id, email: email});
-            let date = new Date(lastMessage.data.createdAt)
-            if (unreadMessages.status === 200) {
-              conver.push({
-                id: current_conver._id,
-                name: conversant.data.name,
-                profileImage: (conversant.data.profilePicture) ? conversant.data.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-                lastMessage: lastMessage.data.text,
-                lastMessageTime: [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/'),
-                unreadMessages: unreadMessages.data.length
-              });
-            } else {
-              //TODO handle error searching for the unread messages
-              return null;
-            }
-          } else {
-            //TODO handle error searching for the unread messages
-            return null;
-          }
-        } else {
-          //TODO handle error searching for the last message
-          return null;
-        }
-    }
-    return conver;
-  } else {
-    //TODO handle error
-    return null;
-  }
+	let conver = [];
+	let conversations = await persistenceCtrl.getRequest("/conversation", {
+		email: email,
+	});
+	if (conversations.status === 200) {
+		for (const current_conver of conversations.data) {
+			const conversant = await persistenceCtrl.getRequest("/user", {
+				email:
+					current_conver.users[0] === email
+						? current_conver.users[1]
+						: current_conver.users[0],
+			});
+			if (conversant.status === 200) {
+				const lastMessage = await persistenceCtrl.getRequest("/lastMessage", {
+					conversation: current_conver._id,
+				});
+				if (lastMessage.status === 200) {
+					if (Array.isArray(lastMessage.data))
+						lastMessage.data = lastMessage.data[0];
+					const unreadMessages = await persistenceCtrl.getRequest(
+						"/unreadedMessages",
+						{ conversation: current_conver._id, email: email }
+					);
+					let date = new Date(lastMessage.data.createdAt);
+					if (unreadMessages.status === 200) {
+						conver.push({
+							id: current_conver._id,
+							name: conversant.data.name,
+							profileImage: conversant.data.profilePicture
+								? conversant.data.profilePicture
+								: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+							lastMessage: lastMessage.data.text,
+							lastMessageTime: [
+								date.getDate().toString().padStart(2, "0"),
+								(date.getMonth() + 1).toString().padStart(2, "0"),
+								date.getFullYear().toString().substring(2),
+							].join("/"),
+							unreadMessages: unreadMessages.data.length,
+						});
+					} else {
+						//TODO handle error searching for the unread messages
+						return null;
+					}
+				} else {
+					//TODO handle error searching for the unread messages
+					return null;
+				}
+			} else {
+				//TODO handle error searching for the last message
+				return null;
+			}
+		}
+		return conver;
+	} else {
+		//TODO handle error
+		return null;
+	}
 };
 
 DomainCtrl.prototype.fetchNewConversations = async function (email) {
-  //get all users with no conversation with logged user
-  const all_users = await persistenceCtrl.getRequest("/users", {email: email});
-  if (all_users.status === 200) {
-    const fetchedNewConversations = [];
-    all_users.data.forEach(user => {
-      fetchedNewConversations.push({
-        email: user.email,
-        name: user.name,
-        profileImage: (user.profilePicture !== undefined && user.profilePicture !== "") ? user.profilePicture : "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg"
-      })
-    });
-    return fetchedNewConversations;
-  } else {
-    //TODO handle error. Return an error and reload the view with the error
-    return null;
-  }
+	//get all users with no conversation with logged user
+	const all_users = await persistenceCtrl.getRequest("/users", {
+		email: email,
+	});
+	if (all_users.status === 200) {
+		const fetchedNewConversations = [];
+		all_users.data.forEach((user) => {
+			fetchedNewConversations.push({
+				email: user.email,
+				name: user.name,
+				profileImage:
+					user.profilePicture !== undefined && user.profilePicture !== ""
+						? user.profilePicture
+						: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+			});
+		});
+		return fetchedNewConversations;
+	} else {
+		//TODO handle error. Return an error and reload the view with the error
+		return null;
+	}
 };
 
-DomainCtrl.prototype.createConversation = async function (email, text, loggedEmail) {
-  let users = [
-    loggedEmail,
-    email
-  ];
-  let messages = await persistenceCtrl.postRequest("/conversation", {users: users, message: text});
-  if (messages.status === 200) {
-        message = messages.data;
-        let date = new Date(message.createdAt);
-        message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
-        message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
-    return message.conversation;
-  } else {
-    //TODO handle error
-    return "error";
-  }
+DomainCtrl.prototype.createConversation = async function (
+	email,
+	text,
+	loggedEmail
+) {
+	let users = [loggedEmail, email];
+	let messages = await persistenceCtrl.postRequest("/conversation", {
+		users: users,
+		message: text,
+	});
+	if (messages.status === 200) {
+		message = messages.data;
+		let date = new Date(message.createdAt);
+		message.date = [
+			date.getDate().toString().padStart(2, "0"),
+			(date.getMonth() + 1).toString().padStart(2, "0"),
+			date.getFullYear().toString().substring(2),
+		].join("/");
+		message.hour =
+			date.getHours().toString().padStart(2, "0") +
+			":" +
+			date.getMinutes().toString().padStart(2, "0");
+		return message.conversation;
+	} else {
+		//TODO handle error
+		return "error";
+	}
 };
 
-
-DomainCtrl.prototype.getQualifationMap = async function (range_1 , range_2) {
-	
-	const energyMap = await persistenceCtrl.getQualifationMap(range_1,range_2);
+DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
+	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
 	if (energyMap) {
 		return energyMap;
 	} else {
@@ -631,19 +704,45 @@ DomainCtrl.prototype.getQualifationMap = async function (range_1 , range_2) {
 	}
 };
 
-DomainCtrl.prototype.createMessage = async function (conversation, text, email) {
-  let message = await persistenceCtrl.postRequest("/message", {conversation: conversation, user: email, text: text});
-  if (message.status === 200) {
-    message = message.data;
-    let date = new Date(message.createdAt);
-    message.date = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString().substring(2)].join('/');
-    message.hour = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
-    return message;
-  } else {
-    //TODO handle error
-    return null;
-  }
-}
+DomainCtrl.prototype.createMessage = async function (
+	conversation,
+	text,
+	email
+) {
+	let message = await persistenceCtrl.postRequest("/message", {
+		conversation: conversation,
+		user: email,
+		text: text,
+	});
+	if (message.status === 200) {
+		message = message.data;
+		let date = new Date(message.createdAt);
+		message.date = [
+			date.getDate().toString().padStart(2, "0"),
+			(date.getMonth() + 1).toString().padStart(2, "0"),
+			date.getFullYear().toString().substring(2),
+		].join("/");
+		message.hour =
+			date.getHours().toString().padStart(2, "0") +
+			":" +
+			date.getMinutes().toString().padStart(2, "0");
+		return message;
+	} else {
+		//TODO handle error
+		return null;
+	}
+};
+
+DomainCtrl.prototype.reportMessage = async function (messageId) {
+	let message = await persistenceCtrl.putRequest("/reportMessage", {
+		message: messageId,
+	});
+	if (message.status === 200) {
+		return message.data;
+	} else {
+		throw new Error("Error reporting message");
+	}
+};
 
 DomainCtrl.prototype.findUser = async function (email) {
 	//create
@@ -666,6 +765,13 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	console.log(date, pin_id, email);
 };
 
+/**
+ * Fetch users {username, picture, points} sorted by points
+ */
+DomainCtrl.prototype.fetchUsers = async function () {
+	//TODO
+};
+
 /*DomainCtrl.prototype.findMessage = async function (id) {
   //create
   let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
@@ -682,15 +788,44 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
       .then((data) => data);
   //console.log(user);
 };*/
+DomainCtrl.prototype.inCat = function (lat, long){
+	if(40.547416<lat && lat<41.147653)
+		return (0.197311<long  && long<1.039680);
+
+	if(41.147653<lat && lat<41.202419)
+		return(0.297129<long  && long<1.658984);
+
+	if(41.202419<lat && lat<41.453135)
+		return(0.380587<long  && long<2.260350);
+
+	if(41.453135<lat && lat<41.516696)
+		return(0.344322<long  && long<2.446748);
+	if(41.516696<lat && lat<41.787774)
+		return(0.378409<long  && long<3.004935);
+
+	if(41.787774<lat && lat<41.835174)
+		return(0.407281<long  && long<3.157412);
+
+	if(41.835174<lat && lat<42.179406)
+		return(3.155225<long  && long<0.677742);
+
+	if(42.179406<lat && lat<42.401692)
+		return(3.313046<long  && long<0.673662);
+
+	if(42.401692<lat && lat<42.717475)
+		return(0.642428<long  && long<1.409893);
+	return false;
+};
 
 DomainCtrl.prototype.fetchUser = async function (email) {
-  const user = await persistenceCtrl.getRequest("/user", {email: email});
-  if (user.status === 200) {
-    return user.data;
-  } else {
-    //TODO handle error
-    return null;
-  }
-}
+	const user = await persistenceCtrl.getRequest("/user", { email: email });
+	if (user.status === 200) {
+		return user.data;
+	} else {
+		//TODO handle error
+		return null;
+	}
+};
+
 
 module.exports = DomainCtrl;

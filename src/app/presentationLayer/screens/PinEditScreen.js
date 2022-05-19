@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	StyleSheet,
 	View,
@@ -16,7 +16,6 @@ import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
 import { MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
@@ -28,7 +27,6 @@ function PinEditScreen({ navigation, route }) {
 	const [user] = useContext(UserContext);
 	const { pin } = route.params;
 	const locationName = "Edifici B6 del Campus Nord, C/ Jordi Girona";
-	const [date, setDate] = useState(pin.date);
 	const [status, setStatus] = useState(pin.status === "Public");
 	const [rating, setRating] = useState(pin.rating);
 	const [media, setMedia] = useState(Array.from(pin.media));
@@ -39,10 +37,9 @@ function PinEditScreen({ navigation, route }) {
 		description: pin.description,
 	});
 	const [errors, setErrors] = useState({});
-	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [deleteMode, setDeleteMode] = useState(false);
 
-	const validate = () => {
+	const validate = async () => {
 		Keyboard.dismiss();
 		let isValid = true;
 		const tmpMedia = [...media];
@@ -56,18 +53,18 @@ function PinEditScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			let editedPin = presentationCtrl.editPin(
+			let editedPin = await presentationCtrl.editPin(
+				pin._id,
 				inputs.title,
-				pin.location,
+				{ latitude: pin.latitude, longitude: pin.longitude },
+				pin.locationTitle,
 				inputs.description,
 				tmpMedia,
 				rating,
-				date,
-				status === true ? "Public" : "Private",
-				user = user.email,
+				status ? "Public" : "Private",
+				user.email
 			);
-			navigation.popToTop();
-			navigation.navigate("OwnerPin", { pin: editedPin });
+			navigation.replace("OwnerPin", { pin: editedPin });
 		}
 	};
 
@@ -213,6 +210,7 @@ function PinEditScreen({ navigation, route }) {
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
+					activeOpacity={0.8}
 					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
