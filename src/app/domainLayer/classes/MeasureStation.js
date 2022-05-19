@@ -20,20 +20,22 @@ class MeasureStation {
         this.length = length;
         this.months = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
-        if(MeasureStation.Stations!==undefined && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
-            MeasureStation.Stations.push({
+        if(eoiCode!==undefined){
+                if(MeasureStation.Stations!==undefined && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
+                MeasureStation.Stations.push({
+                    eoi: eoiCode,
+                    station: this,
+                });
+            }else if(MeasureStation.Stations!==undefined ){
+                MeasureStation.Stations.push({
                 eoi: eoiCode,
                 station: this,
             });
-        }else if(MeasureStation.Stations!==undefined ){
-            MeasureStation.Stations.push({
-            eoi: eoiCode,
-            station: this,
-        });
-        }else MeasureStation.Stations=[{
-            eoi: eoiCode,
-            station: this,
-        }];
+            }else MeasureStation.Stations=[{
+                eoi: eoiCode,
+                station: this,
+            }];
+        }
     }
     static Stations;
     level;
