@@ -144,7 +144,6 @@ exports.create = async (request, response) => {
     }
     pinDatalayer.createPin(params)
     .then(async (pinData) => {
-        console.log(pinData);
         if (pinData !== null && typeof pinData !== undefined) {
             await userController.updateUserPoints(pinData.creatorEmail, 6);
             sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Pin created", pinData);

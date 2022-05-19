@@ -188,7 +188,7 @@ PresentationCtrl.prototype.savePin = async function (pin, email) {
  * @param {*} pin
  * @returns the saved pin from the logged user that is going to be unsaved
  */
- PresentationCtrl.prototype.unsavePin = async function (pin, email) {
+PresentationCtrl.prototype.unsavePin = async function (pin, email) {
 	let result = await this.domainCtrl.unsavePin(pin, email);
 	if (result != null) {
 		return result;
@@ -295,7 +295,7 @@ PresentationCtrl.prototype.changePassword = async function (
  * @param {*} email
  * @returns restores the password and sends an email
  */
- PresentationCtrl.prototype.restorePassword = async function (email) {
+PresentationCtrl.prototype.restorePassword = async function (email) {
 	if (email) {
 		return await this.domainCtrl.restorePassword(email);
 	} else {
@@ -366,6 +366,16 @@ PresentationCtrl.prototype.fetchPins = async function (email) {
 	let pins = await this.domainCtrl.fetchPins(email);
 	if (pins != null) {
 		return pins;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+};
+
+PresentationCtrl.prototype.fetchRanking = async function () {
+	let ranking = await this.domainCtrl.fetchRanking();
+	if (ranking != null) {
+		return ranking;
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
@@ -467,8 +477,8 @@ PresentationCtrl.prototype.reportMessage = async function (id) {
 	}
 };
 
-PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
-	this.domainCtrl.createEvent(date, pin_id, email);
+PresentationCtrl.prototype.createEvent = async function (date, pin, email) {
+	this.domainCtrl.createEvent(date, pin, email);
 };
 
 PresentationCtrl.prototype.fetchUsers = async function () {
