@@ -42,13 +42,30 @@ function ChatScreen({ route, navigation }) {
 	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
 	
-	const socketRef = useRef(null);
+	//const socketRef = useRef(null);
 
 	useEffect(() => {
+		/*
 		if (socketRef.current == null) {
-			socketRef.current = io('http://localhost:8000');
+			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000');
 		}
+		*/
 
+		this.socket = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
+		console.log('check 1', this.socket.connected);
+		socket.on('connect', function() {
+			console.log('check 2', this.socket.connected);
+		  });
+		let m = "Missatge del socket";
+		
+		this.socket.on('message', (data) => {
+			// we get settings data and can do something with it
+			//setSettings(data);
+			console.log("Recieved message: ", data)
+		})
+		this.socket.emit('message', m);
+
+		/*
 		const {current: socket} = socketRef;
 
 		try {
@@ -63,7 +80,7 @@ function ChatScreen({ route, navigation }) {
 		} catch (error) {
 			console.log(error);
 		}
-
+		*/
 		/*
 		socketRef.current = io('http://localhost:8000');
 
