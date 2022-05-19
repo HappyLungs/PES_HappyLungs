@@ -372,6 +372,16 @@ PresentationCtrl.prototype.fetchPins = async function (email) {
 	}
 };
 
+PresentationCtrl.prototype.fetchRanking = async function () {
+	let ranking = await this.domainCtrl.fetchRanking();
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}
+
 PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	let pins = await this.domainCtrl.fetchTrendingPins(email);
 	if (pins != null) {

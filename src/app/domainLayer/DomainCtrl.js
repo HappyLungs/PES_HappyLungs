@@ -293,6 +293,20 @@ DomainCtrl.prototype.fetchPins = async function (email) {
 	}
 };
 
+
+/**
+ * @returns Returns the ranking of the users and the number of pins they have created
+ */
+DomainCtrl.prototype.fetchRanking = async function () {
+	let ranking = await persistenceCtrl.getRequest("/listUsers", {type: "all"});
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}
+
 /**
  * @param {*} email Email from the current logged user
  * @returns returns 50 best rated pins. Else returns null => error
