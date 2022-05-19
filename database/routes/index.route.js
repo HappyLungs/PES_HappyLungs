@@ -49,6 +49,12 @@ router.put(
 );
 
 router.put(
+    "/restorePassword",
+    licenseMiddleware.validate,
+    UserController.restorePassword
+);
+
+router.put(
     "/savePin",
     licenseMiddleware.validate,
     UserController.savePin
@@ -158,6 +164,12 @@ router.get(
     MessageController.unreadedMessages
 );
 
+router.put(
+    "/reportMessage",
+    licenseMiddleware.validate,
+    MessageController.reportMessage
+);
+
 /*  /Message */
 
 
@@ -185,10 +197,13 @@ router.post(
 /** Contamination */
 
 router.get(
-    "/contamination/:longitude/:latitude/:date", 
+    "/contamination/:longitude/:latitude/:radius", 
     
-    ContaminationController.find
+    ContaminationController.findRadius
 );
+
+
+
 
 /** /Contamination */
 

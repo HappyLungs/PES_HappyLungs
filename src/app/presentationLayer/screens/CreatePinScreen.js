@@ -13,7 +13,7 @@ import {
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
-import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 import COLORS from "../../config/stylesheet/colors";
 import InputField from "../components/InputField";
@@ -50,7 +50,7 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (!inputs.description) {
-			handleError(i18n.t("titleText"), "description");
+			handleError(i18n.t("descriptionText"), "description");
 			isValid = false;
 		}
 		if (isValid) {
@@ -65,6 +65,7 @@ function CreatePinScreen({ navigation, route }) {
 				user.email,
 				user.name
 			);
+
 			navigation.navigate("MapScreen");
 		}
 	};
@@ -106,7 +107,11 @@ function CreatePinScreen({ navigation, route }) {
 					alignItems: "center",
 				}}
 			>
-				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					activeOpacity={0.8}
+					onPress={pickImage}
+					style={{ flexDirection: "row" }}
+				>
 					<MaterialIcons
 						name="library-add"
 						size={25}
@@ -114,6 +119,7 @@ function CreatePinScreen({ navigation, route }) {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onLongPress={() => {
 						setDeleteMode(!deleteMode);
 					}}
@@ -154,6 +160,7 @@ function CreatePinScreen({ navigation, route }) {
 				</TouchableOpacity>
 
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onLongPress={() => {
 						setDeleteMode(!deleteMode);
 					}}
@@ -205,7 +212,10 @@ function CreatePinScreen({ navigation, route }) {
 					unfillColor={COLORS.white}
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
-					onPress={() => setStatus(!status)}
+					onPress={() => {
+						setStatus(!status);
+					}}
+					activeOpacity={0.8}
 					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
@@ -239,7 +249,9 @@ function CreatePinScreen({ navigation, route }) {
 					passwordChange={false}
 				/>
 				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
+					onChangeText={(newDescription) =>
+						handleOnChange(newDescription, "description")
+					}
 					onFocus={() => handleError(null, "description")}
 					iconName="description"
 					label={i18n.t("description")}
@@ -272,16 +284,20 @@ function CreatePinScreen({ navigation, route }) {
 					}}
 				>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
 							{ backgroundColor: COLORS.red1 },
 						]}
-						onPress={() => navigation.navigate("MapScreen")}
+						onPress={() => {
+							navigation.navigate("MapScreen");
+						}}
 					>
 						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,

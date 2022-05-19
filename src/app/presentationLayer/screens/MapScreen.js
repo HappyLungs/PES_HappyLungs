@@ -25,7 +25,6 @@ import Modal from "react-native-modal";
 
 import { LinearGradient } from "expo-linear-gradient";
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
@@ -139,6 +138,7 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
+
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
 			const fetchPins = async () => {
@@ -157,7 +157,11 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 		const initHeatPoints = async () => {
-			setHeatpoints(await presentationCtrl.getHeatPoints());
+			console.log("abans");
+			let aux = await presentationCtrl.getHeatPoints();
+			console.log(aux);
+			setHeatpoints(aux);
+			console.log(heatpoints);
 		};
 		await initHeatPoints();
 		return unsubscribe;
@@ -255,6 +259,7 @@ function MapScreen({ navigation, route }) {
 				]}
 			>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => {
 						navigation.navigate("Profile");
 					}}
@@ -325,15 +330,7 @@ function MapScreen({ navigation, route }) {
 						>
 							{i18n.t("filter")}
 						</Text>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1 },
-							]}
-						>
-							{i18n.t("typeOfContamination")}
-						</Text>
-						{renderCheckList()}
+
 						<Text
 							style={[
 								styles.modalText,
@@ -343,6 +340,7 @@ function MapScreen({ navigation, route }) {
 							{i18n.t("showPins")}
 						</Text>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								backgroundColor: COLORS.secondary,
@@ -370,6 +368,7 @@ function MapScreen({ navigation, route }) {
 						</Text>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									backgroundColor: COLORS.secondary,
@@ -504,6 +503,7 @@ function MapScreen({ navigation, route }) {
 						<Text style={styles.highlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -517,6 +517,7 @@ function MapScreen({ navigation, route }) {
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -548,6 +549,7 @@ function MapScreen({ navigation, route }) {
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -613,69 +615,6 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
-	function renderCheckList() {
-		return (
-			<View style={{ flexDirection: "column", marginStart: 20 }}>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setTraffic(!trafficSelected)}
-					text={i18n.t("typeOfContamination1")}
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !industrySelected
-							? COLORS.lightGrey
-							: COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setIndustry(!industrySelected)}
-					text={i18n.t("typeOfContamination2")}
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setUrban(!urbanSelected)}
-					text={i18n.t("typeOfContamination3")}
-				/>
-			</View>
-		);
-	}
-
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
@@ -738,7 +677,12 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={() => {
+							setModalFilterVisible(true);
+						}}
+					>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
@@ -748,6 +692,7 @@ function MapScreen({ navigation, route }) {
 				</View>
 				<View style={[styles.container, styles.shadow, { marginBottom: 70 }]}>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						onPress={() => {
 							Location.installWebGeolocationPolyfill();
 							navigator.geolocation.getCurrentPosition((position) => {

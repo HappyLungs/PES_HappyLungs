@@ -110,7 +110,7 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @returns the created pin
  *
  */
-PresentationCtrl.prototype.createPin = function (
+PresentationCtrl.prototype.createPin = async function (
 	title,
 	location,
 	locationTitle,
@@ -278,6 +278,19 @@ PresentationCtrl.prototype.changePassword = async function (
 /**
  *
  * @param {*} email
+ * @returns restores the password and sends an email
+ */
+ PresentationCtrl.prototype.restorePassword = async function (email) {
+	if (email) {
+		return await this.domainCtrl.restorePassword(email);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
  * @returns deletes the user from DB
  */
 PresentationCtrl.prototype.deleteUser = async function (email) {
@@ -430,8 +443,21 @@ PresentationCtrl.prototype.createMessage = async function (id, text, email) {
 	}
 };
 
+PresentationCtrl.prototype.reportMessage = async function (id) {
+	try {
+		let result = await this.domainCtrl.reportMessage(id);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 PresentationCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	this.domainCtrl.createEvent(date, pin_id, email);
+};
+
+PresentationCtrl.prototype.fetchUsers = async function () {
+	this.domainCtrl.fetchUsers();
 };
 
 PresentationCtrl.prototype.fetchUser = async function (email) {

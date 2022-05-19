@@ -20,6 +20,7 @@ let DomainCtrl;
 		if (instance) return instance;
 		instance = this;
 
+
 		// initialize any properties of the singleton
 	};
 })();
@@ -64,36 +65,48 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
-	const date = new Date();
-	let nsteps = 10;
-	let jmax = 1;
-	let inilat = 40.541006;
-	let inilong = 0.68031;
-	let maxlat = 42.814019;
-	let maxlong = 3.20592;
-	let actuallat = inilat;
-	let actuallong = inilong;
+	const date=new Date();
+	let nsteps=100;
+	let jmax=1;
+	let inilat=40.541006;
+	let inilong=0.680310;
+	let maxlat=42.814019;
+	let maxlong=3.205920;
+	let actuallat=inilat;
+	let actuallong=inilong;
 
-	let longstep = (maxlong - inilong) / nsteps;
-	let latsteps = (maxlat - inilat) / nsteps;
-	let datapoints = [];
-	for (let i = 0; i < nsteps; i++) {
-		for (let j = 0; j < jmax; j++) {
-			let dp = new DataPointMap(actuallat, actuallong);
+	let longstep=(maxlong-inilong)/nsteps;
+	let latsteps= (maxlat-inilat)/nsteps;
+	let datapoints=[];
+	for (let i=0;i<=nsteps;i++){
+		for(let j=0;j<=nsteps ;j++){
+			if(!this.inCat(actuallat,actuallong)){
+				actuallong=actuallong+longstep;
+				continue;
+			}
+			let dp=new DataPointMap(actuallat, actuallong);
 			let actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: await dp.getHourLevel(date, date.getHours()),
+				weight: await dp.getHourLevel(date,date.getHours())/6,
 			};
 			datapoints.push(actual);
-			actuallong = actuallong + longstep;
+			actuallong=actuallong+longstep;
 		}
-		actuallat = actuallat + latsteps;
-		actuallong = inilong;
+		actuallat=actuallat+latsteps;
+		actuallong=inilong;
 		jmax++;
 	}
+	let actual = {
+		latitude: 0,
+		longitude: 0,
+		weight: 0.99,
+	};
+	datapoints.push(actual);
 	return datapoints;
-};
+
+
+}
 //STATISTICS - AIR QUALITY
 
 /**
@@ -256,7 +269,6 @@ DomainCtrl.prototype.createPin = async function (
 		creatorName: creatorName,
 		media: pin.media,
 	};
-	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB
@@ -312,8 +324,6 @@ DomainCtrl.prototype.editPin = async function (
 	userEmail
 ) {
 	let { latitude, longitude } = location;
-	console.log("location");
-	console.log(location);
 	let pin = {
 		_id: id,
 		title: title,
@@ -329,6 +339,8 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
+	console.log("result.data");
+	console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -421,6 +433,16 @@ DomainCtrl.prototype.changePassword = async function (
 ) {
 	let myUser = new User(null, email, null, null);
 	return await myUser.changePassword(oldPassword, newPassword);
+};
+
+/**
+ *
+ * @param {*} email
+ * @returns restores the password and sends an email
+ */
+DomainCtrl.prototype.restorePassword = async function (email) {
+	let myUser = new User(null, email, null, null);
+	return await myUser.restorePassword();
 };
 
 /**
@@ -711,6 +733,17 @@ DomainCtrl.prototype.createMessage = async function (
 	}
 };
 
+DomainCtrl.prototype.reportMessage = async function (messageId) {
+	let message = await persistenceCtrl.putRequest("/reportMessage", {
+		message: messageId,
+	});
+	if (message.status === 200) {
+		return message.data;
+	} else {
+		throw new Error("Error reporting message");
+	}
+};
+
 DomainCtrl.prototype.findUser = async function (email) {
 	//create
 	let DB_URL = "http://localhost:7000/v1/user?email=" + email;
@@ -732,6 +765,13 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
 	console.log(date, pin_id, email);
 };
 
+/**
+ * Fetch users {username, picture, points} sorted by points
+ */
+DomainCtrl.prototype.fetchUsers = async function () {
+	//TODO
+};
+
 /*DomainCtrl.prototype.findMessage = async function (id) {
   //create
   let DB_URL = "http://localhost:7000/v1/message?_id=" + id;
@@ -748,6 +788,34 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
       .then((data) => data);
   //console.log(user);
 };*/
+DomainCtrl.prototype.inCat = function (lat, long){
+	if(40.547416<lat && lat<41.147653)
+		return (0.197311<long  && long<1.039680);
+
+	if(41.147653<lat && lat<41.202419)
+		return(0.297129<long  && long<1.658984);
+
+	if(41.202419<lat && lat<41.453135)
+		return(0.380587<long  && long<2.260350);
+
+	if(41.453135<lat && lat<41.516696)
+		return(0.344322<long  && long<2.446748);
+	if(41.516696<lat && lat<41.787774)
+		return(0.378409<long  && long<3.004935);
+
+	if(41.787774<lat && lat<41.835174)
+		return(0.407281<long  && long<3.157412);
+
+	if(41.835174<lat && lat<42.179406)
+		return(3.155225<long  && long<0.677742);
+
+	if(42.179406<lat && lat<42.401692)
+		return(3.313046<long  && long<0.673662);
+
+	if(42.401692<lat && lat<42.717475)
+		return(0.642428<long  && long<1.409893);
+	return false;
+};
 
 DomainCtrl.prototype.fetchUser = async function (email) {
 	const user = await persistenceCtrl.getRequest("/user", { email: email });
@@ -758,5 +826,6 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 		return null;
 	}
 };
+
 
 module.exports = DomainCtrl;

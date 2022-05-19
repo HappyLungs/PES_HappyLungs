@@ -33,5 +33,35 @@ exports.find = async (req, res) => {
  
 };
 
+
+exports.findRadius = async (req, res) => {
+    if(isNaN(parseInt(req.params.longitude)))  {
+        res.status(400).send('Parametro de longitud no introducido correctamente');
+        return;
+    }
+    if(isNaN(parseInt(req.params.latitude)))  {
+     
+     res.status(400).send('Parametro de latitud no introducido correctamente');
+     return; 
+     }
+     let radius = req.params.radius;
+  
+    
+ 
+ 
+ 
+     const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
+     const valor_contaminacion = await punto.getDayLevel_byRadius(radius)
+
+     valor_contaminacion.forEach(el => {
+         console.log(el)
+     }) 
+ 
+     
+     if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
+     else res.send(valor_contaminacion)
+ 
+};
+
    
 
