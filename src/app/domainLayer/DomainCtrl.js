@@ -37,16 +37,21 @@ DomainCtrl.prototype.getMapData = async function () {
 	let allMeasures = await dadesObertes.getMeasuresDate(date);
 	allMeasures.forEach((measure) => {
 		let eoiCode = measure.codi_eoi;
+		let auxstation=this.getMeasureStation(eoiCode);
 		if (!measureStations.has(eoiCode)) {
-			let ms = new MeasureStation(
+			let ms;
+			if(auxstation===undefined){
+				ms = new MeasureStation(
 				measure.codi_eoi,
 				measure.nom_estacio,
 				measure.tipus_estacio,
 				measure.latitud,
 				measure.longitud,
 				null
-			);
-			measureStations.set(eoiCode, ms);
+				);
+			}else ms=auxstation;
+				measureStations.set(eoiCode, ms);
+
 		}
 	});
 
@@ -676,7 +681,7 @@ DomainCtrl.prototype.createConversation = async function (
 		message: text,
 	});
 	if (messages.status === 200) {
-		message = messages.data;
+		let message = messages.data;
 		let date = new Date(message.createdAt);
 		message.date = [
 			date.getDate().toString().padStart(2, "0"),
@@ -826,6 +831,9 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 		return null;
 	}
 };
-
+DomainCtrl.prototype.getMeasureStation = function(eoiCode){
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	return undefined;
+};
 
 module.exports = DomainCtrl;
