@@ -1,9 +1,36 @@
 {
   "expo": {
-    "slug": "happylungs",
-    "name": "happylungs",
-    "sdkVersion": "44.0.0",
-    "entryPoint": ".vscode\\exponentIndex.js"
+    "name": "happyLungs",
+    "slug": "happyLungs",
+    "scheme": "happylungs",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "happy.lungs"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "sdkVersion": "44.0.0"
   },
   "name": "happylungs"
 }

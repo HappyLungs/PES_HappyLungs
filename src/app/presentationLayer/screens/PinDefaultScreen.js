@@ -21,11 +21,12 @@ function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 	const [user] = useContext(UserContext);
 
-	const { pin } = route.params;
-	const saved = route.params;
+	const pin = route.params.pin;
+	const saved = route.params.saved;
 	const [bookmark, setBookmark] = useState(
 		saved ? "bookmark" : "bookmark-outline"
 	);
+	const [savedPin, setSavedPin] = useState(saved);
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
 			latitude: pin.location.latitude,
@@ -39,6 +40,7 @@ function PinDefaultScreen({ navigation, route }) {
 		} else {
 			presentationCtrl.savePin(pin._id, user.email);
 		}
+		setSavedPin(bookmark === "bookmark");
 		setBookmark(bookmark === "bookmark" ? "bookmark-outline" : "bookmark");
 	};
 
@@ -210,7 +212,8 @@ function PinDefaultScreen({ navigation, route }) {
 								color: COLORS.white,
 							}}
 						>
-							{i18n.t("savePin")}
+							{savedPin && i18n.t("savePin")}
+							{!savedPin && i18n.t("notSavePin")}
 						</Text>
 						<Ionicons
 							name={bookmark}

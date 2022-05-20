@@ -15,6 +15,9 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
+import * as Progress from 'react-native-progress';
+
+
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function RankingScreen({ navigation, route }) {
@@ -101,7 +104,7 @@ function RankingScreen({ navigation, route }) {
 				}}
 			></View>
 			<Leaderboard
-				chatsList={masterData}
+				usersList={masterData}
 				navigation={navigation}
 				email={user.email}
 				scroll={scrollToUser}
@@ -109,8 +112,23 @@ function RankingScreen({ navigation, route }) {
 		</View>
 	);
 
+	/*
+*/
 	const SecondRoute = () => (
-		<View style={{ flex: 1, backgroundColor: "white" }} />
+		<View style={{ flex: 1, backgroundColor: "white" }}>
+			<View 
+				style={{
+					borderWidth: 1.3,
+					borderStyle: "dashed",
+					borderRadius: 1,
+					borderColor: COLORS.green2,
+					marginTop: 50,
+				}}	
+				
+			>
+				<Progress.Circle size={150} indeterminate={false} strokeCap={'round'} showsText={true} progress= {0.5}/>
+			</View> 
+		</View>
 	);
 
 	const renderScene = SceneMap({
@@ -120,18 +138,12 @@ function RankingScreen({ navigation, route }) {
 
 	useEffect(() => {
 		fetchUsers();
-		fetchChats();
 		return () => {};
 	}, []);
 
-	const fetchChats = async () => {
-		const data = await presentationCtrl.fetchNewConversations(user.email);
-		setMasterData(data);
-	};
-
 	const fetchUsers = async () => {
-		//const data = await presentationCtrl.fetchUsers();
-		//setMasterData(data);
+		const data = await presentationCtrl.fetchRanking();
+		setMasterData(Array.from(data.data));
 	};
 
 	const [index, setIndex] = React.useState(0);
@@ -185,6 +197,7 @@ function RankingScreen({ navigation, route }) {
 			onIndexChange={setIndex}
 			initialLayout={{ width: "100%" }}
 			renderTabBar={renderTabBar}
+		
 		/>
 	);
 }

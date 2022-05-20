@@ -506,6 +506,17 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 
 /**
  *
+ * @param {*} userGoogleData
+ * @returns if is registered returns the userInfo, else, registers it and returns the info
+ */
+ DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+	//create
+	let myUser = new User(null, userGoogleData.email, null, null);
+	return await myUser.loginGoogle(userGoogleData); //login to db
+};
+
+/**
+ *
  * @param {*} email
  * @param {*} oldPassword
  * @param {*} newPassword
