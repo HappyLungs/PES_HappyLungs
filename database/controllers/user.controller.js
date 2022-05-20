@@ -1,6 +1,7 @@
 const responseObj = {};
 const mongodb = require("mongodb");
 const bcrypt=require("bcryptjs");
+const randomstring = require("randomstring");
 
 //Helpers
 const errorCodes = require("../helpers/errorCodes.js");
