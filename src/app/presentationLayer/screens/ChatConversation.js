@@ -42,55 +42,38 @@ function ChatScreen({ route, navigation }) {
 	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
 	
-	//const socketRef = useRef(null);
+	const socketRef = useRef(null);
+	const flatListRef = useRef();
 
 	useEffect(() => {
-		/*
-		if (socketRef.current == null) {
-			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000');
-		}
-		*/
-
-		this.socket = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
-		console.log('check 1', this.socket.connected);
-		socket.on('connect', function() {
-			console.log('check 2', this.socket.connected);
-		  });
-		let m = "Missatge del socket";
-		
-		this.socket.on('message', (data) => {
-			// we get settings data and can do something with it
-			//setSettings(data);
-			console.log("Recieved message: ", data)
-		})
-		this.socket.emit('message', m);
-
-		/*
-		const {current: socket} = socketRef;
-
-		try {
-			let m = "Missatge del socket";
-			socket.open();
-			socket.emit('message', m);
-			socket.on('message', (data) => {
-			  // we get settings data and can do something with it
-			  //setSettings(data);
-			  console.log("Recieved message: ", data)
-			})
-		} catch (error) {
-			console.log(error);
-		}
-		*/
-		/*
-		socketRef.current = io('http://localhost:8000');
-
-		socketRef.current.on('message', (message) => {
-			console.log("Message arrived");
-			console.log("Message: ", message)
-		})
-		*/
-
 		fetchChats();
+		
+		if (socketRef.current == null) {
+			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
+		}
+
+		const {current: socket} = socketRef;
+		socket.open();
+		socket.on('chat message', (data) => {
+			console.log("Recieved message: ", data)
+			if (data.user != loggedUser.email) {
+				//if (messages.findIndex(x => x._id==data._id) === -1){
+					let exists = false;
+					for (ms of messages) {
+						if(ms._id === data._id) exists = true;
+					}
+					if (!exists) {
+						setMessages(oldArray => [...oldArray, data]);
+						flatListRef.current.scrollToEnd({animating: true})
+					}
+				//}
+				//setMessage("Entra if")
+			}
+		})
+		
+
+
+		
 		return () => {};
 	}, []);
 
@@ -117,8 +100,8 @@ function ChatScreen({ route, navigation }) {
 					setNewChat(false);
 					let data = await presentationCtrl.fetchConversation(newId);
 					
-					let m = "Missatge del socket";
-					socketRef.current.emit('message', m);
+					
+					socketRef.current.emit('message', data);
 
 					setId(newId);
 					setLoggedUser(data.users.logged);
@@ -130,11 +113,25 @@ function ChatScreen({ route, navigation }) {
 			} else {
 				let newMessage = await presentationCtrl.createMessage(id, message, user.email);
 				if(newMessage != null) {
-					messages.push(newMessage);
+					
+					//if (messages.findIndex(x => x._id==data._id) === -1){
+					
+					let exists = false;
+					/*
+					for (m of messages) {
+						if(m._id === data._id) exists = true;
+					}
+					if (!exists)setMessages(oldArray => [...oldArray, newMessage]);
+					//}
+					*/
+					
+					const {current: socket} = socketRef;
+					socket.emit('chat message', {newMessage, conversant});
 				}
 			}
 			setMessage("");
 			Keyboard.dismiss();
+			flatListRef.current.scrollToEnd({animating: true})
 		}
 	}
 
@@ -344,14 +341,16 @@ function ChatScreen({ route, navigation }) {
 			
 			<View>
 				<FlatList
+				ref={flatListRef}
 				stickyHeaderHiddenOnScroll={true}
 				contentContainerStyle={{ }}
 				scrollEnabled={true}
 				data={messages}
 				extraData={messages}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(item) => item._id}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={true}
+				onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
 			></FlatList>
 			</View>
 			
@@ -418,7 +417,7 @@ function ChatScreen({ route, navigation }) {
 			}}
 		>
 			{renderHeader()}
-			<View style={[{ flex: 1, marginTop: 10 }]}>
+			<View style={[{ flex: 1, marginTop: 10 , marginBottom:50}]}>
 				{chatMessagesList()}
 			</View>
 			<KeyboardAvoidingView
@@ -451,7 +450,7 @@ function ChatScreen({ route, navigation }) {
 				</View>
   			</KeyboardAvoidingView>
 			  {renderErrorPopupDeclare()}
-			  {renderOptionsPopupDeclare()}	
+			  {renderOptionsPopupDeclare()}
 		</View>
 	);
 }

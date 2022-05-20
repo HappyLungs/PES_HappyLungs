@@ -3,11 +3,14 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const port = 8000;
+let sockets = new Map();
 
 io.on("connection", socket => {
-    console.log("a user connected :D");
-    socket.on("chat message", msg => {
-      console.log(msg);
+    console.log("a user connected :D, socket id -> ", socket.id);
+    
+    socket.on("chat message", ({msg, to}) => {
+      console.log("Message and to: ", msg, to);
+      //io.to(msg.conversation).emit("chat message", msg);
       io.emit("chat message", msg);
     });
 
