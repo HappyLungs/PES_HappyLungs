@@ -10,6 +10,7 @@ import {
 	StyleSheet,
 	StatusBar,
 	Alert,
+	Modal
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
