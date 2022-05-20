@@ -64,7 +64,7 @@ function SignInScreen({ navigation, route }) {
 		}
 	};
 
-	const loginGoogle = (userGoogleData, accesToken) => {
+	const loginGoogle = async (userGoogleData, accesToken) => {
 		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
 		if (response.status == 200) {
 			response.data.accesToken = accesToken;
