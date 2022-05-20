@@ -126,7 +126,8 @@ function ChatScreen({ route, navigation }) {
 					*/
 					
 					const {current: socket} = socketRef;
-					socket.emit('chat message', {newMessage, conversant});
+					const info = {message: newMessage, to: conversant}
+					socket.emit('chat message', info);
 				}
 			}
 			setMessage("");
