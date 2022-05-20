@@ -49,7 +49,7 @@ function ChatScreen({ route, navigation }) {
 		fetchChats();
 		
 		if (socketRef.current == null) {
-			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
+			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'email='+user.email});
 		}
 
 		const {current: socket} = socketRef;

@@ -521,6 +521,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 					},
 					conversant: {
 						id: conversant.data._id,
+						email:conversant.data.email,
 						name: conversant.data.name,
 						profileImage: conversant.data.profilePicture
 							? conversant.data.profilePicture
