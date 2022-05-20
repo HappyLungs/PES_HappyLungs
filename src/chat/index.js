@@ -5,7 +5,7 @@ const io = require("socket.io")(server);
 const port = 8000;
 
 io.on("connection", socket => {
-    console.log("a user connected :D, id -> ", socket.id);
+    console.log("a user connected :D, id -> ", socket.id, socket.handshake.query.email);
     
     socket.on("chat message", info => {
       console.log("Message: ", info.message);
@@ -14,7 +14,7 @@ io.on("connection", socket => {
       io.emit("chat message", info.message);
     });
 
-    console.log("Id: ",socket.handshake.query.id);
+    //console.log("Id: ",socket.handshake.query.id);
     //let converId = socket.handshake.query.id;
     //socket.join(converId);
 });
