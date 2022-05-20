@@ -10,20 +10,20 @@
     <body>
         <main>
             <div class="form">
-                <form onSubmit={}>
-                <div class="input-container">
-                    <label>Username </label>
-                    <input type="text" name="username" required />
-                    <div class="error">Invalid username</div>
-                </div>
-                <div class="input-container">
-                    <label>Password </label>
-                    <input type="password" name="password" required />
-                    <div class="loginerror">Ivalid Password</div>
-                </div>
-                <div class="loginButton">
-                    <input type="submit" />
-                </div>
+                <form method="post" action="/login">
+                    <div class="input-container">
+                        <label>Username </label>
+                        <input type="text" name="username" required />
+                        <div class="error">Invalid username</div>
+                    </div>
+                    <div class="input-container">
+                        <label>Password </label>
+                        <input type="password" name="password" required />
+                        <div class="loginerror">Ivalid Password</div>
+                    </div>
+                    <div class="loginButton">
+                        <input type="submit" />
+                    </div>
                 </form>
             </div>
         </main>
