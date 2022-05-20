@@ -7,36 +7,19 @@ import {
 	Image,
 	Dimensions,
 } from "react-native";
-import {
-	Ionicons,
-	MaterialIcons,
-	MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import { setLanguage } from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
 	const width = Dimensions.get("window").width;
-	//should pass userId, and then retrieve the updated data
-	// const fakeUserData = {
-	// 	username: "Username",
-	// 	email: "username@email.com",
-	// 	password: "**********",
-	// 	points: 200,
-	// 	healthState: [false, false, true],
-	// 	picture:
-	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	// };
-	// const [user, setUser] = useState(fakeUserData);
-
 	const [user, setUser] = useContext(UserContext);
-
 	const [inputs, setInputs] = useState({
 		language: user.language,
 		notifications: user.notifications,
@@ -52,6 +35,9 @@ function SettingsScreen({ navigation }) {
 			inputs.notifications,
 			user.profilePicture
 		);
+		if (user.language !== inputs.language) {
+			setLanguage(inputs.language);
+		}
 		setUser(updatedUser);
 	};
 
@@ -209,14 +195,17 @@ function SettingsScreen({ navigation }) {
 									setState1(true);
 									setInputs({
 										language: "es",
-										notifications: inputs.notifications
+										notifications: inputs.notifications,
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "es" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "es"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -231,7 +220,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("es")}</Text>
+							<Text style={styles.textState}>{i18n.t("spanish")}</Text>
 						</View>
 						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
@@ -244,14 +233,17 @@ function SettingsScreen({ navigation }) {
 									setState2(true);
 									setInputs({
 										language: "ca",
-										notifications: inputs.notifications
+										notifications: inputs.notifications,
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "ca" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "ca"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -266,7 +258,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("ca")}</Text>
+							<Text style={styles.textState}>{i18n.t("catalan")}</Text>
 						</View>
 						<View
 							style={{
@@ -283,14 +275,17 @@ function SettingsScreen({ navigation }) {
 									setState3(true);
 									setInputs({
 										language: "en",
-										notifications: inputs.notifications
+										notifications: inputs.notifications,
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "en" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "en"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -305,7 +300,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("en")}</Text>
+							<Text style={styles.textState}>{i18n.t("english")}</Text>
 						</View>
 					</View>
 				</View>
