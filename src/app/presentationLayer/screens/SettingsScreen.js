@@ -434,7 +434,7 @@ function SettingsScreen({ navigation }) {
 					]}
 					onPress={() => {
 						validate();
-						navigation.navigate("ProfileScreen");
+						navigation.navigate("ProfileScreen", { toastSettings: true });
 					}}
 				>
 					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>

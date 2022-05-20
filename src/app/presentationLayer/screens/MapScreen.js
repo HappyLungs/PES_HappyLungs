@@ -52,6 +52,7 @@ async function callGeocodeAPI(latitude, longitude) {
 function MapScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 	const { latitude, longitude } = route.params;
+	const toast = route.params.toast;
 
 	const [modalPinVisible, setModalPinVisible] = useState(false);
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
@@ -102,9 +103,8 @@ function MapScreen({ navigation, route }) {
 	const showToast = () => {
 		Toast.show({
 			position: "bottom",
-			type: "failureToast",
-			text1: i18n.t("pinFailure"),
-			text2: "This is some something 👋",
+			type: "successToast",
+			text1: i18n.t("pinCreateSuccess"),
 		});
 	};
 
@@ -116,6 +116,10 @@ function MapScreen({ navigation, route }) {
 
 	// S'executa a cada rerender
 	useEffect(() => {
+		if (toast) {
+			showToast();
+			navigation.setParams({ toast: false });
+		}
 		if (latitude !== null && longitude !== null) {
 			const tmpLocation = {
 				latitude: latitude,
@@ -277,7 +281,7 @@ function MapScreen({ navigation, route }) {
 					<TouchableOpacity
 						activeOpacity={0.8}
 						onPress={() => {
-							navigation.navigate("Profile");
+							navigation.navigate("Profile", { toast: true });
 						}}
 						style={[styles.shadow, { borderRadius: 30 }]}
 					>

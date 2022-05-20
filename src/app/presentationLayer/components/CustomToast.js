@@ -4,6 +4,8 @@ import { View, Text, StyleSheet } from "react-native";
 import COLORS from "../../config/stylesheet/colors";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+
 import i18n from "../../config/translation";
 
 /*
@@ -57,7 +59,7 @@ const toastConfig = {
 					justifyContent: "flex-start",
 					height: 50,
 					width: "80%",
-					borderLeftColor: COLORS.green4,
+					borderLeftColor: COLORS.green1,
 					borderLeftWidth: 6,
 					borderTopLeftRadius: 5,
 					borderBottomLeftRadius: 5,
@@ -68,7 +70,7 @@ const toastConfig = {
 				styles.shadow,
 			]}
 		>
-			<Feather name="check-circle" size={24} color={COLORS.green4} />
+			<Feather name="check-circle" size={24} color={COLORS.green1} />
 			<Text style={styles.message}>{text1}</Text>
 			<Text style={styles.result}> {i18n.t("successfully")}</Text>
 		</View>
@@ -97,6 +99,32 @@ const toastConfig = {
 			<AntDesign name="closecircleo" size={24} color={COLORS.red1} />
 			<Text style={styles.message}>{text1}</Text>
 			<Text style={styles.result}> {i18n.t("fail")}</Text>
+		</View>
+	),
+	configToast: ({ text1, props }) => (
+		<View
+			style={[
+				{
+					flexDirection: "row",
+					alignItems: "center",
+					paddingHorizontal: 15,
+					justifyContent: "flex-start",
+					height: 50,
+					width: "80%",
+					borderLeftColor: COLORS.secondary,
+					borderLeftWidth: 6,
+					borderTopLeftRadius: 5,
+					borderBottomLeftRadius: 5,
+					borderTopRightRadius: 10,
+					borderBottomRightRadius: 10,
+					backgroundColor: COLORS.light,
+				},
+				styles.shadow,
+			]}
+		>
+			<Ionicons name="settings-outline" size={24} color={COLORS.secondary} />
+			<Text style={styles.message}>{text1}</Text>
+			<Text style={styles.result}> {i18n.t("updated")}</Text>
 		</View>
 	),
 };

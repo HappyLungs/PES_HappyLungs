@@ -86,8 +86,7 @@ function ProfileEditScreen({ navigation }) {
 			);
 			navigation.popToTop();
 			setUser(updatedUser);
-			navigation.navigate("ProfileScreen"); //not correct, should pass userId and then retrieve the data
-			//navigation.navigate("ProfileScreen", { userId: updatedUser.username });
+			navigation.navigate("ProfileScreen", { toastProfile: true });
 		}
 	};
 
@@ -129,17 +128,6 @@ function ProfileEditScreen({ navigation }) {
 					handleError(i18n.t("passwordError"), "oldPassword");
 				else handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
 			}
-			/** TODO */
-			/*let updatedUser = await presentationCtrl.updateUserPassword(
-				user.email,
-				inputsPasswordChange.newPassword1
-			);
-			*/
-			// // setInputsPasswordChange({});
-			// // setErrors({});
-			// // navigation.popToTop();
-			// // setUser(updatedUser);
-			// // navigation.navigate("ProfileScreen");
 		}
 	};
 

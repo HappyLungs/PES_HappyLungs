@@ -184,6 +184,7 @@ function ProfileStack() {
 		>
 			<Stack.Screen
 				name="ProfileScreen"
+				initialParams={{ toastProfile: false, toastSettings: false }}
 				component={ProfileScreen}
 				options={({ navigation }) => ({
 					title: "",
@@ -357,7 +358,7 @@ function MapStack() {
 				options={{
 					headerShown: false,
 				}}
-				initialParams={{ latitude: null, longitude: null }}
+				initialParams={{ latitude: null, longitude: null, toast: false }}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
 			<Stack.Screen

@@ -66,7 +66,7 @@ function CreatePinScreen({ navigation, route }) {
 				user.name
 			);
 
-			navigation.navigate("MapScreen");
+			navigation.navigate("MapScreen", { toast: true });
 		}
 	};
 
