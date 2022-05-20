@@ -202,7 +202,7 @@ function SettingsScreen({ navigation }) {
 									}
 									setState1(true);
 									setInputs({
-										language: "Spanish",
+										language: "es",
 										notifications: inputs.notifications
 									});
 								}}
@@ -210,7 +210,7 @@ function SettingsScreen({ navigation }) {
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "Spanish" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "es" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -225,7 +225,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("spanish")}</Text>
+							<Text style={styles.textState}>{i18n.t("es")}</Text>
 						</View>
 						<View style={{ alignItems: "center", width: 115 }}>
 							<TouchableOpacity
@@ -236,7 +236,7 @@ function SettingsScreen({ navigation }) {
 									}
 									setState2(true);
 									setInputs({
-										language: "Catalan",
+										language: "ca",
 										notifications: inputs.notifications
 									});
 								}}
@@ -244,7 +244,7 @@ function SettingsScreen({ navigation }) {
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "Catalan" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "ca" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -259,7 +259,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("catalan")}</Text>
+							<Text style={styles.textState}>{i18n.t("ca")}</Text>
 						</View>
 						<View style={{ alignItems: "center", width: 115 }}>
 							<TouchableOpacity
@@ -270,7 +270,7 @@ function SettingsScreen({ navigation }) {
 									}
 									setState3(true);
 									setInputs({
-										language: "English",
+										language: "en",
 										notifications: inputs.notifications
 									});
 								}}
@@ -278,7 +278,7 @@ function SettingsScreen({ navigation }) {
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: inputs.language == "English" ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.language == "en" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -293,7 +293,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("english")}</Text>
+							<Text style={styles.textState}>{i18n.t("en")}</Text>
 						</View>
 					</View>
 					<Text style={[styles.textOption, { fontSize: 17 }]}>

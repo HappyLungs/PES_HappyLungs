@@ -116,7 +116,6 @@ function MapScreen({ navigation, route }) {
 
 	const multiSliderValuesChange = values => {
 		setMultiSliderValue(values)
-		console.log(values)
 		let letter = ["A", "B", "C", "D", "E", "F", "G"]
 		getHouses(letter[values[0]], letter[values[1]])
 	};
@@ -480,7 +479,6 @@ function MapScreen({ navigation, route }) {
 									borderRadius: 2,
 								}}
 							>
-								{console.log(multiSliderValue)}
 							</MultiSlider>
 						</View>
 					</View>

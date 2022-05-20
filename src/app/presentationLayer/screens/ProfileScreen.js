@@ -207,7 +207,7 @@ function ProfileScreen({ navigation, route }) {
 						<View
 							style={{
 								alignItems: "center",
-								marginLeft: -20,
+								marginLeft: 0,
 							}}
 						>
 							<Text
