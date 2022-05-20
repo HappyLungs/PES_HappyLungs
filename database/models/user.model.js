@@ -26,8 +26,8 @@ const UsersSchema = new global.Schema({
     },
     language: {
         type: String,
-        enum: ["Catalan", "Spanish", "English"],
-        default: "Catalan"
+        enum: ["ca", "es", "en"],
+        default: "ca"
     },
     healthStatus: {
         type: Array,

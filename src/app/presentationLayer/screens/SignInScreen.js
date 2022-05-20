@@ -41,30 +41,14 @@ function SignInScreen({ navigation, route }) {
 		androidClientId: '437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com',
 	});
 
-	// const getUserData = async () => {
-	// 	console.log("HELLOOOOOOOOO!!!!!")
-	// 	let userInfo = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-	// 		method: 'get',
-	// 		headers: { Authorization: `Bearer ${accessToken}`}
-	// 	});
-	// 	console.log("USER DATA:  ", userInfo)
-	// 	setData({
-	// 		...data,
-	// 		email: userInfo.email,
-	// 		checkEmailInputChange: true,
-	// 	});
-	// };
-
 	useEffect(() => {
 		if (response?.type === "success") {
 			const { authentication } = response;
-			console.log("TOKEN:    ", authentication.accessToken)
-			getUserInfo(authentication.accessToken);
-			// console.log("MY DATA IS :   ", data)
+			getGoogleUserInfo(authentication.accessToken);
 		}
 	}, [response]);
 
-	const getUserInfo = async (accessToken) => {
+	const getGoogleUserInfo = async (accessToken) => {
 		try {
 			let userRequestInfo = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo",
 				{
@@ -73,18 +57,24 @@ function SignInScreen({ navigation, route }) {
 					}
 				}
 			);
-			console.log(userRequestInfo.data);
-			// setData({
-			// 	...data,
-			// 	email: userInfo.email,
-			// 	checkEmailInputChange: true,
-			// });
+			loginGoogle(userRequestInfo.data, accessToken)
 		}
 		catch (error) {
-			console.log("userRequestInfo error: ", error);
+			errorMsgChange(error);
 		}
 	};
-		
+
+	const loginGoogle = (userGoogleData, accesToken) => {
+		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
+		if (response.status == 200) {
+			response.data.accesToken = accesToken;
+			setUser(response.data);
+			navigation.navigate("AppTabs", { screen: "Map" });
+			errorMsgChange("");
+		} else {
+			errorMsgChange(response.message);
+		}
+	};		
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

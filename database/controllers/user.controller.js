@@ -151,6 +151,47 @@ exports.register = async (request, response, next) => {
     }
 };
 
+exports.registerGoogle = async (request, response, next) => {
+    let params = {};
+    if (request.body.params.name && request.body.params.email) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    let error = false;
+    await UserDataLayer.findUser({"email":params.email})
+    .then((userData) => {
+        if (userData != null && userData !== {}) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "The email is already registered", {});
+            error = true;
+        }
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+    if (error) return;
+
+    params.password = randomstring.generate(8);
+    
+    UserDataLayer.create(params)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+            responseObj.status  = errorCodes.SUCCESS;
+            responseObj.message = "Success";
+            responseObj.data    = userData;
+        } else {
+            responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
+            responseObj.message = "Can't create user";
+            responseObj.data    = {};
+        }
+        response.send(responseObj);
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+};
+
 exports.login = async (request, response) => {
     let params = {};
     if (request.query) {
@@ -173,6 +214,30 @@ exports.login = async (request, response) => {
                 response.send(responseObj);
                 return;
             }
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
+        }
+        else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+};
+
+exports.loginGoogle = async (request, response) => {
+    let params = {};
+    if (request.query) {
+        params = request.query;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    const {email} = params;
+
+    const where = {};
+    where.email = email;
+    UserDataLayer.findUser(where)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
             sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
         }
         else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});

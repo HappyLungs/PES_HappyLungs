@@ -1,7 +1,5 @@
 const PersistenceCtrl = require("../../persistenceLayer/PersistenceCtrl");
 persistCtrl = new PersistenceCtrl();
-
-const LanguageEnum = Object.freeze({"english":1, "catalan":2, "spanish":3});
 class User {
     
     //Constructors
@@ -11,7 +9,7 @@ class User {
         this.password = password;
         this.birthdate = birthdate;
         this.points = 0;
-        this.language = "Catalan"; // "Spanish", "English"
+        this.language = "ca"; // "es", "en"
         this.healthStatus = [false, false, false]; //cardiorespiratory problems, pregnant, elderly
         this.notifications = true;
         this.profilePicture = "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg";
@@ -27,11 +25,27 @@ class User {
         });
     }
 
+    async registerGoogle (userGoogleData) {
+        return await persistCtrl.postRequest("/registerGoogle", {
+            "name": userGoogleData.given_name,
+            "email": this.email,
+            "language": userGoogleData.locale,
+            "profilePicture": userGoogleData.picture
+        })
+    }
+
     async login () {
         return await persistCtrl.getRequest("/login", {
             "email": this.email,
             "password": this.password
         });
+    }
+
+    async loginGoogle (userGoogleData) {
+        let res = await persistCtrl.getRequest("/loginGoogle", {
+            "email": this.email
+        });
+        if (res.status == 204) this.registerGoogle(userGoogleData);
     }
 
     async delete () {

@@ -23,10 +23,22 @@ router.post(
     UserController.register
 );
 
+router.post(
+    "/registerGoogle",
+    licenseMiddleware.validate,
+    UserController.registerGoogle
+);
+
 router.get(
     "/login",
     licenseMiddleware.validate,
     UserController.login
+);
+
+router.get(
+    "/loginGoogle",
+    licenseMiddleware.validate,
+    UserController.loginGoogle
 );
 
 router.get(

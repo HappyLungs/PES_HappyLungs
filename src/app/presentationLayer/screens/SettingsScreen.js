@@ -50,6 +50,7 @@ function SettingsScreen({ navigation }) {
 				points: 0,
 				savedPins: [],
 				updatedAt: "",
+				accessToken: "",
 			});
 			navigation.navigate("SignInScreen");
 		} else {
