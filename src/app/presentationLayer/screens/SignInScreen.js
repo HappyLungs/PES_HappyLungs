@@ -1,4 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 
 import {
 	View,
@@ -12,17 +14,21 @@ import {
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
+import axios from "axios";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
+
+WebBrowser.maybeCompleteAuthSession();
 
 function SignInScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
+	const [accessToken, setAccessToken] = useState();
+	const [user, setUser] = useContext(UserContext);
 	const [data, setData] = useState({
 		email: "",
 		password: "",
@@ -30,6 +36,46 @@ function SignInScreen({ navigation, route }) {
 		checkEmailInputChange: false,
 		secureTextEntry: true,
 	});
+	
+	const [request, response, promptAsync] = Google.useAuthRequest({
+		expoClientId: '437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com',
+		androidClientId: '437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com',
+	});
+
+	useEffect(() => {
+		if (response?.type === "success") {
+			const { authentication } = response;
+			getGoogleUserInfo(authentication.accessToken);
+		}
+	}, [response]);
+
+	const getGoogleUserInfo = async (accessToken) => {
+		try {
+			let userRequestInfo = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo",
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`
+					}
+				}
+			);
+			loginGoogle(userRequestInfo.data, accessToken)
+		}
+		catch (error) {
+			errorMsgChange(error);
+		}
+	};
+
+	const loginGoogle = async (userGoogleData, accessToken) => {
+		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
+		if (response.status == 200) {
+			response.data.accessToken = accessToken;
+			setUser(response.data);
+			navigation.navigate("AppTabs", { screen: "Map" });
+			errorMsgChange("");
+		} else {
+			errorMsgChange(response.message);
+		}
+	};		
 
 	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
 	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -140,8 +186,6 @@ function SignInScreen({ navigation, route }) {
 			errorMsg: val,
 		});
 	};
-
-	const [user, setUser] = useContext(UserContext);
 
 	const loginUser = async () => {
 		const { email, password } = data;
@@ -297,7 +341,33 @@ function SignInScreen({ navigation, route }) {
 							{i18n.t("signIn")}
 						</Text>
 					</TouchableOpacity>
-
+					<TouchableOpacity
+						onPress={() => {
+							promptAsync({showInRevents: true});
+						}}
+						style={[
+							styles.signIn,
+							{
+								borderColor: COLORS.green1,
+								borderWidth: 1,
+								marginTop: 15,
+								flexDirection: "row",
+								justifyContent: "space-evenly"
+							},
+						]}
+					>
+						<FontAwesome name="google" color={COLORS.green1} size={20} />
+						<Text
+							style={[
+								styles.textSign,
+								{
+									color: COLORS.green1,
+								},
+							]}
+						>
+							{i18n.t("googleLogin")}
+						</Text>
+					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={
 							() => {navigation.navigate("SignUpScreen"); setErrorMsgVisible(false);} 

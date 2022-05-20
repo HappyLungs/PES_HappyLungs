@@ -46,6 +46,7 @@ function ProfileScreen({ navigation, route }) {
 			points: 0,
 			savedPins: [],
 			updatedAt: "",
+			accessToken: "",
 		});
 		navigation.navigate("SignInScreen");
 		// setUser(null);

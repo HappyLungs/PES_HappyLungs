@@ -269,6 +269,19 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
 
 /**
  *
+ * @param {*} userGoogleData
+ * @returns if is registered returns the userInfo, else, registers it and returns the info
+ */
+ PresentationCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+	if (userGoogleData.email) {
+		return await this.domainCtrl.loginGoogleUser(userGoogleData);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
  * @param {*} email
  * @param {*} oldPassword
  * @param {*} newPassword
