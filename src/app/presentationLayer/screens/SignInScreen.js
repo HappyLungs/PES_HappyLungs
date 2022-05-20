@@ -64,10 +64,10 @@ function SignInScreen({ navigation, route }) {
 		}
 	};
 
-	const loginGoogle = async (userGoogleData, accesToken) => {
+	const loginGoogle = async (userGoogleData, accessToken) => {
 		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
 		if (response.status == 200) {
-			response.data.accesToken = accesToken;
+			response.data.accessToken = accessToken;
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			errorMsgChange("");

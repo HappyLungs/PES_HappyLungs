@@ -129,7 +129,6 @@ exports.register = async (request, response, next) => {
         responseObj.message = "The passwords don't match";
         responseObj.data    = {};
         response.send(responseObj);
-
     }
     else {
         UserDataLayer.create(params)

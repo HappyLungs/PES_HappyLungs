@@ -45,7 +45,8 @@ class User {
         let res = await persistCtrl.getRequest("/loginGoogle", {
             "email": this.email
         });
-        if (res.status == 204) this.registerGoogle(userGoogleData);
+        if (res.status == 204) return this.registerGoogle(userGoogleData);
+        else return res;
     }
 
     async delete () {
