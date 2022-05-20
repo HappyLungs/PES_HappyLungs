@@ -384,10 +384,10 @@ DomainCtrl.prototype.savePin = async function (pin, email) {
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
-DomainCtrl.prototype.unsavePin = async function (Pin, email) {
+DomainCtrl.prototype.unsavePin = async function (pin, email) {
 	let result = await persistenceCtrl.putRequest("/unsavePin", {
 		email: email,
-		pin: Pin,
+		pin: pin,
 	});
 	if (result.status === 200) {
 		return result.data;
@@ -453,7 +453,7 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} userGoogleData
  * @returns if is registered returns the userInfo, else, registers it and returns the info
  */
- DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
 	//create
 	let myUser = new User(null, userGoogleData.email, null, null);
 	return await myUser.loginGoogle(userGoogleData); //login to db
@@ -803,13 +803,6 @@ DomainCtrl.prototype.findUser = async function (email) {
 DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	//TODO
 	console.log(date, pin, email);
-};
-
-/**
- * Fetch users {username, picture, points} sorted by points
- */
-DomainCtrl.prototype.fetchUsers = async function () {
-	//TODO
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {

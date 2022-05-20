@@ -15,8 +15,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import * as Progress from 'react-native-progress';
-
+import * as Progress from "react-native-progress";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -113,21 +112,26 @@ function RankingScreen({ navigation, route }) {
 	);
 
 	/*
-*/
+	 */
 	const SecondRoute = () => (
 		<View style={{ flex: 1, backgroundColor: "white" }}>
-			<View 
+			<View
 				style={{
 					borderWidth: 1.3,
 					borderStyle: "dashed",
 					borderRadius: 1,
 					borderColor: COLORS.green2,
 					marginTop: 50,
-				}}	
-				
+				}}
 			>
-				<Progress.Circle size={150} indeterminate={false} strokeCap={'round'} showsText={true} progress= {0.5}/>
-			</View> 
+				<Progress.Circle
+					size={150}
+					indeterminate={false}
+					strokeCap={"square"}
+					showsText={true}
+					progress={0.5}
+				/>
+			</View>
 		</View>
 	);
 
@@ -197,7 +201,6 @@ function RankingScreen({ navigation, route }) {
 			onIndexChange={setIndex}
 			initialLayout={{ width: "100%" }}
 			renderTabBar={renderTabBar}
-		
 		/>
 	);
 }

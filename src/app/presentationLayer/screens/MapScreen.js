@@ -22,6 +22,7 @@ import {
 } from "@expo/vector-icons";
 
 import Modal from "react-native-modal";
+import * as Animatable from "react-native-animatable";
 
 import { LinearGradient } from "expo-linear-gradient";
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
@@ -210,7 +211,7 @@ function MapScreen({ navigation, route }) {
 	};
 
 	const isSavedPin = (pin) => {
-		return user.savedPins.includes(pin);
+		return savedPins.includes(pin);
 	};
 
 	const onMapPress = React.useCallback((e) => {
@@ -275,6 +276,19 @@ function MapScreen({ navigation, route }) {
 	}, []);
 
 	const [user] = useContext(UserContext);
+	const [savedPins, setSavedPins] = useState(user.savedPins);
+
+	const handleSave = () => {
+		if (isSavedPin(selected._id)) {
+			presentationCtrl.unsavePin(selected._id, user.email);
+			let tmp = [...savedPins];
+			tmp.splice(selected._id);
+			setSavedPins(tmp);
+		} else {
+			presentationCtrl.savePin(selected._id, user.email);
+			setSavedPins((savedPins) => [...savedPins, selected._id]);
+		}
+	};
 
 	const getHouses = async (range1, range2) => {
 		//const fetchHouses = async () => {
@@ -566,11 +580,36 @@ function MapScreen({ navigation, route }) {
 							setPinPreview(false);
 						}}
 					>
-						<PinPreview
-							item={selected}
-							saved={isSavedPin(selected._id)}
-							mine={isMyPin(selected.creatorEmail)}
-						></PinPreview>
+						<PinPreview item={selected}></PinPreview>
+						<Animatable.View
+							animation="pulse"
+							duration={1000}
+							style={{
+								height: 30,
+								flexDirection: "row",
+								backgroundColor: COLORS.secondary,
+								borderBottomEndRadius: 10,
+								borderBottomStartRadius: 10,
+							}}
+						>
+							<TouchableOpacity
+								style={{
+									flex: 1,
+									flexDirection: "row",
+									backgroundColor: COLORS.secondary,
+									justifyContent: "space-evenly",
+									borderRadius: 10,
+									alignItems: "center",
+								}}
+								onPress={handleSave}
+							>
+								<Text style={styles.containerTxt}>
+									{isSavedPin(selected._id)
+										? i18n.t("savePin")
+										: i18n.t("unsavePin")}
+								</Text>
+							</TouchableOpacity>
+						</Animatable.View>
 					</Pressable>
 				</View>
 			</Modal>
@@ -902,6 +941,11 @@ const styles = StyleSheet.create({
 		height: 50,
 		borderBottomColor: COLORS.darkGrey,
 		backgroundColor: COLORS.secondary,
+	},
+	containerTxt: {
+		fontSize: 15,
+		color: COLORS.white,
+		fontWeight: "bold",
 	},
 });
 

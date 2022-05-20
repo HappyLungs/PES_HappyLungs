@@ -1,20 +1,13 @@
 import React, { useContext } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Rating } from "react-native-ratings";
 
 import COLORS from "../../config/stylesheet/colors";
-const PresentationCtrl = require("../PresentationCtrl.js");
-import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 
-const PinPreview = ({ item, saved, mine }) => {
-	let presentationCtrl = new PresentationCtrl();
+const PinPreview = ({ item }) => {
 	const [user] = useContext(UserContext);
-
-	const savePin = () => {
-		presentationCtrl.savePin(item._id, user.email);
-	};
 
 	return (
 		<Animatable.View animation="pulse" duration={1000}>
@@ -25,8 +18,8 @@ const PinPreview = ({ item, saved, mine }) => {
 						backgroundColor: COLORS.white,
 						borderTopStartRadius: 10,
 						borderTopEndRadius: 10,
-						borderBottomEndRadius: mine ? 10 : 0,
-						borderBottomStartRadius: mine ? 10 : 0,
+						borderBottomEndRadius: 0,
+						borderBottomStartRadius: 0,
 						padding: 15,
 					},
 					styles.shadow,
@@ -72,33 +65,6 @@ const PinPreview = ({ item, saved, mine }) => {
 					/>
 				</View>
 			</View>
-			{!mine && (
-				<View
-					style={{
-						height: 30,
-						flexDirection: "row",
-						backgroundColor: COLORS.secondary,
-						borderBottomEndRadius: 10,
-						borderBottomStartRadius: 10,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							flex: 1,
-							flexDirection: "row",
-							backgroundColor: COLORS.secondary,
-							justifyContent: "space-evenly",
-							borderRadius: 10,
-							alignItems: "center",
-						}}
-						onPress={savePin}
-					>
-						<Text style={styles.containerTxt}>
-							{saved ? i18n.t("remove") : i18n.t("save")}
-						</Text>
-					</TouchableOpacity>
-				</View>
-			)}
 		</Animatable.View>
 	);
 };
