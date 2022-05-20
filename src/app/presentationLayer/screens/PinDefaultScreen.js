@@ -29,8 +29,8 @@ function PinDefaultScreen({ navigation, route }) {
 	const [savedPin, setSavedPin] = useState(saved);
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
-			latitude: pin.location.latitude,
-			longitude: pin.location.longitude,
+			latitude: pin.latitude,
+			longitude: pin.longitude,
 		});
 	};
 
@@ -223,6 +223,14 @@ function PinDefaultScreen({ navigation, route }) {
 						/>
 					</TouchableOpacity>
 				</View>
+				<Text
+					style={{
+						marginTop: 20,
+					}}
+				>
+					{i18n.t("createdBy")}
+					<Text style={styles.highlight}> {pin.creatorName}</Text>
+				</Text>
 			</View>
 		</SafeAreaView>
 	);

@@ -205,11 +205,12 @@ const PinList = ({ pinList, navigation }) => {
 									<View
 										style={{
 											backgroundColor: isMyPin(item.creatorEmail)
-												? COLORS.blue2
-												: COLORS.secondary,
+												? COLORS.green1
+												: COLORS.blue2,
 											alignSelf: "flex-end",
 											margin: 5,
 											padding: 2,
+											paddingHorizontal: 5,
 											borderRadius: 5,
 										}}
 									>
@@ -276,7 +277,7 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1.5,
 									flexDirection: "row",
-									backgroundColor: COLORS.blue2,
+									backgroundColor: COLORS.green1,
 									borderBottomLeftRadius: 10,
 									justifyContent: "center",
 									alignItems: "center",

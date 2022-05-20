@@ -20,7 +20,8 @@ import {
 	MaterialCommunityIcons,
 	AntDesign,
 } from "@expo/vector-icons";
-
+import Toast from "react-native-toast-message";
+import CustomToast from "../components/CustomToast";
 import Modal from "react-native-modal";
 import * as Animatable from "react-native-animatable";
 
@@ -49,82 +50,19 @@ async function callGeocodeAPI(latitude, longitude) {
  * @param {route} [ route to navigate to the other screens or controllers ]
  */
 function MapScreen({ navigation, route }) {
-	/**
-	 * Function to set a default location
-	 */
-
 	let presentationCtrl = new PresentationCtrl();
+	const { latitude, longitude } = route.params;
 
-	/**
-	 *
-	 */
 	const [modalPinVisible, setModalPinVisible] = useState(false);
-
-	/**
-	 *
-	 */
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
-
-	/**
-	 *
-	 */
-	const [trafficSelected, setTraffic] = useState(false);
-
-	/**
-	 *
-	 */
-	const [industrySelected, setIndustry] = useState(false);
-
-	/**
-	 *
-	 */
-	const [urbanSelected, setUrban] = useState(false);
-
-	/**
-	 *
-	 */
 	const [pinsShown, setPinsShown] = useState(true);
-
-	/**
-	 *
-	 */
 	const [pinPreview, setPinPreview] = useState(false);
-
-	/**
-	 *
-	 */
 	const [pins, setPins] = useState([]);
-
-	/**
-	 *
-	 */
 	const [houses, setHouses] = useState([]);
-
-	/**
-	 *
-	 */
 	const [housesByCertificate, setHousesByCertificate] = useState([]);
-
-	/**
-	 *
-	 */
 	const [byCertificate, setByCertificate] = useState(false);
-
 	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
-
-	const multiSliderValuesChange = (values) => {
-		setMultiSliderValue(values);
-		let letter = ["A", "B", "C", "D", "E", "F", "G"];
-		getHouses(letter[values[0]], letter[values[1]]);
-	};
-
 	const [markers, setMarkers] = useState([]);
-	const [actualMarker, setActualMarker] = useState({
-		latitude: 41.366531,
-		longitude: 2.019336,
-		title: "inexistente",
-	});
-
 	const [selected, setSelected] = useState(null);
 
 	/**
@@ -141,8 +79,6 @@ function MapScreen({ navigation, route }) {
 		longitudeDelta: 1.5,
 	});
 
-	//const [heatpoints] = useState(presentationCtrl.getMapData());
-
 	/**
 	 * Function to set a default hetpoint
 	 * @param {latitude} [ parameter to set a default latitude ]
@@ -157,10 +93,45 @@ function MapScreen({ navigation, route }) {
 		},
 	]);
 
-	/**
-	 *
-	 */
+	const [actualMarker, setActualMarker] = useState({
+		latitude: 41.366531,
+		longitude: 2.019336,
+		title: "inexistente",
+	});
 
+	const showToast = () => {
+		Toast.show({
+			position: "bottom",
+			type: "failureToast",
+			text1: i18n.t("pinFailure"),
+			text2: "This is some something 👋",
+		});
+	};
+
+	const multiSliderValuesChange = (values) => {
+		setMultiSliderValue(values);
+		let letter = ["A", "B", "C", "D", "E", "F", "G"];
+		getHouses(letter[values[0]], letter[values[1]]);
+	};
+
+	// S'executa a cada rerender
+	useEffect(() => {
+		if (latitude !== null && longitude !== null) {
+			const tmpLocation = {
+				latitude: latitude,
+				longitude: longitude,
+				latitudeDelta: 0.01,
+				longitudeDelta: 0.01,
+			};
+			navigation.setParams({
+				latitude: null,
+				longitude: null,
+			});
+			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+		}
+	});
+
+	// onMount (només s'executa una vegada, al carregar la '	vista')
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
 			const fetchPins = async () => {
@@ -178,7 +149,6 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
-
 		const initHeatPoints = async () => {
 			let aux = await presentationCtrl.getHeatPoints();
 			console.log(aux);
@@ -188,27 +158,6 @@ function MapScreen({ navigation, route }) {
 		await initHeatPoints();
 		return unsubscribe;
 	}, [navigation]);
-
-	//setHeatpoints(await presentationCtrl.getMapData());
-	/*
-    Params passats des de PinOwnerScreen al clicar a SeeOnMap
-	*/
-	/*
-	const { latitude, longitude } = route.params;
-	if (latitude && longitude) {
-		const tmpLocation = {
-		latitude: latitude,
-		longitude: longitude,
-		latitudeDelta: 0.01,
-		longitudeDelta: 0.01,
-		}
-		mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
-	}
-	*/
-
-	const isMyPin = (email) => {
-		return user.email === email;
-	};
 
 	const isSavedPin = (pin) => {
 		return savedPins.includes(pin);
@@ -833,6 +782,7 @@ function MapScreen({ navigation, route }) {
 					<TouchableOpacity
 						activeOpacity={0.8}
 						onPress={() => {
+							showToast();
 							setModalFilterVisible(true);
 						}}
 					>
@@ -867,6 +817,7 @@ function MapScreen({ navigation, route }) {
 			{pinPreview && renderPinPreview()}
 			{renderPinCreate()}
 			{renderFilter()}
+			<CustomToast />
 		</SafeAreaView>
 	);
 }

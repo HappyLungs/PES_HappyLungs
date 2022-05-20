@@ -27,8 +27,8 @@ function PinOwnerScreen({ navigation, route }) {
 
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
-			latitude: pin.location.latitude,
-			longitude: pin.location.longitude,
+			latitude: pin.latitude,
+			longitude: pin.longitude,
 		});
 	};
 
@@ -117,7 +117,10 @@ function PinOwnerScreen({ navigation, route }) {
 		>
 			{renderDeleteConfirmation()}
 			<View
-				style={[{ height: 200, borderBottomLeftRadius: 50 }, styles.shadow]}
+				style={[
+					{ height: 200, borderBottomLeftRadius: 50 },
+					styles.shadowImage,
+				]}
 			>
 				<ImageCarousel media={pin.media} />
 			</View>
@@ -310,6 +313,16 @@ const styles = StyleSheet.create({
 	},
 	shadow: {
 		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	shadowImage: {
+		shadowColor: COLORS.green1,
 		shadowOffset: {
 			width: 0,
 			height: 2,
