@@ -3,7 +3,7 @@
     "slug": "happylungs",
     "name": "happylungs",
     "sdkVersion": "44.0.0",
-    "entryPoint": ".vscode/exponentIndex.js"
+    "entryPoint": ".vscode\\exponentIndex.js"
   },
   "name": "happylungs"
 }

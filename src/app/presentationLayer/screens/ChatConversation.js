@@ -24,7 +24,7 @@ import * as Animatable from "react-native-animatable";
 import { setDate } from "date-fns";
 
 
-import io from "socket.io-client";
+//import io from "socket.io-client";
 
 
 function ChatScreen({ route, navigation }) {
@@ -42,18 +42,18 @@ function ChatScreen({ route, navigation }) {
 	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
 	
-	const socketRef = useRef(null);
+	//const socketRef = useRef(null);
 	const flatListRef = useRef();
-
+	const socket = user.socket;
 	useEffect(() => {
 		fetchChats();
 		
-		if (socketRef.current == null) {
+		/* if (socketRef.current == null) {
 			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
 		}
 
 		const {current: socket} = socketRef;
-		socket.open();
+		socket.open(); */
 		socket.on('chat message', (data) => {
 			console.log("Recieved message: ", data)
 			if (data.user != loggedUser.email) {
@@ -101,7 +101,7 @@ function ChatScreen({ route, navigation }) {
 					let data = await presentationCtrl.fetchConversation(newId);
 					
 					
-					socketRef.current.emit('message', data);
+					socket.emit('message', data);
 
 					setId(newId);
 					setLoggedUser(data.users.logged);
@@ -125,7 +125,7 @@ function ChatScreen({ route, navigation }) {
 					//}
 					*/
 					
-					const {current: socket} = socketRef;
+					//const {current: socket} = socketRef;
 					const info = {message: newMessage, to: conversant}
 					socket.emit('chat message', info);
 				}
