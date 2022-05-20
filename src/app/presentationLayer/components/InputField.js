@@ -63,7 +63,13 @@ const InputField = ({
 					secureTextEntry={isMasked}
 					autoCorrect={false}
 					defaultValue={defaultValue}
-					maxLength={label === i18n.t("title") ? 11 : 100}
+					maxLength={
+						label === i18n.t("title")
+							? 11
+							: label === i18n.t("username")
+							? 20
+							: 100
+					}
 					onFocus={() => {
 						onFocus();
 						setIsFocused(true);

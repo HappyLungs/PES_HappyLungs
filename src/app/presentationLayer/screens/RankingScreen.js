@@ -104,7 +104,7 @@ function RankingScreen({ navigation, route }) {
 				}}
 			></View>
 			<Leaderboard
-				chatsList={masterData}
+				usersList={masterData}
 				navigation={navigation}
 				email={user.email}
 				scroll={scrollToUser}
@@ -138,18 +138,12 @@ function RankingScreen({ navigation, route }) {
 
 	useEffect(() => {
 		fetchUsers();
-		fetchChats();
 		return () => {};
 	}, []);
 
-	const fetchChats = async () => {
-		const data = await presentationCtrl.fetchNewConversations(user.email);
-		setMasterData(data);
-	};
-
 	const fetchUsers = async () => {
-		//const data = await presentationCtrl.fetchUsers();
-		//setMasterData(data);
+		const data = await presentationCtrl.fetchRanking();
+		setMasterData(Array.from(data.data));
 	};
 
 	const [index, setIndex] = React.useState(0);

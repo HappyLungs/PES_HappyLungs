@@ -196,21 +196,27 @@ function ProfileStack() {
 									fontWeight: "bold",
 									marginEnd: 10,
 									fontSize: 15,
-									color: COLORS.secondary,
+									color: COLORS.white,
 								}}
 							>
 								{i18n.t("editingProfile")}
 							</Text>
-							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+							<Feather name="edit-3" size={30} color={COLORS.white} />
 						</TouchableOpacity>
 					),
 					headerLeft: null,
-					headerTitleStyle: {
-						fontSize: 20,
-						fontWeight: "bold",
-						color: COLORS.secondary,
+					headerStyle: {
+						elevation: 5,
+						shadowColor: COLORS.black,
+						shadowOffset: {
+							width: 0,
+							height: 2,
+						},
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						shadowColor: "black",
+						backgroundColor: COLORS.green1,
 					},
-					headerStyle: { shadowColor: "transparent" },
 				})}
 			/>
 			<Stack.Screen
@@ -349,6 +355,10 @@ function MapStack() {
 				name="CreatePin"
 				component={CreatePinScreen}
 				options={{
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					headerTintColor: COLORS.white,
 					title: i18n.t("createPin"),
 					gestureEnabled: true,
 					gestureDirection: "horizontal",
@@ -409,6 +419,21 @@ function MapStack() {
 						backgroundColor: COLORS.green1,
 					},
 					...TransitionPresets.SlideFromRightIOS,
+				}}
+			/>
+			<Stack.Screen
+				name="RankingScreen"
+				component={RankingScreen}
+				options={{
+					title: i18n.t("ranking"),
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					headerShown: true,
 				}}
 			/>
 		</Stack.Navigator>
