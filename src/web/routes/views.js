@@ -7,13 +7,38 @@ module.exports = router;
 const userCtrl = new UserCtrl();
 const messageCtrl = new MessageCtrl();
 
+const isLogged = false;
+
 //[GET] Main page
 router.get("/", async (req, res) => {
     try {
-        let users = await userCtrl.fetchUsers("all");
-        res.render("users", {page:"users", users:users});
+        if (isLogged) {
+            let users = await userCtrl.fetchUsers("all");
+            res.render("users", {page:"users", users:users});
+        } else {
+            res.render("login", {page:"login"});
+        }
     } catch (e) {
         res.render("users", {error:"Error: "+e.message});
+    }
+});
+
+//[GET] Admin login
+router.get("/login", async (req, res) => {
+    try {
+        res.render("login", {page:"login"});
+    } catch (e) {
+        res.render("login", {error:"Error: "+e.message});
+    }
+});
+
+//[GET] Admin logout
+router.get("/logout", async (req, res) => {
+    try {
+        this.isLogged = false;
+        res.redirect("login");
+    } catch (e) {
+        res.render("logout", {error:"Error: "+e.message});
     }
 });
 
