@@ -208,18 +208,15 @@ function SettingsScreen({ navigation }) {
 									}
 									setState1(true);
 									setInputs({
-										language: "Spanish",
-										notifications: inputs.notifications,
+										language: "es",
+										notifications: inputs.notifications
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor:
-											inputs.language == "Spanish"
-												? COLORS.green1
-												: COLORS.secondary,
+										backgroundColor: inputs.language == "es" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -234,7 +231,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("spanish")}</Text>
+							<Text style={styles.textState}>{i18n.t("es")}</Text>
 						</View>
 						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
@@ -246,18 +243,15 @@ function SettingsScreen({ navigation }) {
 									}
 									setState2(true);
 									setInputs({
-										language: "Catalan",
-										notifications: inputs.notifications,
+										language: "ca",
+										notifications: inputs.notifications
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor:
-											inputs.language == "Catalan"
-												? COLORS.green1
-												: COLORS.secondary,
+										backgroundColor: inputs.language == "ca" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -272,7 +266,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("catalan")}</Text>
+							<Text style={styles.textState}>{i18n.t("ca")}</Text>
 						</View>
 						<View
 							style={{
@@ -288,18 +282,15 @@ function SettingsScreen({ navigation }) {
 									}
 									setState3(true);
 									setInputs({
-										language: "English",
-										notifications: inputs.notifications,
+										language: "en",
+										notifications: inputs.notifications
 									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor:
-											inputs.language == "English"
-												? COLORS.green1
-												: COLORS.secondary,
+										backgroundColor: inputs.language == "en" ? COLORS.green1 : COLORS.secondary,
 									},
 								]}
 							>
@@ -314,7 +305,7 @@ function SettingsScreen({ navigation }) {
 									}}
 								/>
 							</TouchableOpacity>
-							<Text style={styles.textState}>{i18n.t("english")}</Text>
+							<Text style={styles.textState}>{i18n.t("en")}</Text>
 						</View>
 					</View>
 				</View>

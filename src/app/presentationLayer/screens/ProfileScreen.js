@@ -187,6 +187,8 @@ function ProfileScreen({ navigation, route }) {
 						></ImageBackground>
 						<Text
 							style={{
+								alignItems: "center",
+								marginLeft: 0,
 								color: COLORS.secondary,
 								fontWeight: "bold",
 								fontSize: 19,

@@ -111,11 +111,10 @@ function MapScreen({ navigation, route }) {
 
 	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
 
-	const multiSliderValuesChange = (values) => {
-		setMultiSliderValue(values);
-		console.log(values);
-		let letter = ["A", "B", "C", "D", "E", "F", "G"];
-		getHouses(letter[values[0]], letter[values[1]]);
+	const multiSliderValuesChange = values => {
+		setMultiSliderValue(values)
+		let letter = ["A", "B", "C", "D", "E", "F", "G"]
+		getHouses(letter[values[0]], letter[values[1]])
 	};
 
 	const [markers, setMarkers] = useState([]);
@@ -531,7 +530,12 @@ function MapScreen({ navigation, route }) {
 									height: 5,
 									borderRadius: 2,
 								}}
+<<<<<<< HEAD
+							>
+							</MultiSlider>
+=======
 							></MultiSlider>
+>>>>>>> 8e3112b898247259d2d5df5ab090cccc244e2455
 						</View>
 					</View>
 				</View>

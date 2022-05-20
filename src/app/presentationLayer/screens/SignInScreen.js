@@ -118,7 +118,7 @@ function SignInScreen({ navigation, route }) {
 									justifyContent: "space-around",
 									alignSelf: "center",
 									marginTop: 30,
-									marginHorizontal: 5,
+									marginHorizontal: 20,
 									width: 220,
 								}}
 							>
