@@ -11,10 +11,9 @@ import {
 } from "react-native";
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Rating } from "react-native-ratings";
-import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 import COLORS from "../../config/stylesheet/colors";
 import InputField from "../components/InputField";
@@ -29,7 +28,6 @@ function CreatePinScreen({ navigation, route }) {
 	const [user] = useContext(UserContext);
 
 	const { coords } = route.params;
-	const [date, setDate] = useState(new Date());
 	const [status, setStatus] = useState(false);
 	const [rating, setRating] = useState(3);
 	const [media, setMedia] = useState([]);
@@ -40,7 +38,6 @@ function CreatePinScreen({ navigation, route }) {
 		description: "",
 	});
 	const [errors, setErrors] = useState({});
-	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [deleteMode, setDeleteMode] = useState(false);
 
 	const validate = () => {
@@ -53,11 +50,10 @@ function CreatePinScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (!inputs.description) {
-			handleError(i18n.t("titleText"), "description");
+			handleError(i18n.t("descriptionText"), "description");
 			isValid = false;
 		}
 		if (isValid) {
-			let pinData = transformDate(date);
 			presentationCtrl.createPin(
 				inputs.title,
 				coords,
@@ -65,11 +61,11 @@ function CreatePinScreen({ navigation, route }) {
 				inputs.description,
 				tmpMedia,
 				rating,
-				pinData,
 				status ? "Public" : "Private",
 				user.email,
 				user.name
 			);
+
 			navigation.navigate("MapScreen");
 		}
 	};
@@ -101,41 +97,6 @@ function CreatePinScreen({ navigation, route }) {
 		}
 	};
 
-	const showDatePicker = () => {
-		setDatePickerVisibility(true);
-	};
-
-	const hideDatePicker = () => {
-		setDatePickerVisibility(false);
-	};
-
-	const handleConfirmDate = (date) => {
-		hideDatePicker();
-		setDate(date);
-	};
-
-	const transformDate = (date) => {
-		var formattedDate =
-			"" + date.getDate() < 10
-				? "0" + date.getDate() + "/"
-				: date.getDate() + "/";
-		formattedDate +=
-			date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-		return formattedDate.concat("/", date.getFullYear());
-	};
-
-	const standarizeDate = () => {
-		var tmp = transformDate(date);
-		var standarizedDate = "";
-		return standarizedDate.concat(
-			tmp.slice(3, 5),
-			"/",
-			tmp.slice(0, 2),
-			"/",
-			tmp.slice(6, 10)
-		);
-	};
-
 	function renderImageSelector() {
 		return (
 			<View
@@ -146,7 +107,11 @@ function CreatePinScreen({ navigation, route }) {
 					alignItems: "center",
 				}}
 			>
-				<TouchableOpacity onPress={pickImage} style={{ flexDirection: "row" }}>
+				<TouchableOpacity
+					activeOpacity={0.8}
+					onPress={pickImage}
+					style={{ flexDirection: "row" }}
+				>
 					<MaterialIcons
 						name="library-add"
 						size={25}
@@ -154,6 +119,7 @@ function CreatePinScreen({ navigation, route }) {
 					/>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onLongPress={() => {
 						setDeleteMode(!deleteMode);
 					}}
@@ -194,6 +160,7 @@ function CreatePinScreen({ navigation, route }) {
 				</TouchableOpacity>
 
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onLongPress={() => {
 						setDeleteMode(!deleteMode);
 					}}
@@ -236,47 +203,6 @@ function CreatePinScreen({ navigation, route }) {
 		);
 	}
 
-	function renderDateSelector() {
-		return (
-			<View
-				style={{
-					flexDirection: "row",
-					paddingHorizontal: 10,
-					paddingVertical: 5,
-					alignItems: "center",
-				}}
-			>
-				<TouchableOpacity onPress={showDatePicker}>
-					<Ionicons
-						name="md-calendar"
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-						size={25}
-					/>
-					<DateTimePickerModal
-						//style={styles.datePickerStyle}
-						mode="date"
-						date={new Date(standarizeDate())}
-						onConfirm={handleConfirmDate}
-						onCancel={hideDatePicker}
-						isVisible={isDatePickerVisible}
-					/>
-				</TouchableOpacity>
-				<Text
-					style={{
-						textAlignVertical: "center",
-						fontSize: 15,
-						marginStart: 20,
-						color: COLORS.secondary,
-					}}
-				>
-					{" "}
-					{transformDate(date)}
-				</Text>
-			</View>
-		);
-	}
-
 	function renderPinStatusSelector() {
 		return (
 			<View style={{ padding: 10 }}>
@@ -286,7 +212,10 @@ function CreatePinScreen({ navigation, route }) {
 					unfillColor={COLORS.white}
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
-					onPress={() => setStatus(!status)}
+					onPress={() => {
+						setStatus(!status);
+					}}
+					activeOpacity={0.8}
 					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
@@ -302,51 +231,59 @@ function CreatePinScreen({ navigation, route }) {
 				paddingHorizontal: 20,
 			}}
 		>
-			<View style={{ marginVertical: 20 }}>
-				<Text style={[styles.subtitle, { marginTop: 0 }]}>
-					{i18n.t("location")}
-				</Text>
-				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{[coords.latitude, "   ", coords.longitude]}
-				</Text>
-				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
-					onFocus={() => handleError(null, "title")}
-					iconName="title"
-					label={i18n.t("title")}
-					placeholder={i18n.t("titlePlaceholder")}
-					error={errors.title}
-					editable={true}
-					passwordChange={false}
-				/>
-				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
-					onFocus={() => handleError(null, "description")}
-					iconName="description"
-					label={i18n.t("description")}
-					placeholder={i18n.t("descriptionPlaceholder")}
-					error={errors.description}
-					editable={true}
-					passwordChange={false}
-				/>
-				<Text style={styles.subtitle}> {i18n.t("date")}</Text>
-				{renderDateSelector()}
-				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
-				{renderImageSelector()}
-				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
-				<Rating
-					type={"custom"}
-					imageSize={20}
-					fractions={0}
-					startingValue={3}
-					ratingBackgroundColor={COLORS.secondary}
-					ratingColor={COLORS.green1}
-					tintColor={COLORS.white}
-					style={{ padding: 10, alignSelf: "flex-start" }}
-					onFinishRating={(newRating) => setRating(newRating)}
-				/>
-				<Text style={styles.subtitle}>{i18n.t("allowOption")}</Text>
-				{renderPinStatusSelector()}
+			<View
+				style={{
+					marginVertical: 20,
+					flex: 1,
+					justifyContent: "space-between",
+				}}
+			>
+				<View>
+					<Text style={[styles.subtitle, { marginTop: 0 }]}>
+						{i18n.t("location")}
+					</Text>
+					<Text style={{ fontSize: 15, color: COLORS.green1 }}>
+						{[coords.latitude, "   ", coords.longitude]}
+					</Text>
+					<InputField
+						onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
+						onFocus={() => handleError(null, "title")}
+						iconName="title"
+						label={i18n.t("title")}
+						placeholder={i18n.t("titlePlaceholder")}
+						error={errors.title}
+						editable={true}
+						passwordChange={false}
+					/>
+					<InputField
+						onChangeText={(newDescription) =>
+							handleOnChange(newDescription, "description")
+						}
+						onFocus={() => handleError(null, "description")}
+						iconName="description"
+						label={i18n.t("description")}
+						placeholder={i18n.t("descriptionPlaceholder")}
+						error={errors.description}
+						editable={true}
+						passwordChange={false}
+					/>
+					<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
+					{renderImageSelector()}
+					<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
+					<Rating
+						type={"custom"}
+						imageSize={20}
+						fractions={0}
+						startingValue={3}
+						ratingBackgroundColor={COLORS.secondary}
+						ratingColor={COLORS.green1}
+						tintColor={COLORS.white}
+						style={{ padding: 10, alignSelf: "flex-start" }}
+						onFinishRating={(newRating) => setRating(newRating)}
+					/>
+					<Text style={styles.subtitle}>{i18n.t("allowOption")}</Text>
+					{renderPinStatusSelector()}
+				</View>
 				<View
 					style={{
 						flexDirection: "row",
@@ -355,16 +292,20 @@ function CreatePinScreen({ navigation, route }) {
 					}}
 				>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
 							{ backgroundColor: COLORS.red1 },
 						]}
-						onPress={() => navigation.navigate("MapScreen")}
+						onPress={() => {
+							navigation.navigate("MapScreen");
+						}}
 					>
 						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -390,7 +331,7 @@ const styles = StyleSheet.create({
 		color: COLORS.secondary,
 	},
 	containerBtn: {
-		width: 120,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},

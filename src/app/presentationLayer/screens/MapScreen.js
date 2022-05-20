@@ -25,10 +25,11 @@ import Modal from "react-native-modal";
 
 import { LinearGradient } from "expo-linear-gradient";
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
+
+//import customPin from 'https://i.ibb.co/vXZrNbB/A.png';
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -96,7 +97,26 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
+	const [houses, setHouses] = useState([]);
+
+	/**
+	 *
+	 */
+	const [housesByCertificate, setHousesByCertificate] = useState([]);
+
+	/**
+	 *
+	 */
 	const [byCertificate, setByCertificate] = useState(false);
+
+	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
+
+	const multiSliderValuesChange = (values) => {
+		setMultiSliderValue(values);
+		console.log(values);
+		let letter = ["A", "B", "C", "D", "E", "F", "G"];
+		getHouses(letter[values[0]], letter[values[1]]);
+	};
 
 	const [markers, setMarkers] = useState([]);
 	const [actualMarker, setActualMarker] = useState({
@@ -104,6 +124,7 @@ function MapScreen({ navigation, route }) {
 		longitude: 2.019336,
 		title: "inexistente",
 	});
+
 	const [selected, setSelected] = useState(null);
 
 	/**
@@ -139,9 +160,9 @@ function MapScreen({ navigation, route }) {
 	/**
 	 *
 	 */
+
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
-			console.log("map");
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchTrendingPins(user.email);
 				setPins(data);
@@ -157,8 +178,12 @@ function MapScreen({ navigation, route }) {
 
 			await fetchPins();
 		});
+
 		const initHeatPoints = async () => {
-			setHeatpoints(await presentationCtrl.getHeatPoints());
+			let aux = await presentationCtrl.getHeatPoints();
+			console.log(aux);
+			setHeatpoints(aux);
+			console.log(heatpoints);
 		};
 		await initHeatPoints();
 		return unsubscribe;
@@ -183,6 +208,10 @@ function MapScreen({ navigation, route }) {
 
 	const isMyPin = (email) => {
 		return user.email === email;
+	};
+
+	const isSavedPin = (pin) => {
+		return user.savedPins.includes(pin);
 	};
 
 	const onMapPress = React.useCallback((e) => {
@@ -217,6 +246,16 @@ function MapScreen({ navigation, route }) {
 	 */
 	const mapRef = useRef(null);
 
+	let housesImgages = [
+		"https://i.ibb.co/yShfsG6/A.png",
+		"https://i.ibb.co/sJtSG9v/B.png",
+		"https://i.ibb.co/fQJTpFL/C.png",
+		"https://i.ibb.co/D7nt50T/D.png",
+		"https://i.ibb.co/BPWjqC4/E.png",
+		"https://i.ibb.co/GTdNLQ8/F.png",
+		"https://i.ibb.co/CmWbn9f/G.png",
+	];
+
 	const onMapLoad = React.useCallback((map) => {
 		mapRef.current = map;
 	});
@@ -238,6 +277,22 @@ function MapScreen({ navigation, route }) {
 
 	const [user] = useContext(UserContext);
 
+	const getHouses = async (range1, range2) => {
+		//const fetchHouses = async () => {
+		const energyMap = await presentationCtrl.getQualifationMap(range1, range2);
+		setHouses(energyMap);
+		let fetchedHouses = [];
+		for (let house of Object.keys(energyMap)) {
+			fetchedHouses.push({
+				latitude: energyMap[house].latitud,
+				longitude: energyMap[house].longitud,
+				value: energyMap[house].value,
+			});
+		}
+		setHousesByCertificate(fetchedHouses);
+		setByCertificate(true);
+	};
+
 	function renderHeader(user) {
 		return (
 			<View
@@ -247,49 +302,95 @@ function MapScreen({ navigation, route }) {
 						width: "100%",
 						paddingHorizontal: 20,
 						alignItems: "center",
+						justifyContent: "space-between",
 						flexDirection: "row",
-						backgroundColor: COLORS.white,
+						backgroundColor: COLORS.green1,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
 					},
 					styles.shadow,
 				]}
 			>
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={() => {
+							navigation.navigate("Profile");
+						}}
+						style={[styles.shadow, { borderRadius: 30 }]}
+					>
+						<Image
+							source={{ uri: user.profilePicture }}
+							style={[{ borderRadius: 30, width: 40, height: 40 }]}
+						></Image>
+					</TouchableOpacity>
+					<View
+						style={{
+							flexDirection: "column",
+							marginStart: 15,
+						}}
+					>
+						<Text
+							style={[
+								{
+									fontSize: 20,
+									fontWeight: "bold",
+									color: COLORS.white,
+								},
+							]}
+						>
+							{user.name}
+						</Text>
+						<Text
+							style={[
+								{
+									fontSize: 18,
+									fontWeight: "normal",
+									color: COLORS.white,
+								},
+							]}
+						>
+							{i18n.t("welcome")}
+						</Text>
+					</View>
+				</View>
 				<TouchableOpacity
-					onPress={() => {
-						navigation.navigate("Profile");
-					}}
-					style={{}}
-				>
-					<Image
-						source={{ uri: user.profilePicture }}
-						style={[{ borderRadius: 20, width: 40, height: 40 }]}
-					></Image>
-				</TouchableOpacity>
-				<Text
+					activeOpacity={0.8}
 					style={[
 						{
-							fontSize: 20,
-							fontWeight: "bold",
-							color: COLORS.secondary,
-							marginStart: 15,
+							backgroundColor: COLORS.white,
+							padding: 5,
+							borderRadius: 12,
+							alignSelf: "center",
+							justifyContent: "flex-end",
 						},
+						styles.shadow,
 					]}
+					onPress={() => {
+						navigation.navigate("RankingScreen", { scroll: true });
+					}}
 				>
-					{user.name},
-					<Text
-						style={[
-							{
-								fontSize: 18,
-								fontWeight: "normal",
-								color: COLORS.secondary,
-							},
-						]}
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
 					>
-						{" "}
-						{i18n.t("welcome")}
-					</Text>
-				</Text>
+						<View
+							style={{
+								width: 25,
+								height: 25,
+								alignItems: "center",
+								justifyContent: "center",
+								borderRadius: 20,
+								backgroundColor: COLORS.lightGrey,
+							}}
+						>
+							<AntDesign name="Trophy" size={18} color={COLORS.secondary} />
+						</View>
+					</View>
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -326,15 +427,7 @@ function MapScreen({ navigation, route }) {
 						>
 							{i18n.t("filter")}
 						</Text>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1 },
-							]}
-						>
-							{i18n.t("typeOfContamination")}
-						</Text>
-						{renderCheckList()}
+
 						<Text
 							style={[
 								styles.modalText,
@@ -344,6 +437,7 @@ function MapScreen({ navigation, route }) {
 							{i18n.t("showPins")}
 						</Text>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{
 								flexDirection: "row",
 								backgroundColor: COLORS.secondary,
@@ -371,6 +465,7 @@ function MapScreen({ navigation, route }) {
 						</Text>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									backgroundColor: COLORS.secondary,
@@ -393,13 +488,14 @@ function MapScreen({ navigation, route }) {
 							</TouchableOpacity>
 							<MultiSlider
 								sliderLength={100}
-								//onValuesChange={multiSliderValuesChange}
+								onValuesChange={multiSliderValuesChange}
 								min={0}
-								max={7}
+								max={6}
 								step={1}
 								snapped
 								showSteps
-								values={[0, 1]}
+								values={[multiSliderValue[0], multiSliderValue[1]]}
+								allowOverlap={true}
 								//enableLabel
 								//customLabel={CustomLabel}
 								stepLabelStyle={{
@@ -407,8 +503,8 @@ function MapScreen({ navigation, route }) {
 								}}
 								markerStyle={{
 									backgroundColor: COLORS.green1,
-									height: 10,
-									width: 10,
+									height: 13,
+									width: 13,
 									bottom: -3,
 								}}
 								stepLabel={{
@@ -435,7 +531,7 @@ function MapScreen({ navigation, route }) {
 									height: 5,
 									borderRadius: 2,
 								}}
-							/>
+							></MultiSlider>
 						</View>
 					</View>
 				</View>
@@ -466,13 +562,14 @@ function MapScreen({ navigation, route }) {
 						onPress={() => {
 							navigation.navigate("DefaultPin", {
 								pin: selected,
+								saved: isSavedPin(selected._id),
 							});
 							setPinPreview(false);
 						}}
 					>
 						<PinPreview
 							item={selected}
-							saved={false}
+							saved={isSavedPin(selected._id)}
 							mine={isMyPin(selected.creatorEmail)}
 						></PinPreview>
 					</Pressable>
@@ -505,6 +602,7 @@ function MapScreen({ navigation, route }) {
 						<Text style={styles.highlight}> {actualMarker.title}</Text>
 						<View style={{ flexDirection: "column", marginTop: 10 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -518,6 +616,7 @@ function MapScreen({ navigation, route }) {
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -549,6 +648,7 @@ function MapScreen({ navigation, route }) {
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={{
 									flexDirection: "row",
 									margin: 5,
@@ -614,69 +714,6 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
-	function renderCheckList() {
-		return (
-			<View style={{ flexDirection: "column", marginStart: 20 }}>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !trafficSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setTraffic(!trafficSelected)}
-					text={i18n.t("typeOfContamination1")}
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !industrySelected
-							? COLORS.lightGrey
-							: COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !industrySelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setIndustry(!industrySelected)}
-					text={i18n.t("typeOfContamination2")}
-				/>
-				<BouncyCheckbox
-					style={{ marginTop: 10 }}
-					fillColor={COLORS.secondary}
-					size={20}
-					unfillColor={COLORS.white}
-					iconStyle={{
-						borderColor: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-						borderRadius: 7,
-						borderWidth: 1.5,
-					}}
-					textStyle={{
-						textDecorationLine: "none",
-						fontWeight: "bold",
-						color: !urbanSelected ? COLORS.lightGrey : COLORS.secondary,
-					}}
-					onPress={() => setUrban(!urbanSelected)}
-					text={i18n.t("typeOfContamination3")}
-				/>
-			</View>
-		);
-	}
-
 	return (
 		<SafeAreaView style={{ flex: 1, alignItems: "center" }}>
 			<View
@@ -715,6 +752,22 @@ function MapScreen({ navigation, route }) {
 							/>
 						))}
 
+					{byCertificate &&
+						housesByCertificate.map((house, idx2) => (
+							<Marker
+								key={idx2}
+								coordinate={{
+									latitude: parseFloat(house.latitude),
+									longitude: parseFloat(house.longitude),
+								}}
+							>
+								<Image
+									source={{ uri: housesImgages[house.value] }}
+									style={[{ borderRadius: 0, width: 40, height: 40 }]}
+								></Image>
+							</Marker>
+						))}
+
 					<Heatmap
 						points={heatpoints}
 						radius={50}
@@ -739,7 +792,12 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={[styles.container, styles.shadow]}>
-					<TouchableOpacity onPress={() => setModalFilterVisible(true)}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						onPress={() => {
+							setModalFilterVisible(true);
+						}}
+					>
 						<MaterialCommunityIcons
 							name="filter-menu"
 							color={COLORS.secondary}
@@ -749,6 +807,7 @@ function MapScreen({ navigation, route }) {
 				</View>
 				<View style={[styles.container, styles.shadow, { marginBottom: 70 }]}>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						onPress={() => {
 							Location.installWebGeolocationPolyfill();
 							navigator.geolocation.getCurrentPosition((position) => {

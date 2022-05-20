@@ -86,7 +86,8 @@ exports.listUsers = async (request, response) => {
             'email': '$arr.email', 
             'profilePicture': '$arr.profilePicture', 
             'status': '$arr.status', 
-            'reported': '$arr.reported', 
+            'reported': '$arr.reported',
+            'points': '$arr.points',
             'ranking': '$ranking'
           }
         }, {

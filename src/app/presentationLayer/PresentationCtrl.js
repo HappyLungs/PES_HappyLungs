@@ -110,14 +110,13 @@ PresentationCtrl.prototype.getDataStatistics = async function (
  * @returns the created pin
  *
  */
-PresentationCtrl.prototype.createPin = function (
+PresentationCtrl.prototype.createPin = async function (
 	title,
 	location,
 	locationTitle,
 	description,
 	media,
 	rating,
-	pinData,
 	status,
 	creatorEmail,
 	creatorName
@@ -129,7 +128,6 @@ PresentationCtrl.prototype.createPin = function (
 		description,
 		media,
 		rating,
-		pinData,
 		status,
 		creatorEmail,
 		creatorName
@@ -154,7 +152,6 @@ PresentationCtrl.prototype.editPin = function (
 	description,
 	media,
 	rating,
-	date,
 	status,
 	userEmail
 ) {
@@ -166,7 +163,6 @@ PresentationCtrl.prototype.editPin = function (
 		description,
 		media,
 		rating,
-		date,
 		status,
 		userEmail
 	);
@@ -179,6 +175,21 @@ PresentationCtrl.prototype.editPin = function (
  */
 PresentationCtrl.prototype.savePin = async function (pin, email) {
 	let result = await this.domainCtrl.savePin(pin, email);
+	if (result != null) {
+		return result;
+	} else {
+		//TODO: Handle error
+		return null;
+	}
+};
+
+/**
+ *
+ * @param {*} pin
+ * @returns the saved pin from the logged user that is going to be unsaved
+ */
+PresentationCtrl.prototype.unsavePin = async function (pin, email) {
+	let result = await this.domainCtrl.unsavePin(pin, email);
 	if (result != null) {
 		return result;
 	} else {
@@ -276,9 +287,30 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} newPassword
  * @returns an acces_token for the user
  */
- PresentationCtrl.prototype.changePassword = async function (email, oldPassword, newPassword) {
+PresentationCtrl.prototype.changePassword = async function (
+	email,
+	oldPassword,
+	newPassword
+) {
 	if (email && oldPassword && newPassword) {
-		return await this.domainCtrl.changePassword(email, oldPassword, newPassword);
+		return await this.domainCtrl.changePassword(
+			email,
+			oldPassword,
+			newPassword
+		);
+	} else {
+		return { data: {}, message: i18n.t("signInError1"), status: 422 };
+	}
+};
+
+/**
+ *
+ * @param {*} email
+ * @returns restores the password and sends an email
+ */
+PresentationCtrl.prototype.restorePassword = async function (email) {
+	if (email) {
+		return await this.domainCtrl.restorePassword(email);
 	} else {
 		return { data: {}, message: i18n.t("signInError1"), status: 422 };
 	}
@@ -289,7 +321,7 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} email
  * @returns deletes the user from DB
  */
- PresentationCtrl.prototype.deleteUser = async function (email) {
+PresentationCtrl.prototype.deleteUser = async function (email) {
 	if (email) {
 		return await this.domainCtrl.deleteUser(email);
 	} else {
@@ -353,6 +385,16 @@ PresentationCtrl.prototype.fetchPins = async function (email) {
 	}
 };
 
+PresentationCtrl.prototype.fetchRanking = async function () {
+	let ranking = await this.domainCtrl.fetchRanking();
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+};
+
 PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	let pins = await this.domainCtrl.fetchTrendingPins(email);
 	if (pins != null) {
@@ -363,16 +405,26 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	}
 };
 
+PresentationCtrl.prototype.getQualifationMap = async function(range_1, range_2) {
+	let energyMap = await this.domainCtrl.getQualifationMap(range_1,range_2);
+	if (energyMap != null) {
+		return energyMap;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+}; 
+
+
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
 PresentationCtrl.prototype.getHeatPoints = async function () {
 	return this.domainCtrl.getHeatPoints();
-}
+};
 
 PresentationCtrl.prototype.fetchConversations = async function (email) {
-	let conversations =
-		await this.domainCtrl.fetchConversations(email);
+	let conversations = await this.domainCtrl.fetchConversations(email);
 	if (conversations != null) {
 		return conversations;
 	} else {
@@ -382,8 +434,7 @@ PresentationCtrl.prototype.fetchConversations = async function (email) {
 };
 
 PresentationCtrl.prototype.fetchNewConversations = async function (email) {
-	let conversation =
-		await this.domainCtrl.fetchNewConversations(email);
+	let conversation = await this.domainCtrl.fetchNewConversations(email);
 	if (conversation != null) {
 		return conversation;
 	} else {
@@ -403,8 +454,16 @@ PresentationCtrl.prototype.fetchConversation = async function (id, email) {
 	}
 };
 
-PresentationCtrl.prototype.createConversation = async function (email, text, loggedEmail) {
-	let result = await this.domainCtrl.createConversation(email, text, loggedEmail);
+PresentationCtrl.prototype.createConversation = async function (
+	email,
+	text,
+	loggedEmail
+) {
+	let result = await this.domainCtrl.createConversation(
+		email,
+		text,
+		loggedEmail
+	);
 	if (result != "error") {
 		return result;
 	} else {
@@ -433,6 +492,23 @@ PresentationCtrl.prototype.createMessage = async function (id, text, email) {
 	}
 };
 
+PresentationCtrl.prototype.reportMessage = async function (id) {
+	try {
+		let result = await this.domainCtrl.reportMessage(id);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+PresentationCtrl.prototype.createEvent = async function (date, pin, email) {
+	this.domainCtrl.createEvent(date, pin, email);
+};
+
+PresentationCtrl.prototype.fetchUsers = async function () {
+	this.domainCtrl.fetchUsers();
+};
+
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);
 	if (user != null) {
@@ -441,6 +517,6 @@ PresentationCtrl.prototype.fetchUser = async function (email) {
 		//TODO ERROR: Show error message && reload page
 		return null;
 	}
-}
+};
 
 module.exports = PresentationCtrl;

@@ -144,7 +144,6 @@ exports.create = async (request, response) => {
     }
     pinDatalayer.createPin(params)
     .then(async (pinData) => {
-        console.log(pinData);
         if (pinData !== null && typeof pinData !== undefined) {
             await userController.updateUserPoints(pinData.creatorEmail, 6);
             sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Pin created", pinData);
@@ -159,8 +158,8 @@ exports.create = async (request, response) => {
 
 exports.update = async(request, response) => {
     let params = {};
-    if (request.body.pin) {
-        params = request.body;
+    if (request.body.params.pin) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;

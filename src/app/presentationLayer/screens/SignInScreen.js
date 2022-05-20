@@ -9,6 +9,7 @@ import {
 	TextInput,
 	StyleSheet,
 	StatusBar,
+	Alert,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -76,6 +77,78 @@ function SignInScreen({ navigation, route }) {
 		}
 	};		
 
+	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
+	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
+	
+
+	const renderModalRestorePassword = () => {
+		return (
+			<Modal
+				animationType="fade"
+				transparent={true}
+				visible={modalRestorePasswordVisible}
+				onRequestClose={() => {
+					setModalRestorePasswordVisible(!modalRestorePasswordVisible);
+				}}
+				onBackdropPress={() => {
+					setModalRestorePasswordVisible(!modalRestorePasswordVisible);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View
+						style={[
+							styles.modalView,
+							styles.shadow,
+							{ alignItems: "flex-start" },
+						]}
+					>
+						<Text
+							style={[
+								styles.modalText,
+								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+							]}
+						>
+							{i18n.t("restorePasswordConfirmation")}
+						</Text>
+						<View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-around",
+									alignSelf: "center",
+									marginTop: 30,
+									marginHorizontal: 5,
+									width: 220,
+								}}
+							>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.red1 },
+									]}
+									onPress={() => setModalRestorePasswordVisible(false)}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										styles.containerBtn2,
+										styles.shadow,
+										{ backgroundColor: COLORS.green1 },
+									]}
+									onPress={() => restorePassword()}
+								>
+									<Text style={styles.containerTxt}>{i18n.t("yes")}</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
+
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 		return emailAdress.match(regexEmail);
@@ -120,14 +193,36 @@ function SignInScreen({ navigation, route }) {
 		if (response.status == 200) {
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
-			errorMsgChange("");
+			setErrorMsgVisible(false);
 		} else {
 			errorMsgChange(response.message);
+			setErrorMsgVisible(true);
+		}
+	};
+
+	const restorePassword = async () => {
+		setModalRestorePasswordVisible(false);
+		if (!data.checkEmailInputChange) {
+			errorMsgChange(i18n.t("invalidEmail"));
+			setErrorMsgVisible(true);
+		}
+		else {
+			const { email } = data;
+			let response = await presentationCtrl.restorePassword(email);
+			if (response.status == 200) {
+				setErrorMsgVisible(false);
+				Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), ["OK"]);
+			} else {
+				if (response.status == 204) errorMsgChange(i18n.t("signInError2"));
+				else if (response.status == 422) errorMsgChange(response.message);
+				else errorMsgChange(i18n.t("restorePasswordError"));
+				setErrorMsgVisible(true);
+			}
 		}
 	};
 
 	const renderMessage = () => {
-		if (data.errorMsg != "") {
+		if (errorMsgVisible) {
 			return <Text style={styles.errorMsg}>{data.errorMsg}</Text>;
 		}
 		return;
@@ -170,7 +265,7 @@ function SignInScreen({ navigation, route }) {
 								onChangeText={(val) => emailChange(val)}
 							/>
 						</View>
-						{data.checkTextInputChange ? (
+						{data.checkEmailInputChange ? (
 							<Animatable.View animation="bounceIn">
 								<Feather name="check-circle" color="green" size={20} />
 							</Animatable.View>
@@ -216,7 +311,9 @@ function SignInScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => setModalRestorePasswordVisible()}
+				>
 					<Text style={{ color: COLORS.green1, marginTop: 15 }}>
 						{i18n.t("passwordForgot")}
 					</Text>
@@ -272,7 +369,9 @@ function SignInScreen({ navigation, route }) {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => navigation.navigate("SignUpScreen")}
+						onPress={
+							() => {navigation.navigate("SignUpScreen"); setErrorMsgVisible(false);} 
+						}
 						style={[
 							styles.signIn,
 							{
@@ -295,6 +394,7 @@ function SignInScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</Animatable.View>
+			{renderModalRestorePassword()}
 		</View>
 	);
 }
@@ -314,6 +414,17 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: COLORS.green1,
+	},
+	containerBtn2: {
+		width: 85,
+		padding: 10,
+		borderRadius: 5,
+	},
+	containerTxt: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 15,
+		color: COLORS.white,
 	},
 	header: {
 		flex: 1,
@@ -338,6 +449,20 @@ const styles = StyleSheet.create({
 		color: "#05375a",
 		fontSize: 18,
 	},
+	modalText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+	shadow: {
+		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
 	action: {
 		marginTop: 10,
 		borderBottomWidth: 1,
@@ -350,6 +475,13 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: "#FF0000",
 		paddingBottom: 5,
+	},
+	modalView: {
+		margin: 25,
+		backgroundColor: COLORS.white,
+		borderRadius: 15,
+		padding: 20,
+		alignItems: "center",
 	},
 	textInput: {
 		marginTop: -5,

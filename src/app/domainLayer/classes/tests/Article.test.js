@@ -4,7 +4,7 @@ import Comment from "../Comment";
 
 const usuario = new User("alexsoriano@hotmail.es");
 
-const id_user = usuario.userID;
+const id_user = usuario.name;
 
 let articleTest = new Article("Lo que el viento se llevó", id_user);
 

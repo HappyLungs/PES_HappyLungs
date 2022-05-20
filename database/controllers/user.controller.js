@@ -10,6 +10,8 @@ const loginHelpers = require("../helpers/loginHelpers");
 
 const sendResponseHelper = require("../helpers/sendResponse.helper.js");
 
+const email = require("../helpers/email");
+
 //Datalayers
 const UserDataLayer = require("./../datalayers/user.datalayer");
 const ConversationDatalayer = require("./../datalayers/conversation.datalayer");
@@ -305,6 +307,43 @@ exports.changePassword = async (request, response) => {
     })
 }
 
+exports.restorePassword = async (request, response) => {
+    let params = {};
+    if (request.body) {
+        params = request.body;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    await UserDataLayer.findUser({email: params.email})
+    .then( async (userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+            //CREATE RANDOM STRING (8 chars)
+            let newPassword = randomstring.generate(8);
+            //ENCRYPT AND SAVE AS PASSWORD
+            var salt = bcrypt.genSaltSync(10);
+            newPasswordHashed = bcrypt.hashSync(newPassword, salt);
+            await UserDataLayer.updateUser({email: params.email}, {password: newPasswordHashed})
+            .then( async (updatedData) => {
+                if (updatedData !== null && typeof updatedData !== undefined) {
+                    //SEND EMAIL WITH PASSWORD
+                    let res = await email.sendMail(params.email, newPassword);
+                    if (res.accepted) sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", {});
+                    else sendResponseHelper.sendResponse(response, errorCodes.METHOD_NOT_ALLOWED, "Mail not sent", {});
+                } else {
+                    sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+                }
+            })
+            .catch(error => {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+            });
+        } else {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+        }
+    })
+}
+
 exports.savePin = async (request, response) => {
     let params = {};
     if (request.body.params) {
@@ -334,6 +373,42 @@ exports.savePin = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
+}
+
+exports.unsavePin = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    let result = await UserDataLayer.findUser({email: params.email}).then();
+    if (result == null && typeof result == undefined) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Invalid user", {});
+        return;
+    } 
+    if (result.savedPins.indexOf(params.pin) === -1) {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
+    if (mongodb.ObjectID.isValid(params.pin)) {
+        UserDataLayer.updateUser({email: params.email}, {$unset: {savedPins: mongodb.ObjectId(params.pin)}})
+        .then((updatedData) => {
+            if (updatedData !== null && typeof updatedData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
 }
 
 exports.delete = async (request, response) => {
