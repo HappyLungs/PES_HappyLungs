@@ -36,7 +36,7 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const handleSave = () => {
 		if (bookmark) {
-			presentationCtrl.removeFromSaved(pin._id, user.email);
+			presentationCtrl.unsavePin(pin._id, user.email);
 		} else {
 			presentationCtrl.savePin(pin._id, user.email);
 		}
@@ -213,7 +213,7 @@ function PinDefaultScreen({ navigation, route }) {
 							}}
 						>
 							{savedPin && i18n.t("savePin")}
-							{!savedPin && i18n.t("notSavePin")}
+							{!savedPin && i18n.t("unsavePin")}
 						</Text>
 						<Ionicons
 							name={bookmark}

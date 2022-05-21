@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
 
 import {
 	View,
@@ -10,7 +10,7 @@ import {
 	StyleSheet,
 	StatusBar,
 	Alert,
-	Modal
+	Modal,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -20,6 +20,7 @@ import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 import axios from "axios";
+import { setLanguage } from "../../config/translation";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -37,10 +38,12 @@ function SignInScreen({ navigation, route }) {
 		checkEmailInputChange: false,
 		secureTextEntry: true,
 	});
-	
+
 	const [request, response, promptAsync] = Google.useAuthRequest({
-		expoClientId: '437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com',
-		androidClientId: '437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com',
+		expoClientId:
+			"437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com",
+		androidClientId:
+			"437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com",
 	});
 
 	useEffect(() => {
@@ -52,16 +55,16 @@ function SignInScreen({ navigation, route }) {
 
 	const getGoogleUserInfo = async (accessToken) => {
 		try {
-			let userRequestInfo = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo",
+			let userRequestInfo = await axios.get(
+				"https://www.googleapis.com/oauth2/v2/userinfo",
 				{
 					headers: {
-						Authorization: `Bearer ${accessToken}`
-					}
+						Authorization: `Bearer ${accessToken}`,
+					},
 				}
 			);
-			loginGoogle(userRequestInfo.data, accessToken)
-		}
-		catch (error) {
+			loginGoogle(userRequestInfo.data, accessToken);
+		} catch (error) {
 			errorMsgChange(error);
 		}
 	};
@@ -76,11 +79,11 @@ function SignInScreen({ navigation, route }) {
 		} else {
 			errorMsgChange(response.message);
 		}
-	};		
+	};
 
-	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
+	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] =
+		useState(false);
 	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
-	
 
 	const renderModalRestorePassword = () => {
 		return (
@@ -148,7 +151,7 @@ function SignInScreen({ navigation, route }) {
 				</View>
 			</Modal>
 		);
-	}
+	};
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -193,6 +196,7 @@ function SignInScreen({ navigation, route }) {
 		let response = await presentationCtrl.loginUser(email, password);
 		if (response.status == 200) {
 			setUser(response.data);
+			setLanguage(response.data.language);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			setErrorMsgVisible(false);
 		} else {
@@ -206,13 +210,16 @@ function SignInScreen({ navigation, route }) {
 		if (!data.checkEmailInputChange) {
 			errorMsgChange(i18n.t("invalidEmail"));
 			setErrorMsgVisible(true);
-		}
-		else {
+		} else {
 			const { email } = data;
 			let response = await presentationCtrl.restorePassword(email);
 			if (response.status == 200) {
 				setErrorMsgVisible(false);
-				Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), ["OK"]);
+				Alert.alert(
+					i18n.t("passwordRestoredTitle"),
+					i18n.t("passwordRestoredText"),
+					["OK"]
+				);
 			} else {
 				if (response.status == 204) errorMsgChange(i18n.t("signInError2"));
 				else if (response.status == 422) errorMsgChange(response.message);
@@ -312,9 +319,7 @@ function SignInScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<TouchableOpacity
-					onPress={() => setModalRestorePasswordVisible()}
-				>
+				<TouchableOpacity onPress={() => setModalRestorePasswordVisible()}>
 					<Text style={{ color: COLORS.green1, marginTop: 15 }}>
 						{i18n.t("passwordForgot")}
 					</Text>
@@ -344,7 +349,7 @@ function SignInScreen({ navigation, route }) {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							promptAsync({showInRevents: true});
+							promptAsync({ showInRevents: true });
 						}}
 						style={[
 							styles.signIn,
@@ -353,7 +358,7 @@ function SignInScreen({ navigation, route }) {
 								borderWidth: 1,
 								marginTop: 15,
 								flexDirection: "row",
-								justifyContent: "space-evenly"
+								justifyContent: "space-evenly",
 							},
 						]}
 					>
@@ -370,9 +375,10 @@ function SignInScreen({ navigation, route }) {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={
-							() => {navigation.navigate("SignUpScreen"); setErrorMsgVisible(false);} 
-						}
+						onPress={() => {
+							navigation.navigate("SignUpScreen");
+							setErrorMsgVisible(false);
+						}}
 						style={[
 							styles.signIn,
 							{

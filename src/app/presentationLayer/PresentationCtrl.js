@@ -201,15 +201,6 @@ PresentationCtrl.prototype.unsavePin = async function (pin, email) {
 /**
  *
  * @param {*} pin
- * @returns the saved pin from the logged user
- */
-PresentationCtrl.prototype.removeFromSaved = async function (pin, email) {
-	return this.domainCtrl.removeFromSaved(pin, email);
-};
-
-/**
- *
- * @param {*} pin
  * @returns deletes pin with identifier = id. Else returns null => error
  */
 PresentationCtrl.prototype.deletePin = function (pin) {
@@ -272,7 +263,7 @@ PresentationCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} userGoogleData
  * @returns if is registered returns the userInfo, else, registers it and returns the info
  */
- PresentationCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+PresentationCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
 	if (userGoogleData.email) {
 		return await this.domainCtrl.loginGoogleUser(userGoogleData);
 	} else {
@@ -405,16 +396,18 @@ PresentationCtrl.prototype.fetchTrendingPins = async function (email) {
 	}
 };
 
-PresentationCtrl.prototype.getQualifationMap = async function(range_1, range_2) {
-	let energyMap = await this.domainCtrl.getQualifationMap(range_1,range_2);
+PresentationCtrl.prototype.getQualifationMap = async function (
+	range_1,
+	range_2
+) {
+	let energyMap = await this.domainCtrl.getQualifationMap(range_1, range_2);
 	if (energyMap != null) {
 		return energyMap;
 	} else {
 		//TODO ERROR: print error && reload page
 		return null;
 	}
-}; 
-
+};
 
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();

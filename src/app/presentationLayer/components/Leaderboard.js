@@ -109,7 +109,7 @@ const Leaderboard = ({ usersList, email, scroll }) => {
 			contentContainerStyle={{}}
 			scrollEnabled={true}
 			data={usersList}
-			keyExtractor={(item) => `${item.name}`}
+			keyExtractor={(item) => `${item.email}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
 			initialScrollIndex={getScrollIndex()}

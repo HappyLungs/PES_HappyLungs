@@ -384,10 +384,10 @@ DomainCtrl.prototype.savePin = async function (pin, email) {
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
-DomainCtrl.prototype.unsavePin = async function (Pin, email) {
+DomainCtrl.prototype.unsavePin = async function (pin, email) {
 	let result = await persistenceCtrl.putRequest("/unsavePin", {
 		email: email,
-		pin: Pin,
+		pin: pin,
 	});
 	if (result.status === 200) {
 		return result.data;
@@ -412,62 +412,6 @@ DomainCtrl.prototype.deletePin = async function (Pin) {
 		//TODO: handle error. Return an error and reload the view with the error
 		return null;
 	}
-};
-
-DomainCtrl.prototype.createEvent = async function (date, pin, email) {
-	console.log(date, pin, email);
-	//pin.addCalendarEvent();
-
-	let gapi = window.gapi;
-
-	let CLIENT_ID = "494906188598-m2om2vv1siovnkmim1bbhkatqt4ngrjp.apps.googleusercontent.com"
-	let API_KEY = "AIzaSyB9WYI1_sLF-I3s5Z7ZChw7bJM6jAKwc4I"
-	let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-	let SCOPES = "https://www.googleapis.com/auth/calendar.events";
-	
-	gapi.load('client:auth2', () => {
-		gapi.client.init({
-			apiKey: API_KEY,
-			clientId: CLIENT_ID,
-			discoveryDocs: DISCOVERY_DOCS,
-			scope: SCOPES,
-		})
-
-			gapi.client.load("calendar", "v3", () => console.log("google calendar loaded"));
-
-
-		let today = new Date().toISOString().slice(0, 10);
-		const isoStrStart = today + "T12:00:00-00:00";
-		const isoStrEnd = today + "T13:00:00-00:00";
-
-		//pop up window sign-in
-		gapi.auth2.getAuthInstance().signIn().then(() => {
-			let event = {
-				summary: "ton ciclista",
-				location: "al cul del mon",
-				description: "peu pla",
-
-				start: {
-					dateTime: isoStrStart,
-				},
-				end: {
-					dateTime: isoStrEnd,
-				},
-			};
-
-			let request = gapi.client.calendar.events.insert({
-				calendarId: "primary",
-				resource: event,
-			});
-
-			request.execute(event => {
-				console.log(event)
-				window.open(event.htmlLink)
-			  })
-		})
-	})
-
-
 };
 
 /**
@@ -509,7 +453,7 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
  * @param {*} userGoogleData
  * @returns if is registered returns the userInfo, else, registers it and returns the info
  */
- DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
 	//create
 	let myUser = new User(null, userGoogleData.email, null, null);
 	return await myUser.loginGoogle(userGoogleData); //login to db
@@ -856,11 +800,9 @@ DomainCtrl.prototype.findUser = async function (email) {
 		.then((data) => data);
 };
 
-/**
- * Fetch users {username, picture, points} sorted by points
- */
-DomainCtrl.prototype.fetchUsers = async function () {
+DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	//TODO
+	console.log(date, pin, email);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
