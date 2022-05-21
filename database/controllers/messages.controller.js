@@ -211,21 +211,18 @@ exports.reportMessage = async (request, response) => {
         messageDataLayer.findMessage(where)
         .then((messageData) => {
             if (messageData !== null && typeof messageData !== undefined) {
-                if (messageData.reported > 0) {
-                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Message already reported", {});
-                } else {
-                    messageData.reported = true;
-                    messageDataLayer.updateMessage({_id: messageData._id}, messageData)
-                    .then(async (messageData) => {
-                        if (messageData !== null && typeof messageData !== undefined) {
-                            await userCtrl.updateReports(messageData.user);
-                            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
-                        }
-                    })
-                    .catch(error => {
-                        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-                    });
-                }
+                messageData.reported = 1 - messageData.reported;
+                messageData.reported = (messageData.reported === 1) ? true : false;
+                messageDataLayer.updateMessage({_id: messageData._id}, messageData)
+                .then(async (messageData) => {
+                    if (messageData !== null && typeof messageData !== undefined) {
+                        await userCtrl.updateReports(messageData.user);
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                });
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
             }
