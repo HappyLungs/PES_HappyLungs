@@ -410,7 +410,7 @@ function SettingsScreen({ navigation }) {
 			<View
 				style={{
 					flexDirection: "row",
-					justifyContent: "space-between",
+					justifyContent: "space-around",
 					marginVertical: 20,
 				}}
 			>

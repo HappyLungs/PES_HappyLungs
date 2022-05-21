@@ -113,6 +113,7 @@ function PinStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
+				initialParams={{ toast: false }}
 				options={({ navigation, route }) => ({
 					title: "",
 					headerShown: true,
@@ -392,6 +393,7 @@ function MapStack() {
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
+				initialParams={{ toast: false }}
 				options={({ navigation }) => ({
 					title: "",
 					headerShown: true,

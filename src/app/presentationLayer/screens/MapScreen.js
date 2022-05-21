@@ -100,11 +100,11 @@ function MapScreen({ navigation, route }) {
 		title: "inexistente",
 	});
 
-	const showToast = () => {
+	const showToast = (message, type) => {
 		Toast.show({
 			position: "bottom",
-			type: "successToast",
-			text1: i18n.t("pinCreateSuccess"),
+			type: type,
+			text1: message,
 		});
 	};
 
@@ -117,7 +117,7 @@ function MapScreen({ navigation, route }) {
 	// S'executa a cada rerender
 	useEffect(() => {
 		if (toast) {
-			showToast();
+			showToast(i18n.t("pinCreateSuccess"), "successToast");
 			navigation.setParams({ toast: false });
 		}
 		if (latitude !== null && longitude !== null) {
@@ -237,9 +237,11 @@ function MapScreen({ navigation, route }) {
 			let tmp = [...savedPins];
 			tmp.splice(selected._id);
 			setSavedPins(tmp);
+			showToast(i18n.t("pinUnsaveSuccess"), "pinFailureToast");
 		} else {
 			presentationCtrl.savePin(selected._id, user.email);
 			setSavedPins((savedPins) => [...savedPins, selected._id]);
+			showToast(i18n.t("pinSaveSuccess"), "pinSuccessToast");
 		}
 	};
 
@@ -786,7 +788,6 @@ function MapScreen({ navigation, route }) {
 					<TouchableOpacity
 						activeOpacity={0.8}
 						onPress={() => {
-							showToast();
 							setModalFilterVisible(true);
 						}}
 					>

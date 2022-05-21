@@ -101,6 +101,56 @@ const toastConfig = {
 			<Text style={styles.result}> {i18n.t("fail")}</Text>
 		</View>
 	),
+	pinSuccessToast: ({ text1, props }) => (
+		<View
+			style={[
+				{
+					flexDirection: "row",
+					alignItems: "center",
+					paddingHorizontal: 15,
+					justifyContent: "flex-start",
+					height: 50,
+					width: "80%",
+					borderLeftColor: COLORS.green1,
+					borderLeftWidth: 6,
+					borderTopLeftRadius: 5,
+					borderBottomLeftRadius: 5,
+					borderTopRightRadius: 10,
+					borderBottomRightRadius: 10,
+					backgroundColor: COLORS.light,
+				},
+				styles.shadow,
+			]}
+		>
+			<Ionicons name="bookmark" size={24} color={COLORS.green1} />
+			<Text style={styles.message}>{text1}</Text>
+		</View>
+	),
+	pinFailureToast: ({ text1, props }) => (
+		<View
+			style={[
+				{
+					flexDirection: "row",
+					alignItems: "center",
+					paddingHorizontal: 15,
+					justifyContent: "flex-start",
+					height: 50,
+					width: "80%",
+					borderLeftColor: COLORS.red1,
+					borderLeftWidth: 6,
+					borderTopLeftRadius: 5,
+					borderBottomLeftRadius: 5,
+					borderTopRightRadius: 10,
+					borderBottomRightRadius: 10,
+					backgroundColor: COLORS.light,
+				},
+				styles.shadow,
+			]}
+		>
+			<Ionicons name="bookmark-outline" size={24} color={COLORS.red1} />
+			<Text style={styles.message}>{text1}</Text>
+		</View>
+	),
 	configToast: ({ text1, props }) => (
 		<View
 			style={[
