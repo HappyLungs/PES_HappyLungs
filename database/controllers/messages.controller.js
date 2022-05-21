@@ -15,7 +15,7 @@ exports.find = async (request, response) => {
     if (request.query._id) {
         id = request.query._id;
     } else {
-        if (request.query.hasOwnProperty("conversation")) {
+        if (request.query.hasOwnProperty("conversation") && request.query.hasOwnProperty("user")) {
             if (mongodb.ObjectId.isValid(request.query.conversation)) {
                 let aggregateArr = [
                     {
@@ -31,7 +31,7 @@ exports.find = async (request, response) => {
                 messageDataLayer.aggregateMessage(aggregateArr)
                 .then(async (messageData) => {
                     if (messageData !== null && typeof messageData !== undefined) {
-                        await messageDataLayer.updateMessages({conversation: mongodb.ObjectId(request.query.conversation), user: {$ne: request.query.user}}, {$set: {read: true}})
+                        await messageDataLayer.updateMessages({conversation: mongodb.ObjectId(request.query.conversation), readed: false, user: {$ne: request.query.user}}, {$set: {readed: true}})
                         .then((updateData) => {
                             if (updateData !== null && typeof updateData !== undefined) {
                                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
