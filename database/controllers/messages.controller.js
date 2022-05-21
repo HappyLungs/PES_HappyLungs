@@ -29,9 +29,19 @@ exports.find = async (request, response) => {
                     }
                 ];
                 messageDataLayer.aggregateMessage(aggregateArr)
-                .then((messageData) => {
+                .then(async (messageData) => {
                     if (messageData !== null && typeof messageData !== undefined) {
-                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                        await messageDataLayer.updateMessages({conversation: mongodb.ObjectId(request.query.conversation), user: {$ne: request.query.user}}, {$set: {read: true}})
+                        .then((updateData) => {
+                            if (updateData !== null && typeof updateData !== undefined) {
+                                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                            }
+                            else {
+                                sendResponseHelper.sendResponse(response, errorCodes.ERROR, "Error", updateData);
+                            }
+                        }).catch((error) => {
+                            sendResponseHelper.sendResponse(response, errorCodes.ERROR, "Error", error);
+                        });
                     } else {
                         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                     }
