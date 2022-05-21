@@ -30,7 +30,7 @@ function ChatScreen({ route, navigation }) {
 	const [user] = useContext(UserContext);
 	const [messages, setMessages] = useState([]);
 	const [loggedUser, setLoggedUser] = useState([]);
-	const [conversant, setConversantUsers] = useState([]);
+	const [conversant, setConversantUsers] = useState({});
 	const [message, setMessage] = useState("");
 
 	const [newChat, setNewChat] = useState(false);
@@ -72,6 +72,7 @@ function ChatScreen({ route, navigation }) {
 			const data = await presentationCtrl.fetchUser(route.params.user)
 			setNewChat(true);
 			setConversantUsers(data);
+			setLoggedUser(user);
 		}
 	};
 
@@ -81,15 +82,13 @@ function ChatScreen({ route, navigation }) {
 				let newId = await presentationCtrl.createConversation(conversant.email, message, user.email);
 				if (newId != "error") {
 					setNewChat(false);
-					let data = await presentationCtrl.fetchConversation(newId);
-					
-					setMessages(oldArray => [...oldArray, data.messages]);
-					const info = {message: data.messages[0], to: conversant}
+					let data = await presentationCtrl.fetchConversation(newId, user.email);
+					let i = 0;
+					setMessages(data.messages);
+					const info = {message: data.messages[0], to: data.users.conversant.email}
 					socket.emit('new chat', info);
 
 					setId(newId);
-					setLoggedUser(data.users.logged);
-					setConversantUsers(data.users.conversant);
 					//setMessages(data.messages);
 				} else {
 					setModalErrorVisible(true);

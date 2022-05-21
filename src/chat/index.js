@@ -22,7 +22,7 @@ io.on("connection", socket => {
     socket.on("new chat", info => {
       let message = info.message;
       let to = info.to;
-      let socketId = sockets.get(to.email);
+      let socketId = sockets.get(to);
       console.log("New chat -> Message and to: ", message, to, socketId);
       //io.to(msg.conversation).emit("chat message", msg);
       if (socketId != undefined) io.to(socketId).emit("new chat", info.message);
