@@ -607,8 +607,9 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 								date.getDate().toString().padStart(2, "0"),
 								(date.getMonth() + 1).toString().padStart(2, "0"),
 								date.getFullYear().toString().substring(2),
-							].join("/"),
+							].join("/")+" "+date.getHours().toString().padStart(2, "0") +":" +date.getMinutes().toString().padStart(2, "0"),
 							unreadMessages: unreadMessages.data.length,
+							lastMessageDate: lastMessage.data.createdAt
 						});
 					} else {
 						//TODO handle error searching for the unread messages
@@ -623,6 +624,9 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 				return null;
 			}
 		}
+		conver.sort(function(a,b){ 
+			return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+		})
 		return conver;
 	} else {
 		//TODO handle error
@@ -659,7 +663,7 @@ DomainCtrl.prototype.createConversation = async function (
 	text,
 	loggedEmail
 ) {
-	let users = [loggedEmail, email];
+	let users = [loggedEmail,email];
 	let messages = await persistenceCtrl.postRequest("/conversation", {
 		users: users,
 		message: text,

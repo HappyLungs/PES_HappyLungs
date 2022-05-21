@@ -36,31 +36,37 @@ function GeneralChatScreen({ navigation }) {
 	const s = new Socket(user.email);
 	const socket = s.getSocket();
 
-	useEffect(() => {
-		fetchChats();
+	useEffect(async () => {
+		await fetchChats();
 
 		socket.on('chat message', (data) => {
-			
-			let index = 2;
-			let i = 0;
-			for (c of filteredData) {
-				if (data.conversation === c.id) index = i;
-				i++;
+			let c = {
+				id: "1234",
+				name: "aux",
+				lastMessage: "last",
+				lastMessageTime:"17:00",
+				unreadMessages: 6,
+				profileImage: "https://media-cdn.tripadvisor.com/media/photo-s/15/a4/9b/77/legacy-hotel-at-img-academy.jpg"
 			}
-
-			
-
-			if (index != -1) {
-				let c = filteredData[index];
-				c.lastMessage = data.text;
-
-				setFilteredData([
-					...filteredData.slice(0, index),		  
-					c,		  
-					...filteredData.slice(index + 1, filteredData.length),		  
-				])
-			}
-			setSearch("M: "+data.text+"I: "+index)
+			//(setFilteredData(oldArray => [...oldArray, c])
+			setFilteredData(existingItems => {
+				let i = 0; 
+				let index = -1;
+				for (c of existingItems) {
+					if (c.id === data.conversation) index = i;
+					i++;
+				}
+				let m = existingItems[index];
+				m.lastMessage = data.text;
+				m.unreadMessages += 1;
+				m.lastMessageTime = data.date+" "+data.hour;
+				return [
+					m,
+				  	...existingItems.slice(0, index),		  
+				  	...existingItems.slice(index + 1),		  
+				]		  
+			})
+			setSearch("M: "+data.text)
 		})
 
 		return () => {};
@@ -89,8 +95,10 @@ function GeneralChatScreen({ navigation }) {
 					return converData.indexOf(textData) > -1;
 				})
 			);
+			let i = 0;
 		} else {
 			setFilteredData(masterData);
+			let i = 0;
 		}
 		setSearch(text);
 	};
@@ -161,7 +169,7 @@ function GeneralChatScreen({ navigation }) {
 													style={{
 														alignSelf: "flex-start",
 														padding: 2,
-														width: "75%",
+														width: "70%",
 													}}
 												>
 													<Text
@@ -182,8 +190,8 @@ function GeneralChatScreen({ navigation }) {
 															styles.chatName,
 															{
 																color: COLORS.darkGrey,
-																fontSize: 12,
-																fontWeight: "bold",
+																fontSize: 11,
+																//fontWeight: "bold",
 																textAlign: "right",
 															},
 														]}
@@ -470,6 +478,7 @@ function GeneralChatScreen({ navigation }) {
 												(item) => item.id !== chatDeleted.id
 											);
 											setFilteredData(dataRemoved);
+											let i = 0;
 										}
 										setModalDeleteVisible(false);
 										//else popup d'error

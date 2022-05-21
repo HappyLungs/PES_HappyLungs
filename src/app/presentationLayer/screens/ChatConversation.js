@@ -63,6 +63,7 @@ function ChatScreen({ route, navigation }) {
 		if (route.params.id) {
 			let id = route.params.id;
 			const data = await presentationCtrl.fetchConversation(id, user.email);
+			console.log("Convers: ", data);
 			setId(id);
 			setLoggedUser(data.users.logged);
 			setConversantUsers(data.users.conversant);
@@ -81,14 +82,13 @@ function ChatScreen({ route, navigation }) {
 				if (newId != "error") {
 					setNewChat(false);
 					let data = await presentationCtrl.fetchConversation(newId);
-					
-					
-					socket.emit('message', data);
+										
+					//socket.emit('message', data);
 
 					setId(newId);
 					setLoggedUser(data.users.logged);
 					setConversantUsers(data.users.conversant);
-					setMessages(data.messages);
+					setMessages([data.messages]);
 				} else {
 					setModalErrorVisible(true);
 				}
@@ -115,6 +115,27 @@ function ChatScreen({ route, navigation }) {
 			Keyboard.dismiss();
 			flatListRef.current.scrollToEnd({animating: true})
 		}
+	}
+
+	const reportMessage = async () => {
+		let i = 0;
+		setMessages(existingItems => {
+			let i = 0; 
+			let index = -1;
+			for (c of existingItems) {
+				if (selectedMessage._id === c._id) index = i;
+				i++;
+			}
+			let m = existingItems[index];
+			m.reported = 1;
+			return [
+				  ...existingItems.slice(0, index),
+				  m,		  
+				  ...existingItems.slice(index + 1),		  
+			]		  
+		})
+		await presentationCtrl.reportMessage(selectedMessage._id);
+		setModalOptionsVisible(false);
 	}
 
 	function renderErrorPopupDeclare() {
@@ -232,10 +253,7 @@ function ChatScreen({ route, navigation }) {
 								>Copy message</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
-								onPress={async () => {
-									await presentationCtrl.reportMessage(selectedMessage._id);
-									setModalOptionsVisible(false);
-								}}
+								onPress={async () => {reportMessage()}}
 								style = {{
 									flexDirection: "row",
 									alignItems: "flex-start"
@@ -300,7 +318,7 @@ function ChatScreen({ route, navigation }) {
 								>
 									<Text 
 										style={[styles.chatLastMessage, {
-											backgroundColor: item.user===loggedUser.email ? COLORS.green3 : COLORS.mediumGrey,
+											backgroundColor: item.user===loggedUser.email ? COLORS.green3 : (item.reported ? COLORS.softRed : COLORS.mediumGrey),
 											borderRadius: 10,
 											paddingTop: 6,
 											paddingRight: 7,
