@@ -551,6 +551,7 @@ DomainCtrl.prototype.updateUserPassword = async function (name, password) {
 DomainCtrl.prototype.fetchConversation = async function (id, email) {
 	let conversation = await persistenceCtrl.getRequest("/conversation", {
 		_id: id,
+		email: email
 	});
 	if (conversation.status === 200) {
 		var users = {};
@@ -581,6 +582,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 				};
 				let dbMessages = await persistenceCtrl.getRequest("/message", {
 					conversation: conversation.data._id,
+					user: email
 				});
 				dbMessages.data.forEach((message) => {
 					let date = new Date(message.createdAt);
