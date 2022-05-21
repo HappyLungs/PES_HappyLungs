@@ -12,9 +12,12 @@ io.on("connection", socket => {
 
 
     socket.on("chat message", info => {
-      console.log("Message and to: ", info.message, info.to, sockets.get(info.to.email));
+      let message = info.message;
+      let to = info.to;
+      let socketId = sockets.get(to.email);
+      console.log("Message and to: ", message, to, socketId);
       //io.to(msg.conversation).emit("chat message", msg);
-      io.emit("chat message", info.message);
+      if (socketId != undefined) io.to(socketId).emit("chat message", info.message);
     });
 });
 
