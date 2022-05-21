@@ -199,14 +199,7 @@ class DataPointMap {
         
         var seen = {};
 
-       const uniquearray = points.filter(function(point) {
-        return seen.hasOwnProperty(point[1].codi_eoi) ? false : (seen[point[1].codi_eoi] = true);
-
-       })
-
-    
-
-     return uniquearray
+     return points.filter(function (point) {return seen.hasOwnProperty(point[1].codi_eoi) ? false : (seen[point[1].codi_eoi] = true);})
     }
     getMeasureStation(eoiCode){
         if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);

@@ -83,19 +83,20 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	let latsteps= (maxlat-inilat)/nsteps;
 	let datapoints=[];
 	for (let i=0;i<=nsteps;i++){
-		for(let j=0;j<=nsteps ;j++){
-			if(!this.inCat(actuallat,actuallong)){
-				actuallong=actuallong+longstep;
-				continue;
-			}
-			let dp=new DataPointMap(actuallat, actuallong);
-			let actual = {
+		for(let j=0;j<=nsteps ;j++) {
+			if (!this.inCat(actuallat, actuallong)) {
+				actuallong = actuallong + longstep;
+			} else {
+
+			let dp = new DataPointMap(actuallat, actuallong);
+			const actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: await dp.getHourLevel(date,date.getHours())/6,
+				weight: await dp.getHourLevel(date, date.getHours()) / 6,
 			};
 			datapoints.push(actual);
-			actuallong=actuallong+longstep;
+			actuallong = actuallong + longstep;
+			}
 		}
 		actuallat=actuallat+latsteps;
 		actuallong=inilong;
