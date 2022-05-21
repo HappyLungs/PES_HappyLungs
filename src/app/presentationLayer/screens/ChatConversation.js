@@ -25,6 +25,8 @@ import { setDate } from "date-fns";
 
 
 //import io from "socket.io-client";
+//const Socket = require("../Socket");
+const Socket = require("../Socket");
 
 
 function ChatScreen({ route, navigation }) {
@@ -42,18 +44,14 @@ function ChatScreen({ route, navigation }) {
 	const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState({text:"", _id:""});
 	
-	//const socketRef = useRef(null);
+	const socketRef = useRef(null);
 	const flatListRef = useRef();
-	const socket = user.socket;
+	const s = new Socket(user.email)
+	const socket = s.getSocket();
+
 	useEffect(() => {
 		fetchChats();
-		
-		/* if (socketRef.current == null) {
-			socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
-		}
-
-		const {current: socket} = socketRef;
-		socket.open(); */
+	
 		socket.on('chat message', (data) => {
 			console.log("Recieved message: ", data)
 			if (data.user != loggedUser.email) {
@@ -117,15 +115,14 @@ function ChatScreen({ route, navigation }) {
 					//if (messages.findIndex(x => x._id==data._id) === -1){
 					
 					let exists = false;
-					/*
+					
 					for (m of messages) {
-						if(m._id === data._id) exists = true;
+						if(m._id === newMessage._id) exists = true;
 					}
 					if (!exists)setMessages(oldArray => [...oldArray, newMessage]);
 					//}
-					*/
 					
-					//const {current: socket} = socketRef;
+					
 					const info = {message: newMessage, to: conversant}
 					socket.emit('chat message', info);
 				}

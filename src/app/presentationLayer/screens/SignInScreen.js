@@ -17,7 +17,8 @@ import Modal from "react-native-modal";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import io from "socket.io-client";
+
+import Socket from "../Socket";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -35,8 +36,6 @@ function SignInScreen({ navigation, route }) {
 	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
 	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
 	
-	const socketRef = useRef(null);
-
 	const renderModalRestorePassword = () => {
 		return (
 			<Modal
@@ -149,13 +148,9 @@ function SignInScreen({ navigation, route }) {
 		const { email, password } = data;
 		let response = await presentationCtrl.loginUser(email, password);
 		if (response.status == 200) {
-
-			if (socketRef.current == null) {
-				socketRef.current = io('http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:8000',{query: 'id='+route.params.id});
-			}
-			const {current: socket} = socketRef;
-			socket.open();
-			response.data.socket = socketRef;
+			let socket = new Socket(email);
+			let s = socket.getSocket();
+			let i=3;
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			setErrorMsgVisible(false);
