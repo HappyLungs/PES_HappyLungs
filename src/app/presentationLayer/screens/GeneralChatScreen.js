@@ -17,6 +17,7 @@ import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 const PresentationCtrl = require("../PresentationCtrl.js");
+const Socket = require("../Socket");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -32,9 +33,36 @@ function GeneralChatScreen({ navigation }) {
 	const [chatDeleted, setChatDeleted] = useState({id:"", name:""});
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
+	const s = new Socket(user.email);
+	const socket = s.getSocket();
 
 	useEffect(() => {
 		fetchChats();
+
+		socket.on('chat message', (data) => {
+			
+			let index = 2;
+			let i = 0;
+			for (c of filteredData) {
+				if (data.conversation === c.id) index = i;
+				i++;
+			}
+
+			
+
+			if (index != -1) {
+				let c = filteredData[index];
+				c.lastMessage = data.text;
+
+				setFilteredData([
+					...filteredData.slice(0, index),		  
+					c,		  
+					...filteredData.slice(index + 1, filteredData.length),		  
+				])
+			}
+			setSearch("M: "+data.text+"I: "+index)
+		})
+
 		return () => {};
 	}, []);
 
@@ -42,10 +70,11 @@ function GeneralChatScreen({ navigation }) {
 		//get chats from db
 		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchConversations(user.email);
-
+		let i = 0;
 		setMasterData(data);
 		setFilteredData(data);
 		setAuxiliarFilterData(data);
+		let m =0;
 	};
 
 	const filterBySearch = (text) => {

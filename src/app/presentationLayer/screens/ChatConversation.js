@@ -17,17 +17,12 @@ import {
 import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl");
+const Socket = require("../Socket");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import * as Animatable from "react-native-animatable";
 import { setDate } from "date-fns";
-
-
-//import io from "socket.io-client";
-//const Socket = require("../Socket");
-const Socket = require("../Socket");
-
 
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -46,31 +41,20 @@ function ChatScreen({ route, navigation }) {
 	
 	const socketRef = useRef(null);
 	const flatListRef = useRef();
-	const s = new Socket(user.email)
+	const s = new Socket(user.email);
 	const socket = s.getSocket();
 
 	useEffect(() => {
 		fetchChats();
 	
 		socket.on('chat message', (data) => {
-			console.log("Recieved message: ", data)
-			if (data.user != loggedUser.email) {
-				//if (messages.findIndex(x => x._id==data._id) === -1){
-					let exists = false;
-					for (ms of messages) {
-						if(ms._id === data._id) exists = true;
-					}
-					if (!exists) {
-						setMessages(oldArray => [...oldArray, data]);
-						flatListRef.current.scrollToEnd({animating: true})
-					}
-				//}
-				//setMessage("Entra if")
+			let exists = false;
+			for (ms of messages) if(ms._id === data._id) exists = true;
+			if (!exists) {
+				setMessages(oldArray => [...oldArray, data]);
+				flatListRef.current.scrollToEnd({animating: true})
 			}
 		})
-		
-
-
 		
 		return () => {};
 	}, []);
