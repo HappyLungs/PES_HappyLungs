@@ -49,7 +49,7 @@ DomainCtrl.prototype.getMapData = async function () {
 				measure.longitud,
 				null
 				);
-			}else ms=auxstation;
+			}else ms=auxstation.station;
 				measureStations.set(eoiCode, ms);
 
 		}
@@ -71,8 +71,7 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date=new Date();
-	let nsteps=100;
-	let jmax=1;
+	let nsteps=10;
 	let inilat=40.541006;
 	let inilong=0.680310;
 	let maxlat=42.814019;
@@ -100,7 +99,6 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		}
 		actuallat=actuallat+latsteps;
 		actuallong=inilong;
-		jmax++;
 	}
 	let actual = {
 		latitude: 0,
@@ -832,7 +830,7 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 	}
 };
 DomainCtrl.prototype.getMeasureStation = function(eoiCode){
-	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode).station;
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
 	return undefined;
 };
 

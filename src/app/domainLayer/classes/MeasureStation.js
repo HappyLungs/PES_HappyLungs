@@ -10,8 +10,11 @@ const levelCalculator = new LevelCalculator();
 
 
 class MeasureStation {
+    static Stations;
+    level;
 
     constructor (eoiCode, stationName, stationType, latitud, longitud, length) {
+        if(MeasureStation.Stations===undefined)MeasureStation.Stations=[];
         this.eoiCode = eoiCode;
         this.stationName = stationName;
         this.stationType = stationType;
@@ -20,25 +23,20 @@ class MeasureStation {
         this.length = length;
         this.months = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
-        if(eoiCode!==undefined){
-                if(MeasureStation.Stations!==undefined && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
+        if(eoiCode != null && eoiCode !==undefined){
+            if(MeasureStation.Stations.length!==0 && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
                 MeasureStation.Stations.push({
                     eoi: eoiCode,
                     station: this,
                 });
-            }else if(MeasureStation.Stations!==undefined ){
+            }else
                 MeasureStation.Stations.push({
                 eoi: eoiCode,
                 station: this,
             });
-            }else MeasureStation.Stations=[{
-                eoi: eoiCode,
-                station: this,
-            }];
         }
     }
-    static Stations;
-    level;
+
 
     /**
      * Convert an hour into DadesObertes API hour format
@@ -151,7 +149,7 @@ class MeasureStation {
      * @returns {Integer} pollution level at the date "date" and hour "hour"
      */
     async getHourLevel(date, hour) {
-        if(this.level==null){
+        if(this.level===undefined){
             let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
             this.level=this.calcHourLevel(measures, hour);
         }

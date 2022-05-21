@@ -20,6 +20,7 @@ test('test getMeasuresByDay', async () => {
 */
 test('test getHour level', async () => {
     const data = await measureStationTest.getHourLevel(new Date('March 10, 2022 9:00:00'), 2);
+    console.log(MeasureStation.Stations);
     expect(data).toBe(1);
 
 });

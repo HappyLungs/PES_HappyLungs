@@ -1,4 +1,5 @@
 const DomainCtrl = require('../DomainCtrl');
+const MeasureStation=require('../classes/MeasureStation');
 
 let ctrld=new DomainCtrl();
 
@@ -14,7 +15,9 @@ test('test get map data', async ()=> {
 
 test('test get heat points', async() => {
     const datapoints = await ctrld.getHeatPoints();
-    console.log(datapoints);
+    console.log(MeasureStation.Stations);
+    //console.log(datapoints);
+    console.log(datapoints.length);
 });
 /*
 test('test in Cat', async() => {
