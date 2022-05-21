@@ -44,8 +44,8 @@ function ChatScreen({ route, navigation }) {
 	const s = new Socket(user.email);
 	const socket = s.getSocket();
 
-	useEffect(() => {
-		fetchChats();
+	useEffect(async () => {
+		await fetchChats();
 	
 		socket.on('chat message', (data) => {
 			let exists = false;
@@ -82,31 +82,26 @@ function ChatScreen({ route, navigation }) {
 				if (newId != "error") {
 					setNewChat(false);
 					let data = await presentationCtrl.fetchConversation(newId);
-										
-					//socket.emit('message', data);
+					
+					setMessages(oldArray => [...oldArray, data.messages]);
+					const info = {message: data.messages[0], to: conversant}
+					socket.emit('new chat', info);
 
 					setId(newId);
 					setLoggedUser(data.users.logged);
 					setConversantUsers(data.users.conversant);
-					setMessages([data.messages]);
+					//setMessages(data.messages);
 				} else {
 					setModalErrorVisible(true);
 				}
 			} else {
 				let newMessage = await presentationCtrl.createMessage(id, message, user.email);
 				if(newMessage != null) {
-					
-					//if (messages.findIndex(x => x._id==data._id) === -1){
-					
 					let exists = false;
-					
 					for (m of messages) {
 						if(m._id === newMessage._id) exists = true;
 					}
-					if (!exists)setMessages(oldArray => [...oldArray, newMessage]);
-					//}
-					
-					
+					if (!exists) setMessages(oldArray => [...oldArray, newMessage]);
 					const info = {message: newMessage, to: conversant}
 					socket.emit('chat message', info);
 				}
@@ -127,7 +122,7 @@ function ChatScreen({ route, navigation }) {
 				i++;
 			}
 			let m = existingItems[index];
-			m.reported = 1;
+			m.reported = !m.reported;
 			return [
 				  ...existingItems.slice(0, index),
 				  m,		  
@@ -252,6 +247,7 @@ function ChatScreen({ route, navigation }) {
 									}}
 								>Copy message</Text>
 							</TouchableOpacity>
+							{selectedMessage.user===loggedUser.email ? <View></View> :
 							<TouchableOpacity
 								onPress={async () => {reportMessage()}}
 								style = {{
@@ -264,8 +260,9 @@ function ChatScreen({ route, navigation }) {
 									style = {{
 										marginLeft: 5
 									}}
-								>Report message</Text>
+								>{selectedMessage.reported ? "Unreport" : "Report"} message</Text>
 							</TouchableOpacity>
+							}
 						</View>
 					</View>
 				</View>

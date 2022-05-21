@@ -36,40 +36,52 @@ function GeneralChatScreen({ navigation }) {
 	const s = new Socket(user.email);
 	const socket = s.getSocket();
 
-	useEffect(async () => {
-		await fetchChats();
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			// The screen is focused
+			fetchChats();
 
-		socket.on('chat message', (data) => {
-			let c = {
-				id: "1234",
-				name: "aux",
-				lastMessage: "last",
-				lastMessageTime:"17:00",
-				unreadMessages: 6,
-				profileImage: "https://media-cdn.tripadvisor.com/media/photo-s/15/a4/9b/77/legacy-hotel-at-img-academy.jpg"
-			}
-			//(setFilteredData(oldArray => [...oldArray, c])
-			setFilteredData(existingItems => {
-				let i = 0; 
-				let index = -1;
-				for (c of existingItems) {
-					if (c.id === data.conversation) index = i;
-					i++;
-				}
-				let m = existingItems[index];
-				m.lastMessage = data.text;
-				m.unreadMessages += 1;
-				m.lastMessageTime = data.date+" "+data.hour;
-				return [
-					m,
-				  	...existingItems.slice(0, index),		  
-				  	...existingItems.slice(index + 1),		  
-				]		  
+			socket.on('chat message', (data) => {
+				setFilteredData(existingItems => {
+					let i = 0; 
+					let index = -1;
+					for (c of existingItems) {
+						if (c.id === data.conversation) index = i;
+						i++;
+					}
+					let m = existingItems[index];
+					m.lastMessage = data.text;
+					m.unreadMessages += 1;
+					m.lastMessageTime = data.date+" "+data.hour;
+					return [
+						m,
+						...existingItems.slice(0, index),		  
+						...existingItems.slice(index + 1),		  
+					]		  
+				})
 			})
-			setSearch("M: "+data.text)
-		})
-
-		return () => {};
+			socket.on('new chat', async (data) => {
+				let newUser = await presentationCtrl.fetchUser(data.user);
+				setFilteredData(existingItems => {
+					let m = {
+						id: conversation,
+						name: newUser.username,
+						profileImage: newUser.profileImage,
+						lastMessage: data.text,
+						unreadMessages: 1,
+						lastMessageTime: data.date+" "+data.hour
+					}
+					return [
+						m,
+						...existingItems.slice(0, index),		  
+						...existingItems.slice(index + 1),		  
+					]		  
+				})
+			})
+		  });
+	  
+		  // Return the function to unsubscribe from the event so it gets removed on unmount
+		  return unsubscribe;
 	}, []);
 
 	const fetchChats = async () => {

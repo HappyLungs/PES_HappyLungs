@@ -10,7 +10,6 @@ io.on("connection", socket => {
     sockets.set(socket.handshake.query.email, socket.id);
     console.log("sockets -> ", sockets)
 
-
     socket.on("chat message", info => {
       let message = info.message;
       let to = info.to;
@@ -19,6 +18,16 @@ io.on("connection", socket => {
       //io.to(msg.conversation).emit("chat message", msg);
       if (socketId != undefined) io.to(socketId).emit("chat message", info.message);
     });
+
+    socket.on("new chat", info => {
+      let message = info.message;
+      let to = info.to;
+      let socketId = sockets.get(to.email);
+      console.log("New chat -> Message and to: ", message, to, socketId);
+      //io.to(msg.conversation).emit("chat message", msg);
+      if (socketId != undefined) io.to(socketId).emit("new chat", info.message);
+    });
+
 });
 
 server.listen(port, () => console.log("server running on port:" + port));
