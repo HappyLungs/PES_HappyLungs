@@ -736,6 +736,19 @@ DomainCtrl.prototype.createConversation = async function (
 	}
 };
 
+DomainCtrl.prototype.deleteConversation = async function (conversationId, email) {
+	let result = await persistenceCtrl.postRequest("/deleteConversation", {
+		id: conversationId,
+		user: email,
+	});
+	if (result.status === 200) {
+		return true;
+	} else {
+		//TODO handle error
+		return false;
+	}
+}
+
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
 	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
 	if (energyMap) {

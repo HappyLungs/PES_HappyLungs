@@ -135,6 +135,35 @@ exports.create = async (request, response) => {
             return;
         }
     }
+
+    /* Check if conversation already exists */
+    let ret = false;
+    await conversationDataLayer.findConversation({users: {$all: params.users}})
+    .then((conversationData) => {
+        if (conversationData !== null && typeof conversationData !== undefined) {
+          ret = true;
+          let index = conversationData.users.indexOf(params.users[0]);
+          if (conversationData.deleted[index]) {
+            //updates the deleted status of the conversation
+            conversationData.deleted[index] = false;
+            conversationDataLayer.updateConversation({_id: conversationData._id}, conversationData)
+            .then((conversationData) => {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Conversation restored", {});
+                return;
+            })
+            .catch(error => {
+                sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                return;
+            });
+          } else {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "Conversation already exists", {});
+            return;
+          }
+        }
+      });
+
+      if (ret) return;
+
     /* Create the conversation */
     conversationDataLayer.createConversation({users: params.users})
     .then(async (conversationData) => {
