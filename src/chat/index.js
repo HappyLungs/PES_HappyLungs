@@ -7,16 +7,15 @@ let sockets = new Map();
 
 io.on("connection", socket => {
     console.log("a user connected :D, id -> ", socket.id, socket.handshake.query.email);
-    
-    socket.on("chat message", ({msg, to}) => {
-      console.log("Message and to: ", msg, to);
+    sockets.set(socket.handshake.query.email, socket.id);
+    console.log("sockets -> ", sockets)
+
+
+    socket.on("chat message", info => {
+      console.log("Message and to: ", info.message, info.to, sockets.get(info.to.email));
       //io.to(msg.conversation).emit("chat message", msg);
       io.emit("chat message", msg);
     });
-
-    //console.log("Id: ",socket.handshake.query.id);
-    //let converId = socket.handshake.query.id;
-    //socket.join(converId);
 });
 
 server.listen(port, () => console.log("server running on port:" + port));
