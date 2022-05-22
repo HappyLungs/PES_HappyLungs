@@ -377,7 +377,6 @@ DomainCtrl.prototype.savePin = async function (pin, email) {
 		return null;
 	}
 };
-
 /**
  *
  * @param {*} Pin
