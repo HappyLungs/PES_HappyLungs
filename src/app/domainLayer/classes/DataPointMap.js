@@ -18,9 +18,12 @@ class DataPointMap {
      */
     async  getHourLevel(date, hour) {
         let nearPoints = await this.nearerPoints(new Date());
-
-        let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi,null,null,this.latitude,this.longitud,null);
-            return nearPoint.getHourLevel(date, hour);
+        let nearPoint=this.getMeasureStation(nearPoints[0][1].codi_eoi);
+        if(nearPoint===undefined){
+            nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi,null,null,this.latitude,this.longitud,null);
+        }else nearPoint=nearPoint.station;
+        console.log(nearPoint.eoiCode);
+        return nearPoint.getHourLevel(date, hour);
     }
     
    /**
@@ -194,15 +197,12 @@ class DataPointMap {
         
         var seen = {};
 
-       const uniquearray = points.filter(function(point) {
-        return seen.hasOwnProperty(point[1].codi_eoi) ? false : (seen[point[1].codi_eoi] = true);
-
-       })
-
-    
-
-     return uniquearray
+     return points.filter(function (point) {return seen.hasOwnProperty(point[1].codi_eoi) ? false : (seen[point[1].codi_eoi] = true);})
     }
+    getMeasureStation(eoiCode){
+        if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+        return undefined;
+    };
 }
 
 module.exports = DataPointMap;
