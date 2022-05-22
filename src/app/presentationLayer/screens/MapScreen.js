@@ -103,6 +103,9 @@ function MapScreen({ navigation, route }) {
 		title: "inexistente",
 	});
 
+	const [user] = useContext(UserContext);
+	const [savedPins, setSavedPins] = useState([]);
+
 	const showToast = (message, type) => {
 		Toast.show({
 			position: "bottom",
@@ -144,10 +147,15 @@ function MapScreen({ navigation, route }) {
 		}
 	});
 
+	/*
+	useEffect(() => {
+	}, [savedPins]);
+	*/
+
 	// onMount (només s'executa una vegada, al carregar la '	vista')
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
-			const fetchPins = async () => {
+			const fetchTrendingPins = async () => {
 				const data = await presentationCtrl.fetchTrendingPins(user.email);
 				setPins(data);
 				let fetchedMarkers = [];
@@ -160,6 +168,16 @@ function MapScreen({ navigation, route }) {
 				setMarkers(fetchedMarkers);
 			};
 
+			const fetchPins = async () => {
+				const data = await presentationCtrl.fetchPins(user.email);
+				let tmp = [];
+				data.savedPins.forEach((item) => {
+					tmp.push(item._id);
+				});
+				setSavedPins(tmp);
+			};
+
+			await fetchTrendingPins();
 			await fetchPins();
 		});
 		const initHeatPoints = async () => {
@@ -170,6 +188,24 @@ function MapScreen({ navigation, route }) {
 		};
 		await initHeatPoints();
 		return unsubscribe;
+	}, [navigation]);
+
+	useEffect(() => {
+		const unsubscribe = navigation.addListener("tabPress", async (e) => {
+			// add your business logic here
+			const fetchPins = async () => {
+				const data = await presentationCtrl.fetchPins(user.email);
+				let tmp = [];
+				data.savedPins.forEach((item) => {
+					tmp.push(item._id);
+				});
+				setSavedPins(tmp);
+			};
+
+			await fetchPins();
+		});
+		// Unsubscribe to event listener when component unmount
+		return () => unsubscribe();
 	}, [navigation]);
 
 	const isSavedPin = (pin) => {
@@ -237,14 +273,10 @@ function MapScreen({ navigation, route }) {
 		mapRef.current.animateToRegion(location, 2.5 * 1000);
 	}, []);
 
-	const [user] = useContext(UserContext);
-	const [savedPins, setSavedPins] = useState(user.savedPins);
-
 	const handleSave = () => {
 		if (isSavedPin(selected._id)) {
 			presentationCtrl.unsavePin(selected._id, user.email);
-			let tmp = [...savedPins];
-			tmp.splice(selected._id);
+			let tmp = savedPins.filter((item) => item !== selected._id);
 			setSavedPins(tmp);
 			showToast(i18n.t("pinUnsaveSuccess"), "pinFailureToast");
 		} else {

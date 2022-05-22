@@ -20,7 +20,6 @@ let DomainCtrl;
 		if (instance) return instance;
 		instance = this;
 
-
 		// initialize any properties of the singleton
 	};
 })();
@@ -85,7 +84,6 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	for (let i=0;i<nsteps;i++){
 		for(let j=0;j<nsteps ;j++) {
 			if (!this.inCat(actuallat, actuallong)) {
-				console.log(actuallat, actuallong);
 				actuallong = actuallong + longstep;
 			} else {
 
@@ -555,7 +553,7 @@ DomainCtrl.prototype.updateUserPassword = async function (name, password) {
 DomainCtrl.prototype.fetchConversation = async function (id, email) {
 	let conversation = await persistenceCtrl.getRequest("/conversation", {
 		_id: id,
-		email: email
+		email: email,
 	});
 	if (conversation.status === 200) {
 		var users = {};
@@ -578,7 +576,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 					},
 					conversant: {
 						id: conversant.data._id,
-						email:conversant.data.email,
+						email: conversant.data.email,
 						name: conversant.data.name,
 						profileImage: conversant.data.profilePicture
 							? conversant.data.profilePicture
@@ -587,7 +585,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 				};
 				let dbMessages = await persistenceCtrl.getRequest("/message", {
 					conversation: conversation.data._id,
-					user: email
+					user: email,
 				});
 				dbMessages.data.forEach((message) => {
 					let date = new Date(message.createdAt);
@@ -661,13 +659,21 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 								? conversant.data.profilePicture
 								: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
 							lastMessage: lastMessage.data.text,
-							lastMessageTime: [
-								date.getDate().toString().padStart(2, "0"),
-								(date.getMonth() + 1).toString().padStart(2, "0"),
-								date.getFullYear().toString().substring(2),
-							].join("/")+" "+date.getHours().toString().padStart(2, "0") +":" +date.getMinutes().toString().padStart(2, "0"),
-							unreadMessages: (unreadMessages.data.length === 0) ? 0 : unreadMessages.data[0].total,
-							lastMessageDate: lastMessage.data.createdAt
+							lastMessageTime:
+								[
+									date.getDate().toString().padStart(2, "0"),
+									(date.getMonth() + 1).toString().padStart(2, "0"),
+									date.getFullYear().toString().substring(2),
+								].join("/") +
+								" " +
+								date.getHours().toString().padStart(2, "0") +
+								":" +
+								date.getMinutes().toString().padStart(2, "0"),
+							unreadMessages:
+								unreadMessages.data.length === 0
+									? 0
+									: unreadMessages.data[0].total,
+							lastMessageDate: lastMessage.data.createdAt,
 						});
 						let i = 0;
 					} else {
@@ -683,9 +689,9 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 				return null;
 			}
 		}
-		conver.sort(function(a,b){
+		conver.sort(function (a, b) {
 			return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
-		})
+		});
 		return conver;
 	} else {
 		//TODO handle error
@@ -722,13 +728,13 @@ DomainCtrl.prototype.createConversation = async function (
 	text,
 	loggedEmail
 ) {
-	let users = [loggedEmail,email];
+	let users = [loggedEmail, email];
 	let messages = await persistenceCtrl.postRequest("/conversation", {
 		users: users,
 		message: text,
 	});
 	if (messages.status === 200) {
-		let message = messages.data;
+		message = messages.data;
 		let date = new Date(message.createdAt);
 		message.date = [
 			date.getDate().toString().padStart(2, "0"),
@@ -746,18 +752,21 @@ DomainCtrl.prototype.createConversation = async function (
 	}
 };
 
-DomainCtrl.prototype.deleteConversation = async function (conversationId, email) {
-    let result = await persistenceCtrl.postRequest("/deleteConversation", {
-        id: conversationId,
-        user: email,
-    });
-    if (result.status === 200) {
-        return true;
-    } else {
-        //TODO handle error
-        return false;
-    }
-}
+DomainCtrl.prototype.deleteConversation = async function (
+	conversationId,
+	email
+) {
+	let result = await persistenceCtrl.postRequest("/deleteConversation", {
+		id: conversationId,
+		user: email,
+	});
+	if (result.status === 200) {
+		return true;
+	} else {
+		//TODO handle error
+		return false;
+	}
+};
 
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
 	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
@@ -799,7 +808,9 @@ DomainCtrl.prototype.createMessage = async function (
 };
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
-	let message = await persistenceCtrl.putRequest("/reportMessage", {params:{ message: messageId }});
+	let message = await persistenceCtrl.putRequest("/reportMessage", {
+		params: { message: messageId },
+	});
 	if (message.status === 200) {
 		return message.data;
 	} else {
@@ -876,12 +887,12 @@ DomainCtrl.prototype.inCat = function (lat, long){
 DomainCtrl.prototype.fetchMessage = async function (converId, email) {
 	let dbMessages = await persistenceCtrl.getRequest("/message", {
 		conversation: converId,
-		user: email
+		user: email,
 	});
 	if (dbMessages.status === 200) {
 		return true;
 	} else return null;
-}
+};
 
 DomainCtrl.prototype.fetchUser = async function (email) {
 	const user = await persistenceCtrl.getRequest("/user", { email: email });
@@ -892,6 +903,23 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 		return null;
 	}
 };
+
+DomainCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await persistenceCtrl.getRequest("/userStats", { email: email });
+	if (userStats.status === 200) {
+		if (!userStats.data.chats) userStats.data.chats = 0;
+		if (!userStats.data.pins) userStats.data.pins = 0;
+
+		if (!userStats.data.savedPins) userStats.data.savedPins = 0;
+		else userStats.data.savedPins = userStats.data.savedPins.length;
+
+		return userStats.data;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
 DomainCtrl.prototype.getMeasureStation = function(eoiCode){
 	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
 	return undefined;
