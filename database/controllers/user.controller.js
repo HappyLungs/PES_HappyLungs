@@ -315,12 +315,11 @@ exports.changePassword = async (request, response) => {
 exports.restorePassword = async (request, response) => {
     let params = {};
     if (request.body) {
-        params = request.body;
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
-    console.log(params);
     //Find the user given the id in the params
     await UserDataLayer.findUser({email: params.email})
     .then( async (userData) => {
