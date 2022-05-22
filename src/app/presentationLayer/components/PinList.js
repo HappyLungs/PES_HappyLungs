@@ -21,14 +21,13 @@ import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl");
 
-const PinList = ({ pinList, navigation }) => {
+const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 	let presentationCtrl = new PresentationCtrl();
 	const [user, setUser] = useContext(UserContext);
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
-	const [data, setData] = useState(pinList);
 	const [eventDate, setEventDate] = useState(new Date());
 
 	const isMyPin = (email) => {
@@ -42,7 +41,7 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		setData(data.filter((item) => item._id !== selectedPin._id));
+		onMasterDataChange(pinList.filter((item) => item._id !== selectedPin._id));
 	};
 
 	const showDatePicker = (pin) => {
@@ -145,7 +144,12 @@ const PinList = ({ pinList, navigation }) => {
 		//pulse
 		//fadeInDown/Up
 		//slideInDown
-		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
+		<Animatable.View
+			animation="slideInDown"
+			duration={500}
+			easing={"ease-out-circ"}
+			delay={index * 10}
+		>
 			<View
 				style={[
 					styles.shadow,
