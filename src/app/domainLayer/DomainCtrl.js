@@ -111,6 +111,16 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 
 
 }
+
+DomainCtrl.prototype.fetchRanking = async function () {
+	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+};
 //STATISTICS - AIR QUALITY
 
 /**
@@ -359,10 +369,28 @@ DomainCtrl.prototype.editPin = async function (
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
-DomainCtrl.prototype.savePin = async function (Pin, email) {
+DomainCtrl.prototype.savePin = async function (pin, email) {
 	let result = await persistenceCtrl.putRequest("/savePin", {
 		email: email,
-		pin: Pin,
+		pin: pin,
+	});
+	if (result.status === 200) {
+		return result.data;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+/**
+ *
+ * @param {*} Pin
+ * @param {*} email
+ * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
+ */
+DomainCtrl.prototype.unsavePin = async function (pin, email) {
+	let result = await persistenceCtrl.putRequest("/unsavePin", {
+		email: email,
+		pin: pin,
 	});
 	if (result.status === 200) {
 		return result.data;
