@@ -37,7 +37,6 @@ function ProfileScreen({ navigation, route }) {
 	};
 
 	useEffect(() => {
-		console.log(route.params);
 		if (toastProfile || toastSettings) {
 			showToast();
 			navigation.setParams({ toastProfile: false, toastSettings: false });

@@ -19,6 +19,7 @@ import {
 	MaterialIcons,
 	MaterialCommunityIcons,
 	AntDesign,
+	Feather,
 } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import CustomToast from "../components/CustomToast";
@@ -65,7 +66,8 @@ function MapScreen({ navigation, route }) {
 	const [multiSliderValue, setMultiSliderValue] = useState([0, 2]);
 	const [markers, setMarkers] = useState([]);
 	const [selected, setSelected] = useState(null);
-	const [dataStats, setDataStats] = useState(null);
+	const [dangerOffset, setDangerOffset] = useState(0);
+	const [dangerMessage, setDangerMessage] = useState("");
 
 	/**
 	 * Function to set a default region
@@ -110,7 +112,6 @@ function MapScreen({ navigation, route }) {
 	};
 
 	const fetchHouses = (values) => {
-		console.log("in");
 		let letter = ["A", "B", "C", "D", "E", "F", "G"];
 		getHouses(letter[values[0]], letter[values[1]]);
 	};
@@ -123,6 +124,7 @@ function MapScreen({ navigation, route }) {
 
 	// S'executa a cada rerender
 	useEffect(() => {
+		calculateDangerLevel();
 		if (toast) {
 			showToast(i18n.t("pinCreateSuccess"), "successToast");
 			navigation.setParams({ toast: false });
@@ -184,7 +186,6 @@ function MapScreen({ navigation, route }) {
 			},
 		});
 		//falta condicionar això perq només passi quan realment es crea un pin
-
 		setModalPinVisible(!modalPinVisible);
 	});
 
@@ -266,6 +267,30 @@ function MapScreen({ navigation, route }) {
 			});
 		}
 		setHousesByCertificate(fetchedHouses);
+	};
+
+	const calculateDangerLevel = () => {
+		if (user.healthStatus[0]) {
+			if (user.healthStatus[1]) {
+				setDangerOffset(-50);
+				setDangerMessage(i18n.t("recommended5"));
+			} else if (user.healthStatus[2]) {
+				setDangerOffset(-40);
+				setDangerMessage(i18n.t("recommended4"));
+			} else {
+				setDangerOffset(-20);
+				setDangerMessage(i18n.t("recommended3"));
+			}
+		} else if (user.healthStatus[1]) {
+			setDangerOffset(-40);
+			setDangerMessage(i18n.t("recommended4"));
+		} else if (user.healthStatus[2]) {
+			setDangerOffset(-5);
+			setDangerMessage(i18n.t("recommended2"));
+		} else {
+			setDangerOffset(45);
+			setDangerMessage(i18n.t("recommended1"));
+		}
 	};
 
 	function renderHeader(user) {
@@ -598,9 +623,6 @@ function MapScreen({ navigation, route }) {
 		);
 	}
 
-	/**
-	 *
-	 */
 	function renderPinCreate() {
 		return (
 			<Modal
@@ -686,7 +708,6 @@ function MapScreen({ navigation, route }) {
 									{i18n.t("share")}
 								</Text>
 							</TouchableOpacity>
-							<Text style={styles.subtitle2}>{i18n.t("recommended1")}</Text>
 							<View
 								style={{
 									marginTop: 10,
@@ -710,14 +731,53 @@ function MapScreen({ navigation, route }) {
 								>
 									<View
 										style={{
-											backgroundColor: COLORS.secondary,
+											backgroundColor: COLORS.white,
 											alignSelf: "center",
 											height: 20,
 											width: 5,
-											right: 45,
+											right: dangerOffset,
 										}}
 									/>
 								</LinearGradient>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									justifyContent: "center",
+									marginTop: 5,
+								}}
+							>
+								{dangerOffset === 45 && (
+									<AntDesign name="Safety" size={24} color={COLORS.green1} />
+								)}
+								{dangerOffset === -5 && (
+									<Feather
+										name="alert-triangle"
+										size={24}
+										color={COLORS.yellow}
+									/>
+								)}
+								{dangerOffset === -20 && (
+									<Ionicons name="alert" size={24} color={COLORS.orange} />
+								)}
+								{dangerOffset === -40 && (
+									<Feather
+										name="alert-triangle"
+										size={24}
+										color={COLORS.red1}
+									/>
+								)}
+								{dangerOffset === -50 && (
+									<MaterialIcons
+										name="dangerous"
+										size={24}
+										color={COLORS.red1}
+									/>
+								)}
+								<Text style={[styles.subtitle2, { marginStart: 5 }]}>
+									{dangerMessage.toUpperCase()}
+								</Text>
 							</View>
 						</View>
 					</View>

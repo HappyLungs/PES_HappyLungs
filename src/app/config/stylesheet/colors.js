@@ -17,6 +17,7 @@ const COLORS = {
 	green3: "#a1ccc0",
 	green4: "#98bd5f",
 	orange: "#fe7624",
+	yellow: "#f5e813",
 	dark_orange: "#b15219",
 	softRed: "#ffcdc9",
 	bronze: "#c77b30",
