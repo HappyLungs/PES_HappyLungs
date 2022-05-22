@@ -2,12 +2,19 @@ const TouchHistoryMath = require("react-native/Libraries/Interaction/TouchHistor
 const DadesObertes = require("../services/DadesObertes");
 const LevelCalculator = require("../services/LevelCalculator");
 
+
 const dadesObertes = new DadesObertes();
 const levelCalculator = new LevelCalculator();
 
+
+
+
 class MeasureStation {
+    static Stations;
+    level;
 
     constructor (eoiCode, stationName, stationType, latitud, longitud, length) {
+        if(MeasureStation.Stations===undefined)MeasureStation.Stations=[];
         this.eoiCode = eoiCode;
         this.stationName = stationName;
         this.stationType = stationType;
@@ -15,9 +22,21 @@ class MeasureStation {
         this.longitud = longitud;
         this.length = length;
         this.months = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
+        "July", "August", "September", "October", "November", "December"];
+        if(eoiCode != null && eoiCode !==undefined){
+            if(MeasureStation.Stations.length!==0 && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
+                MeasureStation.Stations.push({
+                    eoi: eoiCode,
+                    station: this,
+                });
+            }else
+                MeasureStation.Stations.push({
+                eoi: eoiCode,
+                station: this,
+            });
+        }
     }
+
 
     /**
      * Convert an hour into DadesObertes API hour format
@@ -61,19 +80,21 @@ class MeasureStation {
      * @returns {Integer} pollution level at hour "hour" 
      */
     calcHourLevel(measures, hour) {
-        let calculatorData = new Map();
-        let availablePollutants = levelCalculator.getAvailablePollutants();
+        if(this.level == null){
+            let calculatorData = new Map();
+            let availablePollutants = levelCalculator.getAvailablePollutants();
 
-        measures.forEach( measure => {
-            let pollutant = measure.contaminant;
-            if (availablePollutants.includes(pollutant)) {
-                let quantity = this.calcHourQuantity(measure, this.hour2JsonHour(hour));
-                calculatorData.set(pollutant,quantity);
-            }
-            
-        });
+            measures.forEach( measure => {
+                let pollutant = measure.contaminant;
+                if (availablePollutants.includes(pollutant)) {
+                    let quantity = this.calcHourQuantity(measure, this.hour2JsonHour(hour));
+                    calculatorData.set(pollutant,quantity);
+                }
 
-        return levelCalculator.calculateLevelHour(calculatorData);
+            });
+            this.level=levelCalculator.calculateLevelHour(calculatorData)
+        }
+        return this.level;
     }
 
     /**
@@ -128,8 +149,11 @@ class MeasureStation {
      * @returns {Integer} pollution level at the date "date" and hour "hour"
      */
     async getHourLevel(date, hour) {
-        let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
-        return this.calcHourLevel(measures, hour);
+        if(this.level===undefined){
+            let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
+            this.level=this.calcHourLevel(measures, hour);
+        }
+        return this.level;
     }
 
     /**

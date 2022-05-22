@@ -24,6 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import * as Animatable from "react-native-animatable";
 import { setDate } from "date-fns";
+import { useIsFocused } from '@react-navigation/native';
 
 function ChatScreen({ route, navigation }) {
 	let presentationCtrl = new PresentationCtrl();
@@ -47,18 +48,19 @@ function ChatScreen({ route, navigation }) {
 
 	useEffect( () => {
 		fetchChats();
-	
-		socket.on('chat message', async (data) => {
-			let exists = false;
-			for (let ms of messages) if(ms._id === data._id) exists = true;
-			if (!exists) {
-				setMessages(oldArray => [...oldArray, data]);
-			}
-			await presentationCtrl.fetchMessage(data.conversation, user.email);
-		})
-		
+			socket.on('chat message', async (data) => {
+				if (data.user === conversant.email) {
+					let exists = false;
+					for (let ms of messages) if(ms._id === data._id) exists = true;
+					if (!exists) {
+						setMessages(oldArray => [...oldArray, data]);
+					}
+					await presentationCtrl.fetchMessage(data.conversation, user.email);
+				}
+			});
 		return () => {};
-	}, []);
+  	}, []);
+
 
 	const fetchChats = async () => {
 		if (route.params.id) {
@@ -100,7 +102,6 @@ function ChatScreen({ route, navigation }) {
 					if (!exists) setMessages(oldArray => [...oldArray, newMessage]);
 					const info = {message: newMessage, to: conversant}
 					socket.emit('chat message', info);
-
 				}
 			}
 			setMessage("");

@@ -69,11 +69,15 @@ function ProfileScreen({ navigation, route }) {
 
 	async function share() {
 		try {
-			await Share.share({
-				title: "Happy Lungs",
-				message: "Breath Safely, Breath With Us",
-				url: "https://happylungsproject.org/", //url és ios only
-			});
+			await Share.share(
+				{
+					message:
+						"Happy Lungs \n\nBreath Safely, Breath With Us \n\nhttps://happylungsproject.org/",
+				},
+				{
+					dialogTitle: "Happy Lungs",
+				}
+			);
 		} catch (err) {}
 	}
 

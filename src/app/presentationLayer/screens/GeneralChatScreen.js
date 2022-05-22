@@ -40,6 +40,8 @@ function GeneralChatScreen({ navigation }) {
 		const unsubscribe = navigation.addListener('focus', async () => {
 			fetchChats();
 			socket.on('chat message', (data) => {
+				fetchChats();
+				/*
 				setFilteredData(existingItems => {
 					let i = 0;
 					let index = -1;
@@ -57,26 +59,76 @@ function GeneralChatScreen({ navigation }) {
 						...existingItems.slice(index + 1),		  
 					]		  
 				})
+				setMasterData(existingItems => {
+					let i = 0;
+					let index = -1;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) index = i;
+						i++;
+					}
+					let m = existingItems[index];
+					m.lastMessage = data.text;
+					m.unreadMessages += 1;
+					m.lastMessageTime = data.date+" "+data.hour;
+					return [
+						m,
+						...existingItems.slice(0, index),		  
+						...existingItems.slice(index + 1),		  
+					]		  
+				})
+				*/
 			})
 			socket.on('new chat', async (data) => {
 				let newUser = await presentationCtrl.fetchUser(data.user);
 				setFilteredData(existingItems => {
-					let m = {
-						id: data.conversation,
-						name: newUser.name,
-						profileImage: newUser.profileImage,
-						lastMessage: data.text,
-						unreadMessages: 1,
-						lastMessageTime: data.date+" "+data.hour
+					let exists = false;
+					let i = 0;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) exists = true;
+						i++;
 					}
-					return [
-						m,
-						...existingItems	  
-					]		  
+					if (exists) return [existingItems]
+					else {
+						let m = {
+							id: data.conversation,
+							name: newUser.name,
+							profileImage: newUser.profileImage,
+							lastMessage: data.text,
+							unreadMessages: 1,
+							lastMessageTime: data.date+" "+data.hour
+						}
+						return [
+							m,
+							...existingItems	  
+						]
+					}	  
+				})
+				setMasterData(existingItems => {
+					let exists = false;
+					let i = 0;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) exists = true;
+						i++;
+					}
+					if (exists) return [existingItems]
+					else {
+						let m = {
+							id: data.conversation,
+							name: newUser.name,
+							profileImage: newUser.profileImage,
+							lastMessage: data.text,
+							unreadMessages: 1,
+							lastMessageTime: data.date+" "+data.hour
+						}
+						return [
+							m,
+							...existingItems	  
+						]
+					}	  
 				})
 			})
-		  });
-	  	  return unsubscribe;
+		});
+	  	return unsubscribe;
 	}, []);
 
 	const fetchChats = async () => {
