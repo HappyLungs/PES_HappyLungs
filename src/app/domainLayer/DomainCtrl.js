@@ -20,6 +20,7 @@ let DomainCtrl;
 		if (instance) return instance;
 		instance = this;
 
+
 		// initialize any properties of the singleton
 	};
 })();
@@ -36,16 +37,21 @@ DomainCtrl.prototype.getMapData = async function () {
 	let allMeasures = await dadesObertes.getMeasuresDate(date);
 	allMeasures.forEach((measure) => {
 		let eoiCode = measure.codi_eoi;
+		let auxstation=this.getMeasureStation(eoiCode);
 		if (!measureStations.has(eoiCode)) {
-			let ms = new MeasureStation(
+			let ms;
+			if(auxstation===undefined){
+				ms = new MeasureStation(
 				measure.codi_eoi,
 				measure.nom_estacio,
 				measure.tipus_estacio,
 				measure.latitud,
 				measure.longitud,
 				null
-			);
-			measureStations.set(eoiCode, ms);
+				);
+			}else ms=auxstation.station;
+				measureStations.set(eoiCode, ms);
+
 		}
 	});
 
@@ -64,37 +70,36 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
-	const date = new Date();
-	let nsteps = 100;
-	let jmax = 1;
-	let inilat = 40.541006;
-	let inilong = 0.68031;
-	let maxlat = 42.814019;
-	let maxlong = 3.20592;
-	let actuallat = inilat;
-	let actuallong = inilong;
+	const date=new Date();
+	let nsteps=10;
+	let inilat=40.541006;
+	let inilong=0.680310;
+	let maxlat=42.814019;
+	let maxlong=3.205920;
+	let actuallat=inilat;
+	let actuallong=inilong;
 
-	let longstep = (maxlong - inilong) / nsteps;
-	let latsteps = (maxlat - inilat) / nsteps;
-	let datapoints = [];
-	for (let i = 0; i <= nsteps; i++) {
-		for (let j = 0; j <= nsteps; j++) {
+	let longstep=(maxlong-inilong)/nsteps;
+	let latsteps= (maxlat-inilat)/nsteps;
+	let datapoints=[];
+	for (let i=0;i<=nsteps;i++){
+		for(let j=0;j<=nsteps ;j++) {
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
-				continue;
-			}
+			} else {
+
 			let dp = new DataPointMap(actuallat, actuallong);
-			let actual = {
+			const actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: (await dp.getHourLevel(date, date.getHours())) / 6,
+				weight: await dp.getHourLevel(date, date.getHours()) / 6,
 			};
 			datapoints.push(actual);
 			actuallong = actuallong + longstep;
+			}
 		}
-		actuallat = actuallat + latsteps;
-		actuallong = inilong;
-		jmax++;
+		actuallat=actuallat+latsteps;
+		actuallong=inilong;
 	}
 	let actual = {
 		latitude: 0,
@@ -103,7 +108,9 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	};
 	datapoints.push(actual);
 	return datapoints;
-};
+
+
+}
 //STATISTICS - AIR QUALITY
 
 /**
@@ -291,19 +298,6 @@ DomainCtrl.prototype.fetchPins = async function (email) {
 };
 
 /**
- * @returns Returns the ranking of the users and the number of pins they have created
- */
-DomainCtrl.prototype.fetchRanking = async function () {
-	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
-	if (ranking != null) {
-		return ranking;
-	} else {
-		//TODO ERROR: print error && reload page
-		return null;
-	}
-};
-
-/**
  * @param {*} email Email from the current logged user
  * @returns returns 50 best rated pins. Else returns null => error
  */
@@ -365,29 +359,10 @@ DomainCtrl.prototype.editPin = async function (
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
-DomainCtrl.prototype.savePin = async function (pin, email) {
+DomainCtrl.prototype.savePin = async function (Pin, email) {
 	let result = await persistenceCtrl.putRequest("/savePin", {
 		email: email,
-		pin: pin,
-	});
-	if (result.status === 200) {
-		return result.data;
-	} else {
-		//TODO: handle error. Return an error and reload the view with the error
-		return null;
-	}
-};
-
-/**
- *
- * @param {*} Pin
- * @param {*} email
- * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
- */
-DomainCtrl.prototype.unsavePin = async function (pin, email) {
-	let result = await persistenceCtrl.putRequest("/unsavePin", {
-		email: email,
-		pin: pin,
+		pin: Pin,
 	});
 	if (result.status === 200) {
 		return result.data;
@@ -679,7 +654,7 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 				return null;
 			}
 		}
-		conver.sort(function(a,b){ 
+		conver.sort(function(a,b){
 			return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
 		})
 		return conver;
@@ -724,7 +699,7 @@ DomainCtrl.prototype.createConversation = async function (
 		message: text,
 	});
 	if (messages.status === 200) {
-		message = messages.data;
+		let message = messages.data;
 		let date = new Date(message.createdAt);
 		message.date = [
 			date.getDate().toString().padStart(2, "0"),
@@ -840,32 +815,32 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
       .then((data) => data);
   //console.log(user);
 };*/
-DomainCtrl.prototype.inCat = function (lat, long) {
-	if (40.547416 < lat && lat < 41.147653)
-		return 0.197311 < long && long < 1.03968;
+DomainCtrl.prototype.inCat = function (lat, long){
+	if(40.547416<lat && lat<41.147653)
+		return (0.197311<long  && long<1.039680);
 
-	if (41.147653 < lat && lat < 41.202419)
-		return 0.297129 < long && long < 1.658984;
+	if(41.147653<lat && lat<41.202419)
+		return(0.297129<long  && long<1.658984);
 
-	if (41.202419 < lat && lat < 41.453135)
-		return 0.380587 < long && long < 2.26035;
+	if(41.202419<lat && lat<41.453135)
+		return(0.380587<long  && long<2.260350);
 
-	if (41.453135 < lat && lat < 41.516696)
-		return 0.344322 < long && long < 2.446748;
-	if (41.516696 < lat && lat < 41.787774)
-		return 0.378409 < long && long < 3.004935;
+	if(41.453135<lat && lat<41.516696)
+		return(0.344322<long  && long<2.446748);
+	if(41.516696<lat && lat<41.787774)
+		return(0.378409<long  && long<3.004935);
 
-	if (41.787774 < lat && lat < 41.835174)
-		return 0.407281 < long && long < 3.157412;
+	if(41.787774<lat && lat<41.835174)
+		return(0.407281<long  && long<3.157412);
 
-	if (41.835174 < lat && lat < 42.179406)
-		return 3.155225 < long && long < 0.677742;
+	if(41.835174<lat && lat<42.179406)
+		return(3.155225<long  && long<0.677742);
 
-	if (42.179406 < lat && lat < 42.401692)
-		return 3.313046 < long && long < 0.673662;
+	if(42.179406<lat && lat<42.401692)
+		return(3.313046<long  && long<0.673662);
 
-	if (42.401692 < lat && lat < 42.717475)
-		return 0.642428 < long && long < 1.409893;
+	if(42.401692<lat && lat<42.717475)
+		return(0.642428<long  && long<1.409893);
 	return false;
 };
 
@@ -887,6 +862,10 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 		//TODO handle error
 		return null;
 	}
+};
+DomainCtrl.prototype.getMeasureStation = function(eoiCode){
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	return undefined;
 };
 
 module.exports = DomainCtrl;
