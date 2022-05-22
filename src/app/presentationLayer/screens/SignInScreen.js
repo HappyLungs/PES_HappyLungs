@@ -74,7 +74,7 @@ function SignInScreen({ navigation, route }) {
 	const loginGoogle = async (userGoogleData, accessToken) => {
 		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
 		if (response.status == 200) {
-      new Socket(email);
+      new Socket(userGoogleData.email);
 			response.data.accessToken = accessToken;      
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
