@@ -46,7 +46,7 @@ DomainCtrl.prototype.getMapData = async function () {
 				null
 			);
 			measureStations.set(eoiCode, ms);
-		}
+		}Can’t automatically merg
 	});
 
 	let measureStationLevels = [];
@@ -574,6 +574,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 					},
 					conversant: {
 						id: conversant.data._id,
+						email:conversant.data.email,
 						name: conversant.data.name,
 						profileImage: conversant.data.profilePicture
 							? conversant.data.profilePicture
@@ -660,9 +661,11 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 								date.getDate().toString().padStart(2, "0"),
 								(date.getMonth() + 1).toString().padStart(2, "0"),
 								date.getFullYear().toString().substring(2),
-							].join("/"),
-							unreadMessages: unreadMessages.data.length,
+							].join("/")+" "+date.getHours().toString().padStart(2, "0") +":" +date.getMinutes().toString().padStart(2, "0"),
+							unreadMessages: (unreadMessages.data.length === 0) ? 0 : unreadMessages.data[0].total,
+							lastMessageDate: lastMessage.data.createdAt
 						});
+						let i = 0;
 					} else {
 						//TODO handle error searching for the unread messages
 						return null;
@@ -676,6 +679,9 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 				return null;
 			}
 		}
+		conver.sort(function(a,b){ 
+			return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+		})
 		return conver;
 	} else {
 		//TODO handle error
@@ -712,7 +718,7 @@ DomainCtrl.prototype.createConversation = async function (
 	text,
 	loggedEmail
 ) {
-	let users = [loggedEmail, email];
+	let users = [loggedEmail,email];
 	let messages = await persistenceCtrl.postRequest("/conversation", {
 		users: users,
 		message: text,
@@ -737,16 +743,16 @@ DomainCtrl.prototype.createConversation = async function (
 };
 
 DomainCtrl.prototype.deleteConversation = async function (conversationId, email) {
-	let result = await persistenceCtrl.postRequest("/deleteConversation", {
-		id: conversationId,
-		user: email,
-	});
-	if (result.status === 200) {
-		return true;
-	} else {
-		//TODO handle error
-		return false;
-	}
+    let result = await persistenceCtrl.postRequest("/deleteConversation", {
+        id: conversationId,
+        user: email,
+    });
+    if (result.status === 200) {
+        return true;
+    } else {
+        //TODO handle error
+        return false;
+    }
 }
 
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
@@ -789,9 +795,7 @@ DomainCtrl.prototype.createMessage = async function (
 };
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
-	let message = await persistenceCtrl.putRequest("/reportMessage", {
-		message: messageId,
-	});
+	let message = await persistenceCtrl.putRequest("/reportMessage", {params:{ message: messageId }});
 	if (message.status === 200) {
 		return message.data;
 	} else {

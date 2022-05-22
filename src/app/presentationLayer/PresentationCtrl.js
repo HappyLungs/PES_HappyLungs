@@ -465,8 +465,8 @@ PresentationCtrl.prototype.createConversation = async function (
 	}
 };
 
-PresentationCtrl.prototype.deleteConversation = async function (id) {
-	let result = await this.domainCtrl.deleteConversation(id);
+PresentationCtrl.prototype.deleteConversation = async function (id,email) {
+	let result = await this.domainCtrl.deleteConversation(id, email);
 	if (result != null) {
 		return true;
 	} else {

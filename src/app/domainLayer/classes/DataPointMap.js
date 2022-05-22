@@ -66,8 +66,6 @@ class DataPointMap {
             totalData = [...totalData, data];
             return data;
         }))
-      
-
 
       return datos;
     

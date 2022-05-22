@@ -3,6 +3,7 @@ const COLORS = {
 	secondary: "#4d4d4d",
 	darkGrey: "#808080",
 	lightGrey: "#eaeaea",
+	mediumGrey: "#dbdbdb",
 	light: "#f3f3f3",
 	black: "#000",
 	white: "#fff",
@@ -16,6 +17,7 @@ const COLORS = {
 	green3: "#a1ccc0",
 	orange: "#fe7624",
 	dark_orange: "#b15219",
+	softRed: "#ffcdc9",
 	bronze: "#c77b30",
 };
 
