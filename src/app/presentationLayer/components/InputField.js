@@ -21,7 +21,7 @@ const InputField = ({
 	onFocus = () => {},
 	...props
 }) => {
-	const [isMasked, setIsMasked] = useState(false);
+	const [isMasked, setIsMasked] = useState(true);
 	const [isFocused, setIsFocused] = useState(false);
 	return (
 		<View style={{ marginTop: 10 }}>
@@ -60,7 +60,7 @@ const InputField = ({
 				/>
 				<TextInput
 					editable={editable}
-					secureTextEntry={isMasked}
+					secureTextEntry={isMasked && passwordChange}
 					autoCorrect={false}
 					defaultValue={defaultValue}
 					maxLength={

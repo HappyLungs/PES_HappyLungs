@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
@@ -14,6 +14,8 @@ import ImageCarousel from "../components/ImageCarousel";
 import Modal from "react-native-modal";
 import { Rating } from "react-native-ratings";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
+import CustomToast from "../components/CustomToast";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -21,14 +23,29 @@ function PinOwnerScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	const { pin } = route.params;
+	const toast = route.params.toast;
 
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
 
+	const showToast = () => {
+		Toast.show({
+			position: "bottom",
+			type: "successToast",
+			text1: i18n.t("pinEditSuccess"),
+		});
+	};
+	useEffect(() => {
+		if (toast) {
+			showToast();
+			navigation.setParams({ toast: false });
+		}
+	});
+
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
-			latitude: pin.location.latitude,
-			longitude: pin.location.longitude,
+			latitude: pin.latitude,
+			longitude: pin.longitude,
 		});
 	};
 
@@ -117,7 +134,10 @@ function PinOwnerScreen({ navigation, route }) {
 		>
 			{renderDeleteConfirmation()}
 			<View
-				style={[{ height: 200, borderBottomLeftRadius: 50 }, styles.shadow]}
+				style={[
+					{ height: 200, borderBottomLeftRadius: 50 },
+					styles.shadowImage,
+				]}
 			>
 				<ImageCarousel media={pin.media} />
 			</View>
@@ -153,8 +173,8 @@ function PinOwnerScreen({ navigation, route }) {
 						onPress={async () => {
 							let data = await presentationCtrl.getDataStatistics(
 								"24hours",
-								pin.location.latitude,
-								pin.location.longitude
+								pin.latitude,
+								pin.longitude
 							);
 							navigation.navigate("Statistics", { data: data });
 						}}
@@ -287,6 +307,7 @@ function PinOwnerScreen({ navigation, route }) {
 					</TouchableOpacity>
 				</View>
 			</View>
+			<CustomToast />
 		</SafeAreaView>
 	);
 }
@@ -310,6 +331,16 @@ const styles = StyleSheet.create({
 	},
 	shadow: {
 		shadowColor: COLORS.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	shadowImage: {
+		shadowColor: COLORS.green1,
 		shadowOffset: {
 			width: 0,
 			height: 2,

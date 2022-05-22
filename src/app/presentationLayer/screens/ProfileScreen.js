@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import {
 	Text,
@@ -14,19 +14,35 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import Toast from "react-native-toast-message";
+import CustomToast from "../components/CustomToast";
 
 import COLORS from "../../config/stylesheet/colors";
 import UserContext from "../../domainLayer/UserContext";
 import i18n from "../../config/translation";
 
 function ProfileScreen({ navigation, route }) {
-	//should know userId, and then retrieve the user data (updated or not)
-
+	const toastProfile = route.params.toastProfile;
+	const toastSettings = route.params.toastSettings;
 	const [user, setUser] = useContext(UserContext);
 
-	function settings() {
-		navigation.navigate("SettingsScreen");
-	}
+	const showToast = () => {
+		Toast.show({
+			position: "bottom",
+			type: toastProfile ? "successToast" : "configToast",
+			text1: toastProfile
+				? i18n.t("profileSuccess")
+				: i18n.t("settingsSuccess"),
+		});
+	};
+
+	useEffect(() => {
+		console.log(route.params);
+		if (toastProfile || toastSettings) {
+			showToast();
+			navigation.setParams({ toastProfile: false, toastSettings: false });
+		}
+	});
 
 	function calendar() {
 		//no se que ha de fer
@@ -411,7 +427,9 @@ function ProfileScreen({ navigation, route }) {
 			>
 				<TouchableOpacity
 					activeOpacity={0.8}
-					onPress={() => settings()}
+					onPress={() => {
+						navigation.navigate("SettingsScreen");
+					}}
 					style={styles.containerOption}
 				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
@@ -456,6 +474,7 @@ function ProfileScreen({ navigation, route }) {
 				<Text style={styles.textOption}>{i18n.t("logOut")}</Text>
 			</TouchableOpacity>
 			{renderModalLogout()}
+			<CustomToast />
 		</View>
 	);
 }

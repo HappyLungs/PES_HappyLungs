@@ -73,6 +73,7 @@
 		"react-native-scrollable-tab-view": "^1.0.0",
 		"react-native-svg": "12.1.1",
 		"react-native-tab-view": "^3.1.1",
+		"react-native-toast-message": "^2.1.5",
 		"react-native-web": "0.17.1",
 		"react-router": "^6.2.2",
 		"rn-checkbox-list": "^1.1.0",
