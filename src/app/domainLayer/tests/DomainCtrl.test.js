@@ -15,9 +15,15 @@ test('test get map data', async ()=> {
 
 test('test get heat points', async() => {
     const datapoints = await ctrld.getHeatPoints();
+<<<<<<< HEAD
     // console.log(MeasureStation.Stations);
     //console.log(datapoints);
     // console.log(datapoints.length);
+=======
+    console.log(MeasureStation.Stations);
+    console.log(datapoints);
+    console.log(datapoints.length);
+>>>>>>> e2ac9bdadacbdad4891e89aaa981a87a4f175ab7
 });
 /*
 test('test in Cat', async() => {

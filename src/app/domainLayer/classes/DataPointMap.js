@@ -22,7 +22,11 @@ class DataPointMap {
         if(nearPoint===undefined){
             nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi,null,null,this.latitude,this.longitud,null);
         }else nearPoint=nearPoint.station;
+<<<<<<< HEAD
         // console.log(nearPoint.eoiCode);
+=======
+        //console.log(nearPoint.eoiCode);
+>>>>>>> e2ac9bdadacbdad4891e89aaa981a87a4f175ab7
         return nearPoint.getHourLevel(date, hour);
     }
     
