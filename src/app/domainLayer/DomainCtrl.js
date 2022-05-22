@@ -889,4 +889,20 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 	}
 };
 
+DomainCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await persistenceCtrl.getRequest("/userStats", { email: email });
+	if (userStats.status === 200) {
+		if (!userStats.data.chats) userStats.data.chats = 0;
+		if (!userStats.data.pins) userStats.data.pins = 0;
+
+		if (!userStats.data.savedPins) userStats.data.savedPins = 0;
+		else userStats.data.savedPins = userStats.data.savedPins.length;
+		
+		return userStats.data;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
 module.exports = DomainCtrl;
