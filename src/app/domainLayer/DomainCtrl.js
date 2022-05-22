@@ -26,7 +26,7 @@ let DomainCtrl;
 })();
 
 ///TESTTTTTT
-DomainCtrl.prototype.createEvent = async function (date, pin, email) {
+DomainCtrl.prototype.createEvent = function (date, pin, email) {
 	console.log(date, pin, email);
 	//pin.addCalendarEvent();
 
@@ -37,54 +37,50 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	let API_KEY = "AIzaSyB9WYI1_sLF-I3s5Z7ZChw7bJM6jAKwc4I";
 	let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 	let SCOPES = "https://www.googleapis.com/auth/calendar";
-	
-	console.log("I MADE IT THIS FUCKING FAR BITTTTTTTTTTTTTCHHHHH");
 
-	window.onLoadCallback = function() { 	
-		
-		console.log("I MADE IT THIS FUCKING FAR BITTTTTTTTTTTTTCHHHHH2");
+	gapi.load('client:auth2', () => {
 
-		gapi.load('client:auth2', () => {
-			gapi.client.init({
-				apiKey: API_KEY,
-				clientId: CLIENT_ID,
-				discoveryDocs: DISCOVERY_DOCS,
-				scope: SCOPES,
+		console.log("I MADE IT THIS FUCKING FAR BITTTTTTTTTTTTTCHHHHH");
+
+		gapi.client.init({
+			apiKey: API_KEY,
+			clientId: CLIENT_ID,
+			discoveryDocs: DISCOVERY_DOCS,
+			scope: SCOPES,
+		});
+
+		gapi.client.load("calendar", "v3", () => console.log("google calendar loaded"));
+
+		let today = new Date().toISOString().slice(0, 10);
+		const isoStrStart = today + "T12:00:00-00:00";
+		const isoStrEnd = today + "T13:00:00-00:00";
+
+		//pop up window sign-in
+		gapi.auth2.getAuthInstance().signIn().then(() => {
+			let event = {
+				summary: "ton ciclista",
+				location: "al cul del mon",
+				description: "peu pla",
+
+				start: {
+					dateTime: isoStrStart,
+				},
+				end: {
+					dateTime: isoStrEnd,
+				},
+			};
+
+			let request = gapi.client.calendar.events.insert({
+				calendarId: "primary",
+				resource: event,
 			});
 
-			gapi.client.load("calendar", "v3", () => console.log("google calendar loaded"));
-	
-			let today = new Date().toISOString().slice(0, 10);
-			const isoStrStart = today + "T12:00:00-00:00";
-			const isoStrEnd = today + "T13:00:00-00:00";
-	
-			//pop up window sign-in
-			gapi.auth2.getAuthInstance().signIn().then(() => {
-				let event = {
-					summary: "ton ciclista",
-					location: "al cul del mon",
-					description: "peu pla",
-	
-					start: {
-						dateTime: isoStrStart,
-					},
-					end: {
-						dateTime: isoStrEnd,
-					},
-				};
-	
-				let request = gapi.client.calendar.events.insert({
-					calendarId: "primary",
-					resource: event,
-				});
-	
-				request.execute(event => {
-					console.log(event)
-					window.open(event.htmlLink)
-				});
-			})
+			request.execute(event => {
+				console.log(event)
+				window.open(event.htmlLink)
+			});
 		})
-	};
+	})
 }
 
 //MAP
