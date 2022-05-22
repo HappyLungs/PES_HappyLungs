@@ -41,6 +41,7 @@ function GeneralChatScreen({ navigation }) {
 			fetchChats();
 			socket.on('chat message', (data) => {
 				setFilteredData(existingItems => {
+					let i = 0;
 					let index = -1;
 					for (let c of existingItems) {
 						if (c.id === data.conversation) index = i;

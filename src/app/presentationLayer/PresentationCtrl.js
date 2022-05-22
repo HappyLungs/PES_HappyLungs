@@ -502,6 +502,13 @@ PresentationCtrl.prototype.fetchUsers = async function () {
 	this.domainCtrl.fetchUsers();
 };
 
+PresentationCtrl.prototype.fetchMessage = async function (converId, email) {
+	let dbMessages = await this.domainCtrl.fetchMessage(converId, email);
+	if (dbMessages != null) {
+		return true;
+	} else return false;
+}
+
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);
 	if (user != null) {

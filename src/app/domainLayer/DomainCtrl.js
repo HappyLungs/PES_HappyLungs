@@ -46,7 +46,7 @@ DomainCtrl.prototype.getMapData = async function () {
 				null
 			);
 			measureStations.set(eoiCode, ms);
-		}Can’t automatically merg
+		}
 	});
 
 	let measureStationLevels = [];
@@ -868,6 +868,16 @@ DomainCtrl.prototype.inCat = function (lat, long) {
 		return 0.642428 < long && long < 1.409893;
 	return false;
 };
+
+DomainCtrl.prototype.fetchMessage = async function (converId, email) {
+	let dbMessages = await persistenceCtrl.getRequest("/message", {
+		conversation: converId,
+		user: email
+	});
+	if (dbMessages.status === 200) {
+		return true;
+	} else return null;
+}
 
 DomainCtrl.prototype.fetchUser = async function (email) {
 	const user = await persistenceCtrl.getRequest("/user", { email: email });
