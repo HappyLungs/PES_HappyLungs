@@ -71,7 +71,7 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date=new Date();
-	let nsteps=13;
+	let nsteps=7;
 	let inilat=40.541006;
 	let inilong=0.680310;
 	let maxlat=42.814019;
@@ -85,6 +85,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	for (let i=0;i<nsteps;i++){
 		for(let j=0;j<nsteps ;j++) {
 			if (!this.inCat(actuallat, actuallong)) {
+				console.log(actuallat, actuallong);
 				actuallong = actuallong + longstep;
 			} else {
 
@@ -92,7 +93,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 			const actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: await dp.getHourLevel(date, date.getHours()) / 6,
+				weight: await dp.getHourLevel(date, date.getHours()) / 5,
 			};
 			datapoints.push(actual);
 			actuallong = actuallong + longstep;
@@ -862,10 +863,10 @@ DomainCtrl.prototype.inCat = function (lat, long){
 		return(0.407281<=long  && long<=3.157412);
 
 	if(41.835174<=lat && lat<=42.179406)
-		return(3.155225<=long  && long<=0.677742);
+		return(0.677742<=long  && long<=3.155225);
 
 	if(42.179406<=lat && lat<=42.401692)
-		return(3.313046<=long  && long<=0.673662);
+		return(0.673662<=long  && long<=3.313046);
 
 	if(42.401692<=lat && lat<=42.717475)
 		return(0.642428<=long  && long<=1.409893);

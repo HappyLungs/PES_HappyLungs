@@ -1,7 +1,7 @@
 import DataPointMap from '../DataPointMap';
 import MeasureStation from '../MeasureStation';
 
-let dataPointMapTest = new DataPointMap(41.420185, 2.144412);
+let dataPointMapTest = new DataPointMap(42.203941, 2.251297);
 /*
 test('get hour level test',
     async () => {
