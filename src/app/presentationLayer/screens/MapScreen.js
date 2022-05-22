@@ -62,9 +62,10 @@ function MapScreen({ navigation, route }) {
 	const [houses, setHouses] = useState([]);
 	const [housesByCertificate, setHousesByCertificate] = useState([]);
 	const [byCertificate, setByCertificate] = useState(false);
-	const [multiSliderValue, setMultiSliderValue] = useState([0, 0]);
+	const [multiSliderValue, setMultiSliderValue] = useState([0, 2]);
 	const [markers, setMarkers] = useState([]);
 	const [selected, setSelected] = useState(null);
+	const [dataStats, setDataStats] = useState(null);
 
 	/**
 	 * Function to set a default region
@@ -108,10 +109,16 @@ function MapScreen({ navigation, route }) {
 		});
 	};
 
-	const multiSliderValuesChange = (values) => {
-		setMultiSliderValue(values);
+	const fetchHouses = (values) => {
+		console.log("in");
 		let letter = ["A", "B", "C", "D", "E", "F", "G"];
 		getHouses(letter[values[0]], letter[values[1]]);
+	};
+
+	const multiSliderValuesChange = (values) => {
+		setByCertificate(true);
+		setMultiSliderValue(values);
+		fetchHouses(values);
 	};
 
 	// S'executa a cada rerender
@@ -185,6 +192,7 @@ function MapScreen({ navigation, route }) {
 		event.persist();
 		const latitude = event.nativeEvent.coordinate.latitude;
 		const longitude = event.nativeEvent.coordinate.longitude;
+
 		const title = await callGeocodeAPI(latitude, longitude);
 		setActualMarker({
 			latitude,
@@ -258,7 +266,6 @@ function MapScreen({ navigation, route }) {
 			});
 		}
 		setHousesByCertificate(fetchedHouses);
-		setByCertificate(true);
 	};
 
 	function renderHeader(user) {
@@ -380,126 +387,146 @@ function MapScreen({ navigation, route }) {
 				}}
 			>
 				<View style={styles.centeredView}>
-					<View
-						style={[
-							styles.modalView,
-							styles.shadow,
-							{ alignItems: "flex-start" },
-						]}
-					>
+					<View style={[styles.modalView, styles.shadow]}>
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center" },
+								{ fontWeight: "bold", alignSelf: "center", fontSize: 17 },
 							]}
 						>
 							{i18n.t("filter")}
 						</Text>
-
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
-							]}
-						>
-							{i18n.t("showPins")}
-						</Text>
-						<TouchableOpacity
-							activeOpacity={0.8}
+						<View
 							style={{
-								flexDirection: "row",
-								backgroundColor: COLORS.secondary,
-								borderRadius: 90,
-								padding: 7,
-								marginTop: 10,
-								marginStart: 15,
-								alignItems: "center",
+								flexDirection: "column",
+								marginTop: 5,
 							}}
-							onPress={() => setPinsShown(!pinsShown)}
 						>
-							<AntDesign
-								name={pinsShown ? "pushpino" : "pushpin"}
-								size={25}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
-						<Text
-							style={[
-								styles.modalText,
-								{ fontWeight: "bold", color: COLORS.green1, marginTop: 10 },
-							]}
-						>
-							{i18n.t("filterByCertificate")}
-						</Text>
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<TouchableOpacity
-								activeOpacity={0.8}
+							<Pressable
 								style={{
 									flexDirection: "row",
-									backgroundColor: COLORS.secondary,
-									borderRadius: 90,
-									padding: 7,
-									marginTop: 10,
-									marginEnd: 10,
-									marginStart: 15,
 									alignItems: "center",
 								}}
 								onPress={() => {
+									setPinsShown(!pinsShown);
+								}}
+							>
+								<View
+									activeOpacity={0.8}
+									style={{
+										backgroundColor: COLORS.green1,
+										borderRadius: 10,
+										padding: 5,
+										margin: 5,
+										alignItems: "center",
+									}}
+								>
+									<AntDesign
+										name={pinsShown ? "pushpin" : "pushpino"}
+										size={22}
+										color={COLORS.white}
+									/>
+								</View>
+								<Text style={styles.subtitle}>{i18n.t("showPins")}</Text>
+							</Pressable>
+							<Pressable
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginTop: 10,
+								}}
+								onPress={() => {
+									if (!byCertificate) {
+										fetchHouses(multiSliderValue);
+									}
 									setByCertificate(!byCertificate);
 								}}
 							>
-								<Ionicons
-									name={byCertificate ? "home" : "home-outline"}
-									size={25}
-									color={COLORS.white}
-								/>
-							</TouchableOpacity>
-							<MultiSlider
-								sliderLength={100}
-								onValuesChange={multiSliderValuesChange}
-								min={0}
-								max={6}
-								step={1}
-								snapped
-								showSteps
-								values={[multiSliderValue[0], multiSliderValue[1]]}
-								allowOverlap={true}
-								//enableLabel
-								//customLabel={CustomLabel}
-								stepLabelStyle={{
-									color: "blue",
-								}}
-								markerStyle={{
-									backgroundColor: COLORS.green1,
-									height: 13,
-									width: 13,
-									bottom: -3,
-								}}
-								stepLabel={{
-									backgroundColor: "red",
-									height: 20,
-									width: 20,
-									fontSize: 10,
-								}}
-								pressedMarkerStyle={{
-									height: 10,
-									width: 10,
-								}}
-								selectedStyle={{
-									backgroundColor: COLORS.green1,
-								}}
-								unselectedStyle={{
-									backgroundColor: COLORS.secondary,
-								}}
-								containerStyle={{
-									height: 40,
-									marginStart: 10,
-								}}
-								trackStyle={{
-									height: 5,
-									borderRadius: 2,
-								}}
-							></MultiSlider>
+								<View
+									style={{
+										backgroundColor: COLORS.green1,
+										borderRadius: 10,
+										padding: 5,
+										margin: 5,
+										alignItems: "center",
+									}}
+								>
+									<Ionicons
+										name={byCertificate ? "home" : "home-outline"}
+										size={22}
+										color={COLORS.white}
+									/>
+								</View>
+								<Text style={styles.subtitle}>{i18n.t("showHouses")}</Text>
+							</Pressable>
+							<Text style={[styles.subtitle2, { marginTop: 10 }]}>
+								{i18n.t("filterByCertificate")}
+							</Text>
+							<View style={{ flexDirection: "row", alignSelf: "center" }}>
+								<Text
+									style={[
+										styles.subtitle2,
+										{ margin: 10, marginHorizontal: 15 },
+									]}
+								>
+									A
+								</Text>
+								<MultiSlider
+									sliderLength={100}
+									onValuesChange={multiSliderValuesChange}
+									min={0}
+									max={6}
+									step={1}
+									snapped
+									showSteps
+									values={[multiSliderValue[0], multiSliderValue[1]]}
+									allowOverlap={true}
+									//enableLabel
+									//customLabel={CustomLabel}
+									stepLabelStyle={{
+										color: "blue",
+									}}
+									markerStyle={{
+										backgroundColor: COLORS.green1,
+										borderRadius: 5,
+										height: 13,
+										width: 13,
+										bottom: -3,
+									}}
+									stepLabel={{
+										backgroundColor: "red",
+										height: 20,
+										width: 20,
+										fontSize: 10,
+									}}
+									pressedMarkerStyle={{
+										height: 10,
+										width: 10,
+										borderRadius: 5,
+									}}
+									selectedStyle={{
+										backgroundColor: COLORS.green1,
+									}}
+									unselectedStyle={{
+										backgroundColor: COLORS.secondary,
+									}}
+									containerStyle={{
+										height: 40,
+									}}
+									trackStyle={{
+										height: 5,
+										borderRadius: 2,
+									}}
+								></MultiSlider>
+								<Text
+									style={[
+										styles.subtitle2,
+										{ margin: 10, marginHorizontal: 15 },
+									]}
+								>
+									G
+								</Text>
+							</View>
 						</View>
 					</View>
 				</View>
@@ -659,15 +686,7 @@ function MapScreen({ navigation, route }) {
 									{i18n.t("share")}
 								</Text>
 							</TouchableOpacity>
-							<Text
-								style={{
-									fontSize: 13,
-									fontWeight: "bold",
-									color: COLORS.secondary,
-								}}
-							>
-								{i18n.t("recommended1")}
-							</Text>
+							<Text style={styles.subtitle2}>{i18n.t("recommended1")}</Text>
 							<View
 								style={{
 									marginTop: 10,
@@ -847,6 +866,7 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		fontSize: 13,
 		color: COLORS.green1,
+		textAlign: "center",
 	},
 	centeredView: {
 		flex: 1,
@@ -874,6 +894,12 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		textAlign: "center",
 		padding: 5,
+	},
+	subtitle2: {
+		fontSize: 14,
+		fontWeight: "bold",
+		color: COLORS.secondary,
+		textAlign: "center",
 	},
 	modalText: {
 		textAlign: "center",
