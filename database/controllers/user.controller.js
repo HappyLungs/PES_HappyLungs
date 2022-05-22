@@ -320,6 +320,7 @@ exports.restorePassword = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
     }
+    console.log(params);
     //Find the user given the id in the params
     await UserDataLayer.findUser({email: params.email})
     .then( async (userData) => {
