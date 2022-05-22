@@ -243,7 +243,7 @@ function CreatePinScreen({ navigation, route }) {
 						{i18n.t("location")}
 					</Text>
 					<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-						{[coords.latitude, "   ", coords.longitude]}
+						{coords.title}
 					</Text>
 					<InputField
 						onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
