@@ -25,7 +25,7 @@ exports.find = async (req, res) => {
  
      const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
      const valor_contaminacion = await punto.getDayLevel(fecha)
-     console.log(valor_contaminacion)
+    //  console.log(valor_contaminacion)
  
      
      if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
@@ -54,7 +54,7 @@ exports.findRadius = async (req, res) => {
      const valor_contaminacion = await punto.getDayLevel_byRadius(radius)
 
      valor_contaminacion.forEach(el => {
-         console.log(el)
+        //  console.log(el)
      }) 
  
      

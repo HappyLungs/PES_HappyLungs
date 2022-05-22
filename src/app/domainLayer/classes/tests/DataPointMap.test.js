@@ -12,6 +12,6 @@ test('get hour level test',
 */
 test('test nearer points', async ()=>{
     const points= await dataPointMapTest.nearerPoints(new Date('March 19, 2022 9:00:00'));
-    console.log(points[0]);
+    // console.log(points[0]);
     expect(points[0][0]).toBe(5914075.164821431);
 });

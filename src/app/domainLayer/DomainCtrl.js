@@ -349,8 +349,8 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
-	console.log("result.data");
-	console.log(result.data);
+	// console.log("result.data");
+	// console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -833,7 +833,7 @@ DomainCtrl.prototype.findUser = async function (email) {
 
 DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	//TODO
-	console.log(date, pin, email);
+	// console.log(date, pin, email);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {

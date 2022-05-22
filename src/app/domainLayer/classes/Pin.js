@@ -69,7 +69,7 @@ class Pin {
 		];
 		var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
-		gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
+		// gapi.client.load("calendar", "v3", () => console.log("loaded calendar"));
 
 		let today = new Date().toISOString().slice(0, 10);
 		const isoStrStart = today + "T12:00:00-00:00";
@@ -97,7 +97,7 @@ class Pin {
 				});
 
 				request.execute((event) => {
-					console.log(event);
+					// console.log(event);
 					window.open(event.htmlLink);
 				});
 

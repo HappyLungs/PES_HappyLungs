@@ -2,7 +2,7 @@ const MeasureStation = require('./../models/measureStation.model')
 
 exports.createMeasureStation = async (params) => {
     return new Promise((resolve, reject) => {
-        console.log(params);
+        // console.log(params);
         MeasureStation
         .create(params)
         .then((data) => { 
