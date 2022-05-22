@@ -201,37 +201,67 @@ const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 								<View
 									style={{
 										flexDirection: "row",
-										justifyContent: "space-between",
 										alignItems: "center",
 									}}
 								>
 									<Text style={styles.itemName}>{item.title}</Text>
 									<View
 										style={{
-											backgroundColor: isMyPin(item.creatorEmail)
-												? COLORS.green1
-												: COLORS.blue2,
-											alignSelf: "flex-end",
-											margin: 5,
-											padding: 2,
-											paddingHorizontal: 5,
-											borderRadius: 5,
+											flexDirection: "row",
+											justifyContent: "flex-end",
+											flex: 1,
 										}}
 									>
-										<Text
-											style={[
-												styles.itemName,
-												{
-													color: COLORS.white,
-													fontSize: 12,
-													fontWeight: "bold",
-												},
-											]}
+										<View
+											style={{
+												backgroundColor: COLORS.secondary,
+												margin: 5,
+												padding: 2,
+												paddingHorizontal: 5,
+												borderRadius: 5,
+											}}
 										>
-											{isMyPin(item.creatorEmail)
-												? i18n.t("created")
-												: i18n.t("saved")}
-										</Text>
+											<Text
+												style={[
+													styles.itemName,
+													{
+														color: COLORS.white,
+														fontSize: 12,
+														fontWeight: "bold",
+													},
+												]}
+											>
+												{item.status === "Public"
+													? i18n.t("public")
+													: i18n.t("private")}
+											</Text>
+										</View>
+										<View
+											style={{
+												backgroundColor: isMyPin(item.creatorEmail)
+													? COLORS.green1
+													: COLORS.blue2,
+												margin: 5,
+												padding: 2,
+												paddingHorizontal: 5,
+												borderRadius: 5,
+											}}
+										>
+											<Text
+												style={[
+													styles.itemName,
+													{
+														color: COLORS.white,
+														fontSize: 12,
+														fontWeight: "bold",
+													},
+												]}
+											>
+												{isMyPin(item.creatorEmail)
+													? i18n.t("created")
+													: i18n.t("saved")}
+											</Text>
+										</View>
 									</View>
 								</View>
 								<View

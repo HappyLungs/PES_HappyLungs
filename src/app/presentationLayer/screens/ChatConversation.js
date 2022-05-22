@@ -49,7 +49,7 @@ function ChatScreen({ route, navigation }) {
 	useEffect( () => {
 		fetchChats();
 			socket.on('chat message', async (data) => {
-				if(await useIsFocused()) {
+				if (data.user === conversant.email) {
 					let exists = false;
 					for (let ms of messages) if(ms._id === data._id) exists = true;
 					if (!exists) {
