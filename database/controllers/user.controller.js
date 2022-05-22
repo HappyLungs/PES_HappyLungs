@@ -52,7 +52,7 @@ exports.users = async (request, response) => {
               '$match': {
                 'users': params.email
               }
-            }, {
+            }/* , {
               '$unwind': {
                 'path': '$users', 
                 'preserveNullAndEmptyArrays': true
@@ -75,13 +75,18 @@ exports.users = async (request, response) => {
                 'users': 1, 
                 '_id': 0
               }
-            }
+            } */
           ];
         let users = [];
         await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
                 if (userData.length > 0) {
-                    users = userData[0].users;
+                    for (conver of userData) {
+                        let index = conver.users.indexOf(params.email);
+                        if (!conver.deleted[index]) {
+                            users.push(conver.users[1-index]);
+                        } 
+                    }
                 }
             }
         });

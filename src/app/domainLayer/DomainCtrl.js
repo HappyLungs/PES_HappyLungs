@@ -610,6 +610,7 @@ DomainCtrl.prototype.updateUserPassword = async function (name, password) {
 DomainCtrl.prototype.fetchConversation = async function (id, email) {
 	let conversation = await persistenceCtrl.getRequest("/conversation", {
 		_id: id,
+		email: email
 	});
 	if (conversation.status === 200) {
 		var users = {};
@@ -640,6 +641,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 				};
 				let dbMessages = await persistenceCtrl.getRequest("/message", {
 					conversation: conversation.data._id,
+					user: email
 				});
 				dbMessages.data.forEach((message) => {
 					let date = new Date(message.createdAt);
@@ -792,6 +794,19 @@ DomainCtrl.prototype.createConversation = async function (
 		return "error";
 	}
 };
+
+DomainCtrl.prototype.deleteConversation = async function (conversationId, email) {
+	let result = await persistenceCtrl.postRequest("/deleteConversation", {
+		id: conversationId,
+		user: email,
+	});
+	if (result.status === 200) {
+		return true;
+	} else {
+		//TODO handle error
+		return false;
+	}
+}
 
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
 	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
