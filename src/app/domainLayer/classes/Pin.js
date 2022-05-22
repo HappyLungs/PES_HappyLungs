@@ -55,4 +55,3 @@ class Pin {
 	}
 }
 module.exports = Pin;
-//ha de ser aixi, si no diu "TypeError: undefined is not a constructor (evaluating 'new _Pin.default')"

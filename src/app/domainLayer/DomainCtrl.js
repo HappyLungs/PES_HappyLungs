@@ -54,18 +54,19 @@ DomainCtrl.prototype.createEvent = function (date, pin, email) {
 		*/
 	};
 
-	console.log("-----------------COMENÇA PROCÉS LOAD-----------------");
 
-	ApiCalendar.onLoad = () => {
 
-		console.log("-----------------LOADED-----------------");
+	ApiCalendar.handleClientLoad();
 
-		ApiCalendar.handleAuthClick();
+	console.log("-----------------GOOGLE API INITIATED-----------------");
 
-		console.log("-----------------SIGNED IN-----------------");
+	ApiCalendar.onLoad(ApiCalendar.handleAuthClick());
 
-		ApiCalendar.createEvent(event);
-	}
+	console.log("-----------------SIGNED IN-----------------");
+
+	ApiCalendar.createEvent(event);
+
+	console.log("-----------------EVENT CREATED-----------------");
 }
 
 //MAP
