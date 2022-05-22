@@ -1,4 +1,7 @@
 const DataPointMap = require("./classes/DataPointMap.js");
+import ApiCalendar from 'react-google-calendar-api';
+//import ApiCalendar from 'react-google-calendar-api/ApiCalendar';
+//import * as ApiCalendar from 'react-native-add-calendar-event';
 //const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
@@ -30,57 +33,39 @@ DomainCtrl.prototype.createEvent = function (date, pin, email) {
 	console.log(date, pin, email);
 	//pin.addCalendarEvent();
 
-	//SignInToGoogle();
+	let today = new Date().toISOString().slice(0, 10);
+	const isoStrStart = today + "T12:00:00-00:00";
+	const isoStrEnd = today + "T13:00:00-00:00";
 
-	let gapi = window.gapi;
-	let CLIENT_ID = "494906188598-m2om2vv1siovnkmim1bbhkatqt4ngrjp.apps.googleusercontent.com";
-	let API_KEY = "AIzaSyB9WYI1_sLF-I3s5Z7ZChw7bJM6jAKwc4I";
-	let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-	let SCOPES = "https://www.googleapis.com/auth/calendar";
+	const event = {
+		title: "ton ciclista",
+		location: "al cul del mon",
+		//description: "peu pla",
+		startDate: isoStrStart,
+		endDate: isoStrEnd,
+		allDay: true,
+		/*
+		start: {
+			dateTime: isoStrStart,
+		},
+		end: {
+			dateTime: isoStrEnd,
+		},
+		*/
+	};
 
-	gapi.load('client:auth2', () => {
+	console.log("-----------------COMENÇA PROCÉS LOAD-----------------");
 
-		console.log("I MADE IT THIS FUCKING FAR BITTTTTTTTTTTTTCHHHHH");
+	ApiCalendar.onLoad = () => {
 
-		gapi.client.init({
-			apiKey: API_KEY,
-			clientId: CLIENT_ID,
-			discoveryDocs: DISCOVERY_DOCS,
-			scope: SCOPES,
-		});
+		console.log("-----------------LOADED-----------------");
 
-		gapi.client.load("calendar", "v3", () => console.log("google calendar loaded"));
+		ApiCalendar.handleAuthClick();
 
-		let today = new Date().toISOString().slice(0, 10);
-		const isoStrStart = today + "T12:00:00-00:00";
-		const isoStrEnd = today + "T13:00:00-00:00";
+		console.log("-----------------SIGNED IN-----------------");
 
-		//pop up window sign-in
-		gapi.auth2.getAuthInstance().signIn().then(() => {
-			let event = {
-				summary: "ton ciclista",
-				location: "al cul del mon",
-				description: "peu pla",
-
-				start: {
-					dateTime: isoStrStart,
-				},
-				end: {
-					dateTime: isoStrEnd,
-				},
-			};
-
-			let request = gapi.client.calendar.events.insert({
-				calendarId: "primary",
-				resource: event,
-			});
-
-			request.execute(event => {
-				console.log(event)
-				window.open(event.htmlLink)
-			});
-		})
-	})
+		ApiCalendar.createEvent(event);
+	}
 }
 
 //MAP
