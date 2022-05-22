@@ -60,7 +60,9 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
     await axios({
         method: 'put',
         url: this.DB_URI + endpoint,
-        data: params,
+        data: {
+            params
+        },
         headers: {
             "x-api-key": "7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm",
             "authorization": "PES2022"

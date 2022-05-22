@@ -7,7 +7,6 @@ import {
 	TextInput,
 	TouchableOpacity,
 	ScrollView,
-	FlatList,
 } from "react-native";
 
 import COLORS from "../../config/stylesheet/colors";
@@ -45,6 +44,7 @@ function PinsScreen({ navigation }) {
 			// Call any action and update data
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchPins(user.email);
+				console.log(data);
 				setMasterData([...data.pins, ...data.savedPins]);
 				setFilteredData([...data.pins, ...data.savedPins]);
 				setCreatedPins(data.pins);
@@ -171,6 +171,7 @@ function PinsScreen({ navigation }) {
 						flexDirection: "row",
 						paddingHorizontal: 20,
 						alignItems: "center",
+						paddingTop: 15,
 						backgroundColor: COLORS.white,
 						borderBottomLeftRadius: 20,
 						borderBottomRightRadius: 20,
@@ -242,7 +243,6 @@ function PinsScreen({ navigation }) {
 									borderRadius: 12,
 									borderColor: COLORS.lightGrey,
 									borderWidth: 1,
-									marginHorizontal: 7,
 								},
 								dateFilter ? styles.shadowSelected : styles.shadow,
 							]}
@@ -265,7 +265,6 @@ function PinsScreen({ navigation }) {
 								}}
 								animation="pulse"
 								duration={1000}
-								onPress={{}}
 							>
 								<Text
 									style={[
@@ -440,7 +439,7 @@ const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	shadowSelected: {
-		elevation: 10,
+		elevation: 5,
 		shadowColor: COLORS.green1,
 	},
 });

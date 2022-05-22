@@ -46,7 +46,7 @@ DomainCtrl.prototype.getMapData = async function () {
 				null
 			);
 			measureStations.set(eoiCode, ms);
-		}
+		}Can’t automatically merg
 	});
 
 	let measureStationLevels = [];
@@ -65,7 +65,7 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date = new Date();
-	let nsteps = 10;
+	let nsteps = 100;
 	let jmax = 1;
 	let inilat = 40.541006;
 	let inilong = 0.68031;
@@ -77,13 +77,17 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	let longstep = (maxlong - inilong) / nsteps;
 	let latsteps = (maxlat - inilat) / nsteps;
 	let datapoints = [];
-	for (let i = 0; i < nsteps; i++) {
-		for (let j = 0; j < jmax; j++) {
+	for (let i = 0; i <= nsteps; i++) {
+		for (let j = 0; j <= nsteps; j++) {
+			if (!this.inCat(actuallat, actuallong)) {
+				actuallong = actuallong + longstep;
+				continue;
+			}
 			let dp = new DataPointMap(actuallat, actuallong);
 			let actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: await dp.getHourLevel(date, date.getHours()),
+				weight: (await dp.getHourLevel(date, date.getHours())) / 6,
 			};
 			datapoints.push(actual);
 			actuallong = actuallong + longstep;
@@ -92,6 +96,12 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		actuallong = inilong;
 		jmax++;
 	}
+	let actual = {
+		latitude: 0,
+		longitude: 0,
+		weight: 0.99,
+	};
+	datapoints.push(actual);
 	return datapoints;
 };
 //STATISTICS - AIR QUALITY
@@ -256,7 +266,6 @@ DomainCtrl.prototype.createPin = async function (
 		creatorName: creatorName,
 		media: pin.media,
 	};
-	console.log(params);
 	let response = await persistenceCtrl.postRequest("/newPin", params);
 	if (response.status === 200) {
 		return response.data; // Returns the object inserted in the DB
@@ -277,6 +286,19 @@ DomainCtrl.prototype.fetchPins = async function (email) {
 		return result.data;
 	} else {
 		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+/**
+ * @returns Returns the ranking of the users and the number of pins they have created
+ */
+DomainCtrl.prototype.fetchRanking = async function () {
+	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
 		return null;
 	}
 };
@@ -312,8 +334,6 @@ DomainCtrl.prototype.editPin = async function (
 	userEmail
 ) {
 	let { latitude, longitude } = location;
-	console.log("location");
-	console.log(location);
 	let pin = {
 		_id: id,
 		title: title,
@@ -329,6 +349,8 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
+	console.log("result.data");
+	console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -343,10 +365,29 @@ DomainCtrl.prototype.editPin = async function (
  * @param {*} email
  * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
  */
-DomainCtrl.prototype.savePin = async function (Pin, email) {
+DomainCtrl.prototype.savePin = async function (pin, email) {
 	let result = await persistenceCtrl.putRequest("/savePin", {
 		email: email,
-		pin: Pin,
+		pin: pin,
+	});
+	if (result.status === 200) {
+		return result.data;
+	} else {
+		//TODO: handle error. Return an error and reload the view with the error
+		return null;
+	}
+};
+
+/**
+ *
+ * @param {*} Pin
+ * @param {*} email
+ * @returns if the Pin have been saved to the user identified by the email "email". Else returns null => error
+ */
+DomainCtrl.prototype.unsavePin = async function (pin, email) {
+	let result = await persistenceCtrl.putRequest("/unsavePin", {
+		email: email,
+		pin: pin,
 	});
 	if (result.status === 200) {
 		return result.data;
@@ -409,6 +450,17 @@ DomainCtrl.prototype.loginUser = async function (email, password) {
 
 /**
  *
+ * @param {*} userGoogleData
+ * @returns if is registered returns the userInfo, else, registers it and returns the info
+ */
+DomainCtrl.prototype.loginGoogleUser = async function (userGoogleData) {
+	//create
+	let myUser = new User(null, userGoogleData.email, null, null);
+	return await myUser.loginGoogle(userGoogleData); //login to db
+};
+
+/**
+ *
  * @param {*} email
  * @param {*} oldPassword
  * @param {*} newPassword
@@ -428,7 +480,7 @@ DomainCtrl.prototype.changePassword = async function (
  * @param {*} email
  * @returns restores the password and sends an email
  */
- DomainCtrl.prototype.restorePassword = async function (email) {
+DomainCtrl.prototype.restorePassword = async function (email) {
 	let myUser = new User(null, email, null, null);
 	return await myUser.restorePassword();
 };
@@ -767,9 +819,9 @@ DomainCtrl.prototype.findUser = async function (email) {
 		.then((data) => data);
 };
 
-DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
+DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	//TODO
-	console.log(date, pin_id, email);
+	console.log(date, pin, email);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
@@ -788,6 +840,34 @@ DomainCtrl.prototype.createEvent = async function (date, pin_id, email) {
       .then((data) => data);
   //console.log(user);
 };*/
+DomainCtrl.prototype.inCat = function (lat, long) {
+	if (40.547416 < lat && lat < 41.147653)
+		return 0.197311 < long && long < 1.03968;
+
+	if (41.147653 < lat && lat < 41.202419)
+		return 0.297129 < long && long < 1.658984;
+
+	if (41.202419 < lat && lat < 41.453135)
+		return 0.380587 < long && long < 2.26035;
+
+	if (41.453135 < lat && lat < 41.516696)
+		return 0.344322 < long && long < 2.446748;
+	if (41.516696 < lat && lat < 41.787774)
+		return 0.378409 < long && long < 3.004935;
+
+	if (41.787774 < lat && lat < 41.835174)
+		return 0.407281 < long && long < 3.157412;
+
+	if (41.835174 < lat && lat < 42.179406)
+		return 3.155225 < long && long < 0.677742;
+
+	if (42.179406 < lat && lat < 42.401692)
+		return 3.313046 < long && long < 0.673662;
+
+	if (42.401692 < lat && lat < 42.717475)
+		return 0.642428 < long && long < 1.409893;
+	return false;
+};
 
 DomainCtrl.prototype.fetchUser = async function (email) {
 	const user = await persistenceCtrl.getRequest("/user", { email: email });

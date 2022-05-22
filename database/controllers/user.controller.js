@@ -52,7 +52,7 @@ exports.users = async (request, response) => {
               '$match': {
                 'users': params.email
               }
-            }, {
+            }/* , {
               '$unwind': {
                 'path': '$users', 
                 'preserveNullAndEmptyArrays': true
@@ -75,13 +75,18 @@ exports.users = async (request, response) => {
                 'users': 1, 
                 '_id': 0
               }
-            }
+            } */
           ];
         let users = [];
         await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
                 if (userData.length > 0) {
-                    users = userData[0].users;
+                    for (conver of userData) {
+                        let index = conver.users.indexOf(params.email);
+                        if (!conver.deleted[index]) {
+                            users.push(conver.users[1-index]);
+                        } 
+                    }
                 }
             }
         });
@@ -131,7 +136,6 @@ exports.register = async (request, response, next) => {
         responseObj.message = "The passwords don't match";
         responseObj.data    = {};
         response.send(responseObj);
-
     }
     else {
         UserDataLayer.create(params)
@@ -152,6 +156,47 @@ exports.register = async (request, response, next) => {
         });
 
     }
+};
+
+exports.registerGoogle = async (request, response, next) => {
+    let params = {};
+    if (request.body.params.name && request.body.params.email) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    let error = false;
+    await UserDataLayer.findUser({"email":params.email})
+    .then((userData) => {
+        if (userData != null && userData !== {}) {
+            sendResponseHelper.sendResponse(response, errorCodes.DATA_ALREADY_EXISTS, "The email is already registered", {});
+            error = true;
+        }
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+    if (error) return;
+
+    params.password = randomstring.generate(8);
+    
+    UserDataLayer.create(params)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
+            responseObj.status  = errorCodes.SUCCESS;
+            responseObj.message = "Success";
+            responseObj.data    = userData;
+        } else {
+            responseObj.status  = errorCodes.REQUIRED_PARAMETER_MISSING;
+            responseObj.message = "Can't create user";
+            responseObj.data    = {};
+        }
+        response.send(responseObj);
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
 };
 
 exports.login = async (request, response) => {
@@ -176,6 +221,30 @@ exports.login = async (request, response) => {
                 response.send(responseObj);
                 return;
             }
+            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
+        }
+        else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
+    })
+    .catch(error => {
+        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+    });
+};
+
+exports.loginGoogle = async (request, response) => {
+    let params = {};
+    if (request.query) {
+        params = request.query;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    const {email} = params;
+
+    const where = {};
+    where.email = email;
+    UserDataLayer.findUser(where)
+    .then((userData) => {
+        if (userData !== null && typeof userData !== undefined) {
             sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
         }
         else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
@@ -309,6 +378,42 @@ exports.savePin = async (request, response) => {
     .catch(error => {
         sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
     });
+}
+
+exports.unsavePin = async (request, response) => {
+    let params = {};
+    if (request.body.params) {
+        params = request.body.params;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    //Find the user given the id in the params
+    let result = await UserDataLayer.findUser({email: params.email}).then();
+    if (result == null && typeof result == undefined) {
+        sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Invalid user", {});
+        return;
+    } 
+    if (result.savedPins.indexOf(params.pin) === -1) {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
+    if (mongodb.ObjectID.isValid(params.pin)) {
+        UserDataLayer.updateUser({email: params.email}, {$unset: {savedPins: mongodb.ObjectId(params.pin)}})
+        .then((updatedData) => {
+            if (updatedData !== null && typeof updatedData !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
+        return;
+    }
 }
 
 exports.delete = async (request, response) => {

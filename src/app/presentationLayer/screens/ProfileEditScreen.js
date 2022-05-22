@@ -109,13 +109,15 @@ function ProfileEditScreen({ navigation }) {
 		) {
 			handleError(i18n.t("passwordNoChange"), "newPassword1");
 			handleError(" ", "newPassword2");
-		} else if (
-			inputsPasswordChange.newPassword1.length < 6
-		) {
+		} else if (inputsPasswordChange.newPassword1.length < 6) {
 			handleError(i18n.t("signUpError1"), "newPassword1");
 			handleError(" ", "newPassword2");
 		} else {
-			let response = await presentationCtrl.changePassword(user.email, inputsPasswordChange.oldPassword, inputsPasswordChange.newPassword1);
+			let response = await presentationCtrl.changePassword(
+				user.email,
+				inputsPasswordChange.oldPassword,
+				inputsPasswordChange.newPassword1
+			);
 			if (response.status == 200) {
 				setInputsPasswordChange({});
 				setErrors({});
@@ -123,7 +125,8 @@ function ProfileEditScreen({ navigation }) {
 				setUser(response.data);
 				navigation.navigate("ProfileScreen");
 			} else {
-				if (response.status == 401) handleError(i18n.t("passwordError"), "oldPassword");
+				if (response.status == 401)
+					handleError(i18n.t("passwordError"), "oldPassword");
 				else handleError(response.message, "oldPassword"); //handleError(i18n.t("passwordError"), "oldPassword");
 			}
 			/** TODO */
@@ -240,6 +243,7 @@ function ProfileEditScreen({ navigation }) {
 							}}
 						>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={[
 									styles.containerBtn2,
 									styles.shadow,
@@ -253,6 +257,7 @@ function ProfileEditScreen({ navigation }) {
 								<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								style={[
 									styles.containerBtn2,
 									styles.shadow,
@@ -317,6 +322,7 @@ function ProfileEditScreen({ navigation }) {
 						passwordChange={false}
 					/>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={{
 							marginTop: 20,
 							flexDirection: "row",
@@ -355,7 +361,7 @@ function ProfileEditScreen({ navigation }) {
 							resizeMode: "cover",
 						}}
 					/>
-					<TouchableOpacity onPress={pickImage}>
+					<TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
 						<Text style={[styles.textState, { color: COLORS.green1 }]}>
 							{i18n.t("upload")}
 						</Text>
@@ -368,85 +374,98 @@ function ProfileEditScreen({ navigation }) {
 					alignSelf: "center",
 					backgroundColor: COLORS.lightGrey,
 					height: 6,
-					marginTop: 35,
-					marginBottom: 15,
+					marginTop: 20,
 					width: "100%",
 				}}
 			/>
 			<View
 				style={{
 					alignSelf: "center",
+					marginVertical: 20,
+					justifyContent: "space-between",
+					flex: 1,
 				}}
 			>
-				<Text style={[styles.textOption, { fontSize: 17 }]}>
-					{i18n.t("healthState")}
-				</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						marginVertical: 15,
-					}}
-				>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								setState1(!state1);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state1 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state2 && state3) setState3(false);
-								setState2(!state2);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state2 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<MaterialIcons
-								name="pregnant-woman"
-								size={35}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
-					</View>
-					<View style={{ alignItems: "center", width: 115 }}>
-						<TouchableOpacity
-							onPress={() => {
-								if (!state3 && state2) setState2(false);
-								setState3(!state3);
-							}}
-							style={[
-								styles.containerState,
-								styles.shadow,
-								{ backgroundColor: state3 ? COLORS.green1 : COLORS.secondary },
-							]}
-						>
-							<MaterialIcons name="elderly" size={35} color={COLORS.white} />
-						</TouchableOpacity>
-						<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
+				<View>
+					<Text style={[styles.textOption, { fontSize: 17 }]}>
+						{i18n.t("healthState")}
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							marginVertical: 15,
+						}}
+					>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									setState1(!state1);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<FontAwesome5 name="lungs" size={35} color={COLORS.white} />
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState1")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									if (!state2 && state3) setState3(false);
+									setState2(!state2);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<MaterialIcons
+									name="pregnant-woman"
+									size={35}
+									color={COLORS.white}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState2")}</Text>
+						</View>
+						<View style={{ alignItems: "center", width: 115 }}>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								onPress={() => {
+									if (!state3 && state2) setState2(false);
+									setState3(!state3);
+								}}
+								style={[
+									styles.containerState,
+									styles.shadow,
+									{
+										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+									},
+								]}
+							>
+								<MaterialIcons name="elderly" size={35} color={COLORS.white} />
+							</TouchableOpacity>
+							<Text style={styles.textState}>{i18n.t("healthState3")}</Text>
+						</View>
 					</View>
 				</View>
 				<View
 					style={{
 						flexDirection: "row",
-						justifyContent: "space-evenly",
-						marginTop: 150,
+						justifyContent: "space-around",
 					}}
 				>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -457,6 +476,7 @@ function ProfileEditScreen({ navigation }) {
 						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -526,12 +546,12 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 110,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},
 	containerBtn2: {
-		width: 95,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
 	},

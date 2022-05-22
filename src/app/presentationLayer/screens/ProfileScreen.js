@@ -28,6 +28,10 @@ function ProfileScreen({ navigation, route }) {
 		navigation.navigate("SettingsScreen");
 	}
 
+	function calendar() {
+		//no se que ha de fer
+	}
+
 	function logOut() {
 		setUser({
 			__v: 0,
@@ -42,16 +46,11 @@ function ProfileScreen({ navigation, route }) {
 			points: 0,
 			savedPins: [],
 			updatedAt: "",
+			accessToken: "",
 		});
 		navigation.navigate("SignInScreen");
 		// setUser(null);
 	}
-
-	function calendar() {
-		//no se que ha de fer
-	}
-
-	function rewards() {}
 
 	async function share() {
 		try {
@@ -106,6 +105,7 @@ function ProfileScreen({ navigation, route }) {
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -116,6 +116,7 @@ function ProfileScreen({ navigation, route }) {
 									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -145,155 +146,169 @@ function ProfileScreen({ navigation, route }) {
 		>
 			<View
 				style={{
+					paddingHorizontal: 20,
+					backgroundColor: "blue",
+				}}
+			></View>
+			<View
+				style={{
 					flexDirection: "row",
 					paddingHorizontal: 20,
+					//marginTop: 20,
 				}}
 			>
-				<View
-					style={{
-						flex: 2,
-						alignItems: "center",
-					}}
-				>
-					<ImageBackground
-						source={{ uri: user.profilePicture }}
-						style={[
-							{
-								borderRadius: 20,
-								width: 100,
-								height: 125,
-								justifyContent: "flex-end",
-							},
-							styles.long_shadow,
-						]}
-						imageStyle={{
-							borderRadius: 10,
-							resizeMode: "cover",
-						}}
-					>
-						<View
-							style={[
-								{
-									backgroundColor: COLORS.light,
-									alignSelf: "center",
-									borderRadius: 5,
-									top: 20,
-									padding: 5,
-									paddingHorizontal: 10,
-								},
-								styles.shadow,
-							]}
-						>
-							<Text style={{ color: COLORS.secondary, fontWeight: "bold" }}>
-								{user.name}
-							</Text>
-						</View>
-					</ImageBackground>
-				</View>
-				<View
-					style={{
-						flex: 3,
-						justifyContent: "flex-start",
-					}}
-				>
+				<View style={{ flexDirection: "row", flex: 1 }}>
 					<View
 						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							marginTop: 10,
+							flex: 2,
+							alignItems: "center",
+							flexDirection: "column",
+						}}
+					>
+						<ImageBackground
+							source={{ uri: user.profilePicture }}
+							style={[
+								{
+									marginTop: 15,
+									borderRadius: 30,
+									borderColor: COLORS.green1,
+									borderBottomWidth: 2,
+									width: 100,
+									height: 125,
+									justifyContent: "flex-start",
+									marginBottom: 5,
+								},
+								styles.long_shadow,
+							]}
+							imageStyle={{
+								borderRadius: 20,
+								resizeMode: "cover",
+							}}
+						></ImageBackground>
+						<Text
+							style={{
+								alignItems: "center",
+								marginLeft: 0,
+								color: COLORS.secondary,
+								fontWeight: "bold",
+								fontSize: 19,
+								textAlign: "center",
+								textAlignVertical: "center",
+							}}
+						>
+							{user.name}
+						</Text>
+					</View>
+					<View
+						style={{
+							flex: 3,
+							justifyContent: "center",
+							//marginStart: 10,
 						}}
 					>
 						<View
 							style={{
-								alignItems: "center",
-							}}
-						>
-							<Text
-								style={{
-									fontWeight: "bold",
-									fontSize: 23,
-									color: COLORS.secondary,
-								}}
-							>
-								3
-							</Text>
-							<Text style={{ color: COLORS.darkGrey }}>
-								{i18n.t("createdPins")}
-							</Text>
-						</View>
-						<View
-							style={{
-								alignSelf: "center",
-								backgroundColor: COLORS.lightGrey,
-								height: "80%",
-								width: 2,
-								marginHorizontal: 5,
-							}}
-						></View>
-						<View
-							style={{
-								alignItems: "center",
-							}}
-						>
-							<Text
-								style={{
-									fontWeight: "bold",
-									fontSize: 23,
-									color: COLORS.secondary,
-								}}
-							>
-								{user.savedPins.length}
-							</Text>
-							<Text style={{ color: COLORS.darkGrey }}>
-								{i18n.t("savedPins")}
-							</Text>
-						</View>
-					</View>
-					<TouchableOpacity
-						style={[
-							{
-								backgroundColor: COLORS.green1,
-								height: 40,
-								width: 125,
-								borderRadius: 12,
-								marginTop: 20,
-								alignSelf: "center",
-							},
-							styles.shadow,
-						]}
-					>
-						<View
-							style={{
-								flex: 1,
 								flexDirection: "row",
-								alignItems: "center",
-								justifyContent: "center",
+								justifyContent: "space-between",
 							}}
 						>
 							<View
 								style={{
-									width: 25,
-									height: 25,
 									alignItems: "center",
-									justifyContent: "center",
-									borderRadius: 20,
-									backgroundColor: COLORS.green2,
+									marginLeft: -10,
 								}}
 							>
-								<AntDesign name="Trophy" size={18} color={COLORS.white} />
+								<Text
+									style={{
+										fontWeight: "bold",
+										fontSize: 23,
+										color: COLORS.secondary,
+									}}
+								>
+									3
+								</Text>
+								<Text style={{ color: COLORS.darkGrey }}>
+									{i18n.t("createdPins")}
+								</Text>
 							</View>
-							<Text
-								style={[
-									{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
-								]}
+							<View
+								style={{
+									alignSelf: "center",
+									backgroundColor: COLORS.lightGrey,
+									height: "80%",
+									width: 2,
+									marginHorizontal: 5,
+								}}
+							></View>
+							<View
+								style={{
+									alignItems: "center",
+								}}
 							>
-								{user.points}
-							</Text>
-							<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
-								{i18n.t("points")}
-							</Text>
+								<Text
+									style={{
+										fontWeight: "bold",
+										fontSize: 23,
+										color: COLORS.secondary,
+									}}
+								>
+									{user.savedPins.length}
+								</Text>
+								<Text style={{ color: COLORS.darkGrey }}>
+									{i18n.t("savedPins")}
+								</Text>
+							</View>
 						</View>
-					</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.8}
+							style={[
+								{
+									backgroundColor: COLORS.green1,
+									height: 40,
+									width: 125,
+									borderRadius: 12,
+									marginTop: 20,
+									alignSelf: "center",
+								},
+								styles.shadow,
+							]}
+							onPress={() => {
+								navigation.navigate("RankingScreen", { scroll: true });
+							}}
+						>
+							<View
+								style={{
+									flex: 1,
+									flexDirection: "row",
+									alignItems: "center",
+									justifyContent: "center",
+								}}
+							>
+								<View
+									style={{
+										width: 25,
+										height: 25,
+										alignItems: "center",
+										justifyContent: "center",
+										borderRadius: 20,
+										backgroundColor: COLORS.green2,
+									}}
+								>
+									<AntDesign name="Trophy" size={18} color={COLORS.white} />
+								</View>
+								<Text
+									style={[
+										{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
+									]}
+								>
+									{user.points}
+								</Text>
+								<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
+									{i18n.t("points")}
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 			<View
@@ -301,7 +316,7 @@ function ProfileScreen({ navigation, route }) {
 					alignSelf: "center",
 					backgroundColor: COLORS.lightGrey,
 					height: 6,
-					marginTop: 35,
+					marginTop: 20,
 					marginBottom: 15,
 					width: "100%",
 				}}
@@ -395,6 +410,7 @@ function ProfileScreen({ navigation, route }) {
 				}}
 			>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => settings()}
 					style={styles.containerOption}
 				>
@@ -402,6 +418,7 @@ function ProfileScreen({ navigation, route }) {
 					<Text style={styles.textOption}>{i18n.t("settings")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => calendar()}
 					style={styles.containerOption}
 				>
@@ -409,13 +426,17 @@ function ProfileScreen({ navigation, route }) {
 					<Text style={styles.textOption}>{i18n.t("calendar")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => rewards()}
+					activeOpacity={0.8}
+					onPress={() => {
+						navigation.navigate("RankingScreen", { scroll: false });
+					}}
 					style={styles.containerOption}
 				>
 					<AntDesign name="Trophy" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>{i18n.t("ranking")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => share()}
 					style={styles.containerOption}
 				>
@@ -424,6 +445,7 @@ function ProfileScreen({ navigation, route }) {
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
+				activeOpacity={0.8}
 				onPress={() => setModalLogoutVisible()}
 				style={[
 					styles.containerOption,
@@ -433,7 +455,6 @@ function ProfileScreen({ navigation, route }) {
 				<Feather name="power" size={27} color={COLORS.red1} />
 				<Text style={styles.textOption}>{i18n.t("logOut")}</Text>
 			</TouchableOpacity>
-
 			{renderModalLogout()}
 		</View>
 	);

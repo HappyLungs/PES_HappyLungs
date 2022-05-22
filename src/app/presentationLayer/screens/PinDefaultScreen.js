@@ -21,11 +21,12 @@ function PinDefaultScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 	const [user] = useContext(UserContext);
 
-	const { pin } = route.params;
-	const saved = route.params;
+	const pin = route.params.pin;
+	const saved = route.params.saved;
 	const [bookmark, setBookmark] = useState(
 		saved ? "bookmark" : "bookmark-outline"
 	);
+	const [savedPin, setSavedPin] = useState(saved);
 	const handleSeeOnMap = () => {
 		navigation.navigate("MapScreen", {
 			latitude: pin.location.latitude,
@@ -35,10 +36,11 @@ function PinDefaultScreen({ navigation, route }) {
 
 	const handleSave = () => {
 		if (bookmark) {
-			presentationCtrl.removeFromSaved(pin._id, user.email);
+			presentationCtrl.unsavePin(pin._id, user.email);
 		} else {
 			presentationCtrl.savePin(pin._id, user.email);
 		}
+		setSavedPin(bookmark === "bookmark");
 		setBookmark(bookmark === "bookmark" ? "bookmark-outline" : "bookmark");
 	};
 
@@ -74,6 +76,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<Text style={[styles.title, { flex: 1 }]}>{pin.title}</Text>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",
@@ -138,6 +141,7 @@ function PinDefaultScreen({ navigation, route }) {
 					</Text>
 				</View>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					style={{
 						alignSelf: "flex-start",
 						paddingVertical: 10,
@@ -146,16 +150,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<Text style={styles.highlight}>{i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						paddingVertical: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
-				</View>
+
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -180,6 +175,7 @@ function PinDefaultScreen({ navigation, route }) {
 				>
 					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{ flexDirection: "row" }}
 							onPress={handleShare}
 						>
@@ -194,6 +190,7 @@ function PinDefaultScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",
@@ -215,7 +212,8 @@ function PinDefaultScreen({ navigation, route }) {
 								color: COLORS.white,
 							}}
 						>
-							{i18n.t("savePin")}
+							{savedPin && i18n.t("savePin")}
+							{!savedPin && i18n.t("unsavePin")}
 						</Text>
 						<Ionicons
 							name={bookmark}

@@ -53,8 +53,6 @@ function PinEditScreen({ navigation, route }) {
 			isValid = false;
 		}
 		if (isValid) {
-			console.log("pin.location");
-			console.log(pin.location);
 			let editedPin = await presentationCtrl.editPin(
 				pin._id,
 				inputs.title,
@@ -66,8 +64,7 @@ function PinEditScreen({ navigation, route }) {
 				status ? "Public" : "Private",
 				user.email
 			);
-			navigation.popToTop();
-			navigation.navigate("OwnerPin", { pin: editedPin });
+			navigation.replace("OwnerPin", { pin: editedPin });
 		}
 	};
 
@@ -213,6 +210,7 @@ function PinEditScreen({ navigation, route }) {
 					iconStyle={{ borderColor: COLORS.secondary }}
 					textStyle={{ textDecorationLine: "none", color: COLORS.secondary }}
 					onPress={() => setStatus(!status)}
+					activeOpacity={0.8}
 					text={status ? i18n.t("allowOption1") : i18n.t("allowOption2")}
 				/>
 			</View>
@@ -228,51 +226,59 @@ function PinEditScreen({ navigation, route }) {
 				paddingHorizontal: 20,
 			}}
 		>
-			<View style={{ marginVertical: 20 }}>
-				<Text style={[styles.subtitle, { marginTop: 0 }]}>
-					{i18n.t("location")}
-				</Text>
-				<Text style={{ fontSize: 15, color: COLORS.green1 }}>
-					{locationName}
-				</Text>
-				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
-					onFocus={() => handleError(null, "title")}
-					iconName="title"
-					defaultValue={pin.title}
-					label={i18n.t("title")}
-					placeholder={i18n.t("titlePlaceholder")}
-					error={errors.title}
-					editable={true}
-					passwordChange={false}
-				/>
-				<InputField
-					onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
-					onFocus={() => handleError(null, "description")}
-					iconName="description"
-					defaultValue={pin.description}
-					label={i18n.t("description")}
-					placeholder={i18n.t("descriptionPlaceholder")}
-					error={errors.description}
-					editable={true}
-					passwordChange={false}
-				/>
-				<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
-				{renderImageSelector()}
-				<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
-				<Rating
-					type={"custom"}
-					imageSize={20}
-					fractions={0}
-					startingValue={rating}
-					ratingBackgroundColor={COLORS.secondary}
-					ratingColor={COLORS.green1}
-					tintColor={COLORS.white}
-					style={{ padding: 10, alignSelf: "flex-start" }}
-					onFinishRating={(newRating) => setRating(newRating)}
-				/>
-				<Text style={styles.subtitle}> {i18n.t("allowOption")}</Text>
-				{renderPinStatusSelector()}
+			<View
+				style={{
+					marginVertical: 20,
+					flex: 1,
+					justifyContent: "space-between",
+				}}
+			>
+				<View>
+					<Text style={[styles.subtitle, { marginTop: 0 }]}>
+						{i18n.t("location")}
+					</Text>
+					<Text style={{ fontSize: 15, color: COLORS.green1 }}>
+						{locationName}
+					</Text>
+					<InputField
+						onChangeText={(newTitle) => handleOnChange(newTitle, "title")}
+						onFocus={() => handleError(null, "title")}
+						iconName="title"
+						defaultValue={pin.title}
+						label={i18n.t("title")}
+						placeholder={i18n.t("titlePlaceholder")}
+						error={errors.title}
+						editable={true}
+						passwordChange={false}
+					/>
+					<InputField
+						onChangeText={(newTitle) => handleOnChange(newTitle, "description")}
+						onFocus={() => handleError(null, "description")}
+						iconName="description"
+						defaultValue={pin.description}
+						label={i18n.t("description")}
+						placeholder={i18n.t("descriptionPlaceholder")}
+						error={errors.description}
+						editable={true}
+						passwordChange={false}
+					/>
+					<Text style={styles.subtitle}> {i18n.t("pictures")}</Text>
+					{renderImageSelector()}
+					<Text style={styles.subtitle}> {i18n.t("rate")}</Text>
+					<Rating
+						type={"custom"}
+						imageSize={20}
+						fractions={0}
+						startingValue={rating}
+						ratingBackgroundColor={COLORS.secondary}
+						ratingColor={COLORS.green1}
+						tintColor={COLORS.white}
+						style={{ padding: 10, alignSelf: "flex-start" }}
+						onFinishRating={(newRating) => setRating(newRating)}
+					/>
+					<Text style={styles.subtitle}> {i18n.t("allowOption")}</Text>
+					{renderPinStatusSelector()}
+				</View>
 				<View
 					style={{
 						flexDirection: "row",
@@ -281,6 +287,7 @@ function PinEditScreen({ navigation, route }) {
 					}}
 				>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -291,6 +298,7 @@ function PinEditScreen({ navigation, route }) {
 						<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							styles.containerBtn,
 							styles.shadow,
@@ -316,7 +324,6 @@ const styles = StyleSheet.create({
 		color: COLORS.secondary,
 	},
 	containerBtn: {
-		width: 125,
 		padding: 10,
 		borderRadius: 5,
 		justifyContent: "center",

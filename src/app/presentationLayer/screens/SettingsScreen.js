@@ -1,38 +1,55 @@
 import React, { useState, useContext } from "react";
-import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import {
+	Text,
+	StyleSheet,
+	View,
+	TouchableOpacity,
+	Image,
+	Dimensions,
+} from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
+import { setLanguage } from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function SettingsScreen({ navigation }) {
 	let presentationCtrl = new PresentationCtrl();
-	//should pass userId, and then retrieve the updated data
-	// const fakeUserData = {
-	// 	username: "Username",
-	// 	email: "username@email.com",
-	// 	password: "**********",
-	// 	points: 200,
-	// 	healthState: [false, false, true],
-	// 	picture:
-	// 		"https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
-	// };
-	// const [user, setUser] = useState(fakeUserData);
+	const width = Dimensions.get("window").width;
+	const [user, setUser] = useContext(UserContext);
+	const [inputs, setInputs] = useState({
+		language: user.language,
+		notifications: user.notifications,
+	});
+
+	const validate = async () => {
+		let updatedUser = await presentationCtrl.updateUser(
+			user.name,
+			user.email,
+			user.points,
+			inputs.language,
+			user.healthStatus,
+			inputs.notifications,
+			user.profilePicture
+		);
+		if (user.language !== inputs.language) {
+			setLanguage(inputs.language);
+		}
+		setUser(updatedUser);
+	};
 
 	const [state1, setState1] = useState(false);
 	const [state2, setState2] = useState(false);
 	const [state3, setState3] = useState(true);
+
 	const [state4, setState4] = useState(false);
 	const [state5, setState5] = useState(true);
 
 	const [modalDeleteAccountVisible, setModalDeleteAccountVisible] =
 		useState(false);
-
-	const [user, setUser] = useContext(UserContext);
 
 	const deleteUser = async () => {
 		let response = await presentationCtrl.deleteUser(user.email);
@@ -50,6 +67,7 @@ function SettingsScreen({ navigation }) {
 				points: 0,
 				savedPins: [],
 				updatedAt: "",
+				accessToken: "",
 			});
 			navigation.navigate("SignInScreen");
 		} else {
@@ -81,7 +99,7 @@ function SettingsScreen({ navigation }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: -3 },
+								{ fontWeight: "bold", alignSelf: "center", marginVertical: 5 },
 							]}
 						>
 							{i18n.t("deleteAccountConfirmation1")}
@@ -89,23 +107,26 @@ function SettingsScreen({ navigation }) {
 						<Text
 							style={[
 								styles.modalText,
-								{ fontWeight: "bold", alignSelf: "center", bottom: -10 },
+								{ fontWeight: "bold", alignSelf: "center", marginVertical: 5 },
 							]}
 						>
 							{i18n.t("deleteAccountConfirmation2")}
 						</Text>
-						<View>
+						<View
+							style={{
+								flexDirection: "row",
+								marginVertical: 15,
+							}}
+						>
 							<View
 								style={{
+									flex: 1,
 									flexDirection: "row",
-									justifyContent: "space-around",
-									alignSelf: "center",
-									marginTop: 30,
-									marginHorizontal: 0,
-									width: 200,
+									justifyContent: "space-between",
 								}}
 							>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -116,6 +137,7 @@ function SettingsScreen({ navigation }) {
 									<Text style={styles.containerTxt}>{i18n.t("no")}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
+									activeOpacity={0.8}
 									style={[
 										styles.containerBtn2,
 										styles.shadow,
@@ -136,26 +158,21 @@ function SettingsScreen({ navigation }) {
 	return (
 		<View
 			style={{
-				flexDirection: "column",
 				flex: 1,
-				alignItems: "flex-start",
-				justifyContent: "flex-start",
+				flexDirection: "column",
 				backgroundColor: COLORS.white,
 			}}
 		>
 			<View
 				style={{
-					flexDirection: "row",
+					flexDirection: "column",
+					padding: 5,
 					paddingHorizontal: 20,
-					marginTop: 15,
 				}}
 			>
 				<View
 					style={{
-						flex: 3,
-						alignSelf: "center",
-						borderRadius: 5,
-						padding: 5,
+						marginVertical: 20,
 					}}
 				>
 					<Text style={[styles.textOption, { fontSize: 17 }]}>
@@ -164,24 +181,31 @@ function SettingsScreen({ navigation }) {
 					<View
 						style={{
 							flexDirection: "row",
-							marginVertical: 15,
+							marginTop: 15,
 						}}
 					>
-						<View style={{ alignItems: "center", width: 115 }}>
+						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								onPress={() => {
 									if (!state1 && (state3 || state2)) {
 										setState3(false);
 										setState2(false);
 									}
-									setState1(!state1);
-									//changeLanguage();
+									setState1(true);
+									setInputs({
+										language: "es",
+										notifications: inputs.notifications,
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state1 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "es"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -198,21 +222,28 @@ function SettingsScreen({ navigation }) {
 							</TouchableOpacity>
 							<Text style={styles.textState}>{i18n.t("spanish")}</Text>
 						</View>
-						<View style={{ alignItems: "center", width: 115 }}>
+						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								onPress={() => {
 									if (!state2 && (state3 || state1)) {
 										setState3(false);
 										setState1(false);
 									}
-									setState2(!state2);
-									//changeLanguage();
+									setState2(true);
+									setInputs({
+										language: "ca",
+										notifications: inputs.notifications,
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state2 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "ca"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -229,21 +260,32 @@ function SettingsScreen({ navigation }) {
 							</TouchableOpacity>
 							<Text style={styles.textState}>{i18n.t("catalan")}</Text>
 						</View>
-						<View style={{ alignItems: "center", width: 115 }}>
+						<View
+							style={{
+								paddingHorizontal: 20,
+							}}
+						>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								onPress={() => {
 									if (!state3 && (state2 || state1)) {
 										setState2(false);
 										setState1(false);
 									}
-									setState3(!state3);
-									//changeLanguage();
+									setState3(true);
+									setInputs({
+										language: "en",
+										notifications: inputs.notifications,
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state3 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor:
+											inputs.language == "en"
+												? COLORS.green1
+												: COLORS.secondary,
 									},
 								]}
 							>
@@ -261,6 +303,20 @@ function SettingsScreen({ navigation }) {
 							<Text style={styles.textState}>{i18n.t("english")}</Text>
 						</View>
 					</View>
+				</View>
+				<View
+					style={{
+						alignSelf: "center",
+						backgroundColor: COLORS.lightGrey,
+						height: 6,
+						width: width,
+					}}
+				/>
+				<View
+					style={{
+						marginTop: 20,
+					}}
+				>
 					<Text style={[styles.textOption, { fontSize: 17 }]}>
 						{i18n.t("notifications")}
 					</Text>
@@ -270,18 +326,24 @@ function SettingsScreen({ navigation }) {
 							marginVertical: 15,
 						}}
 					>
-						<View style={{ alignItems: "center", width: 115 }}>
+						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								onPress={() => {
 									if (!state4 && state5) setState5(false);
-									setState4(!state4);
-									//changeLanguage();
+									setState4(true);
+									setInputs({
+										language: inputs.language,
+										notifications: true,
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state4 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: inputs.notifications
+											? COLORS.green1
+											: COLORS.secondary,
 									},
 								]}
 							>
@@ -289,18 +351,24 @@ function SettingsScreen({ navigation }) {
 							</TouchableOpacity>
 							<Text style={styles.textState}>{i18n.t("on")}</Text>
 						</View>
-						<View style={{ alignItems: "center", width: 115 }}>
+						<View style={{ alignItems: "center", paddingHorizontal: 20 }}>
 							<TouchableOpacity
+								activeOpacity={0.8}
 								onPress={() => {
 									if (!state5 && state4) setState4(false);
-									setState5(!state5);
-									//changeLanguage();
+									setState5(true);
+									setInputs({
+										language: inputs.language,
+										notifications: false,
+									});
 								}}
 								style={[
 									styles.containerState,
 									styles.shadow,
 									{
-										backgroundColor: state5 ? COLORS.green1 : COLORS.secondary,
+										backgroundColor: !inputs.notifications
+											? COLORS.green1
+											: COLORS.secondary,
 									},
 								]}
 							>
@@ -313,26 +381,63 @@ function SettingsScreen({ navigation }) {
 							<Text style={styles.textState}>{i18n.t("off")}</Text>
 						</View>
 					</View>
+					<View
+						style={{
+							alignSelf: "center",
+							backgroundColor: COLORS.lightGrey,
+							height: 6,
+							width: width,
+						}}
+					/>
 				</View>
 			</View>
 			<View
 				style={{
-					flexDirection: "column",
 					flex: 1,
-					alignItems: "flex-end",
-					justifyContent: "flex-end",
-					backgroundColor: COLORS.white,
+					alignItems: "flex-start",
+					paddingHorizontal: 20,
 				}}
 			>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					onPress={() => setModalDeleteAccountVisible()}
-					style={[
-						styles.containerOption,
-						{ marginHorizontal: 30, marginBottom: 20 },
-					]}
+					style={styles.containerOption}
 				>
-					<Feather name="power" size={27} color={COLORS.red1} />
+					<MaterialIcons name="delete" size={27} color={COLORS.red1} />
 					<Text style={styles.textOption}>{i18n.t("deleteAccount")}</Text>
+				</TouchableOpacity>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					marginVertical: 20,
+				}}
+			>
+				<TouchableOpacity
+					activeOpacity={0.8}
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.red1 },
+					]}
+					onPress={() => navigation.navigate("ProfileScreen")}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("cancel")}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					activeOpacity={0.8}
+					style={[
+						styles.containerBtn,
+						styles.shadow,
+						{ backgroundColor: COLORS.green1 },
+					]}
+					onPress={() => {
+						validate();
+						navigation.navigate("ProfileScreen");
+					}}
+				>
+					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>
 				</TouchableOpacity>
 			</View>
 			{renderModalDeleteAccount()}
@@ -389,9 +494,10 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 	},
 	containerBtn: {
-		width: 110,
+		width: 100,
 		padding: 10,
 		borderRadius: 5,
+		marginHorizontal: 25,
 	},
 	containerBtn2: {
 		width: 85,
@@ -413,12 +519,9 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 25,
-		height: 200,
-		width: 240,
 		backgroundColor: COLORS.white,
 		borderRadius: 15,
 		padding: 20,
-		alignItems: "center",
 	},
 	modalText: {
 		textAlign: "center",

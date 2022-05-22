@@ -1,4 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
 
 import {
 	View,
@@ -8,23 +10,29 @@ import {
 	StyleSheet,
 	StatusBar,
 	Alert,
+	Modal,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import Modal from "react-native-modal";
 
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
+import axios from "axios";
+import { setLanguage } from "../../config/translation";
 
 import Socket from "../Socket";
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
+WebBrowser.maybeCompleteAuthSession();
+
 function SignInScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
+	const [accessToken, setAccessToken] = useState();
+	const [user, setUser] = useContext(UserContext);
 	const [data, setData] = useState({
 		email: "",
 		password: "",
@@ -33,9 +41,53 @@ function SignInScreen({ navigation, route }) {
 		secureTextEntry: true,
 	});
 
-	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] = useState(false);
+	const [request, response, promptAsync] = Google.useAuthRequest({
+		expoClientId:
+			"437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com",
+		androidClientId:
+			"437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com",
+	});
+
+	useEffect(() => {
+		if (response?.type === "success") {
+			const { authentication } = response;
+			getGoogleUserInfo(authentication.accessToken);
+		}
+	}, [response]);
+
+	const getGoogleUserInfo = async (accessToken) => {
+		try {
+			let userRequestInfo = await axios.get(
+				"https://www.googleapis.com/oauth2/v2/userinfo",
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			);
+			loginGoogle(userRequestInfo.data, accessToken);
+		} catch (error) {
+			errorMsgChange(error);
+		}
+	};
+
+	const loginGoogle = async (userGoogleData, accessToken) => {
+		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
+		if (response.status == 200) {
+      new Socket(email);
+			response.data.accessToken = accessToken;      
+			setUser(response.data);
+			navigation.navigate("AppTabs", { screen: "Map" });
+			errorMsgChange("");
+		} else {
+			errorMsgChange(response.message);
+		}
+	};
+
+	const [modalRestorePasswordVisible, setModalRestorePasswordVisible] =
+		useState(false);
 	const [errorMsgVisible, setErrorMsgVisible] = useState(false);
-	
+
 	const renderModalRestorePassword = () => {
 		return (
 			<Modal
@@ -72,7 +124,7 @@ function SignInScreen({ navigation, route }) {
 									justifyContent: "space-around",
 									alignSelf: "center",
 									marginTop: 30,
-									marginHorizontal: 5,
+									marginHorizontal: 20,
 									width: 220,
 								}}
 							>
@@ -102,7 +154,7 @@ function SignInScreen({ navigation, route }) {
 				</View>
 			</Modal>
 		);
-	}
+	};
 
 	const validateEmail = (emailAdress) => {
 		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -142,8 +194,6 @@ function SignInScreen({ navigation, route }) {
 		});
 	};
 
-	const [user, setUser] = useContext(UserContext);
-
 	const loginUser = async () => {
 		const { email, password } = data;
 		let response = await presentationCtrl.loginUser(email, password);
@@ -152,6 +202,7 @@ function SignInScreen({ navigation, route }) {
 			let s = socket.getSocket();
 			let i=3;
 			setUser(response.data);
+			setLanguage(response.data.language);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			setErrorMsgVisible(false);
 		} else {
@@ -165,13 +216,16 @@ function SignInScreen({ navigation, route }) {
 		if (!data.checkEmailInputChange) {
 			errorMsgChange(i18n.t("invalidEmail"));
 			setErrorMsgVisible(true);
-		}
-		else {
+		} else {
 			const { email } = data;
 			let response = await presentationCtrl.restorePassword(email);
 			if (response.status == 200) {
 				setErrorMsgVisible(false);
-				Alert.alert(i18n.t("passwordRestoredTitle"), i18n.t("passwordRestoredText"), ["OK"]);
+				Alert.alert(
+					i18n.t("passwordRestoredTitle"),
+					i18n.t("passwordRestoredText"),
+					["OK"]
+				);
 			} else {
 				if (response.status == 204) errorMsgChange(i18n.t("signInError2"));
 				else if (response.status == 422) errorMsgChange(response.message);
@@ -271,9 +325,7 @@ function SignInScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<TouchableOpacity
-					onPress={() => setModalRestorePasswordVisible()}
-				>
+				<TouchableOpacity onPress={() => setModalRestorePasswordVisible()}>
 					<Text style={{ color: COLORS.green1, marginTop: 15 }}>
 						{i18n.t("passwordForgot")}
 					</Text>
@@ -301,11 +353,38 @@ function SignInScreen({ navigation, route }) {
 							{i18n.t("signIn")}
 						</Text>
 					</TouchableOpacity>
-
 					<TouchableOpacity
-						onPress={
-							() => {navigation.navigate("SignUpScreen"); setErrorMsgVisible(false);} 
-						}
+						onPress={() => {
+							promptAsync({ showInRevents: true });
+						}}
+						style={[
+							styles.signIn,
+							{
+								borderColor: COLORS.green1,
+								borderWidth: 1,
+								marginTop: 15,
+								flexDirection: "row",
+								justifyContent: "space-evenly",
+							},
+						]}
+					>
+						<FontAwesome name="google" color={COLORS.green1} size={20} />
+						<Text
+							style={[
+								styles.textSign,
+								{
+									color: COLORS.green1,
+								},
+							]}
+						>
+							{i18n.t("googleLogin")}
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate("SignUpScreen");
+							setErrorMsgVisible(false);
+						}}
 						style={[
 							styles.signIn,
 							{

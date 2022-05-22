@@ -75,6 +75,7 @@ function PinOwnerScreen({ navigation, route }) {
 						style={{ flexDirection: "row", justifyContent: "space-evenly" }}
 					>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={[
 								styles.containerBtn,
 								{ backgroundColor: COLORS.secondary },
@@ -87,6 +88,7 @@ function PinOwnerScreen({ navigation, route }) {
 							<Text style={styles.textStyle}>{i18n.t("cancel")}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={[
 								styles.containerBtn,
 								{ backgroundColor: COLORS.red1, marginStart: 15 },
@@ -136,6 +138,7 @@ function PinOwnerScreen({ navigation, route }) {
 				>
 					<Text style={[styles.title, { flex: 1 }]}>{pin.title}</Text>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",
@@ -200,6 +203,7 @@ function PinOwnerScreen({ navigation, route }) {
 					</Text>
 				</View>
 				<TouchableOpacity
+					activeOpacity={0.8}
 					style={{
 						alignSelf: "flex-start",
 						paddingVertical: 10,
@@ -208,16 +212,7 @@ function PinOwnerScreen({ navigation, route }) {
 				>
 					<Text style={styles.highlight}> {i18n.t("seeOnMap")}</Text>
 				</TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						paddingVertical: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons name="md-calendar" color={COLORS.secondary} size={30} />
-					<Text style={[styles.body, { marginStart: 10 }]}>{pin.date}</Text>
-				</View>
+
 				<Rating
 					type={"custom"}
 					imageSize={20}
@@ -242,6 +237,7 @@ function PinOwnerScreen({ navigation, route }) {
 				>
 					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
 						<TouchableOpacity
+							activeOpacity={0.8}
 							style={{ flexDirection: "row" }}
 							onPress={handleShare}
 						>
@@ -256,6 +252,7 @@ function PinOwnerScreen({ navigation, route }) {
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
+						activeOpacity={0.8}
 						style={[
 							{
 								flexDirection: "row",

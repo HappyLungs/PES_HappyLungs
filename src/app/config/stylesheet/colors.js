@@ -17,7 +17,8 @@ const COLORS = {
 	green3: "#a1ccc0",
 	orange: "#fe7624",
 	dark_orange: "#b15219",
-	softRed: "#ffcdc9"
+	softRed: "#ffcdc9",
+	bronze: "#c77b30",
 };
 
 module.exports = COLORS;
