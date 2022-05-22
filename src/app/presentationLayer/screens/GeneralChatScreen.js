@@ -37,15 +37,12 @@ function GeneralChatScreen({ navigation }) {
 	const socket = s.getSocket();
 
 	useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			// The screen is focused
+		const unsubscribe = navigation.addListener('focus', async () => {
 			fetchChats();
-
 			socket.on('chat message', (data) => {
 				setFilteredData(existingItems => {
-					let i = 0; 
 					let index = -1;
-					for (c of existingItems) {
+					for (let c of existingItems) {
 						if (c.id === data.conversation) index = i;
 						i++;
 					}
@@ -64,8 +61,8 @@ function GeneralChatScreen({ navigation }) {
 				let newUser = await presentationCtrl.fetchUser(data.user);
 				setFilteredData(existingItems => {
 					let m = {
-						id: conversation,
-						name: newUser.username,
+						id: data.conversation,
+						name: newUser.name,
 						profileImage: newUser.profileImage,
 						lastMessage: data.text,
 						unreadMessages: 1,
@@ -73,26 +70,19 @@ function GeneralChatScreen({ navigation }) {
 					}
 					return [
 						m,
-						...existingItems.slice(0, index),		  
-						...existingItems.slice(index + 1),		  
+						...existingItems	  
 					]		  
 				})
 			})
 		  });
-	  
-		  // Return the function to unsubscribe from the event so it gets removed on unmount
-		  return unsubscribe;
+	  	  return unsubscribe;
 	}, []);
 
 	const fetchChats = async () => {
-		//get chats from db
-		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchConversations(user.email);
-		let i = 0;
 		setMasterData(data);
 		setFilteredData(data);
 		setAuxiliarFilterData(data);
-		let m =0;
 	};
 
 	const filterBySearch = (text) => {
@@ -107,10 +97,8 @@ function GeneralChatScreen({ navigation }) {
 					return converData.indexOf(textData) > -1;
 				})
 			);
-			let i = 0;
 		} else {
 			setFilteredData(masterData);
-			let i = 0;
 		}
 		setSearch(text);
 	};
@@ -181,7 +169,7 @@ function GeneralChatScreen({ navigation }) {
 													style={{
 														alignSelf: "flex-start",
 														padding: 2,
-														width: "70%",
+														width: "62%",
 													}}
 												>
 													<Text
@@ -482,18 +470,14 @@ function GeneralChatScreen({ navigation }) {
 										},
 									]}
 									onPress={async () => {
-										let ok = await presentationCtrl.deleteConversation(
-											chatDeleted.id
-										);
+										let ok = await presentationCtrl.deleteConversation(chatDeleted.id, user.email);
 										if (ok) {
 											let dataRemoved = filteredData.filter(
 												(item) => item.id !== chatDeleted.id
 											);
 											setFilteredData(dataRemoved);
-											let i = 0;
 										}
 										setModalDeleteVisible(false);
-										//else popup d'error
 									}}
 								>
 									<Text style={{ color: COLORS.primary, fontWeight: "bold" }}>

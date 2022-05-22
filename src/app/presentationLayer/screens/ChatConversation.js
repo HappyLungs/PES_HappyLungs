@@ -18,6 +18,7 @@ import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl");
 const Socket = require("../Socket");
+import * as Clipboard from 'expo-clipboard';
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
@@ -52,7 +53,6 @@ function ChatScreen({ route, navigation }) {
 			for (ms of messages) if(ms._id === data._id) exists = true;
 			if (!exists) {
 				setMessages(oldArray => [...oldArray, data]);
-				flatListRef.current.scrollToEnd({animating: true})
 			}
 		})
 		
@@ -63,7 +63,6 @@ function ChatScreen({ route, navigation }) {
 		if (route.params.id) {
 			let id = route.params.id;
 			const data = await presentationCtrl.fetchConversation(id, user.email);
-			console.log("Convers: ", data);
 			setId(id);
 			setLoggedUser(data.users.logged);
 			setConversantUsers(data.users.conversant);
@@ -83,13 +82,10 @@ function ChatScreen({ route, navigation }) {
 				if (newId != "error") {
 					setNewChat(false);
 					let data = await presentationCtrl.fetchConversation(newId, user.email);
-					let i = 0;
 					setMessages(data.messages);
 					const info = {message: data.messages[0], to: data.users.conversant.email}
 					socket.emit('new chat', info);
-
 					setId(newId);
-					//setMessages(data.messages);
 				} else {
 					setModalErrorVisible(true);
 				}
@@ -103,6 +99,7 @@ function ChatScreen({ route, navigation }) {
 					if (!exists) setMessages(oldArray => [...oldArray, newMessage]);
 					const info = {message: newMessage, to: conversant}
 					socket.emit('chat message', info);
+
 				}
 			}
 			setMessage("");
@@ -112,7 +109,6 @@ function ChatScreen({ route, navigation }) {
 	}
 
 	const reportMessage = async () => {
-		let i = 0;
 		setMessages(existingItems => {
 			let i = 0; 
 			let index = -1;
@@ -238,7 +234,10 @@ function ChatScreen({ route, navigation }) {
 									alignItems: "flex-start",
 									marginBottom: 10
 								}}
-							>
+								onPress={() => {
+									Clipboard.setString(selectedMessage.text)
+									setModalOptionsVisible(false)
+								}}						>
 								<MaterialIcons name="content-copy" size={24} color="black" />
 								<Text
 									style = {{

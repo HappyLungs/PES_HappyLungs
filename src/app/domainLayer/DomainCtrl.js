@@ -610,9 +610,10 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 								(date.getMonth() + 1).toString().padStart(2, "0"),
 								date.getFullYear().toString().substring(2),
 							].join("/")+" "+date.getHours().toString().padStart(2, "0") +":" +date.getMinutes().toString().padStart(2, "0"),
-							unreadMessages: unreadMessages.data.length,
+							unreadMessages: (unreadMessages.data.length === 0) ? 0 : unreadMessages.data[0].total,
 							lastMessageDate: lastMessage.data.createdAt
 						});
+						let i = 0;
 					} else {
 						//TODO handle error searching for the unread messages
 						return null;
@@ -688,6 +689,19 @@ DomainCtrl.prototype.createConversation = async function (
 		return "error";
 	}
 };
+
+DomainCtrl.prototype.deleteConversation = async function (conversationId, email) {
+    let result = await persistenceCtrl.postRequest("/deleteConversation", {
+        id: conversationId,
+        user: email,
+    });
+    if (result.status === 200) {
+        return true;
+    } else {
+        //TODO handle error
+        return false;
+    }
+}
 
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
 	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
