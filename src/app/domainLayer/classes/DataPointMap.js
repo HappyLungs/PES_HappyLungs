@@ -172,9 +172,9 @@ class DataPointMap {
 		let all_points = await dadesObertes.getMeasuresDate(date);
 		all_points.forEach((c_point) => {
 			let m_s = new MeasureStation(
-				c_point.eoiCode,
-				c_point.stationName,
-				c_point.stationType,
+				c_point.codi_eoi,
+				c_point.nom_estacio,
+				c_point.tipus_estacio,
 				c_point.latitud,
 				c_point.longitud,
 				null
