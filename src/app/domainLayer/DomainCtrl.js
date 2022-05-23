@@ -120,6 +120,23 @@ DomainCtrl.prototype.fetchRanking = async function () {
 		return null;
 	}
 };
+
+/**
+ * Calculates pollution level last hour of one point
+ * @param {} latitude
+ * @param {*} longitude
+ */
+DomainCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let dp = new DataPointMap(latitude, longitude);
+	let date = new Date();
+	let level = await dp.getHourLevel(date, date.getHours());
+	console.log(latitude + " " + longitude);
+	console.log(level);
+	return level;
+};
 //STATISTICS - AIR QUALITY
 
 /**
