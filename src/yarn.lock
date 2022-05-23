@@ -2028,6 +2028,11 @@
   "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.21.tgz"
   "version" "17.0.21"
 
+"@types/node@^9.6.39":
+  "integrity" "sha512-/aKAdg5c8n468cYLy2eQrcR5k6chlbNwZNGUj3TboyPa2hcO2QAJcfymlqPzMiRj8B6nYKXjzQz36minFE0RwQ=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-9.6.61.tgz"
+  "version" "9.6.61"
+
 "@types/q@^1.5.1":
   "integrity" "sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ=="
   "resolved" "https://registry.npmjs.org/@types/q/-/q-1.5.5.tgz"
@@ -9238,6 +9243,13 @@
   "integrity" "sha512-yQaiOqDmoKqks56LN9MTgY06O0qQHgV4FUrikH357DydArSZHQhl0BJFqGKIZoTqi8JizF9Dxhuk1FIZD6qCaw=="
   "resolved" "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.0.tgz"
   "version" "1.0.0"
+
+"react-google-calendar-api@^1.5.2":
+  "integrity" "sha512-/j1c3zQlZ+euRkorxmu1f6LzHCiQkI6kULUFnNnjXIk9yeOb/ytOCwcqu7NoM+KtSMm1SGKWrjcc1oR5DZyHQA=="
+  "resolved" "https://registry.npmjs.org/react-google-calendar-api/-/react-google-calendar-api-1.5.2.tgz"
+  "version" "1.5.2"
+  dependencies:
+    "@types/node" "^9.6.39"
 
 "react-is@^16.13.0":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="

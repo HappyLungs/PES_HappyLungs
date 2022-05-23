@@ -54,8 +54,6 @@ DomainCtrl.prototype.createEvent = function (date, pin, email) {
 		*/
 	};
 
-
-
 	ApiCalendar.handleClientLoad();
 
 	console.log("-----------------GOOGLE API INITIATED-----------------");
