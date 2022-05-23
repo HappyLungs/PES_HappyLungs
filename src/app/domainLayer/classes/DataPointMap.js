@@ -121,35 +121,35 @@ class DataPointMap {
      * @param {Date} date
      * @returns Returns the quantities of each pollutant on a week of the nearer Measure Station.
      */
-    /*async getPollutantsQuantWeek (date) {
+    async getPollutantsQuantWeek (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-       return await nearPoint.getQuantityOfEachPollutantWeek(date);
-    }*/
- /**
+       return await nearPoint.getQuantityOfEachPollutantAtWeek(date);
+    }
+    /**
      * Calculates the quantities of each pollutant on a month.
      * @param {*} date
      * @returns Returns the quantities of each pollutant on a month of the nearer Measure Station.
      */
-    /*async getPollutantsQuantMonth (date) {
+    async getPollutantsQuantMonth (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-     return await nearPoint.getQuantityOfEachPollutantMonth(date);
-    }*/
-         /**
+     return await nearPoint.getQuantityOfEachPollutantAtMonth(date);
+    }
+    /**
      * Calculates the quantities of each pollutant on a Year.
      * @param {*} date
      * @returns Returns the quantities of each pollutant on a Year of the nearer Measure Station..
      */
-   /* async getPollutantsQuantYear (date) {
+    async getPollutantsQuantYear (date) {
         let nearPoints = await this.nearerPoints(date);
 
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
-             return await nearPoint.getQuantityOfEachPollutantYear(date);
+             return await nearPoint.getQuantityOfEachPollutantAtYear(date);
     }
-*/
+
     //Getters
   /**
    * Get the nearest Measure Stations ordered.
@@ -165,7 +165,7 @@ class DataPointMap {
         let distanciaTotal = 0;
         let all_points = await dadesObertes.getMeasuresDate(date);
         all_points.forEach(c_point => {
-            let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
+            let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null);
             let d = m_s.distance(this.latitude,this.longitud);
             distanciaTotal += d;
             points.push([d,c_point]);
@@ -185,7 +185,6 @@ class DataPointMap {
         //let distancia = point1.distance(this.latitude,this.longitud);
         let distanciaTotal = 0;
         let all_points = await dadesObertes.getMeasuresDate(new Date());
-        // console.log("cssccss");
 
         all_points.forEach(c_point => {
             let m_s = new MeasureStation(c_point.eoiCode, c_point.stationName, c_point.stationType, c_point.latitud, c_point.longitud, null)
