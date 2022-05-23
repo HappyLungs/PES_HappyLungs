@@ -25,7 +25,7 @@ exports.find = async (req, res) => {
  
      const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
      const valor_contaminacion = await punto.getDayLevel(fecha)
-     console.log(valor_contaminacion)
+    //  console.log(valor_contaminacion)
  
      
      if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
@@ -33,28 +33,21 @@ exports.find = async (req, res) => {
  
 };
 
+	if (req.params.date === "today") fecha = new Date();
 
-exports.findRadius = async (req, res) => {
-    if(isNaN(parseInt(req.params.longitude)))  {
-        res.status(400).send('Parametro de longitud no introducido correctamente');
-        return;
-    }
-    if(isNaN(parseInt(req.params.latitude)))  {
-     
-     res.status(400).send('Parametro de latitud no introducido correctamente');
-     return; 
-     }
-     let radius = req.params.radius;
-  
-    
- 
- 
- 
-     const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
-     const valor_contaminacion = await punto.getDayLevel_byRadius(radius)
+	if (isNaN(fecha)) {
+		res
+			.status(400)
+			.send(
+				sanitizeHtml(
+					`El parametro: ${req.params.date} no es válido para el atributo fecha`
+				)
+			);
+		return;
+	}
 
      valor_contaminacion.forEach(el => {
-         console.log(el)
+        //  console.log(el)
      }) 
  
      
@@ -63,5 +56,25 @@ exports.findRadius = async (req, res) => {
  
 };
 
-   
+exports.findRadius = async (req, res) => {
+	if (isNaN(parseInt(req.params.longitude))) {
+		res.status(400).send("Parametro de longitud no introducido correctamente");
+		return;
+	}
+	if (isNaN(parseInt(req.params.latitude))) {
+		res.status(400).send("Parametro de latitud no introducido correctamente");
+		return;
+	}
+	let radius = req.params.radius;
 
+	const punto = new DataPointMap(req.params.latitude, req.params.longitude);
+	const valor_contaminacion = await punto.getDayLevel_byRadius(radius);
+
+	valor_contaminacion.forEach((el) => {
+		console.log(el);
+	});
+
+	if (!valor_contaminacion)
+		res.status(404).send("No existe el ID"); // 404 Error
+	else res.send(valor_contaminacion);
+};

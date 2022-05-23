@@ -20,7 +20,7 @@ const start = async function() {
    const ms = new MeasureStation("08102005");
    let x = ms.getYearLevel(new Date());
 
-   console.log(x);
+//    console.log(x);
 }
 
 start();

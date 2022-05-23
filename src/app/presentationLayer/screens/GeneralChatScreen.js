@@ -17,6 +17,7 @@ import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 const PresentationCtrl = require("../PresentationCtrl.js");
+const Socket = require("../Socket");
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -32,17 +33,106 @@ function GeneralChatScreen({ navigation }) {
 	const [chatDeleted, setChatDeleted] = useState({ id: "", name: "" });
 	const [search, setSearch] = useState("");
 	const AnimationRefFilter1 = useRef(null);
+	const s = new Socket(user.email);
+	const socket = s.getSocket();
 
 	useEffect(() => {
-		fetchChats();
-		return () => {};
+		const unsubscribe = navigation.addListener('focus', async () => {
+			fetchChats();
+			socket.on('chat message', (data) => {
+				fetchChats();
+				/*
+				setFilteredData(existingItems => {
+					let i = 0;
+					let index = -1;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) index = i;
+						i++;
+					}
+					let m = existingItems[index];
+					m.lastMessage = data.text;
+					m.unreadMessages += 1;
+					m.lastMessageTime = data.date+" "+data.hour;
+					return [
+						m,
+						...existingItems.slice(0, index),		  
+						...existingItems.slice(index + 1),		  
+					]		  
+				})
+				setMasterData(existingItems => {
+					let i = 0;
+					let index = -1;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) index = i;
+						i++;
+					}
+					let m = existingItems[index];
+					m.lastMessage = data.text;
+					m.unreadMessages += 1;
+					m.lastMessageTime = data.date+" "+data.hour;
+					return [
+						m,
+						...existingItems.slice(0, index),		  
+						...existingItems.slice(index + 1),		  
+					]		  
+				})
+				*/
+			})
+			socket.on('new chat', async (data) => {
+				let newUser = await presentationCtrl.fetchUser(data.user);
+				setFilteredData(existingItems => {
+					let exists = false;
+					let i = 0;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) exists = true;
+						i++;
+					}
+					if (exists) return [existingItems]
+					else {
+						let m = {
+							id: data.conversation,
+							name: newUser.name,
+							profileImage: newUser.profileImage,
+							lastMessage: data.text,
+							unreadMessages: 1,
+							lastMessageTime: data.date+" "+data.hour
+						}
+						return [
+							m,
+							...existingItems	  
+						]
+					}	  
+				})
+				setMasterData(existingItems => {
+					let exists = false;
+					let i = 0;
+					for (let c of existingItems) {
+						if (c.id === data.conversation) exists = true;
+						i++;
+					}
+					if (exists) return [existingItems]
+					else {
+						let m = {
+							id: data.conversation,
+							name: newUser.name,
+							profileImage: newUser.profileImage,
+							lastMessage: data.text,
+							unreadMessages: 1,
+							lastMessageTime: data.date+" "+data.hour
+						}
+						return [
+							m,
+							...existingItems	  
+						]
+					}	  
+				})
+			})
+		});
+	  	return unsubscribe;
 	}, []);
 
 	const fetchChats = async () => {
-		//get chats from db
-		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchConversations(user.email);
-
 		setMasterData(data);
 		setFilteredData(data);
 		setAuxiliarFilterData(data);
@@ -133,7 +223,7 @@ function GeneralChatScreen({ navigation }) {
 													style={{
 														alignSelf: "flex-start",
 														padding: 2,
-														width: "75%",
+														width: "62%",
 													}}
 												>
 													<Text
@@ -154,8 +244,8 @@ function GeneralChatScreen({ navigation }) {
 															styles.chatName,
 															{
 																color: COLORS.darkGrey,
-																fontSize: 12,
-																fontWeight: "bold",
+																fontSize: 11,
+																//fontWeight: "bold",
 																textAlign: "right",
 															},
 														]}
@@ -438,9 +528,7 @@ function GeneralChatScreen({ navigation }) {
 										},
 									]}
 									onPress={async () => {
-										let ok = await presentationCtrl.deleteConversation(
-											chatDeleted.id
-										);
+										let ok = await presentationCtrl.deleteConversation(chatDeleted.id, user.email);
 										if (ok) {
 											let dataRemoved = filteredData.filter(
 												(item) => item.id !== chatDeleted.id
@@ -448,7 +536,6 @@ function GeneralChatScreen({ navigation }) {
 											setFilteredData(dataRemoved);
 										}
 										setModalDeleteVisible(false);
-										//else popup d'error
 									}}
 								>
 									<Text style={{ color: COLORS.primary, fontWeight: "bold" }}>

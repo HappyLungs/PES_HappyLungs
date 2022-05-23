@@ -52,7 +52,7 @@ exports.users = async (request, response) => {
               '$match': {
                 'users': params.email
               }
-            }, {
+            }/* , {
               '$unwind': {
                 'path': '$users', 
                 'preserveNullAndEmptyArrays': true
@@ -75,13 +75,18 @@ exports.users = async (request, response) => {
                 'users': 1, 
                 '_id': 0
               }
-            }
+            } */
           ];
         let users = [];
         await ConversationDatalayer.aggregateConversation(aggregateArr).then((userData) => {
             if (userData !== null && typeof userData !== undefined) {
                 if (userData.length > 0) {
-                    users = userData[0].users;
+                    for (conver of userData) {
+                        let index = conver.users.indexOf(params.email);
+                        if (!conver.deleted[index]) {
+                            users.push(conver.users[1-index]);
+                        } 
+                    }
                 }
             }
         });
@@ -272,8 +277,8 @@ exports.updateUser = async (request, response) => {
 
 exports.changePassword = async (request, response) => {
     let params = {};
-    if (request.body) {
-        params = request.body;
+    if (request.body.params) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
@@ -309,8 +314,9 @@ exports.changePassword = async (request, response) => {
 
 exports.restorePassword = async (request, response) => {
     let params = {};
-    if (request.body) {
-        params = request.body;
+
+    if (request.body.params) {
+        params = request.body.params;
     } else {
         sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
         return;
@@ -393,8 +399,8 @@ exports.unsavePin = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
         return;
     }
-    if (mongodb.ObjectID.isValid(params.pin)) {
-        UserDataLayer.updateUser({email: params.email}, {$unset: {savedPins: mongodb.ObjectId(params.pin)}})
+    if (mongodb.ObjectId.isValid(params.pin)) {
+        UserDataLayer.updateUser({email: params.email}, {$pull: {savedPins: mongodb.ObjectId(params.pin)}})
         .then((updatedData) => {
             if (updatedData !== null && typeof updatedData !== undefined) {
                 sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", updatedData);
@@ -476,4 +482,71 @@ exports.updateReports = async function (email) {
         success = false;
     });
     return success;
+}
+
+
+exports.userStats = async function (request, response) {
+    let email = "";
+    if (request.query.email) {
+        email = request.query.email;
+    } else {
+        sendResponseHelper.sendResponse(response, errorCodes.REQUIRED_PARAMETER_MISSING, "Required parameters missing", {});
+        return;
+    }
+    UserDataLayer.aggregateUser([
+        {
+          '$match': {
+            'email': email
+          }
+        }, {
+          '$lookup': {
+            'from': 'conversations', 
+            'localField': 'email', 
+            'foreignField': 'users', 
+            'pipeline': [
+              {
+                '$count': 'chats'
+              }
+            ], 
+            'as': 'chats'
+          }
+        }, {
+          '$lookup': {
+            'from': 'pins', 
+            'localField': 'email', 
+            'foreignField': 'creatorEmail', 
+            'pipeline': [
+              {
+                '$count': 'pins'
+              }
+            ], 
+            'as': 'pins'
+          }
+        }, {
+          '$unwind': {
+            'path': '$pins', 
+            'preserveNullAndEmptyArrays': true
+          }
+        }, {
+          '$unwind': {
+            'path': '$chats', 
+            'preserveNullAndEmptyArrays': true
+          }
+        }, {
+          '$addFields': {
+            'chats': '$chats.chats', 
+            'pins': '$pins.pins'
+          }
+        }
+      ])
+        .then((result) => {
+            if (result !== null && typeof result !== undefined) {
+                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", result[0]);
+            } else {
+                sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
+            }
+        })
+        .catch(error => {
+            sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+        });
 }

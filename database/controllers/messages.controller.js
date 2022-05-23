@@ -15,7 +15,7 @@ exports.find = async (request, response) => {
     if (request.query._id) {
         id = request.query._id;
     } else {
-        if (request.query.hasOwnProperty("conversation")) {
+        if (request.query.hasOwnProperty("conversation") && request.query.hasOwnProperty("user")) {
             if (mongodb.ObjectId.isValid(request.query.conversation)) {
                 let aggregateArr = [
                     {
@@ -29,9 +29,19 @@ exports.find = async (request, response) => {
                     }
                 ];
                 messageDataLayer.aggregateMessage(aggregateArr)
-                .then((messageData) => {
+                .then(async (messageData) => {
                     if (messageData !== null && typeof messageData !== undefined) {
-                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                        await messageDataLayer.updateMessages({conversation: mongodb.ObjectId(request.query.conversation), readed: false, user: {$ne: request.query.user}}, {$set: {readed: true}})
+                        .then((updateData) => {
+                            if (updateData !== null && typeof updateData !== undefined) {
+                                sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                            }
+                            else {
+                                sendResponseHelper.sendResponse(response, errorCodes.ERROR, "Error", updateData);
+                            }
+                        }).catch((error) => {
+                            sendResponseHelper.sendResponse(response, errorCodes.ERROR, "Error", error);
+                        });
                     } else {
                         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
                     }
@@ -211,21 +221,18 @@ exports.reportMessage = async (request, response) => {
         messageDataLayer.findMessage(where)
         .then((messageData) => {
             if (messageData !== null && typeof messageData !== undefined) {
-                if (messageData.reported > 0) {
-                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, "Message already reported", {});
-                } else {
-                    messageData.reported = true;
-                    messageDataLayer.updateMessage({_id: messageData._id}, messageData)
-                    .then(async (messageData) => {
-                        if (messageData !== null && typeof messageData !== undefined) {
-                            await userCtrl.updateReports(messageData.user);
-                            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
-                        }
-                    })
-                    .catch(error => {
-                        sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
-                    });
-                }
+                messageData.reported = 1 - messageData.reported;
+                messageData.reported = (messageData.reported === 1) ? true : false;
+                messageDataLayer.updateMessage({_id: messageData._id}, messageData)
+                .then(async (messageData) => {
+                    if (messageData !== null && typeof messageData !== undefined) {
+                        await userCtrl.updateReports(messageData.user);
+                        sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Success", messageData);
+                    }
+                })
+                .catch(error => {
+                    sendResponseHelper.sendResponse(response, errorCodes.SYNTAX_ERROR, error, {});
+                });
             } else {
                 sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No record found", {});
             }

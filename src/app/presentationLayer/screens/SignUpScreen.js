@@ -414,7 +414,7 @@ function SignUpScreen({ navigation, route }) {
 				</View>
 				<View style={[styles.textPrivate, { paddingTop: 10 }]}>
 					<BouncyCheckbox
-						onPress={(isChecked: boolean) => {
+						onPress={(isChecked) => {
 							setAccepted(data.accepted);
 						}}
 						fillColor={COLORS.green1}

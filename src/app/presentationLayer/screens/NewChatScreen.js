@@ -23,10 +23,7 @@ function GeneralChatScreen({ navigation }) {
 	}, []);
 
 	const fetchChats = async () => {
-		//get chats from db
-		//ought to fetch them before navigate
 		const data = await presentationCtrl.fetchNewConversations(user.email);
-		console.log("screen new chats:",data)
 
 		setMasterData(data);
 		setFilteredData(data);

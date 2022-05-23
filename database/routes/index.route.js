@@ -91,6 +91,12 @@ router.post(
     UserController.delete
 );
 
+router.get(
+    "/userStats",
+    licenseMiddleware.validate,
+    UserController.userStats
+);
+
 /*  MeasureStation  */
 router.get(
     "/measureStation",

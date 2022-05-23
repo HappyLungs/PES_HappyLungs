@@ -21,14 +21,13 @@ import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
 const PresentationCtrl = require("../PresentationCtrl");
 
-const PinList = ({ pinList, navigation }) => {
+const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 	let presentationCtrl = new PresentationCtrl();
 	const [user, setUser] = useContext(UserContext);
 	const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
 		useState(false);
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 	const [selectedPin, setSelectedPin] = useState(null);
-	const [data, setData] = useState(pinList);
 	const [eventDate, setEventDate] = useState(new Date());
 
 	const isMyPin = (email) => {
@@ -42,7 +41,7 @@ const PinList = ({ pinList, navigation }) => {
 
 	const handleDelete = () => {
 		presentationCtrl.deletePin(selectedPin);
-		setData(data.filter((item) => item._id !== selectedPin._id));
+		onMasterDataChange(pinList.filter((item) => item._id !== selectedPin._id));
 	};
 
 	const showDatePicker = (pin) => {
@@ -145,7 +144,12 @@ const PinList = ({ pinList, navigation }) => {
 		//pulse
 		//fadeInDown/Up
 		//slideInDown
-		<Animatable.View animation="slideInDown" duration={500} delay={index * 10}>
+		<Animatable.View
+			animation="slideInDown"
+			duration={500}
+			easing={"ease-out-circ"}
+			delay={index * 10}
+		>
 			<View
 				style={[
 					styles.shadow,
@@ -197,36 +201,67 @@ const PinList = ({ pinList, navigation }) => {
 								<View
 									style={{
 										flexDirection: "row",
-										justifyContent: "space-between",
 										alignItems: "center",
 									}}
 								>
 									<Text style={styles.itemName}>{item.title}</Text>
 									<View
 										style={{
-											backgroundColor: isMyPin(item.creatorEmail)
-												? COLORS.blue2
-												: COLORS.secondary,
-											alignSelf: "flex-end",
-											margin: 5,
-											padding: 2,
-											borderRadius: 5,
+											flexDirection: "row",
+											justifyContent: "flex-end",
+											flex: 1,
 										}}
 									>
-										<Text
-											style={[
-												styles.itemName,
-												{
-													color: COLORS.white,
-													fontSize: 12,
-													fontWeight: "bold",
-												},
-											]}
+										<View
+											style={{
+												backgroundColor: COLORS.secondary,
+												margin: 5,
+												padding: 2,
+												paddingHorizontal: 5,
+												borderRadius: 5,
+											}}
 										>
-											{isMyPin(item.creatorEmail)
-												? i18n.t("created")
-												: i18n.t("saved")}
-										</Text>
+											<Text
+												style={[
+													styles.itemName,
+													{
+														color: COLORS.white,
+														fontSize: 12,
+														fontWeight: "bold",
+													},
+												]}
+											>
+												{item.status === "Public"
+													? i18n.t("public")
+													: i18n.t("private")}
+											</Text>
+										</View>
+										<View
+											style={{
+												backgroundColor: isMyPin(item.creatorEmail)
+													? COLORS.green1
+													: COLORS.blue2,
+												margin: 5,
+												padding: 2,
+												paddingHorizontal: 5,
+												borderRadius: 5,
+											}}
+										>
+											<Text
+												style={[
+													styles.itemName,
+													{
+														color: COLORS.white,
+														fontSize: 12,
+														fontWeight: "bold",
+													},
+												]}
+											>
+												{isMyPin(item.creatorEmail)
+													? i18n.t("created")
+													: i18n.t("saved")}
+											</Text>
+										</View>
 									</View>
 								</View>
 								<View
@@ -276,7 +311,7 @@ const PinList = ({ pinList, navigation }) => {
 								style={{
 									flex: 1.5,
 									flexDirection: "row",
-									backgroundColor: COLORS.blue2,
+									backgroundColor: COLORS.green1,
 									borderBottomLeftRadius: 10,
 									justifyContent: "center",
 									alignItems: "center",

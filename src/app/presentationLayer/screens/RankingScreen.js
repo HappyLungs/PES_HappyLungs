@@ -269,7 +269,9 @@ function RankingScreen({ navigation, route }) {
 	});
 
 	useEffect(() => {
-		fetchUsers();
+		if (masterData !== []) {
+			fetchUsers();
+		}
 		return () => {};
 	}, []);
 

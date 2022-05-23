@@ -1,4 +1,5 @@
 const DomainCtrl = require('../DomainCtrl');
+const MeasureStation=require('../classes/MeasureStation');
 
 let ctrld=new DomainCtrl();
 
@@ -10,19 +11,28 @@ test('test get map data', async ()=> {
     expect(mapdata[0]).toHaveProperty('latitude');
     expect(mapdata[0]).toHaveProperty('weight');
     expect(mapdata).toHaveLength(74);
-});
+});*/
 
 test('test get heat points', async() => {
     const datapoints = await ctrld.getHeatPoints();
+<<<<<<< HEAD
+    // console.log(MeasureStation.Stations);
+    //console.log(datapoints);
+    // console.log(datapoints.length);
+=======
+    console.log(MeasureStation.Stations);
     console.log(datapoints);
-});*/
+    console.log(datapoints.length);
+>>>>>>> e2ac9bdadacbdad4891e89aaa981a87a4f175ab7
+});
+/*
 test('test in Cat', async() => {
     let bool = await ctrld.inCat(41.804210, 1.372078);
     expect(bool).toBe(true);
     bool = await ctrld.inCat(41.853544, -0.532039);
     expect(bool).toBe(false);
 });
-/*
+
 test('test get pollution level last day', async ()=>{
     const data=await ctrld.getPollutionLevelLastDay(40.93944,0.83139044);
     expect(data).toHaveProperty('levels');

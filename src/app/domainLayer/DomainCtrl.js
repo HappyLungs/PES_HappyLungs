@@ -36,16 +36,21 @@ DomainCtrl.prototype.getMapData = async function () {
 	let allMeasures = await dadesObertes.getMeasuresDate(date);
 	allMeasures.forEach((measure) => {
 		let eoiCode = measure.codi_eoi;
+		let auxstation=this.getMeasureStation(eoiCode);
 		if (!measureStations.has(eoiCode)) {
-			let ms = new MeasureStation(
+			let ms;
+			if(auxstation===undefined){
+				ms = new MeasureStation(
 				measure.codi_eoi,
 				measure.nom_estacio,
 				measure.tipus_estacio,
 				measure.latitud,
 				measure.longitud,
 				null
-			);
-			measureStations.set(eoiCode, ms);
+				);
+			}else ms=auxstation.station;
+				measureStations.set(eoiCode, ms);
+
 		}
 	});
 
@@ -64,37 +69,36 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
-	const date = new Date();
-	let nsteps = 100;
-	let jmax = 1;
-	let inilat = 40.541006;
-	let inilong = 0.68031;
-	let maxlat = 42.814019;
-	let maxlong = 3.20592;
-	let actuallat = inilat;
-	let actuallong = inilong;
+	const date=new Date();
+	let nsteps=7;
+	let inilat=40.541006;
+	let inilong=0.680310;
+	let maxlat=42.814019;
+	let maxlong=3.205920;
+	let actuallat=inilat;
+	let actuallong=inilong;
 
-	let longstep = (maxlong - inilong) / nsteps;
-	let latsteps = (maxlat - inilat) / nsteps;
-	let datapoints = [];
-	for (let i = 0; i <= nsteps; i++) {
-		for (let j = 0; j <= nsteps; j++) {
+	let longstep=(maxlong-inilong)/nsteps;
+	let latsteps= (maxlat-inilat)/nsteps;
+	let datapoints=[];
+	for (let i=0;i<nsteps;i++){
+		for(let j=0;j<nsteps ;j++) {
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
-				continue;
-			}
+			} else {
+
 			let dp = new DataPointMap(actuallat, actuallong);
-			let actual = {
+			const actual = {
 				latitude: actuallat,
 				longitude: actuallong,
-				weight: (await dp.getHourLevel(date, date.getHours())) / 6,
+				weight: await dp.getHourLevel(date, date.getHours()) / 5,
 			};
 			datapoints.push(actual);
 			actuallong = actuallong + longstep;
+			}
 		}
-		actuallat = actuallat + latsteps;
-		actuallong = inilong;
-		jmax++;
+		actuallat=actuallat+latsteps;
+		actuallong=inilong;
 	}
 	let actual = {
 		latitude: 0,
@@ -103,6 +107,35 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	};
 	datapoints.push(actual);
 	return datapoints;
+
+
+}
+
+DomainCtrl.prototype.fetchRanking = async function () {
+	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
+	if (ranking != null) {
+		return ranking;
+	} else {
+		//TODO ERROR: print error && reload page
+		return null;
+	}
+};
+
+/**
+ * Calculates pollution level last hour of one point
+ * @param {} latitude
+ * @param {*} longitude
+ */
+DomainCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let dp = new DataPointMap(latitude, longitude);
+	let date = new Date();
+	let level = await dp.getHourLevel(date, date.getHours());
+	console.log(latitude + " " + longitude);
+	console.log(level);
+	return level;
 };
 //STATISTICS - AIR QUALITY
 
@@ -291,19 +324,6 @@ DomainCtrl.prototype.fetchPins = async function (email) {
 };
 
 /**
- * @returns Returns the ranking of the users and the number of pins they have created
- */
-DomainCtrl.prototype.fetchRanking = async function () {
-	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
-	if (ranking != null) {
-		return ranking;
-	} else {
-		//TODO ERROR: print error && reload page
-		return null;
-	}
-};
-
-/**
  * @param {*} email Email from the current logged user
  * @returns returns 50 best rated pins. Else returns null => error
  */
@@ -349,8 +369,8 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
-	console.log("result.data");
-	console.log(result.data);
+	// console.log("result.data");
+	// console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -377,7 +397,6 @@ DomainCtrl.prototype.savePin = async function (pin, email) {
 		return null;
 	}
 };
-
 /**
  *
  * @param {*} Pin
@@ -551,6 +570,7 @@ DomainCtrl.prototype.updateUserPassword = async function (name, password) {
 DomainCtrl.prototype.fetchConversation = async function (id, email) {
 	let conversation = await persistenceCtrl.getRequest("/conversation", {
 		_id: id,
+		email: email,
 	});
 	if (conversation.status === 200) {
 		var users = {};
@@ -573,6 +593,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 					},
 					conversant: {
 						id: conversant.data._id,
+						email: conversant.data.email,
 						name: conversant.data.name,
 						profileImage: conversant.data.profilePicture
 							? conversant.data.profilePicture
@@ -581,6 +602,7 @@ DomainCtrl.prototype.fetchConversation = async function (id, email) {
 				};
 				let dbMessages = await persistenceCtrl.getRequest("/message", {
 					conversation: conversation.data._id,
+					user: email,
 				});
 				dbMessages.data.forEach((message) => {
 					let date = new Date(message.createdAt);
@@ -654,13 +676,23 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 								? conversant.data.profilePicture
 								: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
 							lastMessage: lastMessage.data.text,
-							lastMessageTime: [
-								date.getDate().toString().padStart(2, "0"),
-								(date.getMonth() + 1).toString().padStart(2, "0"),
-								date.getFullYear().toString().substring(2),
-							].join("/"),
-							unreadMessages: unreadMessages.data.length,
+							lastMessageTime:
+								[
+									date.getDate().toString().padStart(2, "0"),
+									(date.getMonth() + 1).toString().padStart(2, "0"),
+									date.getFullYear().toString().substring(2),
+								].join("/") +
+								" " +
+								date.getHours().toString().padStart(2, "0") +
+								":" +
+								date.getMinutes().toString().padStart(2, "0"),
+							unreadMessages:
+								unreadMessages.data.length === 0
+									? 0
+									: unreadMessages.data[0].total,
+							lastMessageDate: lastMessage.data.createdAt,
 						});
+						let i = 0;
 					} else {
 						//TODO handle error searching for the unread messages
 						return null;
@@ -674,6 +706,9 @@ DomainCtrl.prototype.fetchConversations = async function (email) {
 				return null;
 			}
 		}
+		conver.sort(function (a, b) {
+			return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+		});
 		return conver;
 	} else {
 		//TODO handle error
@@ -734,6 +769,22 @@ DomainCtrl.prototype.createConversation = async function (
 	}
 };
 
+DomainCtrl.prototype.deleteConversation = async function (
+	conversationId,
+	email
+) {
+	let result = await persistenceCtrl.postRequest("/deleteConversation", {
+		id: conversationId,
+		user: email,
+	});
+	if (result.status === 200) {
+		return true;
+	} else {
+		//TODO handle error
+		return false;
+	}
+};
+
 DomainCtrl.prototype.getQualifationMap = async function (range_1, range_2) {
 	const energyMap = await persistenceCtrl.getQualifationMap(range_1, range_2);
 	if (energyMap) {
@@ -775,7 +826,7 @@ DomainCtrl.prototype.createMessage = async function (
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
 	let message = await persistenceCtrl.putRequest("/reportMessage", {
-		message: messageId,
+		params: { message: messageId },
 	});
 	if (message.status === 200) {
 		return message.data;
@@ -802,7 +853,7 @@ DomainCtrl.prototype.findUser = async function (email) {
 
 DomainCtrl.prototype.createEvent = async function (date, pin, email) {
 	//TODO
-	console.log(date, pin, email);
+	// console.log(date, pin, email);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
@@ -821,33 +872,43 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
       .then((data) => data);
   //console.log(user);
 };*/
-DomainCtrl.prototype.inCat = function (lat, long) {
-	if (40.547416 < lat && lat < 41.147653)
-		return 0.197311 < long && long < 1.03968;
+DomainCtrl.prototype.inCat = function (lat, long){
+	if(40.547416<=lat && lat<=41.147653)
+		return (0.197311<=long  && long<=1.039680);
 
-	if (41.147653 < lat && lat < 41.202419)
-		return 0.297129 < long && long < 1.658984;
+	if(41.147653<=lat && lat<=41.202419)
+		return(0.297129<=long  && long<=1.658984);
 
-	if (41.202419 < lat && lat < 41.453135)
-		return 0.380587 < long && long < 2.26035;
+	if(41.202419<=lat && lat<=41.453135)
+		return(0.380587<=long  && long<=2.260350);
 
-	if (41.453135 < lat && lat < 41.516696)
-		return 0.344322 < long && long < 2.446748;
-	if (41.516696 < lat && lat < 41.787774)
-		return 0.378409 < long && long < 3.004935;
+	if(41.453135<=lat && lat<=41.516696)
+		return(0.344322<long  && long<2.446748);
+	if(41.516696<=lat && lat<=41.787774)
+		return(0.378409<=long  && long<=3.004935);
 
-	if (41.787774 < lat && lat < 41.835174)
-		return 0.407281 < long && long < 3.157412;
+	if(41.787774<=lat && lat<=41.835174)
+		return(0.407281<=long  && long<=3.157412);
 
-	if (41.835174 < lat && lat < 42.179406)
-		return 3.155225 < long && long < 0.677742;
+	if(41.835174<=lat && lat<=42.179406)
+		return(0.677742<=long  && long<=3.155225);
 
-	if (42.179406 < lat && lat < 42.401692)
-		return 3.313046 < long && long < 0.673662;
+	if(42.179406<=lat && lat<=42.401692)
+		return(0.673662<=long  && long<=3.313046);
 
-	if (42.401692 < lat && lat < 42.717475)
-		return 0.642428 < long && long < 1.409893;
+	if(42.401692<=lat && lat<=42.717475)
+		return(0.642428<=long  && long<=1.409893);
 	return false;
+};
+
+DomainCtrl.prototype.fetchMessage = async function (converId, email) {
+	let dbMessages = await persistenceCtrl.getRequest("/message", {
+		conversation: converId,
+		user: email,
+	});
+	if (dbMessages.status === 200) {
+		return true;
+	} else return null;
 };
 
 DomainCtrl.prototype.fetchUser = async function (email) {
@@ -858,6 +919,27 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 		//TODO handle error
 		return null;
 	}
+};
+
+DomainCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await persistenceCtrl.getRequest("/userStats", { email: email });
+	if (userStats.status === 200) {
+		if (!userStats.data.chats) userStats.data.chats = 0;
+		if (!userStats.data.pins) userStats.data.pins = 0;
+
+		if (!userStats.data.savedPins) userStats.data.savedPins = 0;
+		else userStats.data.savedPins = userStats.data.savedPins.length;
+
+		return userStats.data;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
+DomainCtrl.prototype.getMeasureStation = function(eoiCode){
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	return undefined;
 };
 
 module.exports = DomainCtrl;

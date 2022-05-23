@@ -23,6 +23,18 @@ exports.createMessage = async (params) => {
       });
     };
 
+exports.updateMessages = async (where = {}, updateParams = {}) => {
+    return new Promise((resolve, reject) => {
+        MessageModel.updateMany(where, updateParams)
+            .then((data) => {
+                resolve(data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
 
   exports.findMessage = async (where = {}) => {
       return new Promise((resolve, reject) => {

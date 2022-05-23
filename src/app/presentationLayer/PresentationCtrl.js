@@ -14,6 +14,17 @@ let PresentationCtrl;
 	};
 })();
 
+PresentationCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let data = await this.domainCtrl.getPollutionLevelLastHour(
+		latitude,
+		longitude
+	);
+	return data;
+};
+
 /**
  *
  * getPollution Level
@@ -465,8 +476,8 @@ PresentationCtrl.prototype.createConversation = async function (
 	}
 };
 
-PresentationCtrl.prototype.deleteConversation = async function (id) {
-	let result = await this.domainCtrl.deleteConversation(id);
+PresentationCtrl.prototype.deleteConversation = async function (id, email) {
+	let result = await this.domainCtrl.deleteConversation(id, email);
 	if (result != null) {
 		return true;
 	} else {
@@ -502,10 +513,27 @@ PresentationCtrl.prototype.fetchUsers = async function () {
 	this.domainCtrl.fetchUsers();
 };
 
+PresentationCtrl.prototype.fetchMessage = async function (converId, email) {
+	let dbMessages = await this.domainCtrl.fetchMessage(converId, email);
+	if (dbMessages != null) {
+		return true;
+	} else return false;
+};
+
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);
 	if (user != null) {
 		return user;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
+PresentationCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await this.domainCtrl.fetchUserStats(email);
+	if (userStats != null) {
+		return userStats;
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;
