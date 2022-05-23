@@ -255,22 +255,6 @@ function PinOwnerScreen({ navigation, route }) {
 						marginTop: 10,
 					}}
 				>
-					<View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-						<TouchableOpacity
-							activeOpacity={0.8}
-							style={{ flexDirection: "row" }}
-							onPress={handleShare}
-						>
-							<Ionicons
-								name="share-social-sharp"
-								color={COLORS.secondary}
-								size={35}
-							/>
-							<Text style={[styles.body, { marginStart: 10 }]}>
-								{i18n.t("share")}
-							</Text>
-						</TouchableOpacity>
-					</View>
 					<TouchableOpacity
 						activeOpacity={0.8}
 						style={[
