@@ -15,7 +15,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import COLORS, { green1, green2, green3, red1 } from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import ProgressBarAnimated from 'react-native-progress-bar-animated';
+import * as Progress from 'react-native-progress';
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -26,42 +26,70 @@ function RankingScreen({ navigation, route }) {
 	const [user, setUser] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
 
-	const [statePins, setStatePins] = useState([{
-		numPins: 2,
-		state: 0
-	}]); //primer número es el número de pins que hi ha(s'ha de rebre de l'usuari), el segon es l'estat de l'0 al 3 per a les fotos 
-	const [stateConversations, setStateConversations] = useState([{
-		numConversations: 0,
-		state: 0
-	}]); //"
+	const [statePins, setStatePins] = useState([0]);
+	const [numPins, setNumPins] = useState([0]);
+	const [progressPins,setProgressPins] = useState([0])
+	const [stateConversations, setStateConversations] = useState([0]); 
+	const [numConversations, setNumConversations] = useState([0])
+	const [progressConversations,setProgressConversations] = useState([0])
 
 	let trophies = [ 
 		"https://i.ibb.co/HzVDSLq/nada.png",		
 		"https://i.ibb.co/02vY7w7/bronce.png",
 		"https://i.ibb.co/mcZ8BMf/plata.png",
 		"https://i.ibb.co/vz5W0Wx/oro.png",
-	];
+	]; 
 
 	let maxValues= [1, 5, 10, 10];
+ 
+
+	useEffect(async () => {
+		const getAll = async () => {
+			const userStats = await presentationCtrl.fetchUserStats(user.email);
+			setNumPins(userStats.pins)
+			setNumConversations(userStats.chats)
+		};
+
+		await getAll();
+	});
+
+	
 
 	const getStatePins = () => {
-		
-		if (statePins[0] < 1) {
-			setStatePins({state: 0})
-			console.log("0 "+statePins[0]/maxValues[statePins[1]]*100)
+		if (numPins < 1) {
+			setStatePins(0)
+			setProgressPins(numPins/maxValues[statePins]*100);
 		}
-		else if (statePins[0] >= 1 && statePins[0] < 5) { 
-			setStatePins({state: 1})
-			console.log(statePins)
-			console.log("1"+statePins.numPins/maxValues[statePins.state]*100)
+		else if (numPins >= 1 && numPins < 5) { 
+			setStatePins(1)
+			setProgressPins(numPins/maxValues[statePins]*100);
 		}
-		else if (statePins[0] >= 5 && statePins[0]< 10) {
-			setStatePins({state: 2})
-			console.log("2"+statePins[0]/maxValues[statePins[1]]*100)
+		else if (numPins >= 5 && numPins < 10) {
+			setStatePins(2)
+			setProgressPins(numPins/maxValues[statePins]*100);
 		}
-		else if (statePins[0] >= 10) {
-			setStatePins({state: 3})
-			console.log("3"+statePins[0]/maxValues[statePins[1]]*100)
+		else if (numPins >= 10) {
+			setStatePins(3)
+			setProgressPins(100);
+		}
+	}
+
+	const getStateConversations = () => {
+		if (numConversations < 1) {
+			setStateConversations(0)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 1 && numConversations < 5) { 
+			setStateConversations(1)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 5 && numConversations < 10) {
+			setStateConversations(2)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 10) {
+			setStateConversations(3)
+			setProgressConversations(100);
 		}
 	}
 
@@ -179,36 +207,54 @@ function RankingScreen({ navigation, route }) {
 						}}
 					>
 					{getStatePins()}
-					{console.log(statePins[1])}
 						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
-							Created Pin	
+							Created Pins
 						</Text>
-						
 					</View>
-					<ProgressBarAnimated
+					<Progress.Bar 
+						progress={progressPins/100} 
 						width={300}
 						height={40}
-						value={statePins[0]/maxValues[statePins[1]]*100}
 						backgroundColor={green3}
-						backgroundColorOnComplete={red1}
-						barEasing="ease"
+						color={green1}
 						maxValue={100}
+						borderWidth={0}
 					/>
-					
 				</View>
-				<Image
-					source={{
-						uri: trophies[0],
-					}}
+				<View
 					style={{
-						width: 40,
-						height: 40,
-						borderRadius: 5,
-						marginTop: 50,
-						marginLeft: 5
+						flexDirection: "column",	
 					}}
-				/>
-			</View>
+					>
+						<View
+							style={{
+								backgroundColor: COLORS.lightGrey,
+								height: 30,
+								width: 40,
+								borderRadius: 5,
+								justifyContent: "center",
+								alignItems: "center",
+								marginVertical:10,
+								marginLeft: 5
+							}}
+						>
+							<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+								{numPins}/{maxValues[stateConversations]}
+							</Text>
+						</View>
+						<Image
+							source={{
+								uri: trophies[statePins],
+							}}
+							style={{
+								width: 40,
+								height: 40,
+								borderRadius: 5,
+								marginLeft: 5
+							}}
+						/>
+					</View>
+				</View>
 			<View
 				style={{
 					flexDirection: "row",
@@ -233,32 +279,54 @@ function RankingScreen({ navigation, route }) {
 								marginVertical:10
 							}}
 						>
+							{getStateConversations()}
 							<Text style={[styles.containerTxt, { color: COLORS.black }]}>
 								Created Conversations
 							</Text>
 						</View>
-						<ProgressBarAnimated
+						<Progress.Bar 
+							progress={progressConversations/100} 
 							width={300}
 							height={40}
-							value={80}
 							backgroundColor={green3}
-							backgroundColorOnComplete={red1}
-							barEasing="ease"
+							color={green1}
 							maxValue={100}
-						/>			
+							borderWidth={0}
+						/>	
 				</View>
-				<Image
-					source={{
-						uri: trophies[3],
-					}}
+				<View
 					style={{
-						width: 40,
-						height: 40,
-						borderRadius: 5,
-						marginTop: 50,
-						marginLeft: 5
+						flexDirection: "column",	
 					}}
-				/>
+				>
+					<View
+						style={{
+							backgroundColor: COLORS.lightGrey,
+							height: 30,
+							width: 40,
+							borderRadius: 5,
+							justifyContent: "center",
+							alignItems: "center",
+							marginVertical:10,
+							marginLeft: 5
+							}}
+					>
+						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+							{numConversations}/{maxValues[stateConversations]}
+						</Text>
+					</View>
+					<Image
+						source={{
+							uri: trophies[stateConversations],
+						}}
+						style={{
+							width: 40,
+							height: 40,
+							borderRadius: 5,
+							marginLeft: 5
+						}}
+					/>
+				</View>
 			</View>
 		</View>
 	);
