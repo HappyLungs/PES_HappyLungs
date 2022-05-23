@@ -2,6 +2,7 @@ const DataPointMap = require("./classes/DataPointMap.js");
 import ApiCalendar from 'react-google-calendar-api';
 //import ApiCalendar from 'react-google-calendar-api/ApiCalendar';
 //import * as ApiCalendar from 'react-native-add-calendar-event';
+
 //const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
