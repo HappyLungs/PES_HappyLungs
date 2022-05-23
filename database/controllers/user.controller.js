@@ -314,6 +314,7 @@ exports.changePassword = async (request, response) => {
 
 exports.restorePassword = async (request, response) => {
     let params = {};
+
     if (request.body.params) {
         params = request.body.params;
     } else {
