@@ -12,10 +12,10 @@ import Leaderboard from "../components/Leaderboard";
 
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
-import COLORS from "../../config/stylesheet/colors";
+import COLORS, { green1, green2, green3, red1 } from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import * as Progress from "react-native-progress";
+import ProgressBarAnimated from 'react-native-progress-bar-animated';
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -25,6 +25,45 @@ function RankingScreen({ navigation, route }) {
 
 	const [user, setUser] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
+
+	const [statePins, setStatePins] = useState([{
+		numPins: 2,
+		state: 0
+	}]); //primer número es el número de pins que hi ha(s'ha de rebre de l'usuari), el segon es l'estat de l'0 al 3 per a les fotos 
+	const [stateConversations, setStateConversations] = useState([{
+		numConversations: 0,
+		state: 0
+	}]); //"
+
+	let trophies = [ 
+		"https://i.ibb.co/HzVDSLq/nada.png",		
+		"https://i.ibb.co/02vY7w7/bronce.png",
+		"https://i.ibb.co/mcZ8BMf/plata.png",
+		"https://i.ibb.co/vz5W0Wx/oro.png",
+	];
+
+	let maxValues= [1, 5, 10, 10];
+
+	const getStatePins = () => {
+		
+		if (statePins[0] < 1) {
+			setStatePins({state: 0})
+			console.log("0 "+statePins[0]/maxValues[statePins[1]]*100)
+		}
+		else if (statePins[0] >= 1 && statePins[0] < 5) { 
+			setStatePins({state: 1})
+			console.log(statePins)
+			console.log("1"+statePins.numPins/maxValues[statePins.state]*100)
+		}
+		else if (statePins[0] >= 5 && statePins[0]< 10) {
+			setStatePins({state: 2})
+			console.log("2"+statePins[0]/maxValues[statePins[1]]*100)
+		}
+		else if (statePins[0] >= 10) {
+			setStatePins({state: 3})
+			console.log("3"+statePins[0]/maxValues[statePins[1]]*100)
+		}
+	}
 
 	function renderLeaderboardHeader() {
 		return (
@@ -114,22 +153,111 @@ function RankingScreen({ navigation, route }) {
 	/*
 	 */
 	const SecondRoute = () => (
-		<View style={{ flex: 1, backgroundColor: "white" }}>
+		<View style={{ flex: 1, backgroundColor: "white", flexDirection: "column" }}>
 			<View
 				style={{
-					borderWidth: 1.3,
-					borderStyle: "dashed",
-					borderRadius: 1,
-					borderColor: COLORS.green2,
-					marginTop: 50,
+					flexDirection: "row",
+					marginTop: 20,
+					marginLeft: 30,
+					
 				}}
 			>
-				<Progress.Circle
-					size={150}
-					indeterminate={false}
-					strokeCap={"square"}
-					showsText={true}
-					progress={0.5}
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+					>	
+					<View
+						style={{
+							backgroundColor: COLORS.lightGrey,
+							height: 30,
+							width: 300,
+							borderRadius: 5,
+							justifyContent: "center",
+							alignItems: "center",
+							marginVertical:10
+						}}
+					>
+					{getStatePins()}
+					{console.log(statePins[1])}
+						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+							Created Pin	
+						</Text>
+						
+					</View>
+					<ProgressBarAnimated
+						width={300}
+						height={40}
+						value={statePins[0]/maxValues[statePins[1]]*100}
+						backgroundColor={green3}
+						backgroundColorOnComplete={red1}
+						barEasing="ease"
+						maxValue={100}
+					/>
+					
+				</View>
+				<Image
+					source={{
+						uri: trophies[0],
+					}}
+					style={{
+						width: 40,
+						height: 40,
+						borderRadius: 5,
+						marginTop: 50,
+						marginLeft: 5
+					}}
+				/>
+			</View>
+			<View
+				style={{
+					flexDirection: "row",
+					marginTop: 20,
+					marginLeft: 30,
+					
+				}}
+			>
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+					>	
+						<View
+							style={{
+								backgroundColor: COLORS.lightGrey,
+								height: 30,
+								width: 300,
+								borderRadius: 5,
+								justifyContent: "center",
+								alignItems: "center",
+								marginVertical:10
+							}}
+						>
+							<Text style={[styles.containerTxt, { color: COLORS.black }]}>
+								Created Conversations
+							</Text>
+						</View>
+						<ProgressBarAnimated
+							width={300}
+							height={40}
+							value={80}
+							backgroundColor={green3}
+							backgroundColorOnComplete={red1}
+							barEasing="ease"
+							maxValue={100}
+						/>			
+				</View>
+				<Image
+					source={{
+						uri: trophies[3],
+					}}
+					style={{
+						width: 40,
+						height: 40,
+						borderRadius: 5,
+						marginTop: 50,
+						marginLeft: 5
+					}}
 				/>
 			</View>
 		</View>
@@ -268,6 +396,15 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 14,
 	},
+	
+	containerTxt2: {
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		fontWeight: "bold",
+		fontSize: 14,
+	},
+	
 	centeredView: {
 		flex: 1,
 		justifyContent: "center",
