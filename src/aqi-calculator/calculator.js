@@ -77,4 +77,4 @@ function calculateAQI (pollutants) {
 
 pollutants = new Map()
 myMap.set('pm25', 'one')
-console.log(calculateSubindex('pm25', 6))
+// console.log(calculateSubindex('pm25', 6))

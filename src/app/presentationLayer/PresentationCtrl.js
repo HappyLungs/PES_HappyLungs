@@ -530,4 +530,14 @@ PresentationCtrl.prototype.fetchUser = async function (email) {
 	}
 };
 
+PresentationCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await this.domainCtrl.fetchUserStats(email);
+	if (userStats != null) {
+		return userStats;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
 module.exports = PresentationCtrl;

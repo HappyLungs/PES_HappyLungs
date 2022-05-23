@@ -3,7 +3,7 @@ const Comment = require("../models/comment.model");
 
 async function createComment (params) {
     return new Promise((resolve, reject) => {
-        console.log(params);
+        // console.log(params);
         Comment
         .create(params)
         .then((data) => { 

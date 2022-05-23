@@ -46,7 +46,7 @@ app.get('/api/contamination/:longitude/:latitude/:date', async (req,res) => {
 
     const punto = new DataPointMap((req.params.latitude), (req.params.longitude));
     const valor_contaminacion = await punto.getDayLevel(fecha)
-    console.log(valor_contaminacion)
+    // console.log(valor_contaminacion)
 
     
     if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
@@ -61,7 +61,7 @@ app.post('/api/article', (req,res) => {
     };
 
    const result =  Joi.validate(req.body,schema)
-   console.log(result)
+//    console.log(result)
  
     if(result.error) {
         res.status(400).send(result.error.details[0].message);
@@ -98,7 +98,7 @@ app.put('/api/courses/:id', (req,res) => {
     };
 
    const result =  Joi.validate(req.body,schema)
-   console.log(result)
+//    console.log(result)
  
     if(result.error) {
         res.status(400).send(result.error.details[0].message);

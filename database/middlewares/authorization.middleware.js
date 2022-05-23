@@ -31,7 +31,7 @@ exports.validate = (request, response, next) => {
                         next();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        // console.log(err);
                         responseObj.status = errorCodes.BAD_REQUEST;
                         responseObj.message = "Something went wrong";
                         responseObj.data = {};
@@ -46,7 +46,7 @@ exports.validate = (request, response, next) => {
                 return;
             }
             if (err) {
-                console.log(err.message);
+                // console.log(err.message);
                 responseObj.status = errorCodes.BAD_REQUEST;
                 responseObj.message = "Access token missing";
                 responseObj.data = {};
@@ -55,7 +55,7 @@ exports.validate = (request, response, next) => {
             }
         });
     } else {
-        console.log(err.message);
+        // console.log(err.message);
         responseObj.status = errorCodes.BAD_REQUEST;
         responseObj.message = "Access token missing";
         responseObj.data = {};
