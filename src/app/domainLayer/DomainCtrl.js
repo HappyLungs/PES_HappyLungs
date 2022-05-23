@@ -938,7 +938,7 @@ DomainCtrl.prototype.fetchUserStats = async function (email) {
 };
 
 DomainCtrl.prototype.getMeasureStation = function(eoiCode){
-	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi === eoiCode);
 	return undefined;
 };
 

@@ -23,17 +23,18 @@ class MeasureStation {
         this.length = length;
         this.months = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
-        if(eoiCode != null && eoiCode !==undefined){
-            if(MeasureStation.Stations.length!==0 && MeasureStation.Stations.find(element => element.eoi = eoiCode)===undefined){
+        if(stationType ==="heatmap"){
+            if(MeasureStation.Stations.length!==0 && MeasureStation.Stations.find(element => element.eoi === eoiCode)===undefined){
                 MeasureStation.Stations.push({
                     eoi: eoiCode,
                     station: this,
                 });
-            }else
+            }else if(MeasureStation.Stations.length===0 ){
                 MeasureStation.Stations.push({
-                eoi: eoiCode,
-                station: this,
-            });
+                    eoi: eoiCode,
+                    station: this,
+                });
+            }
         }
     }
 
