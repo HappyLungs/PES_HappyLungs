@@ -22,10 +22,19 @@ import COLORS from "../../config/stylesheet/colors";
 import UserContext from "../../domainLayer/UserContext";
 import i18n from "../../config/translation";
 
+const PresentationCtrl = require("../PresentationCtrl.js");
+
 function ProfileScreen({ navigation, route }) {
+	let presentationCtrl = new PresentationCtrl();
 	const toastProfile = route.params.toastProfile;
 	const toastSettings = route.params.toastSettings;
 	const [user, setUser] = useContext(UserContext);
+
+	const [numPins, setNumPins] = useState([0]);
+	const [points, setPoints] = useState([0]);
+	const [savedPins, setSavedPins] = useState([0]);
+
+
 
 	const showToast = () => {
 		Toast.show({
@@ -44,9 +53,21 @@ function ProfileScreen({ navigation, route }) {
 		}
 	});
 
-	function calendar() {
-		//no se que ha de fer
-	}
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', async () => {
+			const getAll = async () => {
+				const userStats = await presentationCtrl.fetchUserStats(user.email);
+				setNumPins(userStats.pins)
+				setPoints(userStats.points)
+				setSavedPins(userStats.savedPins)
+				console.log(userStats)
+			};
+			await getAll();
+		});
+	  	return unsubscribe;
+	}, []);
+
+
 
 	function logOut() {
 		setUser({
@@ -164,6 +185,8 @@ function ProfileScreen({ navigation, route }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
+		{console.log(user.points)}
+
 			<View
 				style={{
 					paddingHorizontal: 20,
@@ -235,7 +258,7 @@ function ProfileScreen({ navigation, route }) {
 							<View
 								style={{
 									alignItems: "center",
-									marginLeft: -10,
+									marginLeft: 0,
 								}}
 							>
 								<Text
@@ -245,7 +268,7 @@ function ProfileScreen({ navigation, route }) {
 										color: COLORS.secondary,
 									}}
 								>
-									3
+									{numPins}
 								</Text>
 								<Text style={{ color: COLORS.darkGrey }}>
 									{i18n.t("createdPins")}
@@ -272,7 +295,7 @@ function ProfileScreen({ navigation, route }) {
 										color: COLORS.secondary,
 									}}
 								>
-									{user.savedPins.length}
+									{savedPins}
 								</Text>
 								<Text style={{ color: COLORS.darkGrey }}>
 									{i18n.t("savedPins")}
@@ -321,7 +344,7 @@ function ProfileScreen({ navigation, route }) {
 										{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
 									]}
 								>
-									{user.points}
+									{points}
 								</Text>
 								<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
 									{i18n.t("points")}
