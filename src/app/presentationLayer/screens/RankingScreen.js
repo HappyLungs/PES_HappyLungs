@@ -49,7 +49,8 @@ function RankingScreen({ navigation, route }) {
 			setNumPins(userStats.pins)
 			setNumConversations(userStats.chats)
 		};
-
+		getStatePins();
+		getStateConversations();
 		await getAll();
 	});
 
@@ -206,7 +207,7 @@ function RankingScreen({ navigation, route }) {
 							marginVertical:10
 						}}
 					>
-					{getStatePins()}
+					{/*getStatePins()*/}
 						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
 							Created Pins
 						</Text>
@@ -239,7 +240,7 @@ function RankingScreen({ navigation, route }) {
 							}}
 						>
 							<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
-								{numPins}/{maxValues[stateConversations]}
+								{numPins}/{maxValues[statePins]}
 							</Text>
 						</View>
 						<Image
@@ -279,7 +280,7 @@ function RankingScreen({ navigation, route }) {
 								marginVertical:10
 							}}
 						>
-							{getStateConversations()}
+							{/*getStateConversations()*/}
 							<Text style={[styles.containerTxt, { color: COLORS.black }]}>
 								Created Conversations
 							</Text>
