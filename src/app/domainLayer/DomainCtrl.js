@@ -120,6 +120,23 @@ DomainCtrl.prototype.fetchRanking = async function () {
 		return null;
 	}
 };
+
+/**
+ * Calculates pollution level last hour of one point
+ * @param {} latitude
+ * @param {*} longitude
+ */
+DomainCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let dp = new DataPointMap(latitude, longitude);
+	let date = new Date();
+	let level = await dp.getHourLevel(date, date.getHours());
+	console.log(latitude + " " + longitude);
+	console.log(level);
+	return level;
+};
 //STATISTICS - AIR QUALITY
 
 /**
@@ -809,7 +826,7 @@ DomainCtrl.prototype.createMessage = async function (
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
 	let message = await persistenceCtrl.putRequest("/reportMessage", {
-		params: { message: messageId },
+		message: messageId,
 	});
 	if (message.status === 200) {
 		return message.data;
@@ -921,7 +938,7 @@ DomainCtrl.prototype.fetchUserStats = async function (email) {
 };
 
 DomainCtrl.prototype.getMeasureStation = function(eoiCode){
-	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi === eoiCode);
 	return undefined;
 };
 
