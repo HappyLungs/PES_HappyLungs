@@ -14,6 +14,17 @@ let PresentationCtrl;
 	};
 })();
 
+PresentationCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let data = await this.domainCtrl.getPollutionLevelLastHour(
+		latitude,
+		longitude
+	);
+	return data;
+};
+
 /**
  *
  * getPollution Level
@@ -465,7 +476,7 @@ PresentationCtrl.prototype.createConversation = async function (
 	}
 };
 
-PresentationCtrl.prototype.deleteConversation = async function (id,email) {
+PresentationCtrl.prototype.deleteConversation = async function (id, email) {
 	let result = await this.domainCtrl.deleteConversation(id, email);
 	if (result != null) {
 		return true;
@@ -507,7 +518,7 @@ PresentationCtrl.prototype.fetchMessage = async function (converId, email) {
 	if (dbMessages != null) {
 		return true;
 	} else return false;
-}
+};
 
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);

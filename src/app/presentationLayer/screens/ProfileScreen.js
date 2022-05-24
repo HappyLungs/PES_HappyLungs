@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 	Share,
+	ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -420,13 +421,13 @@ function ProfileScreen({ navigation, route }) {
 					width: "100%",
 				}}
 			/>
-			<View
+			<ScrollView
 				style={{
 					flex: 1,
 					marginHorizontal: 30,
-					alignItems: "flex-start",
 					flexDirection: "column",
 				}}
+				contentContainerStyle={{ alignItems: "flex-start" }}
 			>
 				<TouchableOpacity
 					activeOpacity={0.8}
@@ -437,14 +438,6 @@ function ProfileScreen({ navigation, route }) {
 				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>{i18n.t("settings")}</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					activeOpacity={0.8}
-					onPress={() => calendar()}
-					style={styles.containerOption}
-				>
-					<Ionicons name="md-calendar" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>{i18n.t("calendar")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					activeOpacity={0.8}
@@ -464,7 +457,7 @@ function ProfileScreen({ navigation, route }) {
 					<Feather name="users" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>{i18n.t("shareOption")}</Text>
 				</TouchableOpacity>
-			</View>
+			</ScrollView>
 			<TouchableOpacity
 				activeOpacity={0.8}
 				onPress={() => setModalLogoutVisible()}

@@ -1,3 +1,4 @@
+const DataPointMap = require("./DataPointMap");
 const MeasureStation = require("./MeasureStation");
 //const DomainCtrl = require("../DomainCtrl")
 //const dCtrl = new DomainCtrl();
@@ -16,9 +17,10 @@ const start = async function() {
 
    //let x = await dCtrl.getPollutionLevelLastYear(41.363094, 2.112971)
    //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
-
-   const ms = new MeasureStation("08102005");
-   let x = ms.getYearLevel(new Date());
+   const point = new DataPointMap("41.366640" , "2.116984")
+  let data = await point.nearerPoints("2022-03-03T00:00:00.000");
+     console.log(data)
+  
 
 //    console.log(x);
 }
