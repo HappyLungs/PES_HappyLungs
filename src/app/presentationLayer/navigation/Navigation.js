@@ -33,7 +33,7 @@ import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import { UserContextProvider } from "../../domainLayer/UserContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import PresentationCtrl from "../PresentationCtrl";
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -531,7 +531,8 @@ export default function Navigation() {
 	//const [user, setUser] = useState(null);
 
 	//const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-
+   //PresentationCtrl.initMeasureStations();
+     
 	return (
 		<NavigationContainer>
 			<UserContextProvider>

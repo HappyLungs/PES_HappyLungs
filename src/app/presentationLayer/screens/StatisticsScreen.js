@@ -22,9 +22,8 @@ import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function StatisticsScreen({ navigation, route }) {
-	const { data } = route.params;
+	const { data, coords } = route.params;
 	const [tmpDades, setDades] = useState(data);
-	const { coords } = route.params;
 	const [selectedInterval, setSelectedInterval] = useState("24hours");
 	let presentationCtrl = new PresentationCtrl();
 

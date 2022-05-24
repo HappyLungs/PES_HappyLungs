@@ -10,8 +10,9 @@ import {
 	FlatList,
 	Image,
 	Dimensions,
-	Modal,
 } from "react-native";
+
+import Modal from "react-native-modal";
 
 import UserContext from "../../domainLayer/UserContext";
 import COLORS from "../../config/stylesheet/colors";
@@ -495,7 +496,7 @@ function GeneralChatScreen({ navigation }) {
 									style={[
 										styles.shadow,
 										{
-											backgroundColor: COLORS.green1,
+											backgroundColor: COLORS.red1,
 											width: 80,
 											height: 40,
 											borderRadius: 10,
@@ -509,7 +510,7 @@ function GeneralChatScreen({ navigation }) {
 									}}
 								>
 									<Text style={{ color: COLORS.white, fontWeight: "bold" }}>
-										Cancel
+										{i18n.t("cancel")}
 									</Text>
 								</TouchableOpacity>
 
@@ -518,7 +519,7 @@ function GeneralChatScreen({ navigation }) {
 									style={[
 										styles.shadow,
 										{
-											backgroundColor: COLORS.white,
+											backgroundColor: COLORS.green1,
 											width: 80,
 											height: 40,
 											borderRadius: 10,
@@ -538,8 +539,8 @@ function GeneralChatScreen({ navigation }) {
 										setModalDeleteVisible(false);
 									}}
 								>
-									<Text style={{ color: COLORS.primary, fontWeight: "bold" }}>
-										Yes
+									<Text style={{ color: COLORS.white, fontWeight: "bold" }}>
+										{i18n.t("yes")}
 									</Text>
 								</TouchableOpacity>
 							</View>

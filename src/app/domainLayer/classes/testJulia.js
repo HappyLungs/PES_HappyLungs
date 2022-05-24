@@ -1,3 +1,4 @@
+const DadesObertes = require("../services/DadesObertes");
 const DataPointMap = require("./DataPointMap");
 const MeasureStation = require("./MeasureStation");
 //const DomainCtrl = require("../DomainCtrl")
@@ -7,28 +8,31 @@ const MeasureStation = require("./MeasureStation");
 
 // Start function
 const start = async function() {
+    const date = new Date();
+    const dObertes = new DadesObertes();
+	let measuresStations = await dObertes.getMeasuresDate(date);
+    for(element of measuresStations){
+        if(getMeasureStation(element.codi_eoi) === undefined){
+            console.log("**")
+            const m_s = new MeasureStation(element.codi_eoi, null, "heatmap", element.latitud, element.longitud, null);
+           
+            await m_s.getHourLevel(date, date.getHours());    
+        }
+        
+    }
     
-    //const d = new Date();
-    //const h = 12;
-    //let m = new MeasureStation("08019004");
-    //console.log("Crido la funció a test.js")
-    //const result = await m.getWeekLevel(d);;
-    //console.log(result);
-
-   //let x = await dCtrl.getPollutionLevelLastYear(41.363094, 2.112971)
-   //let x  = await dCtrl.getPollutionLevelLastDay(41.363094, 2.112971);
-   const point = new DataPointMap("41.366640" , "2.116984")
-  let data = await point.nearerPoints("2022-03-03T00:00:00.000");
-     console.log(data)
-  
-
-//    console.log(x);
 }
+
+
 
 start();
 
 
-
+function getMeasureStation(eoiCode) {
+    if (MeasureStation.Stations !== undefined)
+        return MeasureStation.Stations.find((element) => (element.eoi === eoiCode));
+    return undefined;
+}
 /*
 const d = "2022-02-01T00:00:00.000";
 var day = new Date(d);
