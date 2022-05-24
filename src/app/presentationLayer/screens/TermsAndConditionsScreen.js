@@ -129,7 +129,7 @@ function TermsAndConditionsScreen({ navigation, route }) {
 					We may consider and approve other link requests from the following
 					types of organizations: commonly-known consumer and/or business
 					information sources; dot.com community sites; associations or other
-					groups representing charities; online directory distributors; internet
+					groups representing charities; online directory distributors; internet 
 					portals; accounting, law and consulting firms; and educational
 					institutions and trade associations.
 				</Text>
