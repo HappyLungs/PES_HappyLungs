@@ -33,7 +33,7 @@ exports.find = async (req, res) => {
  
 };
 
-	if (req.params.date === "today") fecha = new Date();
+/* 	if (req.params.date === "today") fecha = new Date();
 
 	if (isNaN(fecha)) {
 		res
@@ -54,7 +54,7 @@ exports.find = async (req, res) => {
      if(!valor_contaminacion) res.status(404).send('No existe el ID') // 404 Error
      else res.send(valor_contaminacion)
  
-};
+} */
 
 exports.findRadius = async (req, res) => {
 	if (isNaN(parseInt(req.params.longitude))) {
