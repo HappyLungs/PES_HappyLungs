@@ -24,7 +24,7 @@
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/logo.png"
 			},
-			"package": "happy.lungs"
+			"package": "com.happylungs.happylungs"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
