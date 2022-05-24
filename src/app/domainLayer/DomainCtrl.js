@@ -121,6 +121,24 @@ DomainCtrl.prototype.fetchRanking = async function () {
 	}
 };
 
+
+
+DomainCtrl.prototype.initMeasureStations = async function (){
+	const date = new Date();
+    const dObertes = new DadesObertes();
+	let measuresStations = await dObertes.getMeasuresDate(date);
+    for(element of measuresStations){
+        if(getMeasureStation(element.codi_eoi) === undefined){
+            console.log("**")
+            const m_s = new MeasureStation(element.codi_eoi, null, "heatmap", element.latitud, element.longitud, null);
+           
+            await m_s.getHourLevel(date, date.getHours());    
+        }
+        
+    }
+    
+};
+
 /**
  * Calculates pollution level last hour of one point
  * @param {} latitude

@@ -50,6 +50,8 @@ class DataPointMap {
 		let data = {
 			name: "null",
 			value: 0,
+			latitude: this.latitude,
+			longitude:  this.longitud
 		};
 		let totalData = [];
 

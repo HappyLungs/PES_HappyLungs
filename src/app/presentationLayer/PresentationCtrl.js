@@ -14,6 +14,12 @@ let PresentationCtrl;
 	};
 })();
 
+PresentationCtrl.prototype.initMeasureStations = async function (){
+	this.domainCtrl.initMeasureStations();
+}
+
+
+
 PresentationCtrl.prototype.getPollutionLevelLastHour = async function (
 	latitude,
 	longitude
