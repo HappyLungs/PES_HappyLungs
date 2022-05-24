@@ -764,7 +764,7 @@ DomainCtrl.prototype.createConversation = async function (
 		message: text,
 	});
 	if (messages.status === 200) {
-		message = messages.data;
+		let message = messages.data;
 		let date = new Date(message.createdAt);
 		message.date = [
 			date.getDate().toString().padStart(2, "0"),
