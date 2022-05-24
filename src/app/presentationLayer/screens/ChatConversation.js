@@ -11,7 +11,6 @@ import {
 	Button,
 	TouchableOpacity,
 	FlatList,
-	Modal
 } from "react-native";
 
 import UserContext from "../../domainLayer/UserContext";
@@ -19,6 +18,8 @@ import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl");
 const Socket = require("../Socket");
 import * as Clipboard from 'expo-clipboard';
+import Modal from "react-native-modal";
+
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';

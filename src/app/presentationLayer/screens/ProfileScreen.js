@@ -60,7 +60,6 @@ function ProfileScreen({ navigation, route }) {
 				setNumPins(userStats.pins)
 				setPoints(userStats.points)
 				setSavedPins(userStats.savedPins)
-				console.log(userStats)
 			};
 			await getAll();
 		});
@@ -185,7 +184,6 @@ function ProfileScreen({ navigation, route }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
-		{console.log(user.points)}
 
 			<View
 				style={{
