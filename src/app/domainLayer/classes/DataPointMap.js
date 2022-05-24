@@ -22,12 +22,13 @@ class DataPointMap {
 			nearPoint = new MeasureStation(
 				nearPoints[0][1].codi_eoi,
 				null,
-				null,
+				"heatmap",
 				this.latitude,
 				this.longitud,
 				null
 			);
 		} else nearPoint = nearPoint.station;
+		//console.log(nearPoint);
 		return nearPoint.getHourLevel(date, hour);
 	}
 
@@ -129,7 +130,6 @@ class DataPointMap {
 	 */
 	/*async getPollutantsQuantWeek (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
        return await nearPoint.getQuantityOfEachPollutantWeek(date);
     }*/
@@ -140,7 +140,6 @@ class DataPointMap {
 	 */
 	/*async getPollutantsQuantMonth (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
      return await nearPoint.getQuantityOfEachPollutantMonth(date);
     }*/
@@ -151,7 +150,6 @@ class DataPointMap {
 	 */
 	/* async getPollutantsQuantYear (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
              return await nearPoint.getQuantityOfEachPollutantYear(date);
     }
@@ -222,7 +220,7 @@ class DataPointMap {
 	}
 	getMeasureStation(eoiCode) {
 		if (MeasureStation.Stations !== undefined)
-			return MeasureStation.Stations.find((element) => (element.eoi = eoiCode));
+			return MeasureStation.Stations.find((element) => (element.eoi === eoiCode));
 		return undefined;
 	}
 }

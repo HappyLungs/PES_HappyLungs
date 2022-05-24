@@ -144,6 +144,7 @@ function MapScreen({ navigation, route }) {
 				longitude: null,
 			});
 			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
+
 		}
 	});
 
@@ -186,6 +187,8 @@ function MapScreen({ navigation, route }) {
 			setHeatpoints(aux);
 			// console.log(heatpoints);
 		};
+		const { zoom } = await mapRef.current.getCamera();
+		console.log(zoom);
 		await initHeatPoints();
 		return unsubscribe;
 	}, [navigation]);

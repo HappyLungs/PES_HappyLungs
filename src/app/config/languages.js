@@ -11,7 +11,7 @@ const ca = {
 	filterByCertificate: "Filtrar edificis per certificat energètic",
 	selectedLocation: "Ubicació seleccionada",
 	createPin: "Crear Pin",
-	seeStatistics: "Estatístiques",
+	seeStatistics: "Estadístiques",
 	seeOnMap: "Veure en el mapa",
 	share: "Compartir",
 	recommended1: "Segur",

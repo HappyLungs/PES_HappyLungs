@@ -369,8 +369,6 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
-	// console.log("result.data");
-	// console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -826,7 +824,7 @@ DomainCtrl.prototype.createMessage = async function (
 
 DomainCtrl.prototype.reportMessage = async function (messageId) {
 	let message = await persistenceCtrl.putRequest("/reportMessage", {
-		params: { message: messageId },
+		message: messageId,
 	});
 	if (message.status === 200) {
 		return message.data;
@@ -870,7 +868,6 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
   })
       .then((response) => response.json())
       .then((data) => data);
-  //console.log(user);
 };*/
 DomainCtrl.prototype.inCat = function (lat, long){
 	if(40.547416<=lat && lat<=41.147653)
@@ -938,7 +935,7 @@ DomainCtrl.prototype.fetchUserStats = async function (email) {
 };
 
 DomainCtrl.prototype.getMeasureStation = function(eoiCode){
-	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi = eoiCode);
+	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi === eoiCode);
 	return undefined;
 };
 
