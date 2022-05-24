@@ -1,7 +1,5 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-import ApiCalendar from 'react-google-calendar-api';
-//import ApiCalendar from 'react-google-calendar-api/ApiCalendar';
-//import * as ApiCalendar from 'react-native-add-calendar-event';
+import { googleCalendarEventUrl } from 'google-calendar-url';
 
 //const fetch = require("node-fetch");
 
@@ -28,45 +26,6 @@ let DomainCtrl;
 		// initialize any properties of the singleton
 	};
 })();
-
-///TESTTTTTT
-DomainCtrl.prototype.createEvent = function (date, pin, email) {
-	console.log(date, pin, email);
-	//pin.addCalendarEvent();
-
-	let today = new Date().toISOString().slice(0, 10);
-	const isoStrStart = today + "T12:00:00-00:00";
-	const isoStrEnd = today + "T13:00:00-00:00";
-
-	const event = {
-		title: "ton ciclista",
-		location: "al cul del mon",
-		//description: "peu pla",
-		startDate: isoStrStart,
-		endDate: isoStrEnd,
-		allDay: true,
-		/*
-		start: {
-			dateTime: isoStrStart,
-		},
-		end: {
-			dateTime: isoStrEnd,
-		},
-		*/
-	};
-
-	ApiCalendar.handleClientLoad();
-
-	console.log("-----------------GOOGLE API INITIATED-----------------");
-
-	ApiCalendar.onLoad(ApiCalendar.handleAuthClick());
-
-	console.log("-----------------SIGNED IN-----------------");
-
-	ApiCalendar.createEvent(event);
-
-	console.log("-----------------EVENT CREATED-----------------");
-}
 
 //MAP
 
@@ -457,6 +416,13 @@ DomainCtrl.prototype.deletePin = async function (Pin) {
 		return null;
 	}
 };
+
+DomainCtrl.prototype.createEvent = function (date, Pin, email) {
+	console.log(date, Pin, email);
+	Pin.addCalendarEvent(date);
+}
+
+//USERS
 
 /**
  *
