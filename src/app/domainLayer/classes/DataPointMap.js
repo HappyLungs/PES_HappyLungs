@@ -28,7 +28,7 @@ class DataPointMap {
 				null
 			);
 		} else nearPoint = nearPoint.station;
-		//console.log(nearPoint);
+		//console.log(nearPoint.eoiCode);
 		return nearPoint.getHourLevel(date, hour);
 	}
 

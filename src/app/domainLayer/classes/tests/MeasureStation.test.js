@@ -17,14 +17,14 @@ test('test getMeasuresByDay', async () => {
     const data = await measureStationTest.getMeasuresByDay(new Date('March 10, 2022 9:00:00'));
     expect(data).toBeInstanceOf(Map);
 });
-*/
+
 test('test getHour level', async () => {
     const data = await measureStationTest.getHourLevel(new Date('March 10, 2022 9:00:00'), 2);
     console.log(MeasureStation.Stations);
     expect(data).toBe(1);
 
 });
-/*
+
 test('test get pollution level at every hour of a day', async()=>{
     const data =await measureStationTest.getDayLevel(new Date('March 10, 2022 9:00:00'));
     expect(data).toHaveProperty('levels');
@@ -73,3 +73,12 @@ test('test distance', ()=>{
     dist=measureStationTest.distance(42.443584, 2.23889);
     expect(dist).toBeCloseTo( 110.81706691033331);
 });*/
+test('test distance', ()=>{
+    new MeasureStation("1",null,"heatmap",41.475384, 1.9212021,null);
+    new MeasureStation("2",null,"heatmap",41.475384, 1.9212021,null);
+    new MeasureStation("23",null,"heatmap",41.475384, 1.9212021,null);
+    new MeasureStation("4",null,"heatmap",41.475384, 1.9212021,null);
+    new MeasureStation("5",null,"heatmap",41.475384, 1.9212021,null);
+    //console.log(MeasureStation.Stations);
+
+});

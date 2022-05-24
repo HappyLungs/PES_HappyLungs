@@ -97,6 +97,7 @@ function MapScreen({ navigation, route }) {
 		},
 	]);
 
+
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -188,7 +189,7 @@ function MapScreen({ navigation, route }) {
 			// console.log(heatpoints);
 		};
 		const { zoom } = await mapRef.current.getCamera();
-		console.log(zoom);
+		//console.log(zoom);
 		await initHeatPoints();
 		return unsubscribe;
 	}, [navigation]);
@@ -886,7 +887,7 @@ function MapScreen({ navigation, route }) {
 						opacity={0.6}
 						gradient={{
 							colors: ["green", "yellow", "orange", "red", "purple"],
-							startPoints: [0.15, 0.3, 0.6, 0.8, 0.99],
+							startPoints: [0.01, 0.5, 0.7, 0.8, 0.9],
 							colorMapSize: 200,
 						}}
 					/>

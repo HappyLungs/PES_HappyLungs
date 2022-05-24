@@ -61,7 +61,7 @@ DomainCtrl.prototype.getMapData = async function () {
 			let info = {
 				latitude: parseFloat(ms.latitud),
 				longitude: parseFloat(ms.longitud),
-				weight: parseFloat(level) / 6,
+				weight: parseFloat(level) / 5,
 			};
 			measureStationLevels.push(info);
 		}
@@ -70,9 +70,9 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date=new Date();
-	let nsteps=7;
-	let inilat=40.541006;
-	let inilong=0.680310;
+	let nsteps=13;
+	let inilat=40.514714;
+	let inilong=-0.116867;
 	let maxlat=42.814019;
 	let maxlong=3.205920;
 	let actuallat=inilat;
@@ -85,6 +85,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		for(let j=0;j<nsteps ;j++) {
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
+				//console.log(i,j);
 			} else {
 
 			let dp = new DataPointMap(actuallat, actuallong);
@@ -93,6 +94,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 				longitude: actuallong,
 				weight: await dp.getHourLevel(date, date.getHours()) / 5,
 			};
+			//console.log(actual.weight);
 			datapoints.push(actual);
 			actuallong = actuallong + longstep;
 			}
@@ -107,8 +109,6 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	};
 	datapoints.push(actual);
 	return datapoints;
-
-
 }
 
 DomainCtrl.prototype.fetchRanking = async function () {
@@ -873,7 +873,7 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
   //console.log(user);
 };*/
 DomainCtrl.prototype.inCat = function (lat, long){
-	if(40.547416<=lat && lat<=41.147653)
+	if(40.541006<=lat && lat<=41.147653)
 		return (0.197311<=long  && long<=1.039680);
 
 	if(41.147653<=lat && lat<=41.202419)
