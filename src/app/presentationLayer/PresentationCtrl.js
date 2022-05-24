@@ -31,10 +31,10 @@ PresentationCtrl.prototype.getPollutionLevelLastHour = async function (
  *
  * @returns { levels, tags, title, filter }
  */
-PresentationCtrl.prototype.getPollutionLastDay = async function () {
-	let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
-	return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
-};
+// PresentationCtrl.prototype.getPollutionLastDay = async function () {
+// 	let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
+// 	return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
+// };
 
 /**
  *
@@ -42,13 +42,13 @@ PresentationCtrl.prototype.getPollutionLastDay = async function () {
  *
  * @returns { levels, tags, title, filter }
  */
-PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
-	let data = await this.domainCtrl.getPollutantsQuantLastDay(
-		41.363094,
-		2.112971
-	);
-	return data;
-};
+// PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
+// 	let data = await this.domainCtrl.getPollutantsQuantLastDay(
+// 		41.363094,
+// 		2.112971
+// 	);
+// 	return data;
+// };
 
 /**
  *

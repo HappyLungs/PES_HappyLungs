@@ -130,7 +130,6 @@ class DataPointMap {
 	 */
 	/*async getPollutantsQuantWeek (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
        return await nearPoint.getQuantityOfEachPollutantWeek(date);
     }*/
@@ -141,7 +140,6 @@ class DataPointMap {
 	 */
 	/*async getPollutantsQuantMonth (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
      return await nearPoint.getQuantityOfEachPollutantMonth(date);
     }*/
@@ -152,7 +150,6 @@ class DataPointMap {
 	 */
 	/* async getPollutantsQuantYear (date) {
         let nearPoints = await this.nearerPoints(date);
-
         let nearPoint = new MeasureStation(nearPoints[0][1].codi_eoi);
              return await nearPoint.getQuantityOfEachPollutantYear(date);
     }

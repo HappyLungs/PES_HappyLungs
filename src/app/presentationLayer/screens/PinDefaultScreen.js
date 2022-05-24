@@ -92,7 +92,7 @@ function PinDefaultScreen({ navigation, route }) {
 								pin.latitude,
 								pin.longitude
 							);
-							navigation.navigate("Statistics", { data: data });
+							navigation.navigate("Statistics", { data: data, coords: { latitude: pin.latitude, longitude: pin.longitude }});
 						}}
 					>
 						<Text

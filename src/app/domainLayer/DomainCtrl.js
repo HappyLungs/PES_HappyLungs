@@ -369,8 +369,6 @@ DomainCtrl.prototype.editPin = async function (
 		pin: pin,
 		creatorEmail: userEmail,
 	});
-	// console.log("result.data");
-	// console.log(result.data);
 	if (result.status === 200) {
 		return result.data;
 	} else {
@@ -870,7 +868,6 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
   })
       .then((response) => response.json())
       .then((data) => data);
-  //console.log(user);
 };*/
 DomainCtrl.prototype.inCat = function (lat, long){
 	if(40.547416<=lat && lat<=41.147653)
