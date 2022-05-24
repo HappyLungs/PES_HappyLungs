@@ -314,6 +314,7 @@ exports.changePassword = async (request, response) => {
 
 exports.restorePassword = async (request, response) => {
     let params = {};
+
     if (request.body.params) {
         params = request.body.params;
     } else {
@@ -394,7 +395,7 @@ exports.unsavePin = async (request, response) => {
         sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "Invalid user", {});
         return;
     } 
-    if (result.savedPins.indexOf(params.pin) === -1) {
+    if (!result.savedPins || result.savedPins.indexOf(params.pin) === -1) {
         sendResponseHelper.sendResponse(response, errorCodes.RESOURCE_NOT_FOUND, "Pin does not exist", {});
         return;
     }

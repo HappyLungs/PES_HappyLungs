@@ -22,12 +22,13 @@ class DataPointMap {
 			nearPoint = new MeasureStation(
 				nearPoints[0][1].codi_eoi,
 				null,
-				null,
+				"heatmap",
 				this.latitude,
 				this.longitud,
 				null
 			);
 		} else nearPoint = nearPoint.station;
+		//console.log(nearPoint);
 		return nearPoint.getHourLevel(date, hour);
 	}
 
@@ -172,9 +173,9 @@ class DataPointMap {
 		let all_points = await dadesObertes.getMeasuresDate(date);
 		all_points.forEach((c_point) => {
 			let m_s = new MeasureStation(
-				c_point.eoiCode,
-				c_point.stationName,
-				c_point.stationType,
+				c_point.codi_eoi,
+				c_point.nom_estacio,
+				c_point.tipus_estacio,
 				c_point.latitud,
 				c_point.longitud,
 				null
@@ -222,7 +223,7 @@ class DataPointMap {
 	}
 	getMeasureStation(eoiCode) {
 		if (MeasureStation.Stations !== undefined)
-			return MeasureStation.Stations.find((element) => (element.eoi = eoiCode));
+			return MeasureStation.Stations.find((element) => (element.eoi === eoiCode));
 		return undefined;
 	}
 }
