@@ -209,7 +209,7 @@ function RankingScreen({ navigation, route }) {
 					>
 					{/*getStatePins()*/}
 						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
-							Created Pins
+							{i18n.t("createdPins")}
 						</Text>
 					</View>
 					<Progress.Bar 
@@ -282,7 +282,7 @@ function RankingScreen({ navigation, route }) {
 						>
 							{/*getStateConversations()*/}
 							<Text style={[styles.containerTxt, { color: COLORS.black }]}>
-								Created Conversations
+								{i18n.t("createdConversations")}
 							</Text>
 						</View>
 						<Progress.Bar 

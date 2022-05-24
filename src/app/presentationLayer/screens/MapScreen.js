@@ -19,7 +19,6 @@ import {
 	MaterialIcons,
 	MaterialCommunityIcons,
 	AntDesign,
-	Feather,
 } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import CustomToast from "../components/CustomToast";
@@ -68,6 +67,7 @@ function MapScreen({ navigation, route }) {
 	const [selected, setSelected] = useState(null);
 	const [dangerOffset, setDangerOffset] = useState(0);
 	const [dangerMessage, setDangerMessage] = useState("");
+	const [pollutionLevel, setPollutionLevel] = useState(0);
 
 	/**
 	 * Function to set a default region
@@ -144,7 +144,6 @@ function MapScreen({ navigation, route }) {
 				longitude: null,
 			});
 			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
-
 		}
 	});
 
@@ -188,7 +187,7 @@ function MapScreen({ navigation, route }) {
 			// console.log(heatpoints);
 		};
 		const { zoom } = await mapRef.current.getCamera();
-		console.log(zoom);
+		//console.log(zoom);
 		await initHeatPoints();
 		return unsubscribe;
 	}, [navigation]);
@@ -236,8 +235,7 @@ function MapScreen({ navigation, route }) {
 			latitude,
 			longitude
 		);
-		console.log(level);
-
+		setPollutionLevel(level);
 		const title = await callGeocodeAPI(latitude, longitude);
 		setActualMarker({
 			latitude,
@@ -312,23 +310,23 @@ function MapScreen({ navigation, route }) {
 	const calculateDangerLevel = () => {
 		if (user.healthStatus[0]) {
 			if (user.healthStatus[1]) {
-				setDangerOffset(-50);
+				setDangerOffset(100);
 				setDangerMessage(i18n.t("recommended5"));
 			} else if (user.healthStatus[2]) {
-				setDangerOffset(-40);
+				setDangerOffset(80);
 				setDangerMessage(i18n.t("recommended4"));
 			} else {
-				setDangerOffset(-20);
+				setDangerOffset(60);
 				setDangerMessage(i18n.t("recommended3"));
 			}
 		} else if (user.healthStatus[1]) {
-			setDangerOffset(-40);
+			setDangerOffset(80);
 			setDangerMessage(i18n.t("recommended4"));
 		} else if (user.healthStatus[2]) {
-			setDangerOffset(-5);
+			setDangerOffset(40);
 			setDangerMessage(i18n.t("recommended2"));
 		} else {
-			setDangerOffset(45);
+			setDangerOffset(20);
 			setDangerMessage(i18n.t("recommended1"));
 		}
 	};
@@ -750,6 +748,15 @@ function MapScreen({ navigation, route }) {
 							</TouchableOpacity>
 							<View
 								style={{
+									flexDirection: "row",
+									alignSelf: "flex-start",
+									right: pollutionLevel * -10,
+								}}
+							>
+								<Text style={styles.subtitle2}>Actual</Text>
+							</View>
+							<View
+								style={{
 									marginTop: 10,
 									flexDirection: "row",
 									alignItems: "center",
@@ -771,53 +778,36 @@ function MapScreen({ navigation, route }) {
 								>
 									<View
 										style={{
-											backgroundColor: COLORS.white,
-											alignSelf: "center",
-											height: 20,
+											backgroundColor: COLORS.secondary,
+											alignSelf: "flex-start",
+											height: 15,
+											top: -3,
+											borderRadius: 20,
 											width: 5,
-											right: dangerOffset,
+											right: pollutionLevel * -20,
+										}}
+									/>
+									<View
+										style={{
+											backgroundColor: COLORS.secondary,
+											alignSelf: "flex-start",
+											height: 15,
+											bottom: -3,
+											borderRadius: 20,
+											width: 5,
+											left: dangerOffset,
 										}}
 									/>
 								</LinearGradient>
 							</View>
 							<View
 								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									justifyContent: "center",
+									alignSelf: "flex-start",
 									marginTop: 5,
+									left: dangerOffset - 10,
 								}}
 							>
-								{dangerOffset === 45 && (
-									<AntDesign name="Safety" size={24} color={COLORS.green1} />
-								)}
-								{dangerOffset === -5 && (
-									<Feather
-										name="alert-triangle"
-										size={24}
-										color={COLORS.yellow}
-									/>
-								)}
-								{dangerOffset === -20 && (
-									<Ionicons name="alert" size={24} color={COLORS.orange} />
-								)}
-								{dangerOffset === -40 && (
-									<Feather
-										name="alert-triangle"
-										size={24}
-										color={COLORS.red1}
-									/>
-								)}
-								{dangerOffset === -50 && (
-									<MaterialIcons
-										name="dangerous"
-										size={24}
-										color={COLORS.red1}
-									/>
-								)}
-								<Text style={[styles.subtitle2, { marginStart: 5 }]}>
-									{dangerMessage.toUpperCase()}
-								</Text>
+								<Text style={styles.subtitle2}>{dangerMessage}</Text>
 							</View>
 						</View>
 					</View>
