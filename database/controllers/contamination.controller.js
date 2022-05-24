@@ -54,7 +54,7 @@ exports.findRadius = async (req, res) => {
      const valor_contaminacion = await punto.getDayLevel_byRadius(radius)
 
      valor_contaminacion.forEach(el => {
-        //  console.log(el)
+         console.log(el)
      }) 
  
      
