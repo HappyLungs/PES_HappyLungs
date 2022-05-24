@@ -36,21 +36,20 @@ DomainCtrl.prototype.getMapData = async function () {
 	let allMeasures = await dadesObertes.getMeasuresDate(date);
 	allMeasures.forEach((measure) => {
 		let eoiCode = measure.codi_eoi;
-		let auxstation=this.getMeasureStation(eoiCode);
+		let auxstation = this.getMeasureStation(eoiCode);
 		if (!measureStations.has(eoiCode)) {
 			let ms;
-			if(auxstation===undefined){
+			if (auxstation === undefined) {
 				ms = new MeasureStation(
-				measure.codi_eoi,
-				measure.nom_estacio,
-				measure.tipus_estacio,
-				measure.latitud,
-				measure.longitud,
-				null
+					measure.codi_eoi,
+					measure.nom_estacio,
+					measure.tipus_estacio,
+					measure.latitud,
+					measure.longitud,
+					null
 				);
-			}else ms=auxstation.station;
-				measureStations.set(eoiCode, ms);
-
+			} else ms = auxstation.station;
+			measureStations.set(eoiCode, ms);
 		}
 	});
 
@@ -69,36 +68,35 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
-	const date=new Date();
-	let nsteps=7;
-	let inilat=40.541006;
-	let inilong=0.680310;
-	let maxlat=42.814019;
-	let maxlong=3.205920;
-	let actuallat=inilat;
-	let actuallong=inilong;
+	const date = new Date();
+	let nsteps = 7;
+	let inilat = 40.541006;
+	let inilong = 0.68031;
+	let maxlat = 42.814019;
+	let maxlong = 3.20592;
+	let actuallat = inilat;
+	let actuallong = inilong;
 
-	let longstep=(maxlong-inilong)/nsteps;
-	let latsteps= (maxlat-inilat)/nsteps;
-	let datapoints=[];
-	for (let i=0;i<nsteps;i++){
-		for(let j=0;j<nsteps ;j++) {
+	let longstep = (maxlong - inilong) / nsteps;
+	let latsteps = (maxlat - inilat) / nsteps;
+	let datapoints = [];
+	for (let i = 0; i < nsteps; i++) {
+		for (let j = 0; j < nsteps; j++) {
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 			} else {
-
-			let dp = new DataPointMap(actuallat, actuallong);
-			const actual = {
-				latitude: actuallat,
-				longitude: actuallong,
-				weight: await dp.getHourLevel(date, date.getHours()) / 5,
-			};
-			datapoints.push(actual);
-			actuallong = actuallong + longstep;
+				let dp = new DataPointMap(actuallat, actuallong);
+				const actual = {
+					latitude: actuallat,
+					longitude: actuallong,
+					weight: (await dp.getHourLevel(date, date.getHours())) / 5,
+				};
+				datapoints.push(actual);
+				actuallong = actuallong + longstep;
 			}
 		}
-		actuallat=actuallat+latsteps;
-		actuallong=inilong;
+		actuallat = actuallat + latsteps;
+		actuallong = inilong;
 	}
 	let actual = {
 		latitude: 0,
@@ -107,9 +105,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 	};
 	datapoints.push(actual);
 	return datapoints;
-
-
-}
+};
 
 DomainCtrl.prototype.fetchRanking = async function () {
 	let ranking = await persistenceCtrl.getRequest("/listUsers", { type: "all" });
@@ -133,8 +129,6 @@ DomainCtrl.prototype.getPollutionLevelLastHour = async function (
 	let dp = new DataPointMap(latitude, longitude);
 	let date = new Date();
 	let level = await dp.getHourLevel(date, date.getHours());
-	console.log(latitude + " " + longitude);
-	console.log(level);
 	return level;
 };
 //STATISTICS - AIR QUALITY
@@ -869,32 +863,32 @@ DomainCtrl.prototype.createEvent = async function (date, pin, email) {
       .then((response) => response.json())
       .then((data) => data);
 };*/
-DomainCtrl.prototype.inCat = function (lat, long){
-	if(40.547416<=lat && lat<=41.147653)
-		return (0.197311<=long  && long<=1.039680);
+DomainCtrl.prototype.inCat = function (lat, long) {
+	if (40.547416 <= lat && lat <= 41.147653)
+		return 0.197311 <= long && long <= 1.03968;
 
-	if(41.147653<=lat && lat<=41.202419)
-		return(0.297129<=long  && long<=1.658984);
+	if (41.147653 <= lat && lat <= 41.202419)
+		return 0.297129 <= long && long <= 1.658984;
 
-	if(41.202419<=lat && lat<=41.453135)
-		return(0.380587<=long  && long<=2.260350);
+	if (41.202419 <= lat && lat <= 41.453135)
+		return 0.380587 <= long && long <= 2.26035;
 
-	if(41.453135<=lat && lat<=41.516696)
-		return(0.344322<long  && long<2.446748);
-	if(41.516696<=lat && lat<=41.787774)
-		return(0.378409<=long  && long<=3.004935);
+	if (41.453135 <= lat && lat <= 41.516696)
+		return 0.344322 < long && long < 2.446748;
+	if (41.516696 <= lat && lat <= 41.787774)
+		return 0.378409 <= long && long <= 3.004935;
 
-	if(41.787774<=lat && lat<=41.835174)
-		return(0.407281<=long  && long<=3.157412);
+	if (41.787774 <= lat && lat <= 41.835174)
+		return 0.407281 <= long && long <= 3.157412;
 
-	if(41.835174<=lat && lat<=42.179406)
-		return(0.677742<=long  && long<=3.155225);
+	if (41.835174 <= lat && lat <= 42.179406)
+		return 0.677742 <= long && long <= 3.155225;
 
-	if(42.179406<=lat && lat<=42.401692)
-		return(0.673662<=long  && long<=3.313046);
+	if (42.179406 <= lat && lat <= 42.401692)
+		return 0.673662 <= long && long <= 3.313046;
 
-	if(42.401692<=lat && lat<=42.717475)
-		return(0.642428<=long  && long<=1.409893);
+	if (42.401692 <= lat && lat <= 42.717475)
+		return 0.642428 <= long && long <= 1.409893;
 	return false;
 };
 
@@ -919,7 +913,9 @@ DomainCtrl.prototype.fetchUser = async function (email) {
 };
 
 DomainCtrl.prototype.fetchUserStats = async function (email) {
-	let userStats = await persistenceCtrl.getRequest("/userStats", { email: email });
+	let userStats = await persistenceCtrl.getRequest("/userStats", {
+		email: email,
+	});
 	if (userStats.status === 200) {
 		if (!userStats.data.chats) userStats.data.chats = 0;
 		if (!userStats.data.pins) userStats.data.pins = 0;
@@ -934,8 +930,9 @@ DomainCtrl.prototype.fetchUserStats = async function (email) {
 	}
 };
 
-DomainCtrl.prototype.getMeasureStation = function(eoiCode){
-	if(MeasureStation.Stations!==undefined) return MeasureStation.Stations.find(element => element.eoi === eoiCode);
+DomainCtrl.prototype.getMeasureStation = function (eoiCode) {
+	if (MeasureStation.Stations !== undefined)
+		return MeasureStation.Stations.find((element) => element.eoi === eoiCode);
 	return undefined;
 };
 
