@@ -531,7 +531,7 @@ export default function Navigation() {
 	//const [user, setUser] = useState(null);
 
 	//const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-   PresentationCtrl.initMeasureStations();
+   //PresentationCtrl.initMeasureStations();
      
 	return (
 		<NavigationContainer>
