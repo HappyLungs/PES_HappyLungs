@@ -1,4 +1,7 @@
 const DataPointMap = require("./classes/DataPointMap.js");
+import { googleCalendarEventUrl } from 'google-calendar-url';
+import * as Linking from 'expo-linking';
+
 //const fetch = require("node-fetch");
 
 import Pin from "./classes/Pin";
@@ -12,6 +15,7 @@ const dataPointMap = require("./classes/DataPointMap");
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
+
 
 let DomainCtrl;
 (function () {
@@ -446,6 +450,37 @@ DomainCtrl.prototype.deletePin = async function (Pin) {
 	}
 };
 
+DomainCtrl.prototype.createEvent = function (date, Pin, email) {
+	console.log(date, Pin, email);
+
+	const dateYear = date.slice(6,10);
+	const dateMonth = date.slice(3,5);
+	const dateDay = date.slice(0,2);
+	
+	const DateCalendar = dateYear + dateMonth + dateDay;
+
+	const isoStrStart = DateCalendar + "T100000Z";	
+	const isoStrEnd = DateCalendar + "T100000Z";
+
+	console.log(isoStrStart.replace(/-/gi, ""));
+	console.log(isoStrEnd.replace(/-/gi, ""));
+
+	var url = googleCalendarEventUrl({
+		title: Pin.title,
+		location: Pin.locationTitle,
+		details: Pin.description,
+		start: isoStrStart.replace(/-/gi, ""),
+		end: isoStrEnd.replace(/-/gi, ""),
+	});
+	
+	url = url.replace(/\s/g, "+");
+	console.log(url);
+
+	Linking.openURL(url);
+}
+
+//USERS
+
 /**
  *
  * @param {*} name
@@ -862,11 +897,6 @@ DomainCtrl.prototype.findUser = async function (email) {
 	})
 		.then((response) => response.json())
 		.then((data) => data);
-};
-
-DomainCtrl.prototype.createEvent = async function (date, pin, email) {
-	//TODO
-	// console.log(date, pin, email);
 };
 
 /*DomainCtrl.prototype.findMessage = async function (id) {
