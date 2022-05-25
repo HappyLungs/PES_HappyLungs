@@ -74,7 +74,8 @@ class DataPointMap {
 					name: point[1].nom_estacio,
 					value: valor_medio,
 					latitude: point[1].latitud,
-					longitude: point[1].longitud			
+					longitude: point[1].longitud,
+					distance: point[0]
 				};
 				totalData = [...totalData, data];
 				return data;
