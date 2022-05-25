@@ -2,3 +2,6 @@ package-lock.json
 package.json
 yarn.lock
 node_modules
+src/.vscode/.react/debuggerWorker.js
+src/.vscode/exponentIndex.js
+src/app.json
