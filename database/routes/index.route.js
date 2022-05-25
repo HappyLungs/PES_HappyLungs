@@ -221,7 +221,7 @@ router.post(
 /** Contamination */
 
 router.get(
-    "/contamination/:longitude/:latitude/:radius", 
+    "/contamination/:latitude/:longitude/:radius", 
     
     ContaminationController.findRadius
 );
