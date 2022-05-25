@@ -2,7 +2,7 @@ const PollutantDayMeasureModel = require('../models/pollutantDayMeasure.model')
 
 exports.createPollutantDayMeasure = async (params) => {
     return new Promise((resolve, reject) => {
-        console.log(params);
+        // console.log(params);
         PollutantDayMeasureModel
         .create(params)
         .then((data) => { 

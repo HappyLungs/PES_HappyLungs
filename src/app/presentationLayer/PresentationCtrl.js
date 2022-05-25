@@ -14,16 +14,33 @@ let PresentationCtrl;
 	};
 })();
 
+PresentationCtrl.prototype.initMeasureStations = async function (){
+	this.domainCtrl.initMeasureStations();
+}
+
+
+
+PresentationCtrl.prototype.getPollutionLevelLastHour = async function (
+	latitude,
+	longitude
+) {
+	let data = await this.domainCtrl.getPollutionLevelLastHour(
+		latitude,
+		longitude
+	);
+	return data;
+};
+
 /**
  *
  * getPollution Level
  *
  * @returns { levels, tags, title, filter }
  */
-PresentationCtrl.prototype.getPollutionLastDay = async function () {
-	let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
-	return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
-};
+// PresentationCtrl.prototype.getPollutionLastDay = async function () {
+// 	let data = await this.domainCtrl.getPollutionLastDay(41.363094, 2.112971);
+// 	return data; //[1,2,2,2,2,3,3,3,3,4,3,3];
+// };
 
 /**
  *
@@ -31,13 +48,13 @@ PresentationCtrl.prototype.getPollutionLastDay = async function () {
  *
  * @returns { levels, tags, title, filter }
  */
-PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
-	let data = await this.domainCtrl.getPollutantsQuantLastDay(
-		41.363094,
-		2.112971
-	);
-	return data;
-};
+// PresentationCtrl.prototype.getPollutantsQuantLastDay = async function () {
+// 	let data = await this.domainCtrl.getPollutantsQuantLastDay(
+// 		41.363094,
+// 		2.112971
+// 	);
+// 	return data;
+// };
 
 /**
  *
@@ -465,8 +482,8 @@ PresentationCtrl.prototype.createConversation = async function (
 	}
 };
 
-PresentationCtrl.prototype.deleteConversation = async function (id) {
-	let result = await this.domainCtrl.deleteConversation(id);
+PresentationCtrl.prototype.deleteConversation = async function (id, email) {
+	let result = await this.domainCtrl.deleteConversation(id, email);
 	if (result != null) {
 		return true;
 	} else {
@@ -502,10 +519,27 @@ PresentationCtrl.prototype.fetchUsers = async function () {
 	this.domainCtrl.fetchUsers();
 };
 
+PresentationCtrl.prototype.fetchMessage = async function (converId, email) {
+	let dbMessages = await this.domainCtrl.fetchMessage(converId, email);
+	if (dbMessages != null) {
+		return true;
+	} else return false;
+};
+
 PresentationCtrl.prototype.fetchUser = async function (email) {
 	let user = await this.domainCtrl.fetchUser(email);
 	if (user != null) {
 		return user;
+	} else {
+		//TODO ERROR: Show error message && reload page
+		return null;
+	}
+};
+
+PresentationCtrl.prototype.fetchUserStats = async function (email) {
+	let userStats = await this.domainCtrl.fetchUserStats(email);
+	if (userStats != null) {
+		return userStats;
 	} else {
 		//TODO ERROR: Show error message && reload page
 		return null;

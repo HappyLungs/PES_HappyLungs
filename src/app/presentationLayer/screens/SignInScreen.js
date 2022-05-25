@@ -22,6 +22,8 @@ import UserContext from "../../domainLayer/UserContext";
 import axios from "axios";
 import { setLanguage } from "../../config/translation";
 
+import Socket from "../Socket";
+
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 WebBrowser.maybeCompleteAuthSession();
@@ -72,7 +74,8 @@ function SignInScreen({ navigation, route }) {
 	const loginGoogle = async (userGoogleData, accessToken) => {
 		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
 		if (response.status == 200) {
-			response.data.accessToken = accessToken;
+      new Socket(userGoogleData.email);
+			response.data.accessToken = accessToken;      
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			errorMsgChange("");
@@ -195,6 +198,9 @@ function SignInScreen({ navigation, route }) {
 		const { email, password } = data;
 		let response = await presentationCtrl.loginUser(email, password);
 		if (response.status == 200) {
+			let socket = new Socket(email);
+			let s = socket.getSocket();
+			let i=3;
 			setUser(response.data);
 			setLanguage(response.data.language);
 			navigation.navigate("AppTabs", { screen: "Map" });

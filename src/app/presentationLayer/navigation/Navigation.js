@@ -33,7 +33,7 @@ import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import { UserContextProvider } from "../../domainLayer/UserContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import PresentationCtrl from "../PresentationCtrl";
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -103,15 +103,24 @@ function PinStack() {
 				component={PinDefaultScreen}
 				options={{
 					title: "",
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					headerTintColor: COLORS.white,
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
+				initialParams={{ toast: false }}
 				options={({ navigation, route }) => ({
 					title: "",
 					headerShown: true,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
 					headerRight: () => (
 						<TouchableOpacity
 							activeOpacity={0.8}
@@ -129,14 +138,15 @@ function PinStack() {
 									fontWeight: "bold",
 									marginEnd: 10,
 									fontSize: 15,
-									color: COLORS.secondary,
+									color: COLORS.white,
 								}}
 							>
-								{i18n.t("editingPin")}
+								{i18n.t("edit").toUpperCase()}
 							</Text>
-							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+							<Feather name="edit-3" size={30} color={COLORS.white} />
 						</TouchableOpacity>
 					),
+
 					...TransitionPresets.SlideFromRightIOS,
 				})}
 			/>
@@ -175,6 +185,7 @@ function ProfileStack() {
 		>
 			<Stack.Screen
 				name="ProfileScreen"
+				initialParams={{ toastProfile: false, toastSettings: false }}
 				component={ProfileScreen}
 				options={({ navigation }) => ({
 					title: "",
@@ -199,7 +210,7 @@ function ProfileStack() {
 									color: COLORS.white,
 								}}
 							>
-								{i18n.t("editingProfile")}
+								{i18n.t("edit").toUpperCase()}
 							</Text>
 							<Feather name="edit-3" size={30} color={COLORS.white} />
 						</TouchableOpacity>
@@ -348,7 +359,7 @@ function MapStack() {
 				options={{
 					headerShown: false,
 				}}
-				initialParams={{ tmpLat: false, tmpLng: false }}
+				initialParams={{ latitude: null, longitude: null, toast: false }}
 			/>
 			<Stack.Screen name="Statistics" component={StatisticsScreen} />
 			<Stack.Screen
@@ -371,15 +382,25 @@ function MapStack() {
 				options={{
 					title: "",
 					headerShown: false,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					headerTintColor: COLORS.white,
+
 					...TransitionPresets.SlideFromRightIOS,
 				}}
 			/>
 			<Stack.Screen
 				name="OwnerPin"
 				component={PinOwnerScreen}
+				initialParams={{ toast: false }}
 				options={({ navigation }) => ({
 					title: "",
 					headerShown: true,
+					headerTintColor: COLORS.white,
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
 					headerRight: () => (
 						<TouchableOpacity
 							activeOpacity={0.8}
@@ -397,12 +418,12 @@ function MapStack() {
 									fontWeight: "bold",
 									marginEnd: 10,
 									fontSize: 15,
-									color: COLORS.secondary,
+									color: COLORS.white,
 								}}
 							>
-								{i18n.t("editingPin")}
+								{i18n.t("edit").toUpperCase()}
 							</Text>
-							<Feather name="edit-3" size={30} color={COLORS.secondary} />
+							<Feather name="edit-3" size={30} color={COLORS.white} />
 						</TouchableOpacity>
 					),
 					headerLeft: null,
@@ -499,6 +520,7 @@ function AppTabs() {
 					//title: "Profile",
 					headerShown: false,
 				}}
+
 				//header username
 			/>
 		</Tab.Navigator>
@@ -509,7 +531,8 @@ export default function Navigation() {
 	//const [user, setUser] = useState(null);
 
 	//const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-
+   //PresentationCtrl.initMeasureStations();
+     
 	return (
 		<NavigationContainer>
 			<UserContextProvider>

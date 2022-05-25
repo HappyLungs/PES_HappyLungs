@@ -34,7 +34,6 @@ const ChatList = ({ chatsList, navigation }) => {
 								padding: 10,
 							}}
 							onPress={() => {
-								console.log("Vaig a veure a:", item.email);
 								navigation.navigate("ChatConversation", {new:true, user:item.email, name:item.name});
 							}}
 						>
@@ -91,7 +90,7 @@ const ChatList = ({ chatsList, navigation }) => {
 			contentContainerStyle={{}}
 			scrollEnabled={true}
 			data={chatsList}
-			keyExtractor={(item) => `${item.name}`}
+			keyExtractor={(item) => `${item.email}`}
 			renderItem={renderItem}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => {

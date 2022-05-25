@@ -410,7 +410,7 @@ function SettingsScreen({ navigation }) {
 			<View
 				style={{
 					flexDirection: "row",
-					justifyContent: "space-between",
+					justifyContent: "space-around",
 					marginVertical: 20,
 				}}
 			>
@@ -434,7 +434,7 @@ function SettingsScreen({ navigation }) {
 					]}
 					onPress={() => {
 						validate();
-						navigation.navigate("ProfileScreen");
+						navigation.navigate("ProfileScreen", { toastSettings: true });
 					}}
 				>
 					<Text style={styles.containerTxt}>{i18n.t("update")}</Text>

@@ -64,7 +64,7 @@ function PinEditScreen({ navigation, route }) {
 				status ? "Public" : "Private",
 				user.email
 			);
-			navigation.replace("OwnerPin", { pin: editedPin });
+			navigation.replace("OwnerPin", { pin: editedPin, toast: true });
 		}
 	};
 
@@ -291,7 +291,7 @@ function PinEditScreen({ navigation, route }) {
 						style={[
 							styles.containerBtn,
 							styles.shadow,
-							{ backgroundColor: COLORS.red1 },
+							{ backgroundColor: COLORS.red1, width: 100 },
 						]}
 						onPress={() => navigation.popToTop()}
 					>

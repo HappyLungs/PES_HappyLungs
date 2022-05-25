@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import {
 	Text,
@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 	Share,
+	ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,23 +15,58 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import Toast from "react-native-toast-message";
+import CustomToast from "../components/CustomToast";
 
 import COLORS from "../../config/stylesheet/colors";
 import UserContext from "../../domainLayer/UserContext";
 import i18n from "../../config/translation";
 
-function ProfileScreen({ navigation, route }) {
-	//should know userId, and then retrieve the user data (updated or not)
+const PresentationCtrl = require("../PresentationCtrl.js");
 
+function ProfileScreen({ navigation, route }) {
+	let presentationCtrl = new PresentationCtrl();
+	const toastProfile = route.params.toastProfile;
+	const toastSettings = route.params.toastSettings;
 	const [user, setUser] = useContext(UserContext);
 
-	function settings() {
-		navigation.navigate("SettingsScreen");
-	}
+	const [numPins, setNumPins] = useState([0]);
+	const [points, setPoints] = useState([0]);
+	const [savedPins, setSavedPins] = useState([0]);
 
-	function calendar() {
-		//no se que ha de fer
-	}
+
+
+	const showToast = () => {
+		Toast.show({
+			position: "bottom",
+			type: toastProfile ? "successToast" : "configToast",
+			text1: toastProfile
+				? i18n.t("profileSuccess")
+				: i18n.t("settingsSuccess"),
+		});
+	};
+
+	useEffect(() => {
+		if (toastProfile || toastSettings) {
+			showToast();
+			navigation.setParams({ toastProfile: false, toastSettings: false });
+		}
+	});
+
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', async () => {
+			const getAll = async () => {
+				const userStats = await presentationCtrl.fetchUserStats(user.email);
+				setNumPins(userStats.pins)
+				setPoints(userStats.points)
+				setSavedPins(userStats.savedPins)
+			};
+			await getAll();
+		});
+	  	return unsubscribe;
+	}, []);
+
+
 
 	function logOut() {
 		setUser({
@@ -54,11 +90,15 @@ function ProfileScreen({ navigation, route }) {
 
 	async function share() {
 		try {
-			await Share.share({
-				title: "Happy Lungs",
-				message: "Breath Safely, Breath With Us",
-				url: "https://happylungsproject.org/", //url és ios only
-			});
+			await Share.share(
+				{
+					message:
+						"Happy Lungs \n\nBreath Safely, Breath With Us \n\nhttps://happylungsproject.org/",
+				},
+				{
+					dialogTitle: "Happy Lungs",
+				}
+			);
 		} catch (err) {}
 	}
 
@@ -144,6 +184,7 @@ function ProfileScreen({ navigation, route }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
+
 			<View
 				style={{
 					paddingHorizontal: 20,
@@ -215,7 +256,7 @@ function ProfileScreen({ navigation, route }) {
 							<View
 								style={{
 									alignItems: "center",
-									marginLeft: -10,
+									marginLeft: 0,
 								}}
 							>
 								<Text
@@ -225,7 +266,7 @@ function ProfileScreen({ navigation, route }) {
 										color: COLORS.secondary,
 									}}
 								>
-									3
+									{numPins}
 								</Text>
 								<Text style={{ color: COLORS.darkGrey }}>
 									{i18n.t("createdPins")}
@@ -252,7 +293,7 @@ function ProfileScreen({ navigation, route }) {
 										color: COLORS.secondary,
 									}}
 								>
-									{user.savedPins.length}
+									{savedPins}
 								</Text>
 								<Text style={{ color: COLORS.darkGrey }}>
 									{i18n.t("savedPins")}
@@ -301,7 +342,7 @@ function ProfileScreen({ navigation, route }) {
 										{ fontWeight: "bold", marginLeft: 10, color: COLORS.white },
 									]}
 								>
-									{user.points}
+									{points}
 								</Text>
 								<Text style={[{ marginLeft: 3, color: COLORS.white }]}>
 									{i18n.t("points")}
@@ -401,29 +442,23 @@ function ProfileScreen({ navigation, route }) {
 					width: "100%",
 				}}
 			/>
-			<View
+			<ScrollView
 				style={{
 					flex: 1,
 					marginHorizontal: 30,
-					alignItems: "flex-start",
 					flexDirection: "column",
 				}}
+				contentContainerStyle={{ alignItems: "flex-start" }}
 			>
 				<TouchableOpacity
 					activeOpacity={0.8}
-					onPress={() => settings()}
+					onPress={() => {
+						navigation.navigate("SettingsScreen");
+					}}
 					style={styles.containerOption}
 				>
 					<Ionicons name="settings-outline" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>{i18n.t("settings")}</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					activeOpacity={0.8}
-					onPress={() => calendar()}
-					style={styles.containerOption}
-				>
-					<Ionicons name="md-calendar" size={27} color={COLORS.green1} />
-					<Text style={styles.textOption}>{i18n.t("calendar")}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					activeOpacity={0.8}
@@ -443,7 +478,7 @@ function ProfileScreen({ navigation, route }) {
 					<Feather name="users" size={27} color={COLORS.green1} />
 					<Text style={styles.textOption}>{i18n.t("shareOption")}</Text>
 				</TouchableOpacity>
-			</View>
+			</ScrollView>
 			<TouchableOpacity
 				activeOpacity={0.8}
 				onPress={() => setModalLogoutVisible()}
@@ -456,6 +491,7 @@ function ProfileScreen({ navigation, route }) {
 				<Text style={styles.textOption}>{i18n.t("logOut")}</Text>
 			</TouchableOpacity>
 			{renderModalLogout()}
+			<CustomToast />
 		</View>
 	);
 }

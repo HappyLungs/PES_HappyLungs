@@ -38,13 +38,14 @@ function PinsScreen({ navigation }) {
 	const AnimationRefFilter3 = useRef(null);
 	const AnimationRefFilter4 = useRef(null);
 
+	useEffect(() => {
+		setFilteredData(masterData);
+	}, [masterData]);
+
 	useEffect(async () => {
 		const unsubscribe = navigation.addListener("focus", async () => {
-			// The screen is focused
-			// Call any action and update data
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchPins(user.email);
-				console.log(data);
 				setMasterData([...data.pins, ...data.savedPins]);
 				setFilteredData([...data.pins, ...data.savedPins]);
 				setCreatedPins(data.pins);
@@ -52,9 +53,6 @@ function PinsScreen({ navigation }) {
 			};
 			await fetchPins();
 		});
-
-		// Return the function to unsubscribe from the event so it gets removed on unmount
-
 		return unsubscribe;
 	}, [navigation]);
 
@@ -411,7 +409,11 @@ function PinsScreen({ navigation }) {
 		>
 			{renderHeader()}
 			<View style={[{ flex: 1, paddingHorizontal: 20 }]}>
-				<PinList pinList={filteredData} navigation={navigation}></PinList>
+				<PinList
+					pinList={filteredData}
+					onMasterDataChange={setMasterData}
+					navigation={navigation}
+				></PinList>
 			</View>
 		</SafeAreaView>
 	);

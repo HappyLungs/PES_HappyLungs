@@ -91,6 +91,12 @@ router.post(
     UserController.delete
 );
 
+router.get(
+    "/userStats",
+    licenseMiddleware.validate,
+    UserController.userStats
+);
+
 /*  MeasureStation  */
 router.get(
     "/measureStation",
@@ -215,7 +221,7 @@ router.post(
 /** Contamination */
 
 router.get(
-    "/contamination/:longitude/:latitude/:radius", 
+    "/contamination/:latitude/:longitude/:radius", 
     
     ContaminationController.findRadius
 );

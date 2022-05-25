@@ -60,7 +60,7 @@ exports.create = async (request, response) => {
     }
     pollutantDayMeasure.createPollutantDayMeasure(params)
     .then((pollutantDayMeasureData) => {
-        console.log(pollutantDayMeasureData);
+        // console.log(pollutantDayMeasureData);
         if (pollutantDayMeasureData !== null && typeof pollutantDayMeasureData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
@@ -94,7 +94,7 @@ exports.insertMultiple = async (request, response) => {
     }
     pollutantDayMeasure.insertMany(params.insertions)
     .then((pollutantDayMeasureData) => {
-        console.log(pollutantDayMeasureData);
+        // console.log(pollutantDayMeasureData);
         if (pollutantDayMeasureData !== null && typeof pollutantDayMeasureData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";

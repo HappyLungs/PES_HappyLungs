@@ -24,7 +24,7 @@ exports.find = async (request, response) => {
     }
 
     let aggregateArr = createAggregateArray(match, date);
-    console.log(JSON.stringify(aggregateArr));
+    // console.log(JSON.stringify(aggregateArr));
     measureStation
     .aggregateMeasureStation(aggregateArr)
     .then((measureStationData) => {
@@ -79,7 +79,7 @@ exports.create = async (request, response) => {
     }
     measureStation.createMeasureStation(params)
     .then((measureStationData) => {
-        console.log(measureStationData);
+        // console.log(measureStationData);
         if (measureStationData !== null && typeof measureStationData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";
@@ -113,7 +113,7 @@ exports.insertMultiple = async (request, response) => {
     }
     measureStation.insertMany(params.insertions)
     .then((measureStationData) => {
-        console.log(measureStationData);
+        // console.log(measureStationData);
         if (measureStationData !== null && typeof measureStationData !== undefined) {
             responseObj.status  = errorCodes.SUCCESS;
             responseObj.message = "Success";

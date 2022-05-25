@@ -12,10 +12,10 @@ import Leaderboard from "../components/Leaderboard";
 
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
-import COLORS from "../../config/stylesheet/colors";
+import COLORS, { green1, green2, green3, red1 } from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 import UserContext from "../../domainLayer/UserContext";
-import * as Progress from "react-native-progress";
+import * as Progress from 'react-native-progress';
 
 const PresentationCtrl = require("../PresentationCtrl.js");
 
@@ -25,6 +25,74 @@ function RankingScreen({ navigation, route }) {
 
 	const [user, setUser] = useContext(UserContext);
 	const [masterData, setMasterData] = useState([]);
+
+	const [statePins, setStatePins] = useState([0]);
+	const [numPins, setNumPins] = useState([0]);
+	const [progressPins,setProgressPins] = useState([0])
+	const [stateConversations, setStateConversations] = useState([0]); 
+	const [numConversations, setNumConversations] = useState([0])
+	const [progressConversations,setProgressConversations] = useState([0])
+
+	let trophies = [ 
+		"https://i.ibb.co/HzVDSLq/nada.png",		
+		"https://i.ibb.co/02vY7w7/bronce.png",
+		"https://i.ibb.co/mcZ8BMf/plata.png",
+		"https://i.ibb.co/vz5W0Wx/oro.png",
+	]; 
+
+	let maxValues= [1, 5, 10, 10];
+ 
+
+	useEffect(async () => {
+		const getAll = async () => {
+			const userStats = await presentationCtrl.fetchUserStats(user.email);
+			setNumPins(userStats.pins)
+			setNumConversations(userStats.chats)
+		};
+		getStatePins();
+		getStateConversations();
+		await getAll();
+	});
+
+	
+
+	const getStatePins = () => {
+		if (numPins < 1) {
+			setStatePins(0)
+			setProgressPins(numPins/maxValues[statePins]*100);
+		}
+		else if (numPins >= 1 && numPins < 5) { 
+			setStatePins(1)
+			setProgressPins(numPins/maxValues[statePins]*100);
+		}
+		else if (numPins >= 5 && numPins < 10) {
+			setStatePins(2)
+			setProgressPins(numPins/maxValues[statePins]*100);
+		}
+		else if (numPins >= 10) {
+			setStatePins(3)
+			setProgressPins(100);
+		}
+	}
+
+	const getStateConversations = () => {
+		if (numConversations < 1) {
+			setStateConversations(0)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 1 && numConversations < 5) { 
+			setStateConversations(1)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 5 && numConversations < 10) {
+			setStateConversations(2)
+			setProgressConversations(numConversations/maxValues[stateConversations]*100);
+		}
+		else if (numConversations >= 10) {
+			setStateConversations(3)
+			setProgressConversations(100);
+		}
+	}
 
 	function renderLeaderboardHeader() {
 		return (
@@ -114,23 +182,152 @@ function RankingScreen({ navigation, route }) {
 	/*
 	 */
 	const SecondRoute = () => (
-		<View style={{ flex: 1, backgroundColor: "white" }}>
+		<View style={{ flex: 1, backgroundColor: "white", flexDirection: "column" }}>
 			<View
 				style={{
-					borderWidth: 1.3,
-					borderStyle: "dashed",
-					borderRadius: 1,
-					borderColor: COLORS.green2,
-					marginTop: 50,
+					flexDirection: "row",
+					marginTop: 20,
+					marginLeft: 30,
+					
 				}}
 			>
-				<Progress.Circle
-					size={150}
-					indeterminate={false}
-					strokeCap={"square"}
-					showsText={true}
-					progress={0.5}
-				/>
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+					>	
+					<View
+						style={{
+							backgroundColor: COLORS.lightGrey,
+							height: 30,
+							width: 300,
+							borderRadius: 5,
+							justifyContent: "center",
+							alignItems: "center",
+							marginVertical:10
+						}}
+					>
+					{/*getStatePins()*/}
+						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+							{i18n.t("createdPins")}
+						</Text>
+					</View>
+					<Progress.Bar 
+						progress={progressPins/100} 
+						width={300}
+						height={40}
+						backgroundColor={green3}
+						color={green1}
+						maxValue={100}
+						borderWidth={0}
+					/>
+				</View>
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+					>
+						<View
+							style={{
+								backgroundColor: COLORS.lightGrey,
+								height: 30,
+								width: 40,
+								borderRadius: 5,
+								justifyContent: "center",
+								alignItems: "center",
+								marginVertical:10,
+								marginLeft: 5
+							}}
+						>
+							<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+								{numPins}/{maxValues[statePins]}
+							</Text>
+						</View>
+						<Image
+							source={{
+								uri: trophies[statePins],
+							}}
+							style={{
+								width: 40,
+								height: 40,
+								borderRadius: 5,
+								marginLeft: 5
+							}}
+						/>
+					</View>
+				</View>
+			<View
+				style={{
+					flexDirection: "row",
+					marginTop: 20,
+					marginLeft: 30,
+					
+				}}
+			>
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+					>	
+						<View
+							style={{
+								backgroundColor: COLORS.lightGrey,
+								height: 30,
+								width: 300,
+								borderRadius: 5,
+								justifyContent: "center",
+								alignItems: "center",
+								marginVertical:10
+							}}
+						>
+							{/*getStateConversations()*/}
+							<Text style={[styles.containerTxt, { color: COLORS.black }]}>
+								{i18n.t("createdConversations")}
+							</Text>
+						</View>
+						<Progress.Bar 
+							progress={progressConversations/100} 
+							width={300}
+							height={40}
+							backgroundColor={green3}
+							color={green1}
+							maxValue={100}
+							borderWidth={0}
+						/>	
+				</View>
+				<View
+					style={{
+						flexDirection: "column",	
+					}}
+				>
+					<View
+						style={{
+							backgroundColor: COLORS.lightGrey,
+							height: 30,
+							width: 40,
+							borderRadius: 5,
+							justifyContent: "center",
+							alignItems: "center",
+							marginVertical:10,
+							marginLeft: 5
+							}}
+					>
+						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
+							{numConversations}/{maxValues[stateConversations]}
+						</Text>
+					</View>
+					<Image
+						source={{
+							uri: trophies[stateConversations],
+						}}
+						style={{
+							width: 40,
+							height: 40,
+							borderRadius: 5,
+							marginLeft: 5
+						}}
+					/>
+				</View>
 			</View>
 		</View>
 	);
@@ -141,7 +338,9 @@ function RankingScreen({ navigation, route }) {
 	});
 
 	useEffect(() => {
-		fetchUsers();
+		if (masterData !== []) {
+			fetchUsers();
+		}
 		return () => {};
 	}, []);
 
@@ -268,6 +467,15 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 14,
 	},
+	
+	containerTxt2: {
+		justifyContent: "center",
+		alignItems: "center",
+		alignSelf: "center",
+		fontWeight: "bold",
+		fontSize: 14,
+	},
+	
 	centeredView: {
 		flex: 1,
 		justifyContent: "center",
