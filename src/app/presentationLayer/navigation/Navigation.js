@@ -218,7 +218,7 @@ function ProfileStack() {
 					headerLeft: null,
 					headerStyle: {
 						elevation: 5,
-						shadowColor: COLORS.black,
+						//shadowColor: COLORS.black,
 						shadowOffset: {
 							width: 0,
 							height: 2,

@@ -15,7 +15,7 @@ let PresentationCtrl;
 })();
 
 PresentationCtrl.prototype.initMeasureStations = async function (){
-	this.domainCtrl.initMeasureStations();
+	await this.domainCtrl.initMeasureStations();
 }
 
 

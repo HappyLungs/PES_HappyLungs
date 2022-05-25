@@ -73,7 +73,7 @@ DomainCtrl.prototype.getMapData = async function () {
 };
 DomainCtrl.prototype.getHeatPoints = async function () {
 	const date=new Date();
-	let nsteps=13;
+	const nsteps=1;
 	let inilat=40.514714;
 	let inilong=-0.116867;
 	let maxlat=42.814019;
@@ -131,15 +131,15 @@ DomainCtrl.prototype.initMeasureStations = async function (){
     const dObertes = new DadesObertes();
 	let measuresStations = await dObertes.getMeasuresDate(date);
     for(element of measuresStations){
-        if(getMeasureStation(element.codi_eoi) === undefined){
-            console.log("**")
+        if(this.getMeasureStation(element.codi_eoi) === undefined){
+
             const m_s = new MeasureStation(element.codi_eoi, null, "heatmap", element.latitud, element.longitud, null);
 
             await m_s.getHourLevel(date, date.getHours());
         }
 
     }
-
+	console.log(MeasureStation.Stations.length);
 };
 
 /**

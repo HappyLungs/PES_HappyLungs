@@ -93,7 +93,7 @@ function MapScreen({ navigation, route }) {
 		{
 			latitude: 41.366531,
 			longitude: 2.019336,
-			weight: 0.3,
+			weight: 0,
 		},
 	]);
 
@@ -106,6 +106,7 @@ function MapScreen({ navigation, route }) {
 
 	const [user] = useContext(UserContext);
 	const [savedPins, setSavedPins] = useState([]);
+	const [lastZoom, setLastZoom] = useState(0);
 
 	const showToast = (message, type) => {
 		Toast.show({
@@ -127,7 +128,7 @@ function MapScreen({ navigation, route }) {
 	};
 
 	// S'executa a cada rerender
-	useEffect(() => {
+	useEffect(async () => {
 		calculateDangerLevel();
 		if (toast) {
 			showToast(i18n.t("pinCreateSuccess"), "successToast");
@@ -146,6 +147,20 @@ function MapScreen({ navigation, route }) {
 			});
 			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
 		}
+
+
+		const camera = await mapRef.current.getCamera();
+
+		if(camera.zoom !== lastZoom){
+			console.log(camera);
+			let rz=Math.round(camera.zoom);
+			//(rz-5)*6
+			let aux = await presentationCtrl.getHeatPoints();
+			setHeatpoints(aux);
+			setLastZoom(camera.zoom);
+		}
+
+
 	});
 
 	/*
@@ -181,15 +196,16 @@ function MapScreen({ navigation, route }) {
 			await fetchTrendingPins();
 			await fetchPins();
 		});
-		const initHeatPoints = async () => {
-			let aux = await presentationCtrl.getHeatPoints();
-			// console.log(aux);
-			setHeatpoints(aux);
-			// console.log(heatpoints);
-		};
-		const { zoom } = await mapRef.current.getCamera();
+
+
 		//console.log(zoom);
-		await initHeatPoints();
+		await presentationCtrl.initMeasureStations();
+		const camera = await mapRef.current.getCamera();
+		console.log(camera);
+		let rz=Math.round(camera.zoom);
+		let aux = await presentationCtrl.getHeatPoints();
+		setHeatpoints(aux);
+		setLastZoom(camera.zoom);
 		return unsubscribe;
 	}, [navigation]);
 
