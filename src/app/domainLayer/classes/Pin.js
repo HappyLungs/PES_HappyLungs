@@ -1,4 +1,3 @@
-import { googleCalendarEventUrl } from 'google-calendar-url';
 class Pin {
 	constructor(
 		title,
@@ -49,30 +48,5 @@ class Pin {
 
 	show_charts() {}
 
-	addCalendarEvent(date) {		
-		console.log("===========ADD PIN TO CALENDAR==========");
-		console.log(date, pin, email);
-	
-		let today = new Date().toISOString().slice(0,10);
-	
-		const isoStrStart = today + "T100000Z";	
-		const isoStrEnd = today + "T100000Z";
-	
-		console.log("===========start date==========");
-		console.log(isoStrStart.replace(/-/gi, ""));
-		console.log("===========end date==========");
-		console.log(isoStrEnd.replace(/-/gi, ""));
-	
-		var url = googleCalendarEventUrl({
-			title: "ELIAS AA",
-			details: "puto google calendar",
-			location: "al cul del mon",
-			start: isoStrStart.replace(/-/gi, ""),
-			end: isoStrEnd.replace(/-/gi, ""),
-		});
-		
-		url = url.replace(/\s/g, "");
-		console.log(url);
-	}
 }
 module.exports = Pin;
