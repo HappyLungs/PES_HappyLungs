@@ -3,10 +3,10 @@ openapi: 3.0.1
 info:
   title: HappyLungs
   version: 1.0.0
-  description: "This is the Open API documentation for the REST API of our beloved application **HappyLungs** deployed at <http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/>. <br>All operations are executable. POST, PUT and DELETE operations requires authentication. In this case, you must **Authorize** your request by providing the api_key value, available on your profile."
+  description: "This is the Open API documentation for the REST API of our beloved application **HappyLungs** deployed at <http://ec2-54-89-16-250.compute-1.amazonaws.com:7000/>. <br>All operations are executable. POST, PUT and DELETE operations requires authentication. In this case, you must **Authorize** your request by providing the api_key value, available on your profile."
 
 servers:
-  - url: http://ec2-15-237-124-151.eu-west-3.compute.amazonaws.com:7000/v1/
+  - url: http://ec2-54-89-16-250.compute-1.amazonaws.com:7000/v1/
 
 paths:
   /user:
