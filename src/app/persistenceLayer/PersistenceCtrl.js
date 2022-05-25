@@ -8,7 +8,7 @@ let PersistenceCtrl;
         instance = this;
 
         // initialize any properties of the singleton
-        this.DB_URI = "http://ec2-54-89-16-250.compute-1.amazonaws.com:7000/v1";
+        this.DB_URI = "http://ec2-18-208-246-30.compute-1.amazonaws.com:7000/v1";
     };
 }());
 
