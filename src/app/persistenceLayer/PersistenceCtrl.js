@@ -79,7 +79,7 @@ PersistenceCtrl.prototype.putRequest = async function (endpoint, params) {
 
 /*TODO USE GET REQUEST instead of this*/
 PersistenceCtrl.prototype.getConversationbyID = async function (id) {
-    const res = await fetch("http://ec2-54-89-16-250.compute-1.amazonaws.com:7000/v1/conversation?_id=" + id, {
+    const res = await fetch("http://ec2-18-208-246-30.compute-1.amazonaws.com:7000/v1/conversation?_id=" + id, {
         method: 'GET',
         headers: {
           'x-api-key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
@@ -92,7 +92,7 @@ PersistenceCtrl.prototype.getConversationbyID = async function (id) {
 
 /*TODO USE GET REQUEST instead of this*/
 PersistenceCtrl.prototype.getAllConversations = async function (id) {
-    const res = await fetch("http://ec2-54-89-16-250.compute-1.amazonaws.com:7000/v1/conversation", {
+    const res = await fetch("http://ec2-18-208-246-30.compute-1.amazonaws.com:7000/v1/conversation", {
         method: 'GET',
         headers: {
           'x-api-key': '7j7C1I1vy46tpgwUybXt4y4tMlIVXKUSSQiHo73K1X3f3pZpoKHg7BzJK5sxEddkRmR3hID7vwcm',
