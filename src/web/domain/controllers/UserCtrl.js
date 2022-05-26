@@ -93,7 +93,8 @@ UserCtrl.prototype.fetchUsers = async function(type) {
             users.push(new User(params));
         }
         return users;
-    } else return fakeUsers;
+    } else if ( result.status === 204) return [];
+    else return fakeUsers;
 }
 
 //[POST] block user
