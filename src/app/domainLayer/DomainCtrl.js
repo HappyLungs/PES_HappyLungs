@@ -1,6 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
 import { googleCalendarEventUrl } from "google-calendar-url";
-import * as Linking from "expo-linking";
+//import * as Linking from 'expo-linking';
 
 //const fetch = require("node-fetch");
 
@@ -90,12 +90,20 @@ DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
 	return [-1, -1, -1, -1];
 };
 DomainCtrl.prototype.getHeatPoints = async function (cz, camera) {
+	console.log(cz);
 	let datapoints = [];
 	const date = new Date();
 	const nsteps = 17;
 	const coords = this.getIniLatbyCamera(cz, camera);
-	if (lastCoords === coords) return lastHeatpoints;
+	if (
+		lastCoords[0] === coords[0] &&
+		lastCoords[1] === coords[1] &&
+		lastCoords[2] === coords[2] &&
+		lastCoords[3] === coords[3]
+	)
+		return lastHeatpoints;
 	const [inilat, inilong, maxlat, maxlong] = coords;
+	lastCoords = coords;
 	if (inilat === -1) {
 		const actual = {
 			latitude: inilat,

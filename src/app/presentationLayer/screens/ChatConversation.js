@@ -50,14 +50,12 @@ function ChatScreen({ route, navigation }) {
 	useEffect(() => {
 		fetchChats();
 		socket.on("chat message", async (data) => {
-			if (data.user === conversant.email) {
-				let exists = false;
-				for (let ms of messages) if (ms._id === data._id) exists = true;
-				if (!exists) {
-					setMessages((oldArray) => [...oldArray, data]);
-				}
-				await presentationCtrl.fetchMessage(data.conversation, user.email);
+			let exists = false;
+			for (let ms of messages) if (ms._id === data._id) exists = true;
+			if (!exists) {
+				setMessages((oldArray) => [...oldArray, data]);
 			}
+			await presentationCtrl.fetchMessage(data.conversation, user.email);
 		});
 		return () => {};
 	}, []);
