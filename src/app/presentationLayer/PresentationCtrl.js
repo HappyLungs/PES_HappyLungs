@@ -429,8 +429,8 @@ PresentationCtrl.prototype.getQualifationMap = async function (
 PresentationCtrl.prototype.getMapData = async function () {
 	return this.domainCtrl.getMapData();
 };
-PresentationCtrl.prototype.getHeatPoints = async function () {
-	return this.domainCtrl.getHeatPoints();
+PresentationCtrl.prototype.getHeatPoints = async function (cz,camera) {
+	return this.domainCtrl.getHeatPoints(cz,camera);
 };
 
 PresentationCtrl.prototype.fetchConversations = async function (email) {

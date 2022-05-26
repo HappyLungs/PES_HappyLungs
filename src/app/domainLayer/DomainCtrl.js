@@ -15,7 +15,12 @@ const dataPointMap = require("./classes/DataPointMap");
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
-
+let lastCoords=[-1,-1,-1,-1];
+let lastHeatpoints=[{
+	latitude: -1,
+	longitude: -1,
+	weight: 0,
+}];
 
 let DomainCtrl;
 (function () {
@@ -71,21 +76,42 @@ DomainCtrl.prototype.getMapData = async function () {
 	}
 	return measureStationLevels;
 };
-DomainCtrl.prototype.getHeatPoints = async function () {
+DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
+	if(cz===-1 || cz <= 7) return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===8)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===9)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===10)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===11)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===12)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===13)return[40.514714,-0.116867,42.814019, 3.205920];
+	if(cz===14)return[40.514714,-0.116867,42.814019, 3.205920];
+	return[-1,-1,-1,-1];
+}
+DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
+	let datapoints = [];
 	const date=new Date();
-	const nsteps=1;
-	let inilat=40.514714;
-	let inilong=-0.116867;
-	let maxlat=42.814019;
-	let maxlong=3.205920;
+	const nsteps=17;
+	const coords=this.getIniLatbyCamera(cz,camera);
+	if(lastCoords===coords)return lastHeatpoints;
+	const [inilat,inilong,maxlat,maxlong]=coords;
+	if(inilat===-1){
+		const actual = {
+			latitude: inilat,
+			longitude: inilat,
+			weight: 0,
+		};
+		datapoints.push(actual);
+		return datapoints;
+	}
 	let actuallat=inilat;
 	let actuallong=inilong;
 
 	let longstep = (maxlong - inilong) / nsteps;
 	let latsteps = (maxlat - inilat) / nsteps;
-	let datapoints = [];
+
 	for (let i = 0; i < nsteps; i++) {
 		for (let j = 0; j < nsteps; j++) {
+			console.log(i,j);
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 				//console.log(i,j);
@@ -111,6 +137,7 @@ DomainCtrl.prototype.getHeatPoints = async function () {
 		weight: 0.99,
 	};
 	datapoints.push(actual);
+	lastHeatpoints=datapoints;
 	return datapoints;
 };
 
