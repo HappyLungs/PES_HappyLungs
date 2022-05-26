@@ -25,11 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png"
       },
-      "package": "com.happylungs.happylungs"
+      "package": "com.happylungs.happylungs",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC5Fb5V200ikMfWmE9TAJ57SwqLCHiiZKo"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
+    }
   },
   "name": "happylungs"
 }
