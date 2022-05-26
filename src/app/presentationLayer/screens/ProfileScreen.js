@@ -34,8 +34,6 @@ function ProfileScreen({ navigation, route }) {
 	const [points, setPoints] = useState([0]);
 	const [savedPins, setSavedPins] = useState([0]);
 
-
-
 	const showToast = () => {
 		Toast.show({
 			position: "bottom",
@@ -54,19 +52,17 @@ function ProfileScreen({ navigation, route }) {
 	});
 
 	useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', async () => {
+		const unsubscribe = navigation.addListener("focus", async () => {
 			const getAll = async () => {
 				const userStats = await presentationCtrl.fetchUserStats(user.email);
-				setNumPins(userStats.pins)
-				setPoints(userStats.points)
-				setSavedPins(userStats.savedPins)
+				setNumPins(userStats.pins);
+				setPoints(userStats.points);
+				setSavedPins(userStats.savedPins);
 			};
 			await getAll();
 		});
-	  	return unsubscribe;
+		return unsubscribe;
 	}, []);
-
-
 
 	function logOut() {
 		setUser({
@@ -184,7 +180,6 @@ function ProfileScreen({ navigation, route }) {
 				backgroundColor: COLORS.white,
 			}}
 		>
-
 			<View
 				style={{
 					paddingHorizontal: 20,
@@ -214,8 +209,8 @@ function ProfileScreen({ navigation, route }) {
 									borderRadius: 30,
 									borderColor: COLORS.green1,
 									borderBottomWidth: 2,
-									width: 100,
-									height: 125,
+									width: 90,
+									height: 115,
 									justifyContent: "flex-start",
 									marginBottom: 5,
 								},

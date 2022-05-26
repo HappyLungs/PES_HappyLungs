@@ -1,6 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-import { googleCalendarEventUrl } from 'google-calendar-url';
-import * as Linking from 'expo-linking';
+import { googleCalendarEventUrl } from "google-calendar-url";
+import * as Linking from "expo-linking";
 
 //const fetch = require("node-fetch");
 
@@ -15,12 +15,14 @@ const dataPointMap = require("./classes/DataPointMap");
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
-let lastCoords=[-1,-1,-1,-1];
-let lastHeatpoints=[{
-	latitude: -1,
-	longitude: -1,
-	weight: 0,
-}];
+let lastCoords = [-1, -1, -1, -1];
+let lastHeatpoints = [
+	{
+		latitude: -1,
+		longitude: -1,
+		weight: 0,
+	},
+];
 
 let DomainCtrl;
 (function () {
@@ -77,24 +79,24 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
-	if(cz===-1 || cz <= 7) return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===8)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===9)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===10)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===11)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===12)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===13)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===14)return[40.514714,-0.116867,42.814019, 3.205920];
-	return[-1,-1,-1,-1];
-}
-DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
+	if (cz === -1 || cz <= 7) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 8) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 9) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 10) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 11) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 12) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 13) return [40.514714, -0.116867, 42.814019, 3.20592];
+	if (cz === 14) return [40.514714, -0.116867, 42.814019, 3.20592];
+	return [-1, -1, -1, -1];
+};
+DomainCtrl.prototype.getHeatPoints = async function (cz, camera) {
 	let datapoints = [];
-	const date=new Date();
-	const nsteps=17;
-	const coords=this.getIniLatbyCamera(cz,camera);
-	if(lastCoords===coords)return lastHeatpoints;
-	const [inilat,inilong,maxlat,maxlong]=coords;
-	if(inilat===-1){
+	const date = new Date();
+	const nsteps = 17;
+	const coords = this.getIniLatbyCamera(cz, camera);
+	if (lastCoords === coords) return lastHeatpoints;
+	const [inilat, inilong, maxlat, maxlong] = coords;
+	if (inilat === -1) {
 		const actual = {
 			latitude: inilat,
 			longitude: inilat,
@@ -103,29 +105,28 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 		datapoints.push(actual);
 		return datapoints;
 	}
-	let actuallat=inilat;
-	let actuallong=inilong;
+	let actuallat = inilat;
+	let actuallong = inilong;
 
 	let longstep = (maxlong - inilong) / nsteps;
 	let latsteps = (maxlat - inilat) / nsteps;
 
 	for (let i = 0; i < nsteps; i++) {
 		for (let j = 0; j < nsteps; j++) {
-			console.log(i,j);
+			//console.log(i,j);
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 				//console.log(i,j);
 			} else {
-
-			let dp = new DataPointMap(actuallat, actuallong);
-			const actual = {
-				latitude: actuallat,
-				longitude: actuallong,
-				weight: await dp.getHourLevel(date, date.getHours()) / 5,
-			};
-			//console.log(actual.weight);
-			datapoints.push(actual);
-			actuallong = actuallong + longstep;
+				let dp = new DataPointMap(actuallat, actuallong);
+				const actual = {
+					latitude: actuallat,
+					longitude: actuallong,
+					weight: (await dp.getHourLevel(date, date.getHours())) / 5,
+				};
+				//console.log(actual.weight);
+				datapoints.push(actual);
+				actuallong = actuallong + longstep;
 			}
 		}
 		actuallat = actuallat + latsteps;
@@ -137,7 +138,7 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 		weight: 0.99,
 	};
 	datapoints.push(actual);
-	lastHeatpoints=datapoints;
+	lastHeatpoints = datapoints;
 	return datapoints;
 };
 
@@ -151,21 +152,24 @@ DomainCtrl.prototype.fetchRanking = async function () {
 	}
 };
 
-
-
-DomainCtrl.prototype.initMeasureStations = async function (){
+DomainCtrl.prototype.initMeasureStations = async function () {
 	const date = new Date();
-    const dObertes = new DadesObertes();
+	const dObertes = new DadesObertes();
 	let measuresStations = await dObertes.getMeasuresDate(date);
-    for(element of measuresStations){
-        if(this.getMeasureStation(element.codi_eoi) === undefined){
+	for (element of measuresStations) {
+		if (this.getMeasureStation(element.codi_eoi) === undefined) {
+			const m_s = new MeasureStation(
+				element.codi_eoi,
+				null,
+				"heatmap",
+				element.latitud,
+				element.longitud,
+				null
+			);
 
-            const m_s = new MeasureStation(element.codi_eoi, null, "heatmap", element.latitud, element.longitud, null);
-
-            await m_s.getHourLevel(date, date.getHours());
-        }
-
-    }
+			await m_s.getHourLevel(date, date.getHours());
+		}
+	}
 	console.log(MeasureStation.Stations.length);
 };
 
@@ -480,13 +484,13 @@ DomainCtrl.prototype.deletePin = async function (Pin) {
 DomainCtrl.prototype.createEvent = function (date, Pin, email) {
 	console.log(date, Pin, email);
 
-	const dateYear = date.slice(6,10);
-	const dateMonth = date.slice(3,5);
-	const dateDay = date.slice(0,2);
-	
+	const dateYear = date.slice(6, 10);
+	const dateMonth = date.slice(3, 5);
+	const dateDay = date.slice(0, 2);
+
 	const DateCalendar = dateYear + dateMonth + dateDay;
 
-	const isoStrStart = DateCalendar + "T100000Z";	
+	const isoStrStart = DateCalendar + "T100000Z";
 	const isoStrEnd = DateCalendar + "T100000Z";
 
 	console.log(isoStrStart.replace(/-/gi, ""));
@@ -499,12 +503,12 @@ DomainCtrl.prototype.createEvent = function (date, Pin, email) {
 		start: isoStrStart.replace(/-/gi, ""),
 		end: isoStrEnd.replace(/-/gi, ""),
 	});
-	
+
 	url = url.replace(/\s/g, "+");
 	console.log(url);
 
 	Linking.openURL(url);
-}
+};
 
 //USERS
 
@@ -941,9 +945,9 @@ DomainCtrl.prototype.findUser = async function (email) {
       .then((response) => response.json())
       .then((data) => data);
 };*/
-DomainCtrl.prototype.inCat = function (lat, long){
-	if(40.541006<=lat && lat<=41.147653)
-		return (0.197311<=long  && long<=1.039680);
+DomainCtrl.prototype.inCat = function (lat, long) {
+	if (40.541006 <= lat && lat <= 41.147653)
+		return 0.197311 <= long && long <= 1.03968;
 
 	if (41.147653 <= lat && lat <= 41.202419)
 		return 0.297129 <= long && long <= 1.658984;

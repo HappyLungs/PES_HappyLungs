@@ -67,9 +67,7 @@ function GeneralChatScreen({ navigation }) {
 					style={{
 						flex: 1,
 						flexDirection: "column",
-						alignItems: "center",
-						marginBottom: 15,
-						marginTop: 15,
+						paddingVertical: 15,
 					}}
 				>
 					<View

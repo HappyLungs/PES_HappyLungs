@@ -19,6 +19,7 @@ import COLORS from "../../config/stylesheet/colors";
 import i18n from "../../config/translation";
 const PresentationCtrl = require("../PresentationCtrl.js");
 const Socket = require("../Socket");
+import { parseLocalProfileImage } from "../../config/localPictures";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -38,9 +39,9 @@ function GeneralChatScreen({ navigation }) {
 	const socket = s.getSocket();
 
 	useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', async () => {
+		const unsubscribe = navigation.addListener("focus", async () => {
 			fetchChats();
-			socket.on('chat message', (data) => {
+			socket.on("chat message", (data) => {
 				fetchChats();
 				/*
 				setFilteredData(existingItems => {
@@ -78,17 +79,17 @@ function GeneralChatScreen({ navigation }) {
 					]		  
 				})
 				*/
-			})
-			socket.on('new chat', async (data) => {
+			});
+			socket.on("new chat", async (data) => {
 				let newUser = await presentationCtrl.fetchUser(data.user);
-				setFilteredData(existingItems => {
+				setFilteredData((existingItems) => {
 					let exists = false;
 					let i = 0;
 					for (let c of existingItems) {
 						if (c.id === data.conversation) exists = true;
 						i++;
 					}
-					if (exists) return [existingItems]
+					if (exists) return [existingItems];
 					else {
 						let m = {
 							id: data.conversation,
@@ -96,22 +97,19 @@ function GeneralChatScreen({ navigation }) {
 							profileImage: newUser.profileImage,
 							lastMessage: data.text,
 							unreadMessages: 1,
-							lastMessageTime: data.date+" "+data.hour
-						}
-						return [
-							m,
-							...existingItems	  
-						]
-					}	  
-				})
-				setMasterData(existingItems => {
+							lastMessageTime: data.date + " " + data.hour,
+						};
+						return [m, ...existingItems];
+					}
+				});
+				setMasterData((existingItems) => {
 					let exists = false;
 					let i = 0;
 					for (let c of existingItems) {
 						if (c.id === data.conversation) exists = true;
 						i++;
 					}
-					if (exists) return [existingItems]
+					if (exists) return [existingItems];
 					else {
 						let m = {
 							id: data.conversation,
@@ -119,17 +117,14 @@ function GeneralChatScreen({ navigation }) {
 							profileImage: newUser.profileImage,
 							lastMessage: data.text,
 							unreadMessages: 1,
-							lastMessageTime: data.date+" "+data.hour
-						}
-						return [
-							m,
-							...existingItems	  
-						]
-					}	  
-				})
-			})
+							lastMessageTime: data.date + " " + data.hour,
+						};
+						return [m, ...existingItems];
+					}
+				});
+			});
 		});
-	  	return unsubscribe;
+		return unsubscribe;
 	}, []);
 
 	const fetchChats = async () => {
@@ -189,14 +184,19 @@ function GeneralChatScreen({ navigation }) {
 										alignItems: "center",
 									}}
 									onPress={() => {
-										navigation.navigate("ChatConversation", { id: item.id });
+										console.log(item.profileImage);
+										navigation.navigate("ChatConversation", {
+											id: item.id,
+											name: item.name,
+											picture: parseLocalProfileImage(item.profileImage),
+										});
 									}}
 								>
 									<Image
-										source={{ uri: item.profileImage }}
+										source={{ uri: parseLocalProfileImage(item.profileImage) }}
 										style={{
-											width: 70,
-											height: 70,
+											width: 50,
+											height: 50,
 											borderRadius: 100,
 										}}
 									/>
@@ -318,7 +318,10 @@ function GeneralChatScreen({ navigation }) {
 								<TouchableOpacity
 									activeOpacity={0.8}
 									onPress={() => {
-										setChatDeleted({ id: item.id, name: item.name });
+										setChatDeleted({
+											id: item.id,
+											name: item.name,
+										});
 										setModalDeleteVisible(true);
 									}}
 								>
@@ -369,12 +372,12 @@ function GeneralChatScreen({ navigation }) {
 					style={{
 						flex: 1,
 						flexDirection: "column",
-						alignItems: "center",
 					}}
 				>
 					<View
 						style={{
 							flexDirection: "row",
+							justifyContent: "space-between",
 						}}
 					>
 						<View
@@ -529,7 +532,10 @@ function GeneralChatScreen({ navigation }) {
 										},
 									]}
 									onPress={async () => {
-										let ok = await presentationCtrl.deleteConversation(chatDeleted.id, user.email);
+										let ok = await presentationCtrl.deleteConversation(
+											chatDeleted.id,
+											user.email
+										);
 										if (ok) {
 											let dataRemoved = filteredData.filter(
 												(item) => item.id !== chatDeleted.id

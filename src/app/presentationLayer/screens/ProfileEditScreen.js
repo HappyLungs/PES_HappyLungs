@@ -338,8 +338,8 @@ function ProfileEditScreen({ navigation }) {
 						style={[
 							{
 								borderRadius: 20,
-								width: 100,
-								height: 125,
+								width: 90,
+								height: 115,
 								justifyContent: "flex-end",
 							},
 							styles.long_shadow,

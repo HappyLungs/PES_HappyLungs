@@ -12,6 +12,7 @@ import {
 import * as Animatable from "react-native-animatable";
 
 import COLORS from "../../config/stylesheet/colors";
+import { parseLocalProfileImage } from "../../config/localPictures";
 
 const ChatList = ({ chatsList, navigation }) => {
 	const renderItem = ({ item, index }) => (
@@ -34,7 +35,12 @@ const ChatList = ({ chatsList, navigation }) => {
 								padding: 10,
 							}}
 							onPress={() => {
-								navigation.navigate("ChatConversation", {new:true, user:item.email, name:item.name});
+								navigation.navigate("ChatConversation", {
+									new: true,
+									user: item.email,
+									name: item.name,
+									picture: parseLocalProfileImage(item.profileImage),
+								});
 							}}
 						>
 							<Image

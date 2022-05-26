@@ -30,7 +30,7 @@ import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
-import {toggle} from "yarn/lib/cli";
+//import {toggle} from "yarn/lib/cli";
 
 //import customPin from 'https://i.ibb.co/vXZrNbB/A.png';
 
@@ -99,7 +99,6 @@ function MapScreen({ navigation, route }) {
 	]);
 	//const[Calculating,toggleCalculating]=useState(true);
 
-
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
 		longitude: 2.019336,
@@ -150,22 +149,19 @@ function MapScreen({ navigation, route }) {
 			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
 		}
 
-
 		const camera = await mapRef.current.getCamera();
-		const cz=Math.round(camera.zoom);
-		if(cz !== lastZoom){//camera.zoom-0.5 >= lastZoom || camera.zoom+0.5 <= lastZoom){
+		const cz = Math.round(camera.zoom);
+		if (cz !== lastZoom) {
+			//camera.zoom-0.5 >= lastZoom || camera.zoom+0.5 <= lastZoom){
 			//console.log(camera);
 			//if(!Calculating){
-				//toggleCalculating(true);
-				let aux = await presentationCtrl.getHeatPoints(cz,camera);
-				setHeatpoints(aux);
-				setLastZoom(cz);
-				//toggleCalculating(false);
+			//toggleCalculating(true);
+			let aux = await presentationCtrl.getHeatPoints(cz, camera);
+			setHeatpoints(aux);
+			setLastZoom(cz);
+			//toggleCalculating(false);
 			//}
-
 		}
-
-
 	});
 
 	/*
@@ -202,13 +198,12 @@ function MapScreen({ navigation, route }) {
 			await fetchPins();
 		});
 
-
 		//console.log(zoom);
 		await presentationCtrl.initMeasureStations();
 		const camera = await mapRef.current.getCamera();
-		const cz=-1;
+		const cz = -1;
 		//console.log(camera);
-		let aux = await presentationCtrl.getHeatPoints(cz,camera);
+		let aux = await presentationCtrl.getHeatPoints(cz, camera);
 		setHeatpoints(aux);
 		//toggleCalculating(false);
 		setLastZoom(cz);

@@ -54,8 +54,6 @@ function PinOwnerScreen({ navigation, route }) {
 		navigation.popToTop();
 	};
 
-	const handleShare = () => console.log("Share clicked");
-
 	function renderDeleteConfirmation() {
 		return (
 			<Modal
@@ -205,23 +203,7 @@ function PinOwnerScreen({ navigation, route }) {
 				>
 					{pin.description}
 				</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						paddingVertical: 10,
-						marginTop: 10,
-					}}
-				>
-					<Ionicons
-						name="location-sharp"
-						size={30}
-						style={{ alignSelf: "center" }}
-						color={COLORS.secondary}
-					/>
-					<Text style={[styles.body, { marginStart: 10, flexShrink: 1 }]}>
-						{pin.locationTitle}
-					</Text>
-				</View>
+
 				<TouchableOpacity
 					activeOpacity={0.8}
 					style={{

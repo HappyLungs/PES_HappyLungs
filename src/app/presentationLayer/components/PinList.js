@@ -204,7 +204,12 @@ const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 										alignItems: "center",
 									}}
 								>
-									<Text style={styles.itemName}>{item.title}</Text>
+									<Text
+										numberOfLines={1}
+										style={[styles.itemName, { flex: 1, flexWrap: "wrap" }]}
+									>
+										{item.title}
+									</Text>
 									<View
 										style={{
 											flexDirection: "row",
