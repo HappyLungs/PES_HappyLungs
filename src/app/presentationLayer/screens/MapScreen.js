@@ -726,15 +726,9 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={async () => {
-									let data = await presentationCtrl.getDataStatistics(
-										"24hours",
-										actualMarker.latitude,
-										actualMarker.longitude
-									);
+								onPress={() => {
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
-										data: data,
 										coords: {
 											latitude: actualMarker.latitude,
 											longitude: actualMarker.latitude,

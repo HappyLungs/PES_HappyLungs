@@ -87,12 +87,7 @@ function PinDefaultScreen({ navigation, route }) {
 							styles.shadow,
 						]}
 						onPress={async () => {
-							let data = await presentationCtrl.getDataStatistics(
-								"24hours",
-								pin.latitude,
-								pin.longitude
-							);
-							navigation.navigate("Statistics", { data: data, coords: { latitude: pin.latitude, longitude: pin.longitude }});
+							navigation.navigate("Statistics", { coords: { latitude: pin.latitude, longitude: pin.longitude }});
 						}}
 					>
 						<Text
