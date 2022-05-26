@@ -55,7 +55,7 @@ function ChatScreen({ route, navigation }) {
 				if (!exists) {
 					setMessages(oldArray => [...oldArray, data]);
 				}
-				await presentationCtrl.fetchMessage(data.conversation, user.email);>
+				await presentationCtrl.fetchMessage(data.conversation, user.email);
 			});
 		return () => {};
   	}, []);
