@@ -111,7 +111,7 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 
 	for (let i = 0; i < nsteps; i++) {
 		for (let j = 0; j < nsteps; j++) {
-			console.log(i,j);
+			//console.log(i,j);
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 				//console.log(i,j);

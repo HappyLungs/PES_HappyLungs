@@ -30,7 +30,7 @@ import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
-import {toggle} from "yarn/lib/cli";
+//import {toggle} from "yarn/lib/cli";
 
 //import customPin from 'https://i.ibb.co/vXZrNbB/A.png';
 
@@ -725,15 +725,9 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={async () => {
-									let data = await presentationCtrl.getDataStatistics(
-										"24hours",
-										actualMarker.latitude,
-										actualMarker.longitude
-									);
+								onPress={() => {
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
-										data: data,
 										coords: {
 											latitude: actualMarker.latitude,
 											longitude: actualMarker.latitude,
