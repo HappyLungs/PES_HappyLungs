@@ -97,7 +97,7 @@ function MapScreen({ navigation, route }) {
 			weight: 0,
 		},
 	]);
-	//const[Calculating,toggleCalculating]=useState(true);
+	const[Calculating,toggleCalculating]=useState(true);
 
 
 	const [actualMarker, setActualMarker] = useState({
@@ -151,18 +151,19 @@ function MapScreen({ navigation, route }) {
 		}
 
 
-		const camera = await mapRef.current.getCamera();
-		const cz=Math.round(camera.zoom);
-		if(cz !== lastZoom){//camera.zoom-0.5 >= lastZoom || camera.zoom+0.5 <= lastZoom){
+
 			//console.log(camera);
-			//if(!Calculating){
-				//toggleCalculating(true);
+		if(!Calculating){
+			toggleCalculating(true);
+			const camera = await mapRef.current.getCamera();
+			const cz=Math.round(camera.zoom);
+			if(cz !== lastZoom){
+
 				let aux = await presentationCtrl.getHeatPoints(cz,camera);
 				setHeatpoints(aux);
 				setLastZoom(cz);
-				//toggleCalculating(false);
-			//}
-
+			}
+			toggleCalculating(false);
 		}
 
 
@@ -210,7 +211,7 @@ function MapScreen({ navigation, route }) {
 		//console.log(camera);
 		let aux = await presentationCtrl.getHeatPoints(cz,camera);
 		setHeatpoints(aux);
-		//toggleCalculating(false);
+		toggleCalculating(false);
 		setLastZoom(cz);
 		return unsubscribe;
 	}, [navigation]);
