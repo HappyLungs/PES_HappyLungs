@@ -24,6 +24,7 @@ body {
     align-items: center;
     justify-content: center;
   }
+  #loginForms input[type="password"],
   #loginForms input[type="text"] {
     border: 1px solid #007f5a;
     border-radius: 6px;
