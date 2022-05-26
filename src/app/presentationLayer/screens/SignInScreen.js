@@ -74,13 +74,18 @@ function SignInScreen({ navigation, route }) {
 	const loginGoogle = async (userGoogleData, accessToken) => {
 		let response = await presentationCtrl.loginGoogleUser(userGoogleData);
 		if (response.status == 200) {
-      new Socket(userGoogleData.email);
+			new Socket(userGoogleData.email);
 			response.data.accessToken = accessToken;      
 			setUser(response.data);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			errorMsgChange("");
-		} else {
+		} else if (response.status === 401) {
+			errorMsgChange(i18n.t("blockedUser"));
+			errorMsgVisible(true);
+		}
+		else {
 			errorMsgChange(response.message);
+			errorMsgVisible(true);
 		}
 	};
 
@@ -205,7 +210,12 @@ function SignInScreen({ navigation, route }) {
 			setLanguage(response.data.language);
 			navigation.navigate("AppTabs", { screen: "Map" });
 			setErrorMsgVisible(false);
-		} else {
+		} 
+		else if (response.status === 401) {
+			errorMsgChange(i18n.t("blockedUser"));
+			setErrorMsgVisible(true);
+		}
+		else {
 			errorMsgChange(response.message);
 			setErrorMsgVisible(true);
 		}
