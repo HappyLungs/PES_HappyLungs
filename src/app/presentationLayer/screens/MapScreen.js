@@ -30,7 +30,7 @@ import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 import * as Location from "expo-location";
-import {toggle} from "yarn/lib/cli";
+//import {toggle} from "yarn/lib/cli";
 
 //import customPin from 'https://i.ibb.co/vXZrNbB/A.png';
 
