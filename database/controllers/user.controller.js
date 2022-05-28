@@ -221,6 +221,9 @@ exports.login = async (request, response) => {
                 response.send(responseObj);
                 return;
             }
+            if (userData.status === -1) {
+                sendResponseHelper.sendResponse(response, errorCodes.UNAUTHORIZED, "The user is blocked", {});
+            }
             sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
         }
         else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
@@ -245,7 +248,9 @@ exports.loginGoogle = async (request, response) => {
     UserDataLayer.findUser(where)
     .then((userData) => {
         if (userData !== null && typeof userData !== undefined) {
-            sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
+            if (userData.status === -1) {
+                sendResponseHelper.sendResponse(response, errorCodes.UNAUTHORIZED, "The user is blocked", {});
+            } else sendResponseHelper.sendResponse(response, errorCodes.SUCCESS, "Logged successfully", userData);
         }
         else sendResponseHelper.sendResponse(response, errorCodes.DATA_NOT_FOUND, "No user found with this email", {});
     })

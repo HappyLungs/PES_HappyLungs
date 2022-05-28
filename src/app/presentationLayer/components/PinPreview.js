@@ -31,7 +31,12 @@ const PinPreview = ({ item }) => {
 						flexDirection: "column",
 					}}
 				>
-					<Text style={styles.pinName}>{item.title}</Text>
+					<Text
+						numberOfLines={1}
+						style={[styles.pinName, { flexWrap: "wrap" }]}
+					>
+						{item.title}
+					</Text>
 
 					<Rating
 						type={"custom"}

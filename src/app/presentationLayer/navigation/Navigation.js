@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View, Image, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
 	createStackNavigator,
@@ -313,15 +313,86 @@ function ChatStack() {
 			<Stack.Screen
 				name="ChatConversation"
 				component={ChatConversation}
-				options={{
-					headerShown: false,
-				}}
+				options={({ route, navigation }) => ({
+					title: "",
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+						elevation: 5,
+						//shadowColor: COLORS.black,
+						shadowOffset: {
+							width: 0,
+							height: 2,
+						},
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						shadowColor: COLORS.black,
+					},
+					headerTintColor: COLORS.white,
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+					header: () => (
+						<View
+							style={{
+								height: 56,
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "flex-start",
+								backgroundColor: COLORS.green1,
+							}}
+						>
+							<Pressable
+								onPress={() => {
+									navigation.goBack();
+								}}
+								style={{
+									width: 40,
+									height: 40,
+									alignItems: "center",
+									justifyContent: "center",
+								}}
+							>
+								<Ionicons
+									name="arrow-back-sharp"
+									size={24}
+									color={COLORS.white}
+								/>
+							</Pressable>
+							<Image
+								source={{
+									uri: route.params.picture,
+									//uri: "https://www.congresodelasemfyc.com/assets/imgs/default/default-logo.jpg",
+								}}
+								style={[
+									{
+										borderRadius: 30,
+										width: 35,
+										height: 35,
+										marginHorizontal: 10,
+									},
+								]}
+							></Image>
+							<Text
+								numberOfLines={1}
+								style={{
+									fontWeight: "bold",
+									marginStart: 5,
+									fontSize: 22,
+									color: COLORS.white,
+								}}
+							>
+								{route.params.name}
+							</Text>
+						</View>
+					),
+				})}
 			/>
 			<Stack.Screen
 				name="NewChat"
 				component={NewChatScreen}
-				options={{
-					title: i18n.t("newChat"),
+				options={({ navigation }) => ({
+					title: "",
+					headerShown: true,
 					headerTintColor: COLORS.white,
 					headerStyle: {
 						backgroundColor: COLORS.green1,
@@ -329,8 +400,45 @@ function ChatStack() {
 					...TransitionPresets.SlideFromRightIOS,
 					gestureEnabled: true,
 					gestureDirection: "horizontal",
-					headerShown: true,
-				}}
+					headerLeft: () => (
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "center",
+								marginHorizontal: 10,
+							}}
+						>
+							<Pressable
+								onPress={() => {
+									navigation.goBack();
+								}}
+								style={{
+									width: 40,
+									height: 40,
+									alignItems: "center",
+									justifyContent: "center",
+								}}
+							>
+								<Ionicons
+									name="arrow-back-sharp"
+									size={24}
+									color={COLORS.white}
+								/>
+							</Pressable>
+							<Text
+								style={{
+									fontWeight: "bold",
+									marginStart: 5,
+									fontSize: 22,
+									color: COLORS.white,
+								}}
+							>
+								{i18n.t("contacts")}
+							</Text>
+						</View>
+					),
+				})}
 			/>
 		</Stack.Navigator>
 	);
@@ -531,8 +639,8 @@ export default function Navigation() {
 	//const [user, setUser] = useState(null);
 
 	//const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-   //PresentationCtrl.initMeasureStations();
-     
+	//PresentationCtrl.initMeasureStations();
+
 	return (
 		<NavigationContainer>
 			<UserContextProvider>

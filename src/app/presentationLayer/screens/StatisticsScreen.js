@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
@@ -22,19 +22,35 @@ import COLORS from "../../config/stylesheet/colors";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function StatisticsScreen({ navigation, route }) {
-	const { data, coords } = route.params;
-	const [tmpDades, setDades] = useState(data);
+	let i = 0;
+	const { coords } = route.params;
+	const [loaded, setLoaded] = useState(false);
+	const [tmpDades, setDades] = useState([]);
 	const [selectedInterval, setSelectedInterval] = useState("24hours");
 	let presentationCtrl = new PresentationCtrl();
 
-	const setInterval = async (option) => {
-		setSelectedInterval(option);
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', async () => {
+			setInterval("24hours");
+		});
+	  	return unsubscribe;
+	}, []);
+
+
+	const setInterval = async (ops) => {
+		setSelectedInterval(ops);
 		let tmp = await presentationCtrl.getDataStatistics(
-			option,
+			selectedInterval,
 			coords.latitude,
 			coords.longitude
-		);
-		setDades(tmp);
+		).then(dades => {
+			let i = 0;
+			setDades(dades);
+			setLoaded(true);
+		})
+		.catch(error => {
+			console.log("error¿?", error);
+		});
 	};
 
 	const handleFilter = () => {};
@@ -42,7 +58,10 @@ function StatisticsScreen({ navigation, route }) {
 	const IntervalOptionsBtn = (props) => {
 		return (
 			<TouchableOpacity
-				onPress={setInterval.bind(this, props.option)}
+				onPress={ () => {
+					setLoaded(false);
+					setInterval( props.option )
+				}}
 				style={[
 					styles.btn,
 					styles.shadow,
@@ -90,28 +109,33 @@ function StatisticsScreen({ navigation, route }) {
 		);
 	}
 
-	function renderLinearChart(dades) {
+	function renderLinearChart() {
+
 		const chartConfig = {
 			backgroundGradientFrom: "#1E2923",
 			backgroundGradientFromOpacity: 0,
 			backgroundGradientTo: "#08130D",
 			backgroundGradientToOpacity: 0,
 			color: (opacity = 1) => "#8bc34a",
-			strokeWidth: 2, // optional, default 3
-			barPercentage: 0.5,
 			useShadowColorFromDataset: false, // optional
 		};
 		const screenWidth = Dimensions.get("window").width;
+		let j = 0;
 		const data = {
-			labels: dades.tags,
+			labels: tmpDades[0].tags,
 			datasets: [
 				{
-					data: dades.levels,
+					data: tmpDades[0].levels,
 					color: (opacity = 1) => "#4d4d4d", // optional
 					strokeWidth: 2, // optional
 				},
+				{
+					data: [0] // min
+				},
+				{
+				data: [6] // max
+				},
 			],
-			//legend: ["Rainy Days"] // optional
 		};
 		return (
 			<View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -121,12 +145,15 @@ function StatisticsScreen({ navigation, route }) {
 					height={180}
 					chartConfig={chartConfig}
 					bezier
+					yAxisInterval={1}
 				/>
 			</View>
 		);
 	}
 
-	function renderPieChart(dades) {
+	function renderPieChart() {
+		let dades = tmpDades[1];
+
 		const chartConfig = {
 			backgroundGradientFrom: "#1E2923",
 			backgroundGradientFromOpacity: 0,
@@ -140,22 +167,26 @@ function StatisticsScreen({ navigation, route }) {
 		const screenWidth = Dimensions.get("window").width;
 
 		let colorsPieChart = [
-			"#F94144",
-			"#277DA1",
-			"#F3722C",
-			"#4D908E",
-			"#F8961E",
-			"#90BE6D",
-			"#F9844A",
-			"#43AA8B",
-			"#F9C74F",
-			"#4D908E",
+			"#669900",
+			"#006699",
+			"#990066",
+			"#FFCC00",
+			"#FF6600",
+			"#99CC33",
+			"#3399CC",
+			"#CC3399",
+			"#CCEE66",
+			"#FF9900"
+
 		];
+
 		for (let i = 0; i < dades.length; i++) {
 			dades[i].color = colorsPieChart[i];
 			dades[i].legendFontColor = COLORS.darkGrey;
 			dades[i].legendFontSize = 13;
+			dades[i].quantity = parseInt(dades[i].quantity);
 		}
+
 
 		return (
 			<View style={{ alignItems: "center" }}>
@@ -172,39 +203,53 @@ function StatisticsScreen({ navigation, route }) {
 				/>
 			</View>
 		);
+		
 	}
 
-	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-			<View style={{ marginVertical: 20, marginHorizontal: 20 }}>
-				<View style={{ flexDirection: "row" }}>
-					<Text style={styles.body}>
-						Location-based data recorded over time
-					</Text>
-					<View style={[styles.containerFilter, styles.shadow]}>
-						<TouchableOpacity onPress={handleFilter}>
-							<MaterialCommunityIcons
-								name="filter-menu"
-								style={{ alignSelf: "center" }}
-								color={COLORS.white}
-								size={30}
-							/>
-						</TouchableOpacity>
+	if (!loaded) {
+		return (
+			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+				<View style={{ marginVertical: 20, marginHorizontal: 20 }}>
+					<View style={{ flexDirection: "row", justifyContent:"center", alignItems:"center"}}>
+						<Text style={styles.body}>
+							Loading...
+						</Text>
 					</View>
 				</View>
-				{renderOptions()}
-				<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
-				{renderLinearChart(tmpDades[0])}
-				<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
-				<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
-					(µg/m3 per day)
-				</Text>
-				{renderPieChart(tmpDades[1])}
-			</View>
-		</SafeAreaView>
-	);
+			</SafeAreaView>
+		);
+	} else {
 
-	//canviar renderLinearChart(data[0]) => renderLinearChart(tmpDades[0]) i guess
+		return (
+			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+				<View style={{ marginVertical: 20, marginHorizontal: 20 }}>
+					<View style={{ flexDirection: "row" }}>
+						<Text style={styles.body}>
+							Location-based data recorded over time
+						</Text>
+						<View style={[styles.containerFilter, styles.shadow]}>
+							<TouchableOpacity onPress={handleFilter}>
+								<MaterialCommunityIcons
+									name="filter-menu"
+									style={{ alignSelf: "center" }}
+									color={COLORS.white}
+									size={30}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+					{renderOptions()}
+					<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
+					{ renderLinearChart() }
+					<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
+					<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
+						(µg/m3 per day)
+					</Text>
+					{ renderPieChart() }
+				</View>
+			</SafeAreaView>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
@@ -242,6 +287,9 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
+	spinner: {
+		marginBottom: 50
+	},	
 });
 
 export default StatisticsScreen;

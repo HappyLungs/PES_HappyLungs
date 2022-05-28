@@ -97,8 +97,7 @@ function MapScreen({ navigation, route }) {
 			weight: 0,
 		},
 	]);
-	const[Calculating,toggleCalculating]=useState(true);
-
+	const [Calculating, toggleCalculating] = useState(true);
 
 	const [actualMarker, setActualMarker] = useState({
 		latitude: 41.366531,
@@ -154,10 +153,8 @@ function MapScreen({ navigation, route }) {
 			mapRef.current.animateToRegion(tmpLocation, 2.5 * 1000);
 		}
 
-
-
-			//console.log(camera);
-		if(!Calculating){
+		//console.log(camera);
+		if (!Calculating) {
 			toggleCalculating(true);
 			const camera = await mapRef.current.getCamera();
 
@@ -178,8 +175,6 @@ function MapScreen({ navigation, route }) {
 			}
 			toggleCalculating(false);
 		}
-
-
 	});
 
 	/*
@@ -215,7 +210,6 @@ function MapScreen({ navigation, route }) {
 			await fetchTrendingPins();
 			await fetchPins();
 		});
-
 
 		//console.log(zoom);
 		await presentationCtrl.initMeasureStations();
@@ -744,15 +738,9 @@ function MapScreen({ navigation, route }) {
 									margin: 5,
 									alignItems: "center",
 								}}
-								onPress={async () => {
-									let data = await presentationCtrl.getDataStatistics(
-										"24hours",
-										actualMarker.latitude,
-										actualMarker.longitude
-									);
+								onPress={() => {
 									setModalPinVisible(!modalPinVisible);
 									navigation.navigate("Statistics", {
-										data: data,
 										coords: {
 											latitude: actualMarker.latitude,
 											longitude: actualMarker.latitude,

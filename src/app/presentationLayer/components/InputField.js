@@ -65,7 +65,7 @@ const InputField = ({
 					defaultValue={defaultValue}
 					maxLength={
 						label === i18n.t("title")
-							? 11
+							? 20
 							: label === i18n.t("username")
 							? 20
 							: 100
