@@ -109,6 +109,10 @@ function MapScreen({ navigation, route }) {
 	const [user] = useContext(UserContext);
 	const [savedPins, setSavedPins] = useState([]);
 	const [lastZoom, setLastZoom] = useState(0);
+	const [lastCoords, setCoords]=useState({
+		latitude: 0,
+		longitude:0,
+	});
 
 	const showToast = (message, type) => {
 		Toast.show({
@@ -156,12 +160,21 @@ function MapScreen({ navigation, route }) {
 		if(!Calculating){
 			toggleCalculating(true);
 			const camera = await mapRef.current.getCamera();
+
 			const cz=Math.round(camera.zoom);
-			if(cz !== lastZoom){
+			console.log(camera.zoom);
+			const cords={
+				latitude: Math.trunc(camera.center.latitude),
+				longitude: Math.trunc(camera.center.longitude),
+			}
+
+			console.log(lastCoords, cords)
+			if(cz !== lastZoom || (cz===9 && lastCoords.latitude!==cords.latitude && lastCoords.longitude!==cords.longitude)){
 
 				let aux = await presentationCtrl.getHeatPoints(cz,camera);
 				setHeatpoints(aux);
 				setLastZoom(cz);
+				setCoords(cords);
 			}
 			toggleCalculating(false);
 		}
@@ -207,12 +220,17 @@ function MapScreen({ navigation, route }) {
 		//console.log(zoom);
 		await presentationCtrl.initMeasureStations();
 		const camera = await mapRef.current.getCamera();
-		const cz=-1;
-		//console.log(camera);
+		const cz=Math.round(camera.zoom);
+		console.log(camera);
 		let aux = await presentationCtrl.getHeatPoints(cz,camera);
 		setHeatpoints(aux);
 		toggleCalculating(false);
 		setLastZoom(cz);
+		const camerafi = await mapRef.current.getCamera();
+		setCoords({
+			latitude: Math.trunc(camerafi.center.latitude),
+			longitude: Math.trunc(camerafi.center.longitude),
+		});
 		return unsubscribe;
 	}, [navigation]);
 
@@ -901,7 +919,7 @@ function MapScreen({ navigation, route }) {
 						gradient={{
 							colors: ["green", "yellow", "orange", "red", "purple"],
 							startPoints: [0.01, 0.5, 0.7, 0.8, 0.9],
-							colorMapSize: 200,
+							colorMapSize: 500,
 						}}
 					/>
 				</MapView>

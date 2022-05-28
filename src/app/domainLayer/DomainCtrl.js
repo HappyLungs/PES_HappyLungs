@@ -1,6 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
 import { googleCalendarEventUrl } from 'google-calendar-url';
-//import * as Linking from 'expo-linking';
+import * as Linking from 'expo-linking';
 
 //const fetch = require("node-fetch");
 
@@ -15,7 +15,7 @@ const dataPointMap = require("./classes/DataPointMap");
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
-let lastCoords=[-1,-1,-1,-1];
+let lastCoords=[[-1,-1,-1,-1],-1];
 let lastHeatpoints=[{
 	latitude: -1,
 	longitude: -1,
@@ -76,25 +76,42 @@ DomainCtrl.prototype.getMapData = async function () {
 	}
 	return measureStationLevels;
 };
+DomainCtrl.prototype.getLatLongbyZoom = function(cz,camera){
+	if(cz===9){
+		const inilat =camera.center.latitude - 0.897125;
+		const maxlat =camera.center.latitude + 0.897125;
+		const inilong =camera.center.longitude - 0.667625;
+		const maxlong =camera.center.longitude + 0.667625;
+		return [inilat,inilong,maxlat,maxlong];
+	}
+	if(cz===10)
+	if(cz===11)
+	if(cz===12)
+	if(cz===13)
+	if(cz===14)return [40.514714,-0.116867,42.814019, 3.205920];
+};
 DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
-	if(cz===-1 || cz <= 7) return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===8)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===9)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===10)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===11)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===12)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===13)return[40.514714,-0.116867,42.814019, 3.205920];
-	if(cz===14)return[40.514714,-0.116867,42.814019, 3.205920];
-	return[-1,-1,-1,-1];
-}
+	if(cz===-1 || cz <= 7) return[40.514714,-0.116867,42.814019, 3.205920,17];
+	if(cz===8)return[40.514714,-0.116867,42.814019, 3.205920,20];
+	if(cz<15){
+		const coords=this.getLatLongbyZoom(cz,camera)
+		return[coords,22]
+	}
+	return[-1,-1,-1,-1,-1];
+};
 DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 	console.log(cz);
 	let datapoints = [];
 	const date=new Date();
-	const nsteps=17;
 	const coords=this.getIniLatbyCamera(cz,camera);
-	if(lastCoords[0]===coords[0] && lastCoords[1]===coords[1] && lastCoords[2]===coords[2] && lastCoords[3]===coords[3])return lastHeatpoints;
-	const [inilat,inilong,maxlat,maxlong]=coords;
+
+	//if(lastCoords[0][0]===coords[0][0] && lastCoords[0][1]===coords[0][1] && lastCoords[0][2]===coords[0][2] && lastCoords[0][3]===coords[0][3]&& lastCoords[2]===coords[2])return lastHeatpoints;
+	const inilat=coords[0][0];
+	const inilong=coords[0][1];
+	const maxlat=coords[0][2];
+	const maxlong=coords[0][3]
+	const nsteps=coords[1];
+	//console.log()
 	lastCoords=coords;
 	if(inilat===-1){
 		const actual = {
@@ -110,7 +127,7 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 
 	let longstep = (maxlong - inilong) / nsteps;
 	let latsteps = (maxlat - inilat) / nsteps;
-
+	console.log("inici for");
 	for (let i = 0; i < nsteps; i++) {
 		for (let j = 0; j < nsteps; j++) {
 			console.log(i,j);
@@ -140,6 +157,7 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 	};
 	datapoints.push(actual);
 	lastHeatpoints=datapoints;
+	console.log('fi');
 	return datapoints;
 };
 

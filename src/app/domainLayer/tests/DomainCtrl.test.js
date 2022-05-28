@@ -14,10 +14,15 @@ test('test get map data', async ()=> {
 });*/
 
 test('test get heat points', async() => {
-    const datapoints = await ctrld.getHeatPoints();
+    const datapoints = await ctrld.getHeatPoints(9,{
+        center: {
+            latitude: 41.671640,
+            longitude: 1.622460,
+        }
+    });
     //console.log(MeasureStation.Stations);
-    //console.log(datapoints);
-   // console.log(datapoints.length);
+    console.log(datapoints);
+    console.log(datapoints.length);
 
 });
 /*
