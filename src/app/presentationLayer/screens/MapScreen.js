@@ -157,16 +157,15 @@ function MapScreen({ navigation, route }) {
 		if (!Calculating) {
 			toggleCalculating(true);
 			const camera = await mapRef.current.getCamera();
-
 			const cz=Math.round(camera.zoom);
 			console.log(camera.zoom);
 			const cords={
-				latitude: Math.trunc(camera.center.latitude),
-				longitude: Math.trunc(camera.center.longitude),
+				latitude: camera.center.latitude,
+				longitude:camera.center.longitude,
 			}
-
 			console.log(lastCoords, cords)
-			if(cz !== lastZoom || (cz===9 && lastCoords.latitude!==cords.latitude && lastCoords.longitude!==cords.longitude)){
+			if(cz !== lastZoom || (cz>=9 && lastCoords.latitude!==cords.latitude
+				&& lastCoords.longitude!==cords.longitude)){
 
 				let aux = await presentationCtrl.getHeatPoints(cz,camera);
 				setHeatpoints(aux);
@@ -197,7 +196,6 @@ function MapScreen({ navigation, route }) {
 				}
 				setMarkers(fetchedMarkers);
 			};
-
 			const fetchPins = async () => {
 				const data = await presentationCtrl.fetchPins(user.email);
 				let tmp = [];
@@ -206,25 +204,11 @@ function MapScreen({ navigation, route }) {
 				});
 				setSavedPins(tmp);
 			};
-
 			await fetchTrendingPins();
 			await fetchPins();
 		});
-
-		//console.log(zoom);
 		await presentationCtrl.initMeasureStations();
-		const camera = await mapRef.current.getCamera();
-		const cz=Math.round(camera.zoom);
-		console.log(camera);
-		let aux = await presentationCtrl.getHeatPoints(cz,camera);
-		setHeatpoints(aux);
 		toggleCalculating(false);
-		setLastZoom(cz);
-		const camerafi = await mapRef.current.getCamera();
-		setCoords({
-			latitude: Math.trunc(camerafi.center.latitude),
-			longitude: Math.trunc(camerafi.center.longitude),
-		});
 		return unsubscribe;
 	}, [navigation]);
 
@@ -906,7 +890,7 @@ function MapScreen({ navigation, route }) {
 						opacity={0.6}
 						gradient={{
 							colors: ["green", "yellow", "orange", "red", "purple"],
-							startPoints: [0.01, 0.5, 0.7, 0.8, 0.9],
+							startPoints: [0.01, 0.25, 0.5, 0.75, 0.9],
 							colorMapSize: 500,
 						}}
 					/>
