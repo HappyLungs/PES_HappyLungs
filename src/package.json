@@ -13,7 +13,6 @@
 		"@expo/ngrok": "^4.1.0",
 		"@ptomasroos/react-native-multi-slider": "^2.2.2",
 		"@reach/combobox": "^0.16.5",
-		"@react-native-clipboard/clipboard": "^1.10.0",
 		"@react-native-community/checkbox": "^0.5.12",
 		"@react-native-community/clipboard": "^1.5.1",
 		"@react-native-community/datetimepicker": "4.0.0",
@@ -94,6 +93,5 @@
 		"@expo/webpack-config": "^0.16.19",
 		"eslint-import-resolver-typescript": "^2.7.1"
 	},
-	"private": true,
-	"type": "commonjs"
+	"private": true
 }

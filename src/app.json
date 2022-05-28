@@ -3,7 +3,7 @@
     "name": "happyLungs",
     "primaryColor": "#FFFFFF",
     "slug": "happyLungs",
-    "scheme": "happylungs",
+    "scheme": "com.happylungs.happylungs",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logotransp.png",
@@ -29,6 +29,10 @@
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC5Fb5V200ikMfWmE9TAJ57SwqLCHiiZKo"
+        },
+        "googleSignIn": {
+          "apiKey": "AIzaSyAdqn-Mlz5UzLn5mqskbVlF1r2ouiRPM3w",
+          "certificateHash": "17361C6A0B425518C7862AE2D7C10272DA6B2D3F"
         }
       }
     },

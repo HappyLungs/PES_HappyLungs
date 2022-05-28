@@ -46,6 +46,7 @@ function SignInScreen({ navigation, route }) {
 			"437928972313-1c9p775pneiu2q3rk64fpmmh85vfr8vj.apps.googleusercontent.com",
 		androidClientId:
 			"437928972313-81301tfl1gjdcjb854mtkmfnr3umah5h.apps.googleusercontent.com",
+		redirectUri: "com.happylungs.happylungs:/oauth2redirect" //	://auth
 	});
 
 	useEffect(() => {
