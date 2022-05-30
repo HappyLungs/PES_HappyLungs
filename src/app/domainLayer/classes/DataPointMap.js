@@ -201,7 +201,6 @@ class DataPointMap {
 		//let distancia = point1.distance(this.latitude,this.longitud);
 		let distanciaTotal = 0;
 		let all_points = await dadesObertes.getMeasuresDate(new Date());
-		// console.log("cssccss");
 
 		all_points.forEach((c_point) => {
 			let m_s = new MeasureStation(
@@ -213,7 +212,6 @@ class DataPointMap {
 				null
 			);
 			let d = m_s.distance(this.latitude, this.longitud);
-			// console.log("Name: " + c_point.stationName +" D: " + d + " radius: " + radius)
 			if (d <= radius) points.push([d, c_point]);
 		});
 
