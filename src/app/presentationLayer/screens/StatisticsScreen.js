@@ -4,21 +4,14 @@ import {
 	View,
 	Text,
 	SafeAreaView,
+	ScrollView,
 	TouchableOpacity,
 	Dimensions,
 } from "react-native";
-import {
-	LineChart,
-	BarChart,
-	PieChart,
-	ProgressChart,
-	ContributionGraph,
-	StackedBarChart,
-} from "react-native-chart-kit";
-
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { LineChart, PieChart } from "react-native-chart-kit";
 
 import COLORS from "../../config/stylesheet/colors";
+import i18n from "../../config/translation";
 const PresentationCtrl = require("../PresentationCtrl.js");
 
 function StatisticsScreen({ navigation, route }) {
@@ -30,37 +23,33 @@ function StatisticsScreen({ navigation, route }) {
 	let presentationCtrl = new PresentationCtrl();
 
 	useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', async () => {
+		const unsubscribe = navigation.addListener("focus", async () => {
 			setInterval("24hours");
 		});
-	  	return unsubscribe;
+		return unsubscribe;
 	}, []);
-
 
 	const setInterval = async (ops) => {
 		setSelectedInterval(ops);
-		let tmp = await presentationCtrl.getDataStatistics(
-			selectedInterval,
-			coords.latitude,
-			coords.longitude
-		).then(dades => {
-			let i = 0;
-			setDades(dades);
-			setLoaded(true);
-		})
-		.catch(error => {
-			console.log("error¿?", error);
-		});
+		let tmp = await presentationCtrl
+			.getDataStatistics(selectedInterval, coords.latitude, coords.longitude)
+			.then((dades) => {
+				let i = 0;
+				setDades(dades);
+				setLoaded(true);
+			})
+			.catch((error) => {
+				console.log("error¿?", error);
+			});
 	};
-
-	const handleFilter = () => {};
 
 	const IntervalOptionsBtn = (props) => {
 		return (
 			<TouchableOpacity
-				onPress={ () => {
+				activeOpacity={0.8}
+				onPress={() => {
 					setLoaded(false);
-					setInterval( props.option )
+					setInterval(props.option);
 				}}
 				style={[
 					styles.btn,
@@ -82,6 +71,7 @@ function StatisticsScreen({ navigation, route }) {
 						color: "white",
 						textAlign: "center",
 						fontWeight: "bold",
+						fontSize: 13,
 					}}
 				>
 					{props.value}
@@ -92,25 +82,40 @@ function StatisticsScreen({ navigation, route }) {
 
 	function renderOptions() {
 		return (
-			<View
+			<ScrollView
+				horizontal={true}
+				showsHorizontalScrollIndicator={false}
 				style={{
 					alignSelf: "center",
 					flexDirection: "row",
-					justifyContent: "center",
 					padding: 10,
 					marginTop: 10,
 				}}
+				contentContainerStyle={{
+					justifyContent: "center",
+				}}
 			>
-				<IntervalOptionsBtn option={"24hours"} value="Last 24h" />
-				<IntervalOptionsBtn option={"week"} value="Last Week" />
-				<IntervalOptionsBtn option={"month"} value="Last Month" />
-				<IntervalOptionsBtn option={"year"} value="Last Year" />
-			</View>
+				<IntervalOptionsBtn
+					option={"24hours"}
+					value={i18n.t("statisticsFilter1")}
+				/>
+				<IntervalOptionsBtn
+					option={"week"}
+					value={i18n.t("statisticsFilter2")}
+				/>
+				<IntervalOptionsBtn
+					option={"month"}
+					value={i18n.t("statisticsFilter3")}
+				/>
+				<IntervalOptionsBtn
+					option={"year"}
+					value={i18n.t("statisticsFilter4")}
+				/>
+			</ScrollView>
 		);
 	}
 
 	function renderLinearChart() {
-
 		const chartConfig = {
 			backgroundGradientFrom: "#1E2923",
 			backgroundGradientFromOpacity: 0,
@@ -130,15 +135,21 @@ function StatisticsScreen({ navigation, route }) {
 					strokeWidth: 2, // optional
 				},
 				{
-					data: [0] // min
+					data: [0], // min
 				},
 				{
-				data: [6] // max
+					data: [6], // max
 				},
 			],
 		};
 		return (
-			<View style={{ alignItems: "center", justifyContent: "center" }}>
+			<View
+				style={{
+					alignItems: "center",
+					justifyContent: "center",
+					marginTop: 10,
+				}}
+			>
 				<LineChart
 					data={data}
 					width={screenWidth}
@@ -176,8 +187,7 @@ function StatisticsScreen({ navigation, route }) {
 			"#3399CC",
 			"#CC3399",
 			"#CCEE66",
-			"#FF9900"
-
+			"#FF9900",
 		];
 
 		for (let i = 0; i < dades.length; i++) {
@@ -186,7 +196,6 @@ function StatisticsScreen({ navigation, route }) {
 			dades[i].legendFontSize = 13;
 			dades[i].quantity = parseInt(dades[i].quantity);
 		}
-
 
 		return (
 			<View style={{ alignItems: "center" }}>
@@ -203,49 +212,41 @@ function StatisticsScreen({ navigation, route }) {
 				/>
 			</View>
 		);
-		
 	}
 
 	if (!loaded) {
 		return (
 			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 				<View style={{ marginVertical: 20, marginHorizontal: 20 }}>
-					<View style={{ flexDirection: "row", justifyContent:"center", alignItems:"center"}}>
-						<Text style={styles.body}>
-							Loading...
-						</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Text style={styles.body}>{i18n.t("loading")}</Text>
 					</View>
 				</View>
 			</SafeAreaView>
 		);
 	} else {
-
 		return (
 			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-				<View style={{ marginVertical: 20, marginHorizontal: 20 }}>
-					<View style={{ flexDirection: "row" }}>
-						<Text style={styles.body}>
-							Location-based data recorded over time
-						</Text>
-						<View style={[styles.containerFilter, styles.shadow]}>
-							<TouchableOpacity onPress={handleFilter}>
-								<MaterialCommunityIcons
-									name="filter-menu"
-									style={{ alignSelf: "center" }}
-									color={COLORS.white}
-									size={30}
-								/>
-							</TouchableOpacity>
-						</View>
-					</View>
+				<View style={{ marginVertical: 20, marginHorizontal: 10 }}>
+					<Text style={styles.body}>{i18n.t("statisticsSubTitle")}</Text>
 					{renderOptions()}
-					<Text style={[styles.body, { margin: 10 }]}>POLLUTION EVOLUTION</Text>
-					{ renderLinearChart() }
-					<Text style={[styles.body, { marginTop: 10 }]}>POLLUTANT QUANTITY</Text>
-					<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
-						(µg/m3 per day)
+					<Text style={[styles.body, { margin: 10 }]}>
+						{i18n.t("statisticsChart1").toUpperCase()}
 					</Text>
-					{ renderPieChart() }
+					{renderLinearChart()}
+					<Text style={[styles.body, { marginTop: 30 }]}>
+						{i18n.t("statisticsChart2").toUpperCase()}
+					</Text>
+					<Text style={[styles.body, { fontSize: 14, fontWeight: "normal" }]}>
+						({i18n.t("perDay")})
+					</Text>
+					{renderPieChart()}
 				</View>
 			</SafeAreaView>
 		);
@@ -258,8 +259,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		borderRadius: 5,
 		borderBottomWidth: 5,
-		width: 80,
-		height: 35,
+		padding: 5,
 		borderBottomColor: COLORS.green2,
 		backgroundColor: COLORS.green1,
 	},
@@ -288,8 +288,8 @@ const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	spinner: {
-		marginBottom: 50
-	},	
+		marginBottom: 50,
+	},
 });
 
 export default StatisticsScreen;

@@ -184,7 +184,7 @@ function GeneralChatScreen({ navigation }) {
 										alignItems: "center",
 									}}
 									onPress={() => {
-										console.log(item.profileImage);
+										//console.log(item.profileImage);
 										navigation.navigate("ChatConversation", {
 											id: item.id,
 											name: item.name,

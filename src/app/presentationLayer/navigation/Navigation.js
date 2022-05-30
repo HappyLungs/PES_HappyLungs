@@ -97,7 +97,15 @@ function PinStack() {
 					},
 				}}
 			/>
-			<Stack.Screen name="Statistics" component={StatisticsScreen} />
+			<Stack.Screen
+				name="Statistics"
+				component={StatisticsScreen}
+				options={{
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+				}}
+			/>
 			<Stack.Screen
 				name="DefaultPin"
 				component={PinDefaultScreen}
@@ -469,7 +477,20 @@ function MapStack() {
 				}}
 				initialParams={{ latitude: null, longitude: null, toast: false }}
 			/>
-			<Stack.Screen name="Statistics" component={StatisticsScreen} />
+			<Stack.Screen
+				name="Statistics"
+				component={StatisticsScreen}
+				options={{
+					headerStyle: {
+						backgroundColor: COLORS.green1,
+					},
+					headerTintColor: COLORS.white,
+					title: i18n.t("seeStatistics"),
+					...TransitionPresets.SlideFromRightIOS,
+					gestureEnabled: true,
+					gestureDirection: "horizontal",
+				}}
+			/>
 			<Stack.Screen
 				name="CreatePin"
 				component={CreatePinScreen}

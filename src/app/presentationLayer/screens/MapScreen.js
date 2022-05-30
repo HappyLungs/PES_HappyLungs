@@ -108,9 +108,9 @@ function MapScreen({ navigation, route }) {
 	const [user] = useContext(UserContext);
 	const [savedPins, setSavedPins] = useState([]);
 	const [lastZoom, setLastZoom] = useState(0);
-	const [lastCoords, setCoords]=useState({
+	const [lastCoords, setCoords] = useState({
 		latitude: 0,
-		longitude:0,
+		longitude: 0,
 	});
 
 	const showToast = (message, type) => {
@@ -157,17 +157,20 @@ function MapScreen({ navigation, route }) {
 		if (!Calculating) {
 			toggleCalculating(true);
 			const camera = await mapRef.current.getCamera();
-			const cz=Math.round(camera.zoom);
-			console.log(camera.zoom);
-			const cords={
+			const cz = Math.round(camera.zoom);
+			//console.log(camera.zoom);
+			const cords = {
 				latitude: camera.center.latitude,
-				longitude:camera.center.longitude,
-			}
-			console.log(lastCoords, cords)
-			if(cz !== lastZoom || (cz>=9 && lastCoords.latitude!==cords.latitude
-				&& lastCoords.longitude!==cords.longitude)){
-
-				let aux = await presentationCtrl.getHeatPoints(cz,camera);
+				longitude: camera.center.longitude,
+			};
+			//console.log(lastCoords, cords)
+			if (
+				cz !== lastZoom ||
+				(cz >= 9 &&
+					lastCoords.latitude !== cords.latitude &&
+					lastCoords.longitude !== cords.longitude)
+			) {
+				let aux = await presentationCtrl.getHeatPoints(cz, camera);
 				setHeatpoints(aux);
 				setLastZoom(cz);
 				setCoords(cords);

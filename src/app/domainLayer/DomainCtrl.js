@@ -1,6 +1,6 @@
 const DataPointMap = require("./classes/DataPointMap.js");
-import { googleCalendarEventUrl } from 'google-calendar-url';
-import * as Linking from 'expo-linking';
+import { googleCalendarEventUrl } from "google-calendar-url";
+import * as Linking from "expo-linking";
 
 //const fetch = require("node-fetch");
 
@@ -15,12 +15,14 @@ const dataPointMap = require("./classes/DataPointMap");
 const PersistenceCtrl = require("../persistenceLayer/PersistenceCtrl");
 //initialize the persistence ctrl singleton
 const persistenceCtrl = new PersistenceCtrl();
-let lastCoords=[[-1,-1,-1,-1],-1];
-let lastHeatpoints=[{
-	latitude: -1,
-	longitude: -1,
-	weight: 0,
-}];
+let lastCoords = [[-1, -1, -1, -1], -1];
+let lastHeatpoints = [
+	{
+		latitude: -1,
+		longitude: -1,
+		weight: 0,
+	},
+];
 
 let DomainCtrl;
 (function () {
@@ -76,7 +78,7 @@ DomainCtrl.prototype.getMapData = async function () {
 	}
 	return measureStationLevels;
 };
-DomainCtrl.prototype.getLatLongbyZoom = function(cz,camera) {
+DomainCtrl.prototype.getLatLongbyZoom = function (cz, camera) {
 	const deltaLat = 540 / Math.pow(2, cz);
 	const inilat = camera.center.latitude - deltaLat;
 	const maxlat = camera.center.latitude + deltaLat;
@@ -84,27 +86,28 @@ DomainCtrl.prototype.getLatLongbyZoom = function(cz,camera) {
 	const inilong = camera.center.longitude - deltaLong;
 	const maxlong = camera.center.longitude + deltaLong;
 	return [inilat, inilong, maxlat, maxlong];
-}
-DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
-	if(cz===-1 || cz <= 7) return[[40.514714,-0.116867,42.814019, 3.205920],17];
-	if(cz===8)return[[40.514714,-0.116867,42.814019, 3.205920],20];
-	if(cz<15){
-		const coords=this.getLatLongbyZoom(cz,camera);
-		return[coords,25];
-	}
-	return[[-1,-1,-1,-1],-1];
 };
-DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
+DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
+	if (cz === -1 || cz <= 7)
+		return [[40.514714, -0.116867, 42.814019, 3.20592], 17];
+	if (cz === 8) return [[40.514714, -0.116867, 42.814019, 3.20592], 20];
+	if (cz < 15) {
+		const coords = this.getLatLongbyZoom(cz, camera);
+		return [coords, 25];
+	}
+	return [[-1, -1, -1, -1], -1];
+};
+DomainCtrl.prototype.getHeatPoints = async function (cz, camera) {
 	let datapoints = [];
-	const date=new Date();
-	const coords=this.getIniLatbyCamera(cz,camera);
-	const inilat=coords[0][0];
-	const inilong=coords[0][1];
-	const maxlat=coords[0][2];
-	const maxlong=coords[0][3]
-	const nsteps=coords[1];
-	lastCoords=coords;
-	if(inilat===-1){
+	const date = new Date();
+	const coords = this.getIniLatbyCamera(cz, camera);
+	const inilat = coords[0][0];
+	const inilong = coords[0][1];
+	const maxlat = coords[0][2];
+	const maxlong = coords[0][3];
+	const nsteps = coords[1];
+	lastCoords = coords;
+	if (inilat === -1) {
 		const actual = {
 			latitude: inilat,
 			longitude: inilat,
@@ -115,14 +118,14 @@ DomainCtrl.prototype.getHeatPoints = async function (cz,camera) {
 	}
 	let actuallat = inilat;
 	let actuallong = inilong;
-	const nstepsLong=nsteps/1.33;
-	const nstepsLat=nsteps*1.33;
-	let longstep = (maxlong - inilong) / (nstepsLong);
-	let latsteps = (maxlat - inilat) / (nstepsLat);
+	const nstepsLong = nsteps / 1.33;
+	const nstepsLat = nsteps * 1.33;
+	let longstep = (maxlong - inilong) / nstepsLong;
+	let latsteps = (maxlat - inilat) / nstepsLat;
 
 	for (let i = 0; i < nstepsLat; i++) {
 		for (let j = 0; j < nstepsLong; j++) {
-			console.log(i,j);
+			//console.log(i,j);
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 			} else {
@@ -177,7 +180,7 @@ DomainCtrl.prototype.initMeasureStations = async function () {
 			await m_s.getHourLevel(date, date.getHours());
 		}
 	}
-	console.log(MeasureStation.Stations.length);
+	//console.log(MeasureStation.Stations.length);
 };
 
 /**
@@ -489,8 +492,6 @@ DomainCtrl.prototype.deletePin = async function (Pin) {
 };
 
 DomainCtrl.prototype.createEvent = function (date, Pin, email) {
-	console.log(date, Pin, email);
-
 	const dateYear = date.slice(6, 10);
 	const dateMonth = date.slice(3, 5);
 	const dateDay = date.slice(0, 2);
@@ -499,9 +500,6 @@ DomainCtrl.prototype.createEvent = function (date, Pin, email) {
 
 	const isoStrStart = DateCalendar + "T100000Z";
 	const isoStrEnd = DateCalendar + "T100000Z";
-
-	console.log(isoStrStart.replace(/-/gi, ""));
-	console.log(isoStrEnd.replace(/-/gi, ""));
 
 	var url = googleCalendarEventUrl({
 		title: Pin.title,
@@ -512,8 +510,6 @@ DomainCtrl.prototype.createEvent = function (date, Pin, email) {
 	});
 
 	url = url.replace(/\s/g, "+");
-	console.log(url);
-
 	Linking.openURL(url);
 };
 

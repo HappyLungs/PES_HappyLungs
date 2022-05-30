@@ -182,17 +182,18 @@ function RankingScreen({ navigation, route }) {
 		</View>
 	);
 
-	/*
-	 */
 	const SecondRoute = () => (
 		<View
-			style={{ flex: 1, backgroundColor: "white", flexDirection: "column" }}
+			style={{
+				flex: 1,
+				backgroundColor: COLORS.white,
+				alignItems: "center",
+			}}
 		>
 			<View
 				style={{
 					flexDirection: "row",
 					marginTop: 20,
-					marginLeft: 30,
 				}}
 			>
 				<View
@@ -204,14 +205,11 @@ function RankingScreen({ navigation, route }) {
 						style={{
 							backgroundColor: COLORS.lightGrey,
 							height: 30,
-							width: 300,
 							borderRadius: 5,
 							justifyContent: "center",
-							alignItems: "center",
 							marginVertical: 10,
 						}}
 					>
-						{/*getStatePins()*/}
 						<Text style={[styles.containerTxt2, { color: COLORS.black }]}>
 							{i18n.t("createdPins")}
 						</Text>
@@ -226,19 +224,13 @@ function RankingScreen({ navigation, route }) {
 						borderWidth={0}
 					/>
 				</View>
-				<View
-					style={{
-						flexDirection: "column",
-					}}
-				>
+				<View>
 					<View
 						style={{
 							backgroundColor: COLORS.lightGrey,
 							height: 30,
-							width: 40,
 							borderRadius: 5,
 							justifyContent: "center",
-							alignItems: "center",
 							marginVertical: 10,
 							marginLeft: 5,
 						}}
@@ -264,19 +256,13 @@ function RankingScreen({ navigation, route }) {
 				style={{
 					flexDirection: "row",
 					marginTop: 20,
-					marginLeft: 30,
 				}}
 			>
-				<View
-					style={{
-						flexDirection: "column",
-					}}
-				>
+				<View>
 					<View
 						style={{
 							backgroundColor: COLORS.lightGrey,
 							height: 30,
-							width: 300,
 							borderRadius: 5,
 							justifyContent: "center",
 							alignItems: "center",
@@ -298,19 +284,13 @@ function RankingScreen({ navigation, route }) {
 						borderWidth={0}
 					/>
 				</View>
-				<View
-					style={{
-						flexDirection: "column",
-					}}
-				>
+				<View>
 					<View
 						style={{
 							backgroundColor: COLORS.lightGrey,
 							height: 30,
-							width: 40,
 							borderRadius: 5,
 							justifyContent: "center",
-							alignItems: "center",
 							marginVertical: 10,
 							marginLeft: 5,
 						}}

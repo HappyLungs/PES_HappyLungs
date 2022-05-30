@@ -1,7 +1,7 @@
-const DomainCtrl = require('../DomainCtrl');
-const MeasureStation=require('../classes/MeasureStation');
+const DomainCtrl = require("../DomainCtrl");
+const MeasureStation = require("../classes/MeasureStation");
 
-let ctrld=new DomainCtrl();
+let ctrld = new DomainCtrl();
 
 jest.setTimeout(100000);
 /*
@@ -13,17 +13,16 @@ test('test get map data', async ()=> {
     expect(mapdata).toHaveLength(74);
 });*/
 
-test('test get heat points', async() => {
-    const datapoints = await ctrld.getHeatPoints(9,{
-        center: {
-            latitude: 41.671640,
-            longitude: 1.622460,
-        }
-    });
-    //console.log(MeasureStation.Stations);
-    console.log(datapoints);
-    console.log(datapoints.length);
-
+test("test get heat points", async () => {
+	const datapoints = await ctrld.getHeatPoints(9, {
+		center: {
+			latitude: 41.67164,
+			longitude: 1.62246,
+		},
+	});
+	//console.log(MeasureStation.Stations);
+	//console.log(datapoints);
+	//console.log(datapoints.length);
 });
 /*
 test('test in Cat', async() => {
