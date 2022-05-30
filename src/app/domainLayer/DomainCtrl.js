@@ -79,21 +79,20 @@ DomainCtrl.prototype.getMapData = async function () {
 	return measureStationLevels;
 };
 DomainCtrl.prototype.getLatLongbyZoom = function (cz, camera) {
-	const deltaLat = 540 / Math.pow(2, cz);
+	const deltaLat = 540 / Math.pow(2, camera.zoom);
 	const inilat = camera.center.latitude - deltaLat;
 	const maxlat = camera.center.latitude + deltaLat;
-	const deltaLong = 411 / Math.pow(2, cz);
+	const deltaLong = 411 / Math.pow(2, camera.zoom);
 	const inilong = camera.center.longitude - deltaLong;
 	const maxlong = camera.center.longitude + deltaLong;
 	return [inilat, inilong, maxlat, maxlong];
 };
 DomainCtrl.prototype.getIniLatbyCamera = function (cz, camera) {
-	if (cz === -1 || cz <= 7)
-		return [[40.514714, -0.116867, 42.814019, 3.20592], 17];
-	if (cz === 8) return [[40.514714, -0.116867, 42.814019, 3.20592], 20];
+	if (cz === -1)
+		return [[40.514714, -0.116867, 42.814019, 3.20592], 25];
 	if (cz < 15) {
 		const coords = this.getLatLongbyZoom(cz, camera);
-		return [coords, 25];
+		return [coords, 40];
 	}
 	return [[-1, -1, -1, -1], -1];
 };
@@ -118,14 +117,13 @@ DomainCtrl.prototype.getHeatPoints = async function (cz, camera) {
 	}
 	let actuallat = inilat;
 	let actuallong = inilong;
-	const nstepsLong = nsteps / 1.33;
-	const nstepsLat = nsteps * 1.33;
+	const nstepsLong = nsteps / 1.45;
+	const nstepsLat = nsteps * 1.25;
 	let longstep = (maxlong - inilong) / nstepsLong;
 	let latsteps = (maxlat - inilat) / nstepsLat;
 
 	for (let i = 0; i < nstepsLat; i++) {
 		for (let j = 0; j < nstepsLong; j++) {
-			//console.log(i,j);
 			if (!this.inCat(actuallat, actuallong)) {
 				actuallong = actuallong + longstep;
 			} else {

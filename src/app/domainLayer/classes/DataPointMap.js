@@ -16,18 +16,10 @@ class DataPointMap {
 	 * @returns {Integer} pollution level at the date "date" and hour "hour" of the nearer Measure Station.
 	 */
 	async getHourLevel(date, hour) {
-		let nearPoints = await this.nearerPoints(new Date());
-		let nearPoint = this.getMeasureStation(nearPoints[0][1].codi_eoi);
+		const nearPoint = await this.nearestPoint();
 		if (nearPoint === undefined) {
-			nearPoint = new MeasureStation(
-				nearPoints[0][1].codi_eoi,
-				null,
-				"heatmap",
-				this.latitude,
-				this.longitud,
-				null
-			);
-		} else nearPoint = nearPoint.station;
+			console.log("fatal");
+		}
 		return nearPoint.getHourLevel(date, hour);
 	}
 
@@ -227,6 +219,21 @@ class DataPointMap {
 		if (MeasureStation.Stations !== undefined)
 			return MeasureStation.Stations.find((element) => (element.eoi === eoiCode));
 		return undefined;
+	}
+
+	async nearestPoint() {
+		let point;
+		let mindist=9999999;
+		let all_points = MeasureStation.Stations;
+		all_points.forEach((m_s) => {
+			let d = m_s.station.distance(this.latitude, this.longitud);
+			if(d<mindist){
+				point=m_s.station;
+				mindist=d;
+			}
+		});
+
+		return point;
 	}
 }
 

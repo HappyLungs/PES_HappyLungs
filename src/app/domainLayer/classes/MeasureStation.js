@@ -152,7 +152,7 @@ class MeasureStation {
         if(this.level===undefined){
             let measures = await dadesObertes.getMeasuresDay(this.eoiCode, date);
             this.level=this.calcHourLevel(measures, hour);
-            if(this.level===0 || this.level==null)this.level=0.5;
+            if(this.level===0 || this.level==null)this.level=1;
         }
         return this.level;
     }
