@@ -304,7 +304,7 @@ const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 							</View>
 						</Pressable>
 					</View>
-					{isMyPin(item.creatorEmail) && (
+					{isMyPin(item.creatorEmail) ? (
 						<View
 							style={{
 								height: 30,
@@ -359,6 +359,32 @@ const PinList = ({ pinList, onMasterDataChange, navigation }) => {
 								}}
 							>
 								<Feather name="trash-2" size={15} color={COLORS.white} />
+							</TouchableOpacity>
+						</View>
+					) : (
+						<View
+							style={{
+								height: 30,
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity
+								activeOpacity={0.8}
+								style={{
+									flex: 3,
+									flexDirection: "row",
+									backgroundColor: COLORS.green1,
+									borderBottomLeftRadius: 10,
+									borderBottomRightRadius: 10,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									showDatePicker(item);
+								}}
+							>
+								<Feather name="calendar" size={15} color={COLORS.white} />
+								<Text style={styles.containerTxt}>{i18n.t("addEvent2")}</Text>
 							</TouchableOpacity>
 						</View>
 					)}

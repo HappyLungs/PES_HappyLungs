@@ -105,6 +105,7 @@ const ca = {
 	save: "Guardar",
 	remove: "Eliminar",
 	addEvent: "Afegir",
+	addEvent2: "Afegir al calendari",
 	edit: "Editar",
 	delete: "Eliminar",
 	public: "Public",
@@ -141,6 +142,7 @@ const ca = {
 	confirmationText:
 		"De veritat vols eliminar aquest pin? Aquesta acció és irreversible",
 	chat: "Xats",
+	chatDelete: "Estàs segur que vols eliminar la conversació amb ",
 	newChat: "Nou xat",
 	copyMessage: "Copiar missatge",
 	reportMessage: "Reportar missatge",
@@ -267,6 +269,7 @@ const en = {
 	save: "SAVE",
 	remove: "Remove",
 	addEvent: "Add",
+	addEvent2: "Add to calendar",
 	edit: "Edit",
 	delete: "Delete",
 	public: "Public",
@@ -303,6 +306,7 @@ const en = {
 	confirmationText:
 		"Do you really want to delete this pin? This cannot be undone.",
 	chat: "Chats",
+	chatDelete: "Are you sure you want to delete the chat with ",
 	newChat: "New chat",
 	copyMessage: "Copy message",
 	reportMessage: "Report message",
@@ -430,6 +434,7 @@ const es = {
 	save: "Guardar",
 	remove: "Eliminar",
 	addEvent: "Añadir",
+	addEvent2: "Añadir al calendario",
 	edit: "Editar",
 	delete: "Eliminar",
 	public: "Público",
@@ -466,6 +471,7 @@ const es = {
 	confirmationText:
 		"¿De verdad quieres eliminar este pin? Esta acción es irreversible.",
 	chat: "Chats",
+	chatDelete: "¿Estás seguro que quieres eliminar la conversación con ",
 	newChat: "Nuevo chat",
 	copyMessage: "Copiar mensaje",
 	reportMessage: "Reportar mensaje",

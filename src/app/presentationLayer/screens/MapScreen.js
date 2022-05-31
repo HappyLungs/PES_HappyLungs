@@ -664,7 +664,9 @@ function MapScreen({ navigation, route }) {
 								style={{
 									flex: 1,
 									flexDirection: "row",
-									backgroundColor: COLORS.secondary,
+									backgroundColor: isSavedPin(selected._id)
+										? COLORS.green1
+										: COLORS.secondary,
 									justifyContent: "space-evenly",
 									borderRadius: 10,
 									alignItems: "center",
@@ -744,27 +746,9 @@ function MapScreen({ navigation, route }) {
 									{i18n.t("seeStatistics")}
 								</Text>
 							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.8}
-								style={{
-									flexDirection: "row",
-									margin: 5,
-									alignItems: "center",
-								}}
-								onPress={() => setModalPinVisible(!modalPinVisible)}
-							>
-								<Ionicons
-									name="share-social-sharp"
-									style={{ alignSelf: "center" }}
-									color={COLORS.secondary}
-									size={35}
-								/>
-								<Text style={[styles.subtitle, { marginStart: 5 }]}>
-									{i18n.t("share")}
-								</Text>
-							</TouchableOpacity>
 							<View
 								style={{
+									marginTop: 20,
 									flexDirection: "row",
 									alignSelf: "flex-start",
 									right: pollutionLevel * -10,

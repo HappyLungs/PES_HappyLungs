@@ -478,8 +478,12 @@ function GeneralChatScreen({ navigation }) {
 							{ flexDirection: "column" },
 						]}
 					>
-						<Text style={[styles.modalText, { fontWeight: "bold" }]}>
-							Are you sure you want to delete the chat with {chatDeleted.name}?
+						<Text style={styles.modalText}>
+							{i18n.t("chatDelete")}
+							<Text style={[styles.modalText, { fontWeight: "bold" }]}>
+								{chatDeleted.name}
+								<Text style={styles.modalText}>?</Text>
+							</Text>
 						</Text>
 						<View
 							style={{
