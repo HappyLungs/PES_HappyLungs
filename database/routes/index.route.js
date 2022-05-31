@@ -9,8 +9,6 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 //Controllers
 //const UserController = require("../controllers/user.controller");
 const UserController = require("../controllers/user.controller");
-const MeasureStationController = require("../controllers/measureStation.controller");
-const PollutantDayMeasureController = require("../controllers/pollutantDayMeasure.controller");
 const PinController = require("../controllers/pin.controller");
 const MessageController = require("../controllers/messages.controller");
 const ConversationController = require("../controllers/conversation.controller");
@@ -96,47 +94,6 @@ router.get(
     licenseMiddleware.validate,
     UserController.userStats
 );
-
-/*  MeasureStation  */
-router.get(
-    "/measureStation",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    MeasureStationController.find
-);
-router.post(
-    "/newMeasureStation",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    MeasureStationController.create
-);
-router.post(
-    "/insertMultipleMeasureStation",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    MeasureStationController.insertMultiple
-);
-/* /MeasureStation */
-
-/* PollutantDayMeasure */
-router.get(
-    "/pollutantDayMeasure",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    PollutantDayMeasureController.find
-);
-router.post(
-    "/newPollutantDayMeasure",
-    licenseMiddleware.validate,
-    //authorizationMiddleware.validate,
-    PollutantDayMeasureController.create
-);
-router.post(
-    "/insertMultiplePollutantDayMeasure",
-    licenseMiddleware.validate,
-    PollutantDayMeasureController.insertMultiple
-);
-/* /PollutantDayMeasure */
 
 /*  Pin */
 router.post(
