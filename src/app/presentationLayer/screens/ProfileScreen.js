@@ -89,7 +89,7 @@ function ProfileScreen({ navigation, route }) {
 			await Share.share(
 				{
 					message:
-						"Happy Lungs \n\nBreath Safely, Breath With Us \n\nhttps://happylungsproject.org/",
+						"Download Happy Lungs \n\nBreath Safely, Breath With Us \n\nhttps://expo.dev/artifacts/80ab14c9-88cd-47b5-b6f6-a54d202b82a3",
 				},
 				{
 					dialogTitle: "Happy Lungs",
